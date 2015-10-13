@@ -31,7 +31,7 @@ Material Design风格的开源照片笔记。
 6. 沙盒。每次拍完照都是先把数据放到沙盒数据库中，然后再到服务中去作图，做完的话再从数据库中删除掉。作图的Service是和Camera那个Activity绑定的(bind方式)，当不再拍照的时候就退出了Service，然后回到相册界面的时候会去判断沙盒数据库中是否有没有做完的图，没有做完的话另外启一个进程的Service继续作图。
 7. 图片处理完之后（比如在Service中做完了图之后）通知更新界面，用的是广播。
 8. 高斯模糊（网上找的），如果图大的话会非常慢。
-9. activity退出和进入的动画。这块弄了很久，主要是想模仿Android5.0的那种，但是有些界面做出来超级卡，卡到爆。
+9. activity退出和进入的动画。这块弄了很久，主要是想模仿Android5.0的那种，但是有些界面做出来超级卡。
 10. 主题设置，沉浸式状态栏（5.0）。
 11. 可以滑动item和可以拖放item的ListView（<a href="https://github.com/yydcdut/SlideAndDragListView">SlideAndDragListView</a>）。
 12. …...
@@ -54,6 +54,8 @@ Material Design风格的开源照片笔记。
 - <a href="https://github.com/futuresimple/android-floating-action-button">android-floating-action-button</a>
 - <a href="https://github.com/yydcdut/SlideAndDragListView">SlideAndDragListView</a>
 - <a href="https://github.com/yydcdut/Camera-Camera2-MVC">Camera-Camera2-MVC</a>
+- <a href="https://github.com/lsjwzh/MaterialLoadingProgressBar">MaterialLoadingProgressBar</a>
+- <a href="http://sdk.camera360.com/">Camera360 SDK</a>
 
 # License
 
@@ -64,4 +66,3 @@ Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 [http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
-
