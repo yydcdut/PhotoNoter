@@ -78,9 +78,6 @@ public class LocalStorageUtils {
     private static final String CAMERA_FRONT_ROTATION = "camera_front_rotation";//前置摄像头方向
     private static final int CAMERA_FRONT_ROTATION_DEFAULT = 90;//默认90
 
-    private static final String NOTE_STYLE = "note_style";//笔记详情的样式
-    private static final int NOTE_STYLE_DEFAULT = 0;//笔记详情的样式的默认值，即image
-
     private static final String CAMERA_SOUND_OPEN = "camera_sound_open";//相机声音
     private static final boolean CAMERA_SOUND_OPEN_DEFAULT = false;//默认味关闭，0
 
@@ -553,26 +550,6 @@ public class LocalStorageUtils {
      */
     public int getCameraFrontRotation() {
         return mSharedPreferences.getInt(CAMERA_FRONT_ROTATION, CAMERA_BACK_ROTATION_DEFAULT);
-    }
-
-    /**
-     * 保存详情笔记Style
-     *
-     * @param i
-     */
-    public void setNoteStyle(int i) {
-        SharedPreferences.Editor editor = mSharedPreferences.edit();
-        editor.putInt(NOTE_STYLE, i);
-        editor.commit();
-    }
-
-    /**
-     * 获得详情笔记Style
-     *
-     * @return
-     */
-    public int getNoteStyle() {
-        return mSharedPreferences.getInt(NOTE_STYLE, NOTE_STYLE_DEFAULT);
     }
 
     /**

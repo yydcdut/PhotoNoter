@@ -2,8 +2,6 @@ package com.yydcdut.note.controller.setting;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
@@ -11,7 +9,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,7 +19,6 @@ import android.widget.Toast;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yydcdut.note.R;
 import com.yydcdut.note.bean.IUser;
 import com.yydcdut.note.camera.controller.AdjustCamera;
@@ -54,7 +50,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     private static final String TAG_THEME = "theme";
     private static final String TAG_FONT = "font";
     private static final String TAG_CATEGORY = "category";
-    private static final String TAG_STYLE = "style";
     private static final String TAG_CAMERA2 = "camera2";
     private static final String TAG_CAMERA_SYSTEM = "camera_system";
     private static final String TAG_CAMERA_SIZE = "camera_size";
@@ -131,14 +126,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         setClick(viewFont);
         setTag(viewFont, TAG_CATEGORY);
         setData(viewFont, R.drawable.ic_format_list_numbered_grey_24dp, R.string.edit_category);
+        cancelDivider(viewFont);
         linearLayout.addView(viewFont);
 
-        View viewDetail = getItemView();
-        setClick(viewDetail);
-        setTag(viewDetail, TAG_STYLE);
-        setData(viewDetail, R.drawable.ic_dvr_grey_24dp, R.string.note_style);
-        cancelDivider(viewDetail);
-        linearLayout.addView(viewDetail);
     }
 
     private void initAccountSetting() {
@@ -411,19 +401,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 Intent intent = new Intent(SettingActivity.this, EditCategoryActivity.class);
                 startActivity(intent);
                 break;
-            case TAG_STYLE:
-                final ViewPager viewPager = initNoteStyle();
-                new AlertDialog.Builder(SettingActivity.this, R.style.note_dialog)
-                        .setView(viewPager)
-                        .setPositiveButton(R.string.dialog_btn_ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                int i = viewPager.getCurrentItem();
-                                LocalStorageUtils.getInstance().setNoteStyle(i);
-                            }
-                        })
-                        .show();
-                break;
             case TAG_CAMERA2:
                 boolean use = LocalStorageUtils.getInstance().getCameraSystem();
                 if ((!Utils.AFTER_LOLLIPOP || !SUPPORT_CAMERA_5_0) && !use) {
@@ -578,37 +555,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             mFontDialog.dismiss();
         }
     };
-
-    /**
-     * note Style 的dialog需要的viewpager
-     *
-     * @return
-     */
-    private ViewPager initNoteStyle() {
-        ViewPager viewPager = (ViewPager) LayoutInflater.from(SettingActivity.this).inflate(R.layout.layout_setting_viewpager, null);
-        final String[] resArray = new String[]{"drawable://" + R.drawable.image_style_of_image, "drawable://" + R.drawable.image_style_of_text};
-        viewPager.setAdapter(new PagerAdapter() {
-            @Override
-            public int getCount() {
-                return 2;
-            }
-
-            @Override
-            public boolean isViewFromObject(View view, Object object) {
-                return view == object;
-            }
-
-            @Override
-            public Object instantiateItem(ViewGroup container, int position) {
-                View v = LayoutInflater.from(SettingActivity.this).inflate(R.layout.item_vp_img, null);
-                ImageView imageView = (ImageView) v.findViewById(R.id.img_vp_login);
-                ImageLoader.getInstance().displayImage(resArray[position], imageView);
-                container.addView(v);
-                return v;
-            }
-        });
-        return viewPager;
-    }
 
     /**
      * 选择摄像头的dialog
