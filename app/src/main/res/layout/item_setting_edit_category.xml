@@ -3,57 +3,13 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@android:color/transparent"
                 tools:ignore="MissingPrefix">
-
-    <RelativeLayout
-        android:id="@+id/layout_item_edit_category_txt"
-        android:layout_width="fill_parent"
-        android:layout_height="@dimen/slv_item_height"
-        android:background="@color/white">
-
-        <ImageView
-            android:layout_width="fill_parent"
-            android:layout_height="@dimen/slv_item_height"
-            android:src="@color/white"/>
-
-        <TextView
-            android:id="@+id/txt_item_edit_category_delete"
-            android:layout_width="@dimen/slv_item_bg_width"
-            android:layout_height="@dimen/slv_item_height"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:background="@color/red_colorPrimary"
-            android:gravity="center"
-            android:lines="1"
-            android:text="删除"
-            android:textColor="@color/txt_white"
-            android:textSize="@dimen/default_textSize"/>
-
-        <TextView
-            android:id="@+id/txt_item_edit_category_rename"
-            android:layout_width="@dimen/slv_item_bg_width"
-            android:layout_height="@dimen/slv_item_height"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/txt_item_edit_category_delete"
-            android:background="@color/gray_colorPrimaryDark"
-            android:gravity="center"
-            android:lines="1"
-            android:text="重命名"
-            android:textColor="@color/txt_white"
-            android:textSize="@dimen/default_textSize"/>
-
-    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/layout_item_edit_category"
         android:layout_width="match_parent"
         android:layout_height="@dimen/slv_item_height">
-
-        <ImageView
-            android:id="@+id/img_item_edit_category_bg"
-            android:layout_width="fill_parent"
-            android:layout_height="@dimen/slv_item_height"
-            android:src="@color/white"/>
 
         <ImageView
             android:id="@+id/img_item_edit_category"

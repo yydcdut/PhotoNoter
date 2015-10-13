@@ -27,15 +27,7 @@ android {
 
 
     signingConfigs {
-        debug {
-            storeFile file("/Users/yuyidong/.android/debug.keystore")
-        }
-
         release {
-            storeFile file('photosnoter.jks')
-            storePassword "Br1ght1992"
-            keyAlias "photosnoter"
-            keyPassword "Br1ght1992"
         }
     }
 
@@ -94,4 +86,5 @@ dependencies {
     compile files('src/libs/mta-sdk-1.6.2.jar')
     compile files('src/libs/open_sdk_r5043.jar')
     compile 'com.facebook.fresco:fresco:0.7.0'
+    compile project(':sdlv')
 }

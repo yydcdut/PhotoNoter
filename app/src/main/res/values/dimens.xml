@@ -28,7 +28,7 @@
     <dimen name="toolbar_top">16dip</dimen>
 
     <!-- swipe listview -->
-    <dimen name="slv_item_height">48dip</dimen>
+    <dimen name="slv_item_height">72dip</dimen>
     <dimen name="slv_item_bg_width">48dip</dimen>
 
     <!-- fab -->

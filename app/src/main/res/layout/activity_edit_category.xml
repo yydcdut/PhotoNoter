@@ -8,7 +8,7 @@
     <include
         layout="@layout/layout_toolbar"/>
 
-    <com.yydcdut.note.view.SlideAndDragListView
+    <com.yydcdut.sdlv.SlideAndDragListView
         android:id="@+id/lv_edit_category"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -16,15 +16,13 @@
         android:divider="@color/gray_colorPrimary"
         android:dividerHeight="0.5dip"
         android:paddingLeft="@dimen/activity_horizontal_margin_small"
-        android:paddingRight="@dimen/activity_horizontal_margin_small">
-    </com.yydcdut.note.view.SlideAndDragListView>
+        android:paddingRight="@dimen/activity_horizontal_margin_small"></com.yydcdut.sdlv.SlideAndDragListView>
 
     <com.yydcdut.note.view.CircleProgressBarLayout
         android:id="@+id/layout_progress"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:visibility="gone">
-
     </com.yydcdut.note.view.CircleProgressBarLayout>
 
 </RelativeLayout>

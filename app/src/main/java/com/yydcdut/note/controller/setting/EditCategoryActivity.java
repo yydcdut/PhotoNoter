@@ -1,15 +1,15 @@
 package com.yydcdut.note.controller.setting;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -23,8 +23,10 @@ import com.yydcdut.note.controller.BaseActivity;
 import com.yydcdut.note.model.CategoryDBModel;
 import com.yydcdut.note.utils.RandomColor;
 import com.yydcdut.note.view.CircleProgressBarLayout;
-import com.yydcdut.note.view.SlideAndDragListView;
 import com.yydcdut.note.view.TextDrawable;
+import com.yydcdut.sdlv.Menu;
+import com.yydcdut.sdlv.MenuItem;
+import com.yydcdut.sdlv.SlideAndDragListView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,16 +35,18 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by yuyidong on 15/7/31.
+ * Created by yuyidong on 15/10/13.
  */
-public class EditCategoryActivity extends BaseActivity implements SlideAndDragListView.OnItemLongClickListener, SlideAndDragListView.OnDragListener,
-        Handler.Callback, View.OnClickListener, SlideAndDragListView.OnScrollListener, AdapterView.OnItemClickListener {
+public class EditCategoryActivity extends BaseActivity implements SlideAndDragListView.OnDragListener,
+        SlideAndDragListView.OnSlideListener, SlideAndDragListView.OnButtonClickListener, Handler.Callback {
     private SlideAndDragListView mListView;
     private CircleProgressBarLayout mProgressLayout;
-    private Toolbar mToolbar;
     private List<Category> mCategoryList;
     private RandomColor mColor = RandomColor.MATERIAL;
     private Handler mHandler;
+    private Menu mMenu;
+    private int mCurrentPosition = -1;
+    private CategoryAdapter mCategoryAdapter;
 
     private List<String> mDeleteCategoryLabelList;
     private Map<String, String> mRenameCategoryLabelMap;
@@ -56,35 +60,56 @@ public class EditCategoryActivity extends BaseActivity implements SlideAndDragLi
     public void initUiAndListener() {
         initToolBarUI();
         initCircleProgressBar();
-        mListView = (SlideAndDragListView) findViewById(R.id.lv_edit_category);
-        mCategoryList = CategoryDBModel.getInstance().findAll();
-
-        mListView.setAdapter(mBaseAdapter);
-        mListView.setData(mCategoryList);
-        mListView.setOnItemLongClickListener(this);
-        mListView.setOnDragListener(this);
-        mListView.setOnItemClickListener(this);
-        mListView.setOnScrollListener(this);
-
+        initData();
+        initMenu();
+        initListView();
         mHandler = new Handler(this);
+    }
+
+    private void initToolBarUI() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(getResources().getString(R.string.edit_category));
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_check_white_24dp);
     }
 
     private void initCircleProgressBar() {
         mProgressLayout = (CircleProgressBarLayout) findViewById(R.id.layout_progress);
     }
 
-
-    private void initToolBarUI() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mToolbar.setTitle(getResources().getString(R.string.edit_category));
-        setSupportActionBar(mToolbar);
-        mToolbar.setNavigationIcon(R.drawable.ic_check_white_24dp);
+    private void initListView() {
+        mListView = (SlideAndDragListView) findViewById(R.id.lv_edit_category);
+        mListView.setMenu(mMenu);
+        mCategoryAdapter = new CategoryAdapter();
+        mListView.setAdapter(mCategoryAdapter);
+        mListView.setOnDragListener(this, mCategoryList);
+        mListView.setOnSlideListener(this);
+        mListView.setOnButtonClickListener(this);
     }
 
-    private int mCurrentPosition = -1;
+    private void initData() {
+        mCategoryList = CategoryDBModel.getInstance().findAll();
+    }
+
+    public void initMenu() {
+        mMenu = new Menu((int) getResources().getDimension(R.dimen.slv_item_height), new ColorDrawable(Color.WHITE), true);
+        mMenu.addItem(new MenuItem.Builder().setWidth((int) getResources().getDimension(R.dimen.slv_item_bg_width) * 3 / 2)
+                .setBackground(new ColorDrawable(getResources().getColor(R.color.red_colorPrimary)))
+                .setText(getResources().getString(R.string.delete))
+                .setTextColor(Color.WHITE)
+                .setTextSize((int) getResources().getDimension(R.dimen.txt_small) / 2)
+                .build());
+        mMenu.addItem(new MenuItem.Builder().setWidth((int) getResources().getDimension(R.dimen.slv_item_bg_width) * 3 / 2)
+                .setBackground(new ColorDrawable(getResources().getColor(R.color.fab_blue)))
+                .setText(getResources().getString(R.string.rename))
+                .setDirection(MenuItem.DIRECTION_RIGHT)
+                .setTextColor(Color.WHITE)
+                .setTextSize((int) getResources().getDimension(R.dimen.txt_small) / 2)
+                .build());
+    }
 
     @Override
-    public void onItemLongClick(View view, int position) {
+    public void onDragViewStart(int position) {
         mCurrentPosition = position;
     }
 
@@ -98,7 +123,44 @@ public class EditCategoryActivity extends BaseActivity implements SlideAndDragLi
         mCurrentPosition = -1;
     }
 
-    private BaseAdapter mBaseAdapter = new BaseAdapter() {
+    @Override
+    public void onSlideOpen(View view, View parentView, int position, int direction) {
+
+    }
+
+    @Override
+    public void onSlideClose(View view, View parentView, int position, int direction) {
+
+    }
+
+    @Override
+    public void onClick(View v, int itemPosition, int buttonPosition, int direction) {
+        switch (direction) {
+            case MenuItem.DIRECTION_LEFT:
+                if (mDeleteCategoryLabelList == null) {
+                    mDeleteCategoryLabelList = new ArrayList<>();
+                }
+                Category category = mCategoryList.remove(itemPosition);
+                String label = category.getLabel();
+                mCategoryAdapter.notifyDataSetChanged();
+                mDeleteCategoryLabelList.add(label);
+                break;
+            case MenuItem.DIRECTION_RIGHT:
+                renameDialog(itemPosition);
+                break;
+        }
+    }
+
+    @Override
+    public boolean handleMessage(Message msg) {
+        finish();
+        mProgressLayout.hide();
+        return true;
+    }
+
+
+    class CategoryAdapter extends BaseAdapter {
+
         @Override
         public int getCount() {
             return mCategoryList.size();
@@ -122,11 +184,6 @@ public class EditCategoryActivity extends BaseActivity implements SlideAndDragLi
                 convertView = LayoutInflater.from(EditCategoryActivity.this).inflate(R.layout.item_setting_edit_category, null);
                 holder.imgLogo = (ImageView) convertView.findViewById(R.id.img_item_edit_category);
                 holder.txtName = (TextView) convertView.findViewById(R.id.txt_item_edit_categoty);
-                holder.layoutScroll = convertView.findViewById(R.id.layout_item_edit_category);
-                holder.btnDelete = (TextView) convertView.findViewById(R.id.txt_item_edit_category_delete);
-                holder.btnRename = (TextView) convertView.findViewById(R.id.txt_item_edit_category_rename);
-                holder.layoutBG = convertView.findViewById(R.id.layout_item_edit_category_txt);
-                holder.imgBG = convertView.findViewById(R.id.img_item_edit_category_bg);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -146,69 +203,17 @@ public class EditCategoryActivity extends BaseActivity implements SlideAndDragLi
                 holder.txtName.setTextColor(getResources().getColor(R.color.txt_gray));
             }
             holder.txtName.setText(mCategoryList.get(position).getLabel());
-            holder.layoutScroll.scrollTo(0, 0);
-            holder.btnDelete.setOnClickListener(EditCategoryActivity.this);
-            holder.btnRename.setOnClickListener(EditCategoryActivity.this);
-            holder.imgBG.setVisibility(View.VISIBLE);
-            holder.layoutBG.setVisibility(View.VISIBLE);
             return convertView;
         }
-    };
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.txt_item_edit_category_delete:
-                if (mBtnPosition != -1) {
-                    if (mDeleteCategoryLabelList == null) {
-                        mDeleteCategoryLabelList = new ArrayList<>();
-                    }
-                    Category category = mCategoryList.remove(mBtnPosition);
-                    String label = category.getLabel();
-                    mBaseAdapter.notifyDataSetChanged();
-                    mDeleteCategoryLabelList.add(label);
-                }
-                break;
-            case R.id.txt_item_edit_category_rename:
-                if (mBtnPosition != -1) {
-                    renameDialog();
-                }
-                break;
+        class ViewHolder {
+            public ImageView imgLogo;
+            public TextView txtName;
         }
     }
 
-    private int mBtnPosition = -1;
-
     @Override
-    public void onScrollOpen(View view, int position) {
-        mBtnPosition = position;
-        mListView.setOnItemClickListener(null);
-    }
-
-    @Override
-    public void onScrollClose(View view, int position) {
-        mBtnPosition = -1;
-        mListView.setOnItemClickListener(this);
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-    }
-
-
-    class ViewHolder {
-        public View layoutScroll;
-        public ImageView imgLogo;
-        public TextView txtName;
-        public TextView btnDelete;
-        public TextView btnRename;
-        public View layoutBG;
-        public View imgBG;
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(android.view.MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 mProgressLayout.show();
@@ -261,14 +266,7 @@ public class EditCategoryActivity extends BaseActivity implements SlideAndDragLi
         }
     }
 
-    @Override
-    public boolean handleMessage(Message msg) {
-        finish();
-        mProgressLayout.hide();
-        return true;
-    }
-
-    private void renameDialog() {
+    private void renameDialog(final int position) {
         if (mRenameCategoryLabelMap == null) {
             mRenameCategoryLabelMap = new HashMap<>();
         }
@@ -287,10 +285,11 @@ public class EditCategoryActivity extends BaseActivity implements SlideAndDragLi
                             dialog.dismiss();
                             return;
                         }
-                        Category category = (Category) mBaseAdapter.getItem(mBtnPosition);
+                        Category category = mCategoryList.get(position);
                         mRenameCategoryLabelMap.put(category.getLabel(), text);
                         category.setLabel(text);
                         dialog.dismiss();
+                        mCategoryAdapter.notifyDataSetChanged();
                     }
                 })
                 .setNegativeButton(R.string.dialog_btn_cancel, new DialogInterface.OnClickListener() {
@@ -301,6 +300,5 @@ public class EditCategoryActivity extends BaseActivity implements SlideAndDragLi
                 })
                 .show();
     }
-
 
 }
