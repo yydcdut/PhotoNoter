@@ -54,7 +54,7 @@
 
     <!-- detail activity -->
     <dimen name="flexible_space_height">72dp</dimen>
-    <dimen name="flexible_space_image_height">240dp</dimen>
+    <dimen name="flexible_space_image_height">480dp</dimen>
     <dimen name="flexible_space_show_fab_offset">120dp</dimen>
     <dimen name="flexible_margin_standard">16dp</dimen>
     <dimen name="flexible_space_text_margin">6dip</dimen>

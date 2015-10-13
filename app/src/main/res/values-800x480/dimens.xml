@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="flexible_space_image_height">360dp</dimen>
+    <dimen name="flexible_space_show_fab_offset">120dp</dimen>
+</resources>
