@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="@color/pg_sdk_edit_seekbar_txt_selected"
+          android:state_focused="true" android:state_pressed="true"/>
+    <item android:color="@color/pg_sdk_edit_seekbar_txt_selected"
+          android:state_focused="false" android:state_pressed="true"/>
+    <item android:color="@color/pg_sdk_edit_seekbar_txt_selected"
+          android:state_focused="true" android:state_pressed="false"/>
+    <item android:color="@color/pg_sdk_edit_seekbar_txt_selected" android:state_selected="true"/>
+    <item android:color="@color/pg_sdk_edit_txt_normal"/>
+
+</selector>

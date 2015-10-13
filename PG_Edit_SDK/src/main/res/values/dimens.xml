@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="effect_select_img_size">28dp</dimen>
+    <dimen name="dnd_effect_item_delete_container_width">76dp</dimen>
+</resources>

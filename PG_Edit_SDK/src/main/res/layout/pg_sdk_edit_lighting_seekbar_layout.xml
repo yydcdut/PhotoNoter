@@ -1,0 +1,90 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/pg_sdk_edit_second_bottom_height"
+    android:orientation="vertical"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    >
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/pg_sdk_edit_second_bottom_down_height"
+        android:id="@+id/bottom"
+        android:layout_alignParentBottom="true"
+        android:background="@color/pg_sdk_edit_top_bg">
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/pg_sdk_edit_line"
+            android:id="@+id/line"
+            android:layout_centerInParent="true"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@id/line"
+            android:id="@+id/cancel"
+            >
+
+            <ImageButton
+                android:layout_width="@dimen/pg_sdk_edit_second_bottom_item_size"
+                android:layout_height="@dimen/pg_sdk_edit_second_bottom_item_size"
+                android:background="@android:color/transparent"
+                android:src="@drawable/pg_sdk_edit_back"
+                android:clickable="false"
+                android:layout_centerInParent="true"
+                />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@id/line"
+            android:id="@+id/confirm"
+            >
+
+            <ImageButton
+                android:layout_width="@dimen/pg_sdk_edit_second_bottom_item_size"
+                android:layout_height="@dimen/pg_sdk_edit_second_bottom_item_size"
+                android:background="@android:color/transparent"
+                android:src="@drawable/pg_sdk_edit_save"
+                android:clickable="false"
+                android:layout_centerInParent="true"
+                />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottom"
+        android:gravity="center"
+        android:background="@color/pg_sdk_edit_bg"
+        android:id="@+id/seekbar_parent">
+
+        <us.pinguo.edit.sdk.widget.PGEditSeekBar
+            android:id="@+id/seek_bar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/pg_sdk_edit_seekbar_margin"
+            android:layout_weight="1"/>
+
+        <ImageView
+            android:layout_width="33dp"
+            android:layout_height="33dp"
+            android:src="@drawable/pg_sdk_edit_angle_random"
+            android:layout_marginRight="@dimen/pg_sdk_edit_seekbar_margin"
+            android:layout_marginLeft="20dp"
+            android:id="@+id/random"/>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

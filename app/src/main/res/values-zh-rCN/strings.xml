@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">照片笔记</string>
+    <string name="app_setting">设置</string>
+
+    <string name="introduce_start">开始!</string>
+
+    <string name="camera">拍照</string>
+    <string name="local">本地</string>
+    <string name="no_space">没有足够的空间完成此操作</string>
+    <string name="finish_activity">双击退出</string>
+
+
+    <!-- menu -->
+    <string name="search">查找</string>
+    <string name="delete">删除</string>
+    <string name="spread">伸展</string>
+    <string name="move">移动</string>
+    <string name="select_all">全选</string>
+    <string name="select_mode">选择</string>
+    <string name="setting">设置</string>
+    <string name="sort">排序</string>
+    <string name="new_file">新建</string>
+    <string name="sort_edit_before">修改时间,远到近</string>
+    <string name="sort_edit_soon">修改时间,近到远</string>
+    <string name="sort_create_before">创建时间,远到近</string>
+    <string name="sort_create_soon">创建时间,近到远</string>
+    <string name="select">选择</string>
+    <string name="info">详情</string>
+    <string name="share">分享</string>
+    <string name="backup">上传云</string>
+    <string name="effect">特效</string>
+    <string name="edit">编辑</string>
+
+
+    <!-- dialog zoom detail-->
+    <string name="file_name">文件名：</string>
+    <string name="size">尺寸：</string>
+    <string name="date">拍摄日期：</string>
+
+    <!-- dialog button text -->
+    <string name="dialog_btn_ok">确定</string>
+    <string name="dialog_btn_cancel">取消</string>
+    <string name="dialog_title_info">详情</string>
+    <string name="dialog_title_new">新建</string>
+    <string name="dialog_title_move">移动到...</string>
+
+    <!-- drawer -->
+    <string name="drawer_open">Open drawer navigation</string>
+    <string name="drawer_close">Navigation drawer Close</string>
+    <string name="start_navigation_listener">You must start the NavigationListener in onInit() method of its main activity. Example: this.setNavigationListener(this);</string>
+
+    <!-- setting -->
+    <string name="choose">选择</string>
+    <string name="color_chooser">选择主题颜色</string>
+    <array name="colors">
+        <item>#2196F3</item>
+        <item>#1E88E5</item>
+        <item>#3F51B5</item>
+        <item>#03A9F4</item>
+        <item>#00BCD4</item>
+        <item>#009688</item>
+        <item>#4CAF50</item>
+        <item>#8BC34A</item>
+        <item>#CDDC39</item>
+        <item>#FFEB3B</item>
+        <item>#FFC107</item>
+        <item>#FF9800</item>
+        <item>#FF5722</item>
+        <item>#F44336</item>
+        <item>#E91E63</item>
+        <item>#9C27B0</item>
+        <item>#795548</item>
+        <item>#9E9E9E</item>
+        <item>#607D8B</item>
+        <item>#1F1F1F</item>
+    </array>
+    <string-array name="sort">
+        <item>创建时间,远到近</item>
+        <item>创建时间,近到远</item>
+        <item>修改时间,远到近</item>
+        <item>修改时间,近到远</item>
+    </string-array>
+
+    <string name="text_title">标题</string>
+    <string name="text_content">内容</string>
+    <string name="text_cloud">云空间</string>
+
+    <string name="preference_setting">偏好设置</string>
+    <string name="theme">主题颜色</string>
+    <string name="font">内容字体</string>
+    <string name="edit_category">编辑分类</string>
+    <string name="note_style">内容样式</string>
+    <string name="account_setting">账号设置</string>
+    <string name="camera_setting">相机设置</string>
+    <string name="camera_system">系统相机</string>
+    <string name="camera_5_0">高级相机(Android5.0)</string>
+    <string name="picture_size">照片尺寸</string>
+    <string name="camera_save">退出时保存配置</string>
+    <string name="camera_mirror">前置摄像头镜像</string>
+    <string name="camera_fix">方向矫正</string>
+    <string name="camera_sound">快门声音</string>
+    <string name="sync_setting">同步</string>
+    <string name="sync_auto">自动同步</string>
+    <string name="sync_wifi">仅Wifi下同步</string>
+    <string name="about_setting">关于</string>
+    <string name="about_app">关于App</string>
+    <string name="not_support">这个版本暂时不支持~</string>
+    <string name="camera_front">前置摄像头</string>
+    <string name="camera_back">后置摄像头</string>
+    <string name="camera_current_picture_size">  (当前)</string>
+    <string name="camera_picture_not_support"> (暂不支持)</string>
+    <string name="version">版本号：</string>
+    <string name="splash">关闭引导页</string>
+
+
+    <string name="toast_fail">失败!</string>
+    <string name="rename">重命名</string>
+    <string name="toast_success">成功!</string>
+    <string name="toast_not_support">所选项暂不支持!</string>
+    <string name="toast_sandbox_fail">某些刚拍摄完的照片可能丢失!</string>
+
+    <string name="make_photo_notification">正在后台作图，请不要退出程序！</string>
+    <string name="toast_storage">存储不足！</string>
+    <string name="toast_sdcard">请插入SD卡！</string>
+    <string name="dialog_crash">我们正在鞭打程序员改BUG!</string>
+    <string name="font_local">系统</string>
+    <string name="font_roboto">Roboto</string>
+    <string name="font_choose">选择字体</string>
+    <string name="loginout">登出</string>
+    <string name="unbind_qq">解绑腾讯QQ</string>
+    <string name="unbind_sina">解绑新浪微博</string>
+    <string name="bind_qq">绑定腾讯QQ</string>
+    <string name="bind_sina">绑定新浪微博</string>
+    <string name="not_login">没有登录...</string>
+    <string name="personal_page">个人主页</string>
+    <string name="about_github">Github</string>
+    <string name="about_contact">联系我们</string>
+    <string name="about_update">检查更新</string>
+    <string name="about_share">推荐给好友</string>
+    <string name="about_share_content">我正在使用 照片笔记 App，十分好用。下载：http://a.app.qq.com/o/simple.jsp?pkgname=com.yydcdut.note</string>
+
+</resources>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:background="@color/white"
+                android:fitsSystemWindows="true"
+                tools:ignore="MissingPrefix">
+
+    <ListView
+        android:id="@+id/list"
+        android:layout_width="@dimen/drawer_layout_width"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/white"
+        android:cacheColorHint="@color/transparent"
+        android:choiceMode="singleChoice"
+        android:divider="@color/transparent"
+        android:dividerHeight="0dp"
+        android:fitsSystemWindows="true"/>
+</RelativeLayout>

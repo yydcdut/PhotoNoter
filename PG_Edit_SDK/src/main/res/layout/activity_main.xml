@@ -1,0 +1,64 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".MainActivity">
+
+    <us.pinguo.edit.sdk.widget.ImageLoaderView
+        android:id="@+id/image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:scaleType="fitCenter">
+    </us.pinguo.edit.sdk.widget.ImageLoaderView>
+
+    <us.pinguo.androidsdk.PGGLSurfaceView
+        android:id="@+id/gl_image"
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </us.pinguo.androidsdk.PGGLSurfaceView>
+
+    <Button
+        android:id="@+id/start_edit"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#99000000"
+        android:textColor="#ffffff"
+        android:gravity="center"
+        android:onClick="startEdit"
+        android:text="开始编辑">
+    </Button>
+
+    <Button
+        android:id="@+id/start_face_whitening"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="#99000000"
+        android:textColor="#ffffff"
+        android:gravity="center"
+        android:onClick="startFaceWhitening"
+        android:text="美白">
+    </Button>
+
+    <Button
+        android:id="@+id/start_remove_black_eye"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_above="@id/start_face_whitening"
+        android:background="#99000000"
+        android:textColor="#ffffff"
+        android:gravity="center"
+        android:onClick="startRemoveBlackEye"
+        android:text="祛黑眼圈">
+    </Button>
+
+    <SeekBar
+        android:id="@+id/seekbar"
+        android:layout_above="@id/start_remove_black_eye"
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"/>
+
+</RelativeLayout>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_edit"
+        android:icon="@drawable/ic_edit_white_24dp"
+        android:title="@string/edit"
+        android:visible="false"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/menu_effect"
+        android:icon="@drawable/ic_palette_white_24dp"
+        android:title="@string/effect"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/menu_trash"
+        android:icon="@drawable/ic_delete_white_24dp"
+        android:title="@string/delete"
+        android:visible="false"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/menu_info"
+        android:icon="@drawable/ic_info_outline_white_24dp"
+        android:title="@string/info"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/menu_spread"
+        android:icon="@drawable/ic_unfold_less_white_24dp"
+        android:title="@string/spread"
+        app:showAsAction="always"/>
+
+
+</menu>

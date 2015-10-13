@@ -1,0 +1,21 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <us.pinguo.androidsdk.PGGLSurfaceView
+
+        android:layout_height="1px"
+        android:layout_width="1px"
+        android:background="@android:color/transparent"
+        android:id="@+id/glsurfaceview"/>
+
+    <us.pinguo.edit.sdk.widget.ImageLoaderView
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_centerInParent="true"
+        android:scaleType="fitCenter"
+        android:id="@+id/compare_imageview"/>
+
+
+</RelativeLayout>

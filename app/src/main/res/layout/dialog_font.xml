@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:font="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/txt_dialog_font_system"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_margin"
+        android:layout_marginRight="@dimen/activity_margin"
+        android:layout_marginTop="@dimen/activity_margin_small"
+        android:background="@drawable/btn_translate2halfgray"
+        android:gravity="center"
+        android:padding="@dimen/activity_margin_small"
+        android:text="@string/font_local"
+        android:textColor="@color/dialog_font"
+        android:textSize="@dimen/txt_mid"/>
+
+    <com.yydcdut.note.view.FontTextView
+        android:id="@+id/txt_dialog_font_personal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/activity_margin_small"
+        android:layout_marginLeft="@dimen/activity_margin"
+        android:layout_marginRight="@dimen/activity_margin"
+        android:background="@drawable/btn_translate2halfgray"
+        android:gravity="center"
+        android:padding="@dimen/activity_margin_small"
+        android:text="@string/font_roboto"
+        android:textColor="@color/dialog_font"
+        android:textSize="@dimen/txt_mid"
+        font:fixed="true"/>
+
+</LinearLayout>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:ignore="MissingPrefix">
+
+    <RelativeLayout
+        android:id="@+id/layoutDados"
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:alpha="0.54"/>
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_toEndOf="@+id/icon"
+            android:layout_toLeftOf="@+id/counter"
+            android:layout_toRightOf="@+id/icon"
+            android:layout_toStartOf="@+id/counter"
+            android:alpha="0.87"
+            android:lines="1"
+            android:maxLength="8"
+            android:textColor="@color/black"
+            android:textSize="@dimen/default_textSize"/>
+
+        <TextView
+            android:id="@+id/counter"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:gravity="center_horizontal"
+            android:lines="1"
+            android:maxLength="3"
+            android:textColor="@color/txt_gray"
+            android:textSize="@dimen/default_textSize"/>
+    </RelativeLayout>
+
+</RelativeLayout>

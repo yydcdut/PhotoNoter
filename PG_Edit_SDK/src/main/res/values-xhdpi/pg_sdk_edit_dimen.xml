@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="pg_sdk_edit_back_width_height">42dp</dimen>
+
+    <dimen name="pg_sdk_edit_back_relativelayout_width">138dp</dimen>
+
+    <dimen name="pg_sdk_edit_seekbar_width">287dp</dimen>
+
+    <dimen name="pg_sdk_edit_tilt_shift_width">277dp</dimen>
+
+    <dimen name="pg_sdk_edit_first_margin_left">15dp</dimen>
+
+    <dimen name="pg_sdk_edit_other_margin_left">38dp</dimen>
+
+    <dimen name="pg_sdk_edit_other_1point5_margin_left">31dp</dimen>
+
+
+    <dimen name="pg_sdk_edit_bottom_height">122dp</dimen>
+    <dimen name="pg_sdk_edit_second_bottom_height">151dp</dimen>
+    <dimen name="pg_sdk_edit_second_bottom_down_height">49dp</dimen>
+    <dimen name="pg_sdk_edit_second_bottom_item_size">45dp</dimen>
+
+    <dimen name="pg_sdk_edit_top_height">49dp</dimen>
+    <dimen name="pg_sdk_edit_center_move_top_height">37dp</dimen>
+
+    <dimen name="pg_sdk_edit_center_margin_top">18dp</dimen>
+    <dimen name="pg_sdk_edit_center_margin_bottom">18dp</dimen>
+    <dimen name="pg_sdk_edit_center_margin_left_right">18dp</dimen>
+
+    <dimen name="pg_sdk_edit_effect_back_size">56dp</dimen>
+    <dimen name="pg_sdk_edit_effect_back_margin_left">15dp</dimen>
+
+    <dimen name="pg_sdk_edit_seekbar_margin">53dp</dimen>
+    <dimen name="pg_sdk_edit_tilt_shift_seekbar_text_size">15sp</dimen>
+    <dimen name="pg_sdk_edit_start_store_icon_size">34dp</dimen>
+
+    <dimen name="pg_sdk_edit_face_radius">40dp</dimen>
+    <dimen name="pg_sdk_edit_face_move_top">60dp</dimen>
+    <dimen name="pg_sdk_edit_face_point_text_size">12sp</dimen>
+
+    <dimen name="menu_item_size">80dp</dimen>
+    <dimen name="menu_item_text_size">13sp</dimen>
+    <dimen name="menu_item_big_text_size">18sp</dimen>
+
+    <dimen name="menu_item_with_value_size">36dp</dimen>
+    <dimen name="menu_item_with_value_text_margin">10dp</dimen>
+    <dimen name="menu_item_with_value_text_size">12sp</dimen>
+    <dimen name="menu_item_with_value_text_number_size">10sp</dimen>
+
+    <dimen name="seekbar_thumb_radius">24px</dimen>
+    <dimen name="seekbar_nail_radius">8px</dimen>
+    <dimen name="seekbar_nail_stroke_width">2px</dimen>
+    <dimen name="seekbar_line_width">2px</dimen>
+
+    <dimen name="seekbar_layout_height">220dp</dimen>
+    <dimen name="seekbar_button_height">60dp</dimen>
+    <dimen name="seekbar_margin_left">34dp</dimen>
+    <dimen name="seekbar_margin_right">34dp</dimen>
+
+    <dimen name="seekbar_gradient_seek_bar_line_width">12px</dimen>
+</resources>

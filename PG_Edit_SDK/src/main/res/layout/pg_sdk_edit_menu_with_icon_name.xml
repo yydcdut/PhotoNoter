@@ -1,0 +1,20 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:gravity="center_horizontal">
+
+    <ImageView
+        android:layout_height="42dp"
+        android:layout_width="42dp"
+        android:id="@+id/pg_sdk_edit_icon"
+        />
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textColor="@drawable/pg_sdk_edit_txt"
+        android:layout_marginTop="8dp"
+        android:id="@+id/pg_sdk_edit_name"
+        android:textSize="11sp"/>
+</LinearLayout>

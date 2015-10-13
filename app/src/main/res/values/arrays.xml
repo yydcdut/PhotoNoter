@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="camera_timer">
+        <item>@drawable/ic_delay_0</item>
+        <item>@drawable/ic_delay_3</item>
+        <item>@drawable/ic_delay_5</item>
+        <item>@drawable/ic_delay_10</item>
+        <item>@drawable/ic_delay_15</item>
+    </array>
+</resources>

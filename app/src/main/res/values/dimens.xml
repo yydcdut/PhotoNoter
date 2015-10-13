@@ -1,0 +1,98 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="dimen_12dip">12dip</dimen>
+    <dimen name="dimen_24dip">24dip</dimen>
+    <dimen name="dimen_36dip">36dip</dimen>
+    <dimen name="dimen_48dip">48dip</dimen>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_horizontal_margin_small">8dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin_small">8dp</dimen>
+    <dimen name="activity_margin">16dip</dimen>
+    <dimen name="activity_margin_small">8dip</dimen>
+    <dimen name="activity_margin_big">32dip</dimen>
+    <dimen name="shadow_width">20dip</dimen>
+    <dimen name="slidingmenu_offset">100dip</dimen>
+    <dimen name="actionbar_height">56dp</dimen>
+    <dimen name="txt_big_large">35sp</dimen>
+    <dimen name="txt_large">30sp</dimen>
+    <dimen name="txt_big">20sp</dimen>
+    <dimen name="txt_mid">15sp</dimen>
+    <dimen name="txt_small">12sp</dimen>
+    <dimen name="setting_height">50dip</dimen>
+    <dimen name="setting_margin">25dip</dimen>
+    <dimen name="setting_img">25dip</dimen>
+    <dimen name="setting_horizontal_margin">16dip</dimen>
+    <dimen name="setting_check">22dip</dimen>
+    <dimen name="toolbar_right">12dip</dimen>
+    <dimen name="toolbar_top">16dip</dimen>
+
+    <!-- swipe listview -->
+    <dimen name="slv_item_height">48dip</dimen>
+    <dimen name="slv_item_bg_width">48dip</dimen>
+
+    <!-- fab -->
+    <dimen name="fab_size_normal_app">56dp</dimen>
+    <dimen name="fab_shadow_radius_app">9dip</dimen>
+
+    <dimen name="fab_size_normal">56dp</dimen>
+    <dimen name="fab_size_mini">40dp</dimen>
+
+    <dimen name="fab_icon_size">24dp</dimen>
+
+    <dimen name="fab_plus_icon_size">14dp</dimen>
+    <dimen name="fab_plus_icon_stroke">2dp</dimen>
+
+    <dimen name="fab_shadow_offset">3dp</dimen>
+    <dimen name="fab_shadow_radius">9dp</dimen>
+
+    <dimen name="fab_stroke_width">1dp</dimen>
+
+    <dimen name="fab_actions_spacing">16dp</dimen>
+    <dimen name="fab_labels_margin">8dp</dimen>
+
+
+    <!-- detail activity -->
+    <dimen name="flexible_space_height">72dp</dimen>
+    <dimen name="flexible_space_image_height">240dp</dimen>
+    <dimen name="flexible_space_show_fab_offset">120dp</dimen>
+    <dimen name="flexible_margin_standard">16dp</dimen>
+    <dimen name="flexible_space_text_margin">6dip</dimen>
+    <dimen name="space_image_height">420dip</dimen>
+
+
+    <!-- navigation_drawer.xml -->
+    <dimen name="drawer_layout_width">-.5dp</dimen>
+
+    <!-- title item list -->
+    <dimen name="default_textSize">14sp</dimen>
+    <dimen name="userBackground_layout_height">164dp</dimen>
+    <dimen name="userPhoto_layout_width">64dp</dimen>
+    <dimen name="userPhoto_layout_height">64dp</dimen>
+    <dimen name="userPhoto_layout_marginTop">32dp</dimen>
+    <dimen name="userPhoto_layout_marginLeft">16dp</dimen>
+    <dimen name="userPhoto_layout_margin">16dp</dimen>
+    <dimen name="userPhotoTwo_layout_width">40dp</dimen>
+    <dimen name="userPhotoTwo_layout_height">40dp</dimen>
+    <dimen name="userPhotoTwo_layout_marginRight">16dp</dimen>
+    <dimen name="userPhotoTree_layout_width">40dp</dimen>
+    <dimen name="userPhotoTree_layout_height">40dp</dimen>
+    <dimen name="userPhotoTree_layout_marginRight">16dp</dimen>
+    <dimen name="user_item_layout_width_small">30dp</dimen>
+    <dimen name="user_item_layout_height_small">30dp</dimen>
+    <dimen name="userData_layout_height">56dp</dimen>
+    <dimen name="userData_layout_marginBottom">8dp</dimen>
+    <dimen name="userName_textSize">20sp</dimen>
+    <dimen name="userName_layout_marginLeft">25dp</dimen>
+    <dimen name="userEmail_textSize">14sp</dimen>
+    <dimen name="userEmail_layout_marginLeft">16dp</dimen>
+    <dimen name="user_spinner_marginBottom">8dip</dimen>
+    <dimen name="user_spinner_marginRight">10dip</dimen>
+    <dimen name="user_item_layout_height">72dip</dimen>
+    <dimen name="navigation_setting_image">30dip</dimen>
+    <dimen name="navigation_setting_height">45dip</dimen>
+
+    <dimen name="focus_length_max">100dip</dimen>
+    <dimen name="focus_length_min">75dip</dimen>
+
+</resources>

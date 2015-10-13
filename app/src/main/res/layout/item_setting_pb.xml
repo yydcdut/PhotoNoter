@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="@dimen/setting_height"
+              android:layout_centerVertical="true"
+              android:orientation="vertical">
+
+    <ProgressBar
+        android:id="@+id/pg_setting"
+        style="@style/StorageProgressBar"
+        android:layout_width="fill_parent"
+        android:layout_height="10dip"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin_small"
+        android:max="100"
+        android:progress="20"/>
+
+    <RelativeLayout
+        android:gravity="center_vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="25dip"
+        android:layout_marginLeft="@dimen/setting_margin"
+        android:layout_marginRight="@dimen/setting_margin"
+        android:layout_marginTop="5.0dip"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="15dip"
+            android:layout_centerVertical="true"
+            android:text="@string/text_cloud"
+            android:textColor="@color/txt_gray"
+            android:textSize="@dimen/txt_small"/>
+
+        <TextView
+            android:id="@+id/txt_setting_clound_use"
+            android:layout_width="wrap_content"
+            android:layout_height="15dip"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="0/50M"
+            android:textColor="@color/txt_gray"
+            android:textSize="@dimen/txt_small"/>
+    </RelativeLayout>
+
+
+</LinearLayout>

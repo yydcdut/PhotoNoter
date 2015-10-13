@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/layout_main"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="150dip"
+    android:background="@android:color/white"
+    android:orientation="horizontal"
+    android:weightSum="3">
+
+    <RelativeLayout
+        android:id="@+id/btn_personal"
+        android:layout_width="0dip"
+        android:layout_height="150dip"
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/img_personal"
+            android:layout_width="36dip"
+            android:layout_height="36dip"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="36dip"
+            android:src="@drawable/ic_camera_filter"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/btn_capture"
+        android:layout_width="0dip"
+        android:layout_height="150dip"
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/img_capture"
+            android:layout_width="48dip"
+            android:layout_height="48dip"
+            android:layout_centerInParent="true"
+            android:src="@drawable/btn_camera_capture"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/btn_params"
+        android:layout_width="0dip"
+        android:layout_height="150dip"
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/img_params"
+            android:layout_width="36dip"
+            android:layout_height="36dip"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="36dip"
+            android:src="@drawable/ic_camera_effect_camera"/>
+
+    </RelativeLayout>
+
+
+</LinearLayout>

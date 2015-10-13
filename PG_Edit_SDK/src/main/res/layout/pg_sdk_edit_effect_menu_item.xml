@@ -1,0 +1,76 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="1px"
+                android:paddingRight="1px"
+                android:background="#212223">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/pg_sdk_edit_top_bg">
+    </View>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <RelativeLayout
+            android:layout_width="67dp"
+            android:layout_height="66dp">
+
+            <us.pinguo.edit.sdk.widget.ImageLoaderView
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:id="@+id/icon"/>
+
+            <ImageView
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:visibility="gone"
+                android:background="@drawable/pg_sdk_edit_effect_mask_bg"
+                android:id="@+id/effect_scroll"/>
+
+        </RelativeLayout>
+
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginTop="7dp"
+            android:id="@+id/name"
+            android:textColor="@drawable/pg_sdk_edit_item_text"
+            android:gravity="center"
+            android:singleLine="true"
+            android:textSize="15sp"/>
+
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginRight="2dp"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/down_line"
+        android:background="#4b5258"
+        android:visibility="invisible"/>
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/value"
+        android:textColor="#4b5258"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/down_line"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="5dp"
+        android:visibility="gone"
+        android:singleLine="true"
+        android:textSize="@dimen/menu_item_with_value_text_number_size"/>
+
+
+</RelativeLayout>

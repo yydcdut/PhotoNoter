@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/layout_params"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="150dip"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="120dip"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="120dip"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:id="@+id/btn_camera_id"
+                android:layout_width="60dip"
+                android:layout_height="120dip">
+
+                <ImageView
+                    android:id="@+id/img_camera_id"
+                    android:layout_width="36dip"
+                    android:layout_height="36dip"
+                    android:layout_centerInParent="true"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_camera_rear"
+                    />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/btn_flash"
+                android:layout_width="60dip"
+                android:layout_height="120dip">
+
+                <ImageView
+                    android:id="@+id/img_flash"
+                    android:layout_width="36dip"
+                    android:layout_height="36dip"
+                    android:layout_centerInParent="true"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_flash_off"
+                    />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/btn_torch"
+                android:layout_width="60dip"
+                android:layout_height="120dip">
+
+                <ImageView
+                    android:id="@+id/img_torch"
+                    android:layout_width="36dip"
+                    android:layout_height="36dip"
+                    android:layout_centerInParent="true"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_flash_video_off"
+                    />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/btn_wb"
+                android:layout_width="60dip"
+                android:layout_height="120dip">
+
+                <ImageView
+                    android:id="@+id/img_wb"
+                    android:layout_width="36dip"
+                    android:layout_height="36dip"
+                    android:layout_centerInParent="true"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_camera_wb_auto"
+                    />
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:layout_width="60dip"
+                android:layout_height="120dip">
+
+                <ImageView
+                    android:id="@+id/img_zoom"
+                    android:layout_width="36dip"
+                    android:layout_height="36dip"
+                    android:layout_centerInParent="true"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_camera_zoom"
+                    />
+
+                <TextView
+                    android:id="@+id/txt_zoom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin_small"
+                    android:text="0%"
+                    android:textColor="@color/txt_gray"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/btn_sound"
+                android:layout_width="60dip"
+                android:layout_height="120dip">
+
+                <ImageView
+                    android:id="@+id/img_sound"
+                    android:layout_width="36dip"
+                    android:layout_height="36dip"
+                    android:layout_centerInParent="true"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_camera_location_off"
+                    />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/btn_location"
+                android:layout_width="60dip"
+                android:layout_height="120dip">
+
+                <ImageView
+                    android:id="@+id/img_location"
+                    android:layout_width="36dip"
+                    android:layout_height="36dip"
+                    android:layout_centerInParent="true"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_camera_location_off"
+                    />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/btn_grid"
+                android:layout_width="60dip"
+                android:layout_height="120dip">
+
+                <ImageView
+                    android:id="@+id/img_grid"
+                    android:layout_width="36dip"
+                    android:layout_height="36dip"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_camera_grid"
+                    />
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+    <LinearLayout
+        android:id="@+id/btn_down"
+        android:layout_width="fill_parent"
+        android:layout_height="30dip"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:background="@android:color/darker_gray"/>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="29dip">
+
+            <ImageView
+                android:layout_width="29dip"
+                android:layout_height="29dip"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_back_bottom"/>
+        </RelativeLayout>
+
+    </LinearLayout>
+</LinearLayout>

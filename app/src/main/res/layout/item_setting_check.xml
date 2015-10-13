@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.yydcdut.note.view.ripple.MaterialRippleLayout
+    android:id="@+id/layout_ripple_setting"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/setting_height"
+    app:mrl_rippleAlpha="0.2"
+    app:mrl_rippleColor="#585858"
+    app:mrl_rippleHover="true"
+    app:mrl_rippleOverlay="false">
+
+    <RelativeLayout
+        android:id="@+id/layout_setting_click"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/setting_height">
+
+        <ImageView
+            android:id="@+id/img_setting"
+            android:layout_width="@dimen/setting_img"
+            android:layout_height="@dimen/setting_img"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/setting_horizontal_margin"
+            android:layout_marginRight="@dimen/setting_horizontal_margin"
+            android:scaleType="fitXY"/>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/setting_height"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/img_setting">
+
+            <TextView
+                android:id="@+id/txt_setting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="2dip"
+                android:textColor="@color/txt_gray"
+                android:textSize="@dimen/txt_big"
+                />
+
+            <CheckBox
+                android:id="@+id/cb_setting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/setting_margin"
+                android:clickable="false"
+                android:tag="false"/>
+
+            <View
+                android:id="@+id/view_divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:layout_alignParentBottom="true"
+                android:background="@color/blue_gray_alpha_colorPrimaryDark"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+</com.yydcdut.note.view.ripple.MaterialRippleLayout>

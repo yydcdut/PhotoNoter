@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="pg_sdk_edit_seekbar_width">507dp</dimen>
+
+    <dimen name="pg_sdk_edit_tilt_shift_width">507dp</dimen>
+
+    <dimen name="pg_sdk_edit_first_margin_left">45dp</dimen>
+
+    <dimen name="pg_sdk_edit_other_margin_left">80dp</dimen>
+
+    <dimen name="pg_sdk_edit_other_1point5_margin_left">80dp</dimen>
+</resources>

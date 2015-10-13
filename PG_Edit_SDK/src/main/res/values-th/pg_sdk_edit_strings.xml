@@ -1,0 +1,115 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+    <!--翻译start-->
+    <string name="pg_sdk_edit_download">Download</string>
+    <string name="pg_sdk_edit_left_eye">ตาซ้าย</string>
+    <string name="pg_sdk_edit_right_eye">ตาขวา</string>
+    <string name="pg_sdk_edit_mouth">ปาก</string>
+
+    <string name="pg_sdk_edit_photo_edit">แก้ไข</string>
+    <string name="pg_sdk_edit_quit">ยกเลิก</string>
+    <string name="pg_sdk_edit_photo_save_my_album">ภาพที่ได้ถูกบันทึกไว้ในอัลบั้มของฉัน</string>
+    <string name="pg_sdk_edit_tint_class">แรเงา</string>
+    <string name="pg_sdk_edit_tint_green">สีเขียว</string>
+    <string name="pg_sdk_edit_tint_red">สีม่วงแดงเข้ม</string>
+    <string name="pg_sdk_edit_tint_yellow">สีเหลือง</string>
+    <string name="pg_sdk_edit_tint_shadow_color">เงา</string>
+    <string name="pg_sdk_edit_tint_middle_color">ฮาล์ฟโทน</string>
+    <string name="pg_sdk_edit_tint_high_light_color">ไฮไลท์</string>
+    <string name="pg_sdk_edit_face_art_none">ธรรมดา</string>
+    <string name="pg_sdk_edit_face_art_sweet">หวาน</string>
+    <string name="pg_sdk_edit_face_art_custom_curve">สด</string>
+    <string name="pg_sdk_edit_face_art_light_color_sweet">น้ำผึ้ง</string>
+    <string name="pg_sdk_edit_face_art_skin_plus_lab">ริมฝีปาก</string>
+    <string name="pg_sdk_edit_face_art_skin_plus_sunshine">แสงอาทิตย์</string>
+    <string name="pg_sdk_edit_face_art_light_color_lighting">ท้องฟ้าสดใส</string>
+    <string name="pg_sdk_edit_face_art_skin_plus_red_clear">แดงก่ำ</string>
+    <string name="pg_sdk_edit_face_art_light_color_sweet_color_balance">งดงาม</string>
+    <string name="pg_sdk_edit_face_art_light_color_low_green">สง่า</string>
+    <string name="pg_sdk_edit_face_art_light_color_color_blue">เย็น</string>
+    <string name="pg_sdk_edit_face_art_skin_plus_bw">ขาวดำ</string>
+    <string name="pg_sdk_edit_face_portrait_skin">ผิว</string>
+    <string name="pg_sdk_edit_face_portrait_face_lift">ใบหน้า</string>
+    <string name="pg_sdk_edit_face_portrait_art">ศิลปะ</string>
+    <string name="pg_sdk_edit_face_portrait_skin_strong">ผิวมัน</string>
+    <string name="pg_sdk_edit_face_portrait_skin_white_level">ขาวขึ้น</string>
+    <string name="pg_sdk_edit_face_portrait_skin_skin_color">ผิวสองสี</string>
+    <string name="pg_sdk_edit_face_portrait_face_lift_moulding">รูปทรง</string>
+    <string name="pg_sdk_edit_face_portrait_face_lift_eye">ตา</string>
+    <string name="pg_sdk_edit_face_portrait_face_lift_edge">ลบริ้วรอย</string>
+    <string name="pg_sdk_edit_lighting_class">เงา</string>
+    <string name="pg_sdk_edit_frame_class">กรอบ</string>
+    <string name="pg_sdk_edit_color_hue">ฮิว</string>
+    <string name="pg_sdk_edit_color_light">ความสว่าง</string>
+    <string name="pg_sdk_edit_face_class">ภาพบุคคล</string>
+    <string name="pg_sdk_edit_face_discriminate">ระบุใบหน้า</string>
+    <string name="pg_sdk_edit_face_feature">ระบุตำแหน่งใบหน้า</string>
+    <string name="pg_sdk_edit_face_checking">กำลังตรวจจับใบหน้า ...</string>
+    <string name="pg_sdk_edit_face_move_three_feature_point">ลากสามจุดตามลำดับที่ตาซ้าย ตาขวาและปากบนรูปภาพ</string>
+    <string name="pg_sdk_edit_face_plus_plus_support">(Face++ จะให้ความช่วยเหลือทางเทคนิค)</string>
+    <string name="pg_sdk_edit_lightzone_class">การปรับแต่ง</string>
+    <string name="pg_sdk_edit_lightzone_hue">ฮิว</string>
+    <string name="pg_sdk_edit_lightzone_vibrance">ความมีชีวิตชีวา</string>
+    <string name="pg_sdk_edit_lightzone_vignette_strong">ลวดลายขอบภาพ</string>
+    <string name="pg_sdk_edit_lightzone_center_strong">ศูนย์กลาง</string>
+    <string name="pg_sdk_edit_lightzone_enhance">กลาง</string>
+    <string name="pg_sdk_edit_lightzone_skin">ภาพบุคคล</string>
+    <string name="pg_sdk_edit_tool_class">เครื่องมือ</string>
+    <string name="pg_sdk_edit_hsl_class">สี</string>
+    <string name="pg_sdk_edit_hsl_red">สีแดง</string>
+    <string name="pg_sdk_edit_hsl_orange">สีส้ม</string>
+    <string name="pg_sdk_edit_hsl_yellow">สีเหลือง</string>
+    <string name="pg_sdk_edit_hsl_green">สีเขียว</string>
+    <string name="pg_sdk_edit_hsl_cyan">สีฟ้าน้ำทะเล</string>
+    <string name="pg_sdk_edit_hsl_blue">สีน้ำเงิน</string>
+    <string name="pg_sdk_edit_hsl_purple">สีม่วง</string>
+    <string name="pg_sdk_edit_hsl_magenta">สีม่วงแดงเข้ม</string>
+    <!--翻译end-->
+    <string name="pg_sdk_edit">แก้ไข</string>
+    <string name="pg_sdk_edit_first_show_fail">การโหลดภาพล้มเหลว</string>
+    <string name="pg_sdk_edit_effect_scale_size">เนื่องจากข้อจำกัดด้านเทคนิคพิเศษ ภาพที่แก้ไขจะมีขนาดเล็กกว่าภาพต้นฉบับ</string>
+
+    <string name="pg_sdk_edit_stop_save">หยุดการบันทึก</string>
+    <string name="pg_sdk_edit_use">แอปพลิเคชั่น</string>
+    <string name="pg_sdk_edit_return">กลับ</string>
+    <string name="pg_sdk_edit_save">บันทึก</string>
+    <string name="pg_sdk_edit_ok">ตกลง</string>
+    <string name="pg_sdk_edit_tool_crop">ตัด</string>
+    <string name="pg_sdk_edit_adjust_class">การปรับแต่ง</string>
+    <string name="pg_sdk_edit_texture_class">พื้นผิว</string>
+    <string name="pg_sdk_edit_tool_rotate">การหมุน</string>
+    <string name="pg_sdk_edit_tiltshift_class">เบลอ</string>
+    <string name="pg_sdk_edit_effect_class">พิเศษ</string>
+
+    <string name="pg_sdk_edit_tiltshift_round">รอบ</string>
+    <string name="pg_sdk_edit_tiltshift_vertical">กลม</string>
+    <string name="pg_sdk_edit_tiltshift_horizontal">แนวนอน</string>
+
+    <string name="pg_sdk_edit_crop_crop618_vertical">V-0.618</string>
+    <string name="pg_sdk_edit_crop_crop618_horizontal">H-0.618</string>
+    <string name="pg_sdk_edit_crop_cropFree">ฟรี</string>
+    <string name="pg_sdk_edit_crop_cropHorizontal">แนวนอน</string>
+    <string name="pg_sdk_edit_crop_cropVertical">กลม</string>
+    <string name="pg_sdk_edit_about">เกี่ยวกับ</string>
+
+    <string name="pg_sdk_edit_lightzone_sharpen">คำจำกัดความ</string>
+    <string name="pg_sdk_edit_lightzone_exposure">การเปิดรับแสง</string>
+    <string name="pg_sdk_edit_lightzone_contrast">คอนทราสต์</string>
+    <string name="pg_sdk_edit_lightzone_highlight">ไฮไลท์</string>
+    <string name="pg_sdk_edit_lightzone_shadow">เงา</string>
+    <string name="pg_sdk_edit_lightzone_saturation">ความอิ่มตัว</string>
+    <string name="pg_sdk_edit_lightzone_temperature">CCT</string>
+
+    <string name="pg_sdk_edit_strength">ความเข้ม</string>
+    <string name="pg_sdk_edit_range">สโคป</string>
+
+    <string name="pg_sdk_edit_quit_edit">เลิกทำการแก้ไขภาพปัจจุบันหรือไม่</string>
+    <string name="pg_sdk_edit_replace_effect">เลือกเทคนิคพิเศษ</string>
+
+    <string name="pg_sdk_edit_no_free_space">ขออภัย พื้นที่การ์ด SD ไม่เพียงพอ</string>
+    <string name="pg_sdk_edit_no_storage">ขออภัย ไม่พบการ์ดหน่วยความจำ กรุณาใส่ SD การ์ด</string>
+    <string name="pg_sdk_edit_make_photo_fail">การบันทึกภาพล้มเหลว</string>
+
+    <string name="pg_sdk_edit_org_photo">คลิกเพื่อกลับไปที่ภาพต้นฉบับ</string>
+    <string name="pg_sdk_edit_about_desc">"Camera360, one of world leading camera apps, creates 200+ amazing photo filters, 10+ creative cameras and powerful photo editing features. Camera360 defines you as a photographying talent."</string>
+</resources>

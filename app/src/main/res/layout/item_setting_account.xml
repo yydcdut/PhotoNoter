@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/setting_height">
+
+    <com.yydcdut.note.view.RoundedImageView
+        android:id="@+id/img_item_setting_logo"
+        android:layout_width="@dimen/setting_img"
+        android:layout_height="@dimen/setting_img"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/setting_horizontal_margin"
+        android:layout_marginRight="@dimen/setting_horizontal_margin"
+        android:scaleType="fitXY"/>
+
+
+    <TextView
+        android:id="@+id/txt_item_setting_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/setting_height"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/img_item_setting_user"
+        android:layout_toRightOf="@+id/img_item_setting_logo"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxEms="20"
+        android:singleLine="true"
+        android:textColor="@color/txt_gray"
+        android:textSize="@dimen/txt_mid"/>
+
+    <com.yydcdut.note.view.RoundedImageView
+        android:id="@+id/img_item_setting_user"
+        android:layout_width="@dimen/dimen_36dip"
+        android:layout_height="@dimen/dimen_36dip"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/setting_horizontal_margin"
+        android:layout_marginRight="@dimen/setting_horizontal_margin"
+        android:scaleType="fitXY"/>
+
+    <View
+        android:id="@+id/view_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/img_item_setting_logo"
+        android:background="@color/blue_gray_alpha_colorPrimaryDark"/>
+
+</RelativeLayout>

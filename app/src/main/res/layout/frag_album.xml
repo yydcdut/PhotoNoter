@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:fab="http://schemas.android.com/apk/res-auto"
+                xmlns:reveal="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/bg_album">
+
+    <!--这个的存在是让点击 floating button 的时候RevealColorView有地方显示出来-->
+    <View
+        android:id="@+id/view_menu_floating_position"
+        android:layout_width="@dimen/fab_size_normal_app"
+        android:layout_height="@dimen/fab_size_normal_app"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/fab_shadow_radius_app"
+        android:background="@android:color/transparent"
+        android:visibility="invisible"/>
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <GridView
+            android:id="@+id/gv_album"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:horizontalSpacing="3dip"
+            android:numColumns="3"
+            android:verticalSpacing="3dip"
+            />
+
+    </FrameLayout>
+
+
+    <com.yydcdut.note.view.RevealView
+        android:id="@+id/reveal_album"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        reveal:own_touch="true">
+
+        <com.yydcdut.note.view.RevealColorView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+    </com.yydcdut.note.view.RevealView>
+
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true">
+
+        <com.yydcdut.note.view.fab.FloatingActionsMenu
+            android:id="@+id/fab_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|bottom"
+            fab:fab_addButtonColorNormal="?attr/colorPrimary"
+            fab:fab_addButtonColorPressed="?attr/colorPrimaryDark"
+            fab:fab_addButtonPlusIconColor="@color/fab_white"
+            fab:fab_colorNormal="?attr/colorPrimary"
+            fab:fab_colorPressed="?attr/colorPrimaryDark"
+            fab:fab_labelStyle="@style/menu_labels_style">
+
+            <com.yydcdut.note.view.fab.FloatingActionButton
+                android:id="@+id/fab_camera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                fab:fab_colorNormal="?attr/colorPrimary"
+                fab:fab_colorPressed="?attr/colorPrimaryDark"
+                fab:fab_icon="@drawable/ic_photo_camera_white_24dp"
+                fab:fab_title="@string/camera"/>
+
+            <com.yydcdut.note.view.fab.FloatingActionButton
+                android:id="@+id/fab_local"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                fab:fab_colorNormal="?attr/colorPrimary"
+                fab:fab_colorPressed="?attr/colorPrimaryDark"
+                fab:fab_icon="@drawable/ic_crop_original_white_24dp"
+                fab:fab_title="@string/local"/>
+
+        </com.yydcdut.note.view.fab.FloatingActionsMenu>
+
+    </FrameLayout>
+
+    <com.yydcdut.note.view.CircleProgressBarLayout
+        android:id="@+id/layout_progress"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="gone">
+
+    </com.yydcdut.note.view.CircleProgressBarLayout>
+
+</RelativeLayout>

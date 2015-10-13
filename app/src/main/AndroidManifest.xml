@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<manifest
+    package="com.yydcdut.note"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application
+        android:name=".NoteApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/noteBlue">
+        <activity
+            android:name=".controller.home.SplashActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".controller.home.IntroduceActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".controller.home.HomeActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".controller.note.DetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".controller.note.EditTextActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".controller.login.LoginActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".controller.setting.SettingActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".camera.controller.CameraActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".controller.note.ZoomActivity"
+            android:label=" "
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".controller.setting.EditCategoryActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".controller.setting.AboutAppActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".controller.login.BindUserActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".camera.controller.AdjustCamera"
+            android:screenOrientation="portrait"/>
+
+        <service android:name=".service.InitService"/>
+        <service
+            android:name=".service.CameraService"
+            android:process=":cameraphots"/>
+        <service android:name=".service.CheckService"/>
+        <service
+            android:name=".service.SandBoxService"
+            android:process=":makephotos"/>
+
+        <!-- ************ 友盟 ************ -->
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="55361d44e0f55ae664003b4e"/>
+        <meta-data
+            android:name="UMENG_MESSAGE_SECRET"
+            android:value="318c30366d0e153a9bf71b712e7046e3">
+        </meta-data>
+        <!-- 渠道 -->
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="${UMENG_CHANNEL_VALUE}"/>
+        <!-- ************ 友盟 ************ -->
+
+
+        <!-- ************ Camera360  Begin ************ -->
+        <meta-data
+            android:name="EDIT_SDK_KEY"
+            android:value="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"/>
+        <meta-data
+            android:name="BD_APP_ID"
+            android:value="ea8d04692735bc1f"/>
+
+        <meta-data
+            android:name="BD_APP_SECRET"
+            android:value="vCGG9QZ94tcGxTjangCc_b_VuXwmfGd2"/>
+
+        <activity
+            android:name="us.pinguo.edit.sdk.PGEditActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
+
+        <service
+            android:name="us.pinguo.bigdata.BDUpService"
+            android:process=":bdupload">
+        </service>
+
+        <receiver android:name="us.pinguo.bigdata.BDAlarmReceiver">
+            <intent-filter>
+                <action android:name="bd_alarm"/>
+            </intent-filter>
+        </receiver>
+        <!-- ************ Camera360  End ************ -->
+
+        <!-- ************  QQ Begin ************ -->
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data android:scheme="tencent1104732115"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+        </activity>
+        <!-- ************ QQ End ************ -->
+
+    </application>
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.FLASHLIGHT"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.READ_LOGS"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+
+    <uses-feature android:name="android.hardware.camera.autofocus"/>
+    <uses-feature android:name="android.hardware.camera"/>
+    <uses-feature android:name="android.hardware.camera.flash"/>
+</manifest>

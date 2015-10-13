@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/black">
+
+    <com.yydcdut.note.view.ZoomImageView
+        android:id="@+id/img_zoom"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/black"/>
+
+    <ImageView
+        android:id="@+id/img_zoom_spread"
+        android:layout_width="@dimen/dimen_24dip"
+        android:layout_height="@dimen/dimen_24dip"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="@dimen/toolbar_right"
+        android:layout_marginTop="@dimen/toolbar_top"
+        android:src="@drawable/ic_unfold_more_white_24dp"
+        android:visibility="gone"/>
+
+    <include layout="@layout/layout_toolbar"/>
+
+    <com.yydcdut.note.view.CircleProgressBarLayout
+        android:id="@+id/layout_progress"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="gone">
+
+    </com.yydcdut.note.view.CircleProgressBarLayout>
+
+</RelativeLayout>

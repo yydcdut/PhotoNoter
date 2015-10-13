@@ -1,0 +1,24 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <us.pinguo.edit.sdk.base.view.PGEditPtrHorizontalScrollView
+        android:id="@+id/scroll_view"
+        android:overScrollMode="never"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/layout"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            >
+        </LinearLayout>
+
+    </us.pinguo.edit.sdk.base.view.PGEditPtrHorizontalScrollView>
+</LinearLayout>

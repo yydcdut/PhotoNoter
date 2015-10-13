@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">PhotosNoter</string>
+    <string name="app_setting">Settings</string>
+
+    <string name="introduce_start">Start!</string>
+
+    <string name="camera">Camera</string>
+    <string name="local">Local</string>
+    <string name="no_space">There is not enough space to complete this operation!</string>
+
+    <string name="finish_activity">Double Click to Quit</string>
+
+    <!-- dialog zoom detail-->
+    <string name="file_name">File Name:</string>
+    <string name="size">Size:</string>
+    <string name="date">Date:</string>
+
+    <!-- dialog button text -->
+    <string name="dialog_btn_ok">Ok</string>
+    <string name="dialog_btn_cancel">Cancel</string>
+    <string name="dialog_title_info">Infomation</string>
+    <string name="dialog_title_new">New</string>
+    <string name="dialog_title_move">Move to...</string>
+
+    <!-- menu -->
+    <string name="search">Search</string>
+    <string name="delete">Delete</string>
+    <string name="spread">Spread</string>
+    <string name="move">Move</string>
+    <string name="select_all">Select All</string>
+    <string name="select_mode">Select Mode</string>
+    <string name="setting">Setting</string>
+    <string name="sort">Sort</string>
+    <string name="new_file">New</string>
+    <string name="sort_edit_before">Notes\' edited time, from before</string>
+    <string name="sort_edit_soon">Notes\' edited time, from soon</string>
+    <string name="sort_create_before">Notes\' created time, from before</string>
+    <string name="sort_create_soon">Notes\' created time, from soon</string>
+    <string name="select">Select</string>
+    <string name="info">Info</string>
+    <string name="share">Share</string>
+    <string name="backup">Update</string>
+    <string name="effect">Effect</string>
+    <string name="edit">Edit</string>
+
+
+    <!-- drawer -->
+    <string name="drawer_open">Open drawer navigation</string>
+    <string name="drawer_close">Navigation drawer Close</string>
+    <string name="start_navigation_listener">You must start the NavigationListener in onInit() method of its main activity. Example: this.setNavigationListener(this);</string>
+
+    <!-- setting -->
+    <string name="choose">Choose</string>
+    <string name="color_chooser">Choose Theme</string>
+    <array name="colors">
+        <item>#2196F3</item>
+        <item>#1E88E5</item>
+        <item>#3F51B5</item>
+        <item>#03A9F4</item>
+        <item>#00BCD4</item>
+        <item>#009688</item>
+        <item>#4CAF50</item>
+        <item>#8BC34A</item>
+        <item>#CDDC39</item>
+        <item>#FFEB3B</item>
+        <item>#FFC107</item>
+        <item>#FF9800</item>
+        <item>#FF5722</item>
+        <item>#F44336</item>
+        <item>#E91E63</item>
+        <item>#9C27B0</item>
+        <item>#795548</item>
+        <item>#9E9E9E</item>
+        <item>#607D8B</item>
+        <item>#1F1F1F</item>
+    </array>
+
+    <string-array name="sort">
+        <item>Notes\' created time, from before</item>
+        <item>Notes\' created time, from soon</item>
+        <item>Notes\' edited time, from before</item>
+        <item>Notes\' edited time, from soon</item>
+    </string-array>
+
+    <string name="text_title">Title</string>
+    <string name="text_content">Content</string>
+    <string name="text_cloud">Cloud</string>
+
+    <string name="preference_setting">Preference</string>
+    <string name="theme">Theme</string>
+    <string name="font">Content Font</string>
+    <string name="edit_category">Edit Category</string>
+    <string name="note_style">Note Style</string>
+    <string name="account_setting">Account</string>
+    <string name="camera_setting">Camera</string>
+    <string name="camera_system">System Camera</string>
+    <string name="camera_5_0">Advanced Camera(Android5.0)</string>
+    <string name="picture_size">Picture Size</string>
+    <string name="camera_save">Save Camera Settings</string>
+    <string name="camera_mirror">Front Camera Mirror</string>
+    <string name="camera_fix">Direction of Correction</string>
+    <string name="camera_sound">Shutter Sound</string>
+    <string name="sync_setting">Synchronization</string>
+    <string name="sync_auto">Auto Sync</string>
+    <string name="sync_wifi">Sync When Wifi</string>
+    <string name="about_setting">About</string>
+    <string name="about_app">About App</string>
+    <string name="not_support">Not Support In This Version</string>
+    <string name="camera_front">Front Camera</string>
+    <string name="camera_back">Back Camera</string>
+    <string name="camera_current_picture_size">  (Current)</string>
+    <string name="camera_picture_not_support"> (Not Support Now)</string>
+    <string name="version">Version:</string>
+    <string name="font_local">System</string>
+    <string name="font_roboto">Roboto</string>
+    <string name="general">General</string>
+    <string name="splash">Close Launch Page</string>
+
+
+    <string name="toast_fail">Fail!</string>
+    <string name="rename">Rename</string>
+    <string name="toast_success">Success!</string>
+    <string name="toast_not_support">Not Support Now!</string>
+    <string name="toast_sandbox_fail">Some Photos may be lost!</string>
+
+    <string name="make_photo_notification">Make Photos In the background, please do not exit the Application!</string>
+    <string name="toast_storage">There is not enough Storage!</string>
+    <string name="toast_sdcard">Please insert the SD card!</string>
+    <string name="dialog_crash">We are beating the programmers to fix the BUG!</string>
+    <string name="font_choose">Choose Text Font</string>
+    <string name="loginout">Login Out</string>
+    <string name="unbind_qq">Unbind QQ</string>
+    <string name="unbind_sina">Unbind Sina</string>
+    <string name="bind_qq">Bind QQ</string>
+    <string name="bind_sina">Bind Sina</string>
+    <string name="not_login">Not Login...</string>
+    <string name="personal_page">Personal Page</string>
+    <string name="about_update">Update</string>
+    <string name="about_contact">Contact Us</string>
+    <string name="about_github">Github</string>
+    <string name="about_share">Share to Friends</string>
+    <string name="about_share_content">I am using App called Photos Noter, very easy to use. Download:http://a.app.qq.com/o/simple.jsp?pkgname=com.yydcdut.note</string>
+
+
+</resources>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<us.pinguo.edit.sdk.widget.PGEditableRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                    android:id="@+id/effect_type_item_root"
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/effect_type_image_container"
+        android:layout_width="71dp"
+        android:layout_height="93dp"
+        android:layout_marginLeft="3.5dp"
+        android:layout_marginRight="3.5dp">
+
+        <us.pinguo.edit.sdk.widget.ImageLoaderView
+            android:id="@+id/effect_type_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <us.pinguo.edit.sdk.base.view.EffectTypeMaskView
+            android:duplicateParentState="true"
+            android:id="@+id/effect_type_mask"
+            android:background="@null"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <View
+                android:duplicateParentState="true"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </us.pinguo.edit.sdk.base.view.EffectTypeMaskView>
+
+        <TextView
+            android:id="@+id/effect_type_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"/>
+
+        <ImageView
+            android:visibility="invisible"
+            android:layout_centerInParent="true"
+            android:id="@+id/id_effect_type_camera"
+            android:src="@drawable/icon_effect_select_camera"
+            android:scaleType="fitXY"
+            android:layout_width="@dimen/effect_select_img_size"
+            android:layout_height="@dimen/effect_select_img_size"/>
+
+        <View
+            android:id="@+id/effect_type_color_bar"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_alignParentBottom="true"
+            android:background="#ccccff">
+
+        </View>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/editable_delete"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_width="@dimen/dnd_effect_item_delete_container_width"
+        android:visibility="invisible"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:paddingTop="1dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="1dp"
+            android:paddingBottom="10dp"
+            android:src="@drawable/btn_fx_del_selector"/>
+
+    </RelativeLayout>
+</us.pinguo.edit.sdk.widget.PGEditableRelativeLayout>
+

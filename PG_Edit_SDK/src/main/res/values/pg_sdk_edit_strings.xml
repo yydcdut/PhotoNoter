@@ -1,0 +1,134 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+    <string name="pg_sdk_edit_download">Download</string>
+    <string name="pg_sdk_edit_photo_edit">Edit</string>
+    <string name="pg_sdk_edit_quit">Cancel</string>
+
+    <string name="pg_sdk_edit_left_eye">left eye</string>
+    <string name="pg_sdk_edit_right_eye">right eye</string>
+    <string name="pg_sdk_edit_mouth">mouth</string>
+
+    <string name="pg_sdk_edit_photo_save_my_album">Photo has been saved to my album</string>
+
+
+    <string name="pg_sdk_edit_tint_class">Cast</string>
+    <string name="pg_sdk_edit_tint_green">Green</string>
+    <string name="pg_sdk_edit_tint_red">Magenta</string>
+    <string name="pg_sdk_edit_tint_yellow">Yellow</string>
+
+    <string name="pg_sdk_edit_tint_shadow_color">Shadow</string>
+    <string name="pg_sdk_edit_tint_middle_color">Halftone</string>
+    <string name="pg_sdk_edit_tint_high_light_color">Highlight</string>
+
+    <string name="pg_sdk_edit_face_art_none">Common</string>
+    <string name="pg_sdk_edit_face_art_sweet">Sweet</string>
+    <string name="pg_sdk_edit_face_art_custom_curve">Fresh</string>
+    <string name="pg_sdk_edit_face_art_light_color_sweet">Honey</string>
+    <string name="pg_sdk_edit_face_art_skin_plus_lab">Lip</string>
+    <string name="pg_sdk_edit_face_art_skin_plus_sunshine">Sunshine</string>
+    <string name="pg_sdk_edit_face_art_light_color_lighting">Sunny</string>
+    <string name="pg_sdk_edit_face_art_skin_plus_red_clear">Ruddy</string>
+    <string name="pg_sdk_edit_face_art_light_color_sweet_color_balance">Beautiful</string>
+    <string name="pg_sdk_edit_face_art_light_color_low_green">Elegant</string>
+    <string name="pg_sdk_edit_face_art_light_color_color_blue">Cool</string>
+    <string name="pg_sdk_edit_face_art_skin_plus_bw">Monochrome</string>
+
+    <string name="pg_sdk_edit_face_portrait_skin">Skin</string>
+    <string name="pg_sdk_edit_face_portrait_face_lift">Face</string>
+    <string name="pg_sdk_edit_face_portrait_art">Art</string>
+
+    <string name="pg_sdk_edit_face_portrait_skin_strong">Buffing</string>
+    <string name="pg_sdk_edit_face_portrait_skin_white_level">Whiten</string>
+    <string name="pg_sdk_edit_face_portrait_skin_skin_color">Complexion</string>
+
+    <string name="pg_sdk_edit_face_portrait_face_lift_moulding">Shaping</string>
+    <string name="pg_sdk_edit_face_portrait_face_lift_eye">Eye</string>
+    <string name="pg_sdk_edit_face_portrait_face_lift_edge">Facelift</string>
+
+    <string name="pg_sdk_edit_lighting_class">Shadow</string>
+    <string name="pg_sdk_edit_frame_class">Frame</string>
+    <string name="pg_sdk_edit_color_hue">Hue</string>
+    <string name="pg_sdk_edit_color_light">Brightness</string>
+    <string name="pg_sdk_edit_face_class">Portrait</string>
+    <string name="pg_sdk_edit_face_discriminate">Identify face</string>
+    <string name="pg_sdk_edit_face_feature">Locate facial features</string>
+    <string name="pg_sdk_edit_face_checking">Detecting face...</string>
+    <string name="pg_sdk_edit_face_move_three_feature_point">Drag three points respectively at the left eye, right eye and mouth on the photo</string>
+    <string name="pg_sdk_edit_face_plus_plus_support">(Face++ provides technical support)</string>
+
+    <string name="pg_sdk_edit_lightzone_class">Adjust</string>
+    <string name="pg_sdk_edit_lightzone_hue">Hue</string>
+    <string name="pg_sdk_edit_lightzone_vibrance">Vibrance</string>
+    <string name="pg_sdk_edit_lightzone_vignette_strong">Vignetting</string>
+    <string name="pg_sdk_edit_lightzone_center_strong">Center</string>
+    <string name="pg_sdk_edit_lightzone_enhance">Layer</string>
+    <string name="pg_sdk_edit_lightzone_skin">Portrait</string>
+    <string name="pg_sdk_edit_tool_class">Tools</string>
+    <string name="pg_sdk_edit_hsl_class">Color</string>
+
+    <string name="pg_sdk_edit_hsl_red">Red</string>
+    <string name="pg_sdk_edit_hsl_orange">Orange</string>
+    <string name="pg_sdk_edit_hsl_yellow">Yellow</string>
+    <string name="pg_sdk_edit_hsl_green">Green</string>
+    <string name="pg_sdk_edit_hsl_cyan">Aqua</string>
+    <string name="pg_sdk_edit_hsl_blue">Blue</string>
+    <string name="pg_sdk_edit_hsl_purple">Purple</string>
+    <string name="pg_sdk_edit_hsl_magenta">Magenta</string>
+
+    <string name="pg_sdk_edit">Edit</string>
+
+    <string name="pg_sdk_edit_first_show_fail">Loading picture failed</string>
+    <string name="pg_sdk_edit_effect_scale_size">Due to special effect restrictions, the edited photo will be smaller than the original photo</string>
+
+    <string name="pg_sdk_edit_stop_save">Stop saving</string>
+    <string name="pg_sdk_edit_use">Application</string>
+    <string name="pg_sdk_edit_return">Return</string>
+    <string name="pg_sdk_edit_save">Save</string>
+    <string name="pg_sdk_edit_ok">OK</string>
+    <string name="pg_sdk_edit_tool_crop">Cut</string>
+    <string name="pg_sdk_edit_adjust_class">Adjust</string>
+    <string name="pg_sdk_edit_texture_class">Texture</string>
+    <string name="pg_sdk_edit_tool_rotate">Rotate</string>
+    <string name="pg_sdk_edit_tiltshift_class">Blur</string>
+    <string name="pg_sdk_edit_effect_class">Special</string>
+
+    <string name="pg_sdk_edit_tiltshift_round">Round</string>
+    <string name="pg_sdk_edit_tiltshift_vertical">Vertical</string>
+    <string name="pg_sdk_edit_tiltshift_horizontal">Horizontal</string>
+
+    <string name="pg_sdk_edit_crop_crop618_vertical">V-0.618</string>
+    <string name="pg_sdk_edit_crop_crop618_horizontal">H-0.618</string>
+    <string name="pg_sdk_edit_crop_cropFree">Free</string>
+    <string name="pg_sdk_edit_crop_cropHorizontal">Horizontal</string>
+    <string name="pg_sdk_edit_crop_cropVertical">Vertical</string>
+
+    <string name="pg_sdk_edit_lightzone_sharpen">Definition</string>
+    <string name="pg_sdk_edit_lightzone_exposure">Exposure</string>
+    <string name="pg_sdk_edit_lightzone_contrast">Contrast</string>
+    <string name="pg_sdk_edit_lightzone_highlight">Highlight</string>
+    <string name="pg_sdk_edit_lightzone_shadow">Shadow</string>
+    <string name="pg_sdk_edit_lightzone_saturation">Saturation</string>
+    <string name="pg_sdk_edit_lightzone_temperature">CCT</string>
+
+    <string name="pg_sdk_edit_strength">Intensity</string>
+    <string name="pg_sdk_edit_range">Scope</string>
+    <string name="pg_sdk_edit_about">About</string>
+
+    <string name="pg_sdk_edit_quit_edit">Give up on editing the current pictures?</string>
+    <string name="pg_sdk_edit_replace_effect">Choose special effect</string>
+
+    <string name="pg_sdk_edit_no_free_space">Sorry. Insufficient SD card space.</string>
+    <string name="pg_sdk_edit_no_storage">Sorry. The SD card is not found. Please insert an SD card.</string>
+    <string name="pg_sdk_edit_make_photo_fail">Saving picture failed</string>
+
+    <string name="pg_sdk_edit_org_photo">Click to return to original photo</string>
+    <string name="pg_sdk_edit_about_desc">"Camera360, one of world leading camera apps, creates 200+ amazing photo filters, 10+ creative cameras and powerful photo editing features. Camera360 defines you as a photographying talent."</string>
+
+    <string name="pg_sdk_edit_crop_crop11" translatable="false">1:1</string>
+    <string name="pg_sdk_edit_crop_crop23" translatable="false">2:3</string>
+    <string name="pg_sdk_edit_crop_crop32" translatable="false">3:2</string>
+    <string name="pg_sdk_edit_crop_crop34" translatable="false">3:4</string>
+    <string name="pg_sdk_edit_crop_crop43" translatable="false">4:3</string>
+    <string name="pg_sdk_edit_crop_crop169" translatable="false">16:9</string>
+    <string name="pg_sdk_edit_crop_crop916" translatable="false">9:16</string>
+</resources>

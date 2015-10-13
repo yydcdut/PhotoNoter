@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/white">
+
+    <com.yydcdut.note.camera.view.AutoFitSurfaceView
+        android:id="@+id/sv_camera"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"/>
+
+    <com.yydcdut.note.camera.view.CameraGridView
+        android:id="@+id/grid_camera"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"/>
+
+    <com.yydcdut.note.camera.view.FocusView
+        android:id="@+id/img_focus"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="gone"/>
+
+    <com.yydcdut.note.camera.view.AnimationTextView
+        android:id="@+id/txt_timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="30sp"/>
+
+    <com.yydcdut.note.camera.view.GestureView
+        android:id="@+id/view_gesture"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"/>
+
+    <com.yydcdut.note.camera.view.MenuLayout
+        android:id="@+id/layout_menu"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <com.yydcdut.note.camera.view.MainLayout
+            android:id="@+id/layout_camera_main"
+            android:layout_width="fill_parent"
+            android:layout_height="150dip"
+            android:layout_alignParentBottom="true">
+        </com.yydcdut.note.camera.view.MainLayout>
+
+        <com.yydcdut.note.camera.view.PersonalLayout
+            android:id="@+id/layout_camera_personal"
+            android:layout_width="fill_parent"
+            android:layout_height="150dip"
+            android:layout_alignParentBottom="true">
+        </com.yydcdut.note.camera.view.PersonalLayout>
+
+        <com.yydcdut.note.camera.view.ParamsLayout
+            android:id="@+id/layout_camera_params"
+            android:layout_width="fill_parent"
+            android:layout_height="150dip"
+            android:layout_alignParentBottom="true">
+        </com.yydcdut.note.camera.view.ParamsLayout>
+
+        <View
+            android:id="@+id/view_cover"
+            android:layout_width="fill_parent"
+            android:layout_height="100dip"
+            android:layout_alignParentTop="true"
+            android:background="@android:color/white"
+            android:visibility="gone"/>
+
+        <com.yydcdut.note.camera.view.IsoView
+            android:id="@+id/pb_iso"
+            android:layout_width="wrap_content"
+            android:layout_height="200dip"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/view_cover"
+            android:layout_marginRight="5dip"
+            android:layout_marginTop="100dip"/>
+
+    </com.yydcdut.note.camera.view.MenuLayout>
+
+</RelativeLayout>

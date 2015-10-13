@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/effect_item_root"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="3.5dp"
+        android:layout_marginRight="3.5dp"
+        android:background="#cccccc"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/effect_image_container"
+            android:layout_width="71dp"
+            android:layout_height="71dp">
+
+            <us.pinguo.edit.sdk.widget.ImageLoaderView
+                android:id="@+id/effect_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <RelativeLayout
+                android:visibility="invisible"
+                android:id="@+id/effect_state_parent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/effect_mask"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+                <ImageView
+                    android:layout_centerInParent="true"
+                    android:id="@+id/effect_selected"
+                    android:src="@drawable/icon_effect_select_camera"
+                    android:scaleType="fitXY"
+                    android:layout_width="@dimen/effect_select_img_size"
+                    android:layout_height="@dimen/effect_select_img_size"/>
+            </RelativeLayout>
+
+            <View
+                android:visibility="invisible"
+                android:id="@+id/id_effect_click_state"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:duplicateParentState="true"/>
+
+        </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/effect_text"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:layout_centerInParent="true"
+            android:background="#ff88ff"/>
+
+    </LinearLayout>
+</RelativeLayout>
+

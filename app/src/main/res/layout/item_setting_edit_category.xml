@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:ignore="MissingPrefix">
+
+    <RelativeLayout
+        android:id="@+id/layout_item_edit_category_txt"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/slv_item_height"
+        android:background="@color/white">
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/slv_item_height"
+            android:src="@color/white"/>
+
+        <TextView
+            android:id="@+id/txt_item_edit_category_delete"
+            android:layout_width="@dimen/slv_item_bg_width"
+            android:layout_height="@dimen/slv_item_height"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@color/red_colorPrimary"
+            android:gravity="center"
+            android:lines="1"
+            android:text="删除"
+            android:textColor="@color/txt_white"
+            android:textSize="@dimen/default_textSize"/>
+
+        <TextView
+            android:id="@+id/txt_item_edit_category_rename"
+            android:layout_width="@dimen/slv_item_bg_width"
+            android:layout_height="@dimen/slv_item_height"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/txt_item_edit_category_delete"
+            android:background="@color/gray_colorPrimaryDark"
+            android:gravity="center"
+            android:lines="1"
+            android:text="重命名"
+            android:textColor="@color/txt_white"
+            android:textSize="@dimen/default_textSize"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_item_edit_category"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/slv_item_height">
+
+        <ImageView
+            android:id="@+id/img_item_edit_category_bg"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/slv_item_height"
+            android:src="@color/white"/>
+
+        <ImageView
+            android:id="@+id/img_item_edit_category"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:alpha="0.54"/>
+
+        <TextView
+            android:id="@+id/txt_item_edit_categoty"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/slv_item_height"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_toEndOf="@+id/img_item_edit_category"
+            android:layout_toRightOf="@+id/img_item_edit_category"
+            android:alpha="0.87"
+            android:gravity="center_vertical"
+            android:lines="1"
+            android:maxLength="8"
+            android:textColor="@color/black"
+            android:textSize="@dimen/default_textSize"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

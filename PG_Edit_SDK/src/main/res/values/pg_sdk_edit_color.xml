@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="pg_sdk_edit_dialog_mask">#00000000</color>
+    <color name="pg_sdk_edit_txt_normal">#e8e8e8</color>
+    <color name="pg_sdk_edit_txt_selected">#ffe049</color>
+
+    <color name="pg_sdk_edit_bg">#272829</color>
+
+    <color name="pg_sdk_edit_top_bg">#171819</color>
+    <color name="pg_sdk_edit_line">#212223</color>
+    <color name="pg_sdk_edit_seekbar_txt_selected">#111111</color>
+    <color name="transparent">#00000000</color>
+
+    <color name="menu_item_text_selected">#ffe049</color>
+    <color name="menu_item_text_normal">#ffffff</color>
+    <color name="menu_item_bg">#1a1c1e</color>
+
+    <color name="menu_item_with_value_bg">#0b0b0b</color>
+</resources>

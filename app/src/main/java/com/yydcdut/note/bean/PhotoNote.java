@@ -1,0 +1,192 @@
+package com.yydcdut.note.bean;
+
+import com.yydcdut.note.utils.FilePathUtils;
+
+import org.litepal.crud.DataSupport;
+
+/**
+ * Created by yyd on 15-3-29.
+ */
+public class PhotoNote extends DataSupport implements IObject {
+    /**
+     * ID
+     */
+    private int id;
+    /**
+     * 名字
+     */
+    private String photoName;
+    /**
+     * 照片路径
+     */
+    private long createdPhotoTime;
+    /**
+     * 照片编辑时间
+     */
+    private long editedPhotoTime;
+    /**
+     * 照片宽度
+     */
+    private int width;
+    /**
+     * 照片高度
+     */
+    private int height;
+    /**
+     * 照片是否被选中
+     */
+    private boolean isSelected = false;
+    /**
+     * 标题
+     */
+    private String title;
+    /**
+     * 内容
+     */
+    private String content;
+    /**
+     * 创建笔记时间
+     */
+    private long createdNoteTime;
+    /**
+     * 最后修改笔记时间
+     */
+    private long editedNoteTime;
+
+    /**
+     * Category中的类别
+     */
+    private String categoryLabel;
+
+    public PhotoNote(String photoName, long createdPhotoTime, long editedPhotoTime,
+                     int width, int height, String title, String content, long createdNoteTime,
+                     long editedNoteTime, String categoryLabel) {
+        this.photoName = photoName;
+        this.createdPhotoTime = createdPhotoTime;
+        this.editedPhotoTime = editedPhotoTime;
+        this.width = width;
+        this.height = height;
+        this.title = title;
+        this.content = content;
+        this.createdNoteTime = createdNoteTime;
+        this.editedNoteTime = editedNoteTime;
+        this.categoryLabel = categoryLabel;
+    }
+
+    public String getSmallPhotoPathWithFile() {
+        return "file:/" + FilePathUtils.getSmallPath() + photoName;
+    }
+
+    public String getBigPhotoPathWithFile() {
+        return "file:/" + FilePathUtils.getPath() + photoName;
+    }
+
+    public String getSmallPhotoPathWithoutFile() {
+        return FilePathUtils.getSmallPath() + photoName;
+    }
+
+    public String getBigPhotoPathWithoutFile() {
+        return FilePathUtils.getPath() + photoName;
+    }
+
+    public String getPhotoName() {
+        return photoName;
+    }
+
+    public void setPhotoName(String photoName) {
+        this.photoName = photoName;
+    }
+
+    public long getCreatedPhotoTime() {
+        return createdPhotoTime;
+    }
+
+    public void setCreatedPhotoTime(long createdPhotoTime) {
+        this.createdPhotoTime = createdPhotoTime;
+    }
+
+    public long getEditedPhotoTime() {
+        return editedPhotoTime;
+    }
+
+    public void setEditedPhotoTime(long editedPhotoTime) {
+        this.editedPhotoTime = editedPhotoTime;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean isSelected) {
+        this.isSelected = isSelected;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public long getCreatedNoteTime() {
+        return createdNoteTime;
+    }
+
+    public long getEditedNoteTime() {
+        return editedNoteTime;
+    }
+
+    public void setEditedNoteTime(long editedNoteTime) {
+        this.editedNoteTime = editedNoteTime;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public void setIsSelected(boolean isSelected) {
+        this.isSelected = isSelected;
+    }
+
+    public void setCreatedNoteTime(long createdNoteTime) {
+        this.createdNoteTime = createdNoteTime;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getCategoryLabel() {
+        return categoryLabel;
+    }
+
+    public void setCategoryLabel(String categoryLabel) {
+        this.categoryLabel = categoryLabel;
+    }
+
+}

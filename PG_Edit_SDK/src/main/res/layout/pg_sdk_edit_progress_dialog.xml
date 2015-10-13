@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:layout_centerInParent="true"
+                android:background="#00000000"
+                android:visibility="gone"
+                android:gravity="center">
+
+    <RelativeLayout
+        android:layout_width="49dp"
+        android:layout_height="49dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_centerInParent="true"
+        android:background="@drawable/progress_bg"
+        android:gravity="center">
+
+        <ProgressBar
+            android:indeterminateDrawable="@drawable/progress"
+            android:layout_centerInParent="true"
+            android:layout_width="29dp"
+            android:layout_height="29dp"></ProgressBar>
+    </RelativeLayout>
+
+</RelativeLayout>

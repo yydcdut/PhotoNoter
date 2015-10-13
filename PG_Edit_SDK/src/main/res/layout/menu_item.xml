@@ -1,0 +1,75 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center">
+
+    <RelativeLayout
+        android:id="@+id/image_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="13dp"
+        android:layout_marginBottom="13dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:orientation="vertical"
+        android:layout_centerInParent="true">
+
+        <us.pinguo.android.effect.group.sdk.view.SquareImageLoaderView
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:scaleType="centerCrop"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/icon"/>
+
+        <TextView
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:id="@+id/name"
+            android:textColor="@drawable/menu_item_text"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/icon"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="name"
+            android:textSize="@dimen/menu_item_text_size"/>
+
+        <ImageView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_alignLeft="@id/icon"
+            android:layout_alignRight="@id/icon"
+            android:layout_alignTop="@id/icon"
+            android:layout_alignBottom="@id/icon"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone"
+            android:id="@+id/effect_scroll"/>
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/delete_view"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:visibility="gone"
+        android:src="@drawable/menu_item_btn_delete"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true">
+    </ImageView>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:visibility="gone"
+        android:background="@color/menu_item_bg"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginRight="2dp"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/down_line"
+        android:background="#4b5258"
+        android:visibility="gone"/>
+</RelativeLayout>

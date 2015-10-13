@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:reveal="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <ImageView
+                android:id="@+id/img_detail_bg"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"/>
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/vp_detail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </android.support.v4.view.ViewPager>
+
+            <include layout="@layout/layout_toolbar"/>
+        </RelativeLayout>
+    </FrameLayout>
+
+    <com.yydcdut.note.view.RevealView
+        android:id="@+id/reveal"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        reveal:own_touch="false">
+
+        <com.yydcdut.note.view.RevealColorView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+    </com.yydcdut.note.view.RevealView>
+
+</RelativeLayout>

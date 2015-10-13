@@ -1,0 +1,115 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+    <!--翻译start-->
+    <string name="pg_sdk_edit_download">免費下載</string>
+    <string name="pg_sdk_edit_left_eye">左眼</string>
+    <string name="pg_sdk_edit_right_eye">右眼</string>
+    <string name="pg_sdk_edit_mouth">嘴巴</string>
+
+    <string name="pg_sdk_edit_photo_edit">編輯</string>
+    <string name="pg_sdk_edit_quit">取消</string>
+    <string name="pg_sdk_edit_photo_save_my_album">照片已保存到我的相冊中</string>
+    <string name="pg_sdk_edit_tint_class">偏色</string>
+    <string name="pg_sdk_edit_tint_green">青色</string>
+    <string name="pg_sdk_edit_tint_red">洋紅</string>
+    <string name="pg_sdk_edit_tint_yellow">黃色</string>
+    <string name="pg_sdk_edit_tint_shadow_color">陰影</string>
+    <string name="pg_sdk_edit_tint_middle_color">中間調</string>
+    <string name="pg_sdk_edit_tint_high_light_color">高光</string>
+    <string name="pg_sdk_edit_face_art_none">無特效</string>
+    <string name="pg_sdk_edit_face_art_sweet">甜美可人</string>
+    <string name="pg_sdk_edit_face_art_custom_curve">清新麗人</string>
+    <string name="pg_sdk_edit_face_art_light_color_sweet">甜蜜</string>
+    <string name="pg_sdk_edit_face_art_skin_plus_lab">香艷紅唇</string>
+    <string name="pg_sdk_edit_face_art_skin_plus_sunshine">暖暖陽光</string>
+    <string name="pg_sdk_edit_face_art_light_color_lighting">陽光燦爛</string>
+    <string name="pg_sdk_edit_face_art_skin_plus_red_clear">紅潤</string>
+    <string name="pg_sdk_edit_face_art_light_color_sweet_color_balance">唯美</string>
+    <string name="pg_sdk_edit_face_art_light_color_low_green">淡雅</string>
+    <string name="pg_sdk_edit_face_art_light_color_color_blue">清涼</string>
+    <string name="pg_sdk_edit_face_art_skin_plus_bw">黑白</string>
+    <string name="pg_sdk_edit_face_portrait_skin">美膚</string>
+    <string name="pg_sdk_edit_face_portrait_face_lift">塑顏</string>
+    <string name="pg_sdk_edit_face_portrait_art">藝術</string>
+    <string name="pg_sdk_edit_face_portrait_skin_strong">磨皮</string>
+    <string name="pg_sdk_edit_face_portrait_skin_white_level">美白</string>
+    <string name="pg_sdk_edit_face_portrait_skin_skin_color">膚色</string>
+    <string name="pg_sdk_edit_face_portrait_face_lift_moulding">塑形</string>
+    <string name="pg_sdk_edit_face_portrait_face_lift_eye">大眼</string>
+    <string name="pg_sdk_edit_face_portrait_face_lift_edge">瘦臉</string>
+    <string name="pg_sdk_edit_lighting_class">光影</string>
+    <string name="pg_sdk_edit_frame_class">邊框</string>
+    <string name="pg_sdk_edit_color_hue">色相</string>
+    <string name="pg_sdk_edit_color_light">明亮度</string>
+    <string name="pg_sdk_edit_face_class">人像</string>
+    <string name="pg_sdk_edit_face_discriminate">面部識別</string>
+    <string name="pg_sdk_edit_face_feature">面部特徵定位</string>
+    <string name="pg_sdk_edit_face_checking">人臉檢測中 ...</string>
+    <string name="pg_sdk_edit_face_move_three_feature_point">請拖動照片上的三個特徵點分別定位於左眼、右眼和嘴巴</string>
+    <string name="pg_sdk_edit_face_plus_plus_support">( 由 Face++ 提供技術支持 )</string>
+    <string name="pg_sdk_edit_lightzone_class">調整</string>
+    <string name="pg_sdk_edit_lightzone_hue">色調</string>
+    <string name="pg_sdk_edit_lightzone_vibrance">鮮豔度</string>
+    <string name="pg_sdk_edit_lightzone_vignette_strong">暗角</string>
+    <string name="pg_sdk_edit_lightzone_center_strong">中心亮</string>
+    <string name="pg_sdk_edit_lightzone_enhance">層次調節</string>
+    <string name="pg_sdk_edit_lightzone_skin">人像</string>
+    <string name="pg_sdk_edit_tool_class">工具箱</string>
+    <string name="pg_sdk_edit_hsl_class">色彩</string>
+    <string name="pg_sdk_edit_hsl_red">紅</string>
+    <string name="pg_sdk_edit_hsl_orange">橙</string>
+    <string name="pg_sdk_edit_hsl_yellow">黃</string>
+    <string name="pg_sdk_edit_hsl_green">綠</string>
+    <string name="pg_sdk_edit_hsl_cyan">淺綠</string>
+    <string name="pg_sdk_edit_hsl_blue">藍</string>
+    <string name="pg_sdk_edit_hsl_purple">紫</string>
+    <string name="pg_sdk_edit_hsl_magenta">洋紅</string>
+    <!--翻译end-->
+    <string name="pg_sdk_edit">編輯</string>
+    <string name="pg_sdk_edit_first_show_fail">圖片加載失敗</string>
+    <string name="pg_sdk_edit_effect_scale_size">由於特效製作的限制，你編輯後的特效照片將小於你的原片尺寸</string>
+
+    <string name="pg_sdk_edit_stop_save">停止保存</string>
+    <string name="pg_sdk_edit_use">應用</string>
+    <string name="pg_sdk_edit_return">返回</string>
+    <string name="pg_sdk_edit_save">保存</string>
+    <string name="pg_sdk_edit_ok">確定</string>
+    <string name="pg_sdk_edit_tool_crop">裁剪</string>
+    <string name="pg_sdk_edit_adjust_class">調整</string>
+    <string name="pg_sdk_edit_texture_class">紋理</string>
+    <string name="pg_sdk_edit_tool_rotate">旋轉</string>
+    <string name="pg_sdk_edit_tiltshift_class">虛化</string>
+    <string name="pg_sdk_edit_effect_class">特效</string>
+
+    <string name="pg_sdk_edit_tiltshift_round">圓形虛化</string>
+    <string name="pg_sdk_edit_tiltshift_vertical">縱向虛化</string>
+    <string name="pg_sdk_edit_tiltshift_horizontal">橫向虛化</string>
+
+    <string name="pg_sdk_edit_crop_crop618_vertical">豎黃金</string>
+    <string name="pg_sdk_edit_crop_crop618_horizontal">橫黃金</string>
+    <string name="pg_sdk_edit_crop_cropFree">自由</string>
+    <string name="pg_sdk_edit_crop_cropHorizontal">橫</string>
+    <string name="pg_sdk_edit_crop_cropVertical">豎</string>
+    <string name="pg_sdk_edit_about">關於</string>
+
+    <string name="pg_sdk_edit_lightzone_sharpen">清晰度</string>
+    <string name="pg_sdk_edit_lightzone_exposure">曝光</string>
+    <string name="pg_sdk_edit_lightzone_contrast">對比度</string>
+    <string name="pg_sdk_edit_lightzone_highlight">高光</string>
+    <string name="pg_sdk_edit_lightzone_shadow">陰影</string>
+    <string name="pg_sdk_edit_lightzone_saturation">飽和度</string>
+    <string name="pg_sdk_edit_lightzone_temperature">色溫</string>
+
+    <string name="pg_sdk_edit_strength">強度</string>
+    <string name="pg_sdk_edit_range">範圍</string>
+
+    <string name="pg_sdk_edit_quit_edit">是否放棄當前編輯的圖片？</string>
+    <string name="pg_sdk_edit_replace_effect">特效選擇</string>
+
+    <string name="pg_sdk_edit_no_free_space">抱歉， SD 卡空間不足</string>
+    <string name="pg_sdk_edit_no_storage">抱歉，未檢測到 SD 卡，請插入 SD 卡以繼續使用</string>
+    <string name="pg_sdk_edit_make_photo_fail">保存圖片失敗</string>
+
+    <string name="pg_sdk_edit_org_photo">點此可回到原始照片</string>
+    <string name="pg_sdk_edit_about_desc">Camera360是一款風靡全球的手機拍照應用，超過200款免費頂級特效、十餘款創新相機模式及強大的編輯功能，瞬間讓你變身攝影達人。</string>
+</resources>

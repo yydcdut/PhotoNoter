@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:card_view="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@android:color/white"
+              android:orientation="vertical">
+
+    <include
+        layout="@layout/layout_toolbar"/>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+
+        <com.yydcdut.note.view.RoundedImageView
+            android:id="@+id/img_user"
+            android:layout_width="96dip"
+            android:layout_height="96dip"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_no_user"/>
+
+        <TextView
+            android:id="@+id/txt_name"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_48dip"
+            android:gravity="center"
+            android:textColor="@color/txt_gray"
+            android:textSize="@dimen/txt_big"/>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_48dip"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="200dip"
+                android:layout_height="1dip"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/gray_colorPrimaryDark"/>
+
+            <TextView
+                android:id="@+id/txt_qq"
+                android:layout_width="200dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="2dip"
+                android:gravity="center"
+                android:padding="@dimen/activity_horizontal_margin"
+                android:textColor="@color/txt_blue"
+                android:textSize="@dimen/txt_big"/>
+
+            <View
+                android:layout_width="200dip"
+                android:layout_height="1dip"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/gray_colorPrimaryDark"/>
+
+            <TextView
+                android:id="@+id/txt_sina"
+                android:layout_width="200dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="2dip"
+                android:gravity="center"
+                android:padding="@dimen/activity_horizontal_margin"
+                android:textColor="@color/txt_blue"
+                android:textSize="@dimen/txt_big"/>
+
+            <View
+                android:layout_width="200dip"
+                android:layout_height="1dip"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/gray_colorPrimaryDark"/>
+
+        </LinearLayout>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="155dip"
+            android:layout_height="45dip"
+            android:layout_marginTop="@dimen/dimen_48dip"
+            card_view:cardCornerRadius="3dip"
+            card_view:cardElevation="5dip"
+            card_view:cardUseCompatPadding="true">
+
+            <com.yydcdut.note.view.ripple.MaterialRippleLayout
+                android:layout_width="155dip"
+                android:layout_height="45dip"
+                app:mrl_rippleAlpha="0.2"
+                app:mrl_rippleColor="#585858"
+                app:mrl_rippleHover="true"
+                app:mrl_rippleOverlay="false">
+
+                <Button
+                    android:id="@+id/btn_loginout"
+                    android:layout_width="150dip"
+                    android:layout_height="40dip"
+                    android:background="@android:color/transparent"
+                    android:gravity="center"
+                    android:text="@string/loginout"
+                    android:textColor="@color/txt_red_light_coral"
+                    android:textSize="@dimen/txt_big"/>
+            </com.yydcdut.note.view.ripple.MaterialRippleLayout>
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:reveal="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?attr/colorPrimary">
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <RelativeLayout
+                android:id="@+id/layout_edit_title"
+                android:layout_width="fill_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_below="@+id/toolbar_edit"
+                android:background="?attr/colorPrimary"
+                android:minHeight="?attr/actionBarSize">
+
+                <EditText
+                    android:id="@+id/et_edit_title"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin_small"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:hint="@string/text_title"
+                    android:textColor="@color/white"/>
+
+            </RelativeLayout>
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar_edit"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                android:minHeight="?attr/actionBarSize">
+
+                <RelativeLayout
+                    android:id="@+id/layout_toolbar"
+                    android:layout_width="fill_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:minHeight="?attr/actionBarSize">
+                </RelativeLayout>
+
+            </android.support.v7.widget.Toolbar>
+
+            <EditText
+                android:id="@+id/et_edit_content"
+                style="@null"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/layout_edit_title"
+                android:background="@android:color/white"
+                android:gravity="left|top"
+                android:hint="@string/text_content"
+                android:padding="@dimen/activity_margin_small"
+                android:textColor="@color/black"
+                android:textSize="@dimen/txt_mid"/>
+
+            <com.yydcdut.note.view.fab.FloatingActionButton
+                android:id="@+id/fab_finish"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_margin="@dimen/activity_margin"
+                app:fab_colorNormal="?attr/colorPrimary"
+                app:fab_colorPressed="?attr/colorPrimaryDark"
+                app:fab_icon="@drawable/ic_check_white_24dp"/>
+        </RelativeLayout>
+    </FrameLayout>
+
+    <com.yydcdut.note.view.RevealView
+        android:id="@+id/reveal"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        reveal:own_touch="false">
+
+        <com.yydcdut.note.view.RevealColorView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+    </com.yydcdut.note.view.RevealView>
+
+
+</RelativeLayout>

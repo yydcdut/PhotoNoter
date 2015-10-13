@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <!--<ImageView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:scaleType="centerCrop"-->
+    <!--android:src="@drawable/ic_bg_footer"/>-->
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="14.0dip"
+            android:layout_marginLeft="17.0dip"
+            android:layout_marginRight="17.0dip"
+            android:layout_marginTop="18.0dip"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="0.0dip"
+                android:layout_height="1dip"
+                android:layout_marginTop="15.0dip"
+                android:layout_weight="1.0"
+                android:background="@android:color/black"
+                />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10.0dip"
+                android:layout_marginRight="10.0dip">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_cloud"/>
+
+                <ImageView
+                    android:id="@+id/img_list_footer_cloud"
+                    android:layout_width="20dip"
+                    android:layout_height="20dip"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="3dip"
+                    android:src="@drawable/ic_sync_grey600_24dp"/>
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:layout_width="0.0dip"
+                android:layout_height="1dip"
+                android:layout_marginTop="15.0dip"
+                android:layout_weight="1.0"
+                android:background="@android:color/black"
+                />
+        </LinearLayout>
+
+
+        <ProgressBar
+            android:id="@+id/pb_list_footer"
+            style="@style/StorageProgressBar"
+            android:layout_width="fill_parent"
+            android:layout_height="10.0dip"
+            android:layout_marginLeft="17.0dip"
+            android:layout_marginRight="17.0dip"
+            android:max="100"
+            android:progress="20"/>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20.0dip"
+            android:layout_marginLeft="17.0dip"
+            android:layout_marginRight="17.0dip"
+            android:layout_marginTop="10.0dip"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="云空间"
+                android:textColor="@android:color/black"
+                android:textSize="14.0sp"/>
+
+            <TextView
+                android:id="@+id/txt_list_footer_use"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="0/50M"
+                android:textColor="@android:color/black"
+                android:textSize="14.0sp"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+</RelativeLayout>

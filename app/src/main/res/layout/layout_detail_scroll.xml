@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.yydcdut.note.view.scroll.ObservableScrollView
+    android:id="@+id/scroll_detail"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:overScrollMode="never"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <View
+            android:id="@+id/view_trans"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/flexible_space_image_height"
+            android:background="@android:color/transparent"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:orientation="vertical">
+
+            <com.yydcdut.note.view.FontTextView
+                android:id="@+id/txt_detail_content_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:singleLine="true"
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="@dimen/txt_large"
+                />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:background="@color/divider_gray"/>
+
+            <com.yydcdut.note.view.FontTextView
+                android:id="@+id/txt_detail_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:text=""
+                android:textColor="@color/txt_gray"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:background="@color/divider_gray"/>
+
+            <RelativeLayout
+                android:id="@+id/layout_detail_create"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/txt_detail_create_time"
+                    android:text="Created:"
+                    android:textColor="@color/txt_gray"
+                    android:textSize="@dimen/txt_small"/>
+
+                <TextView
+                    android:id="@+id/txt_detail_create_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:text="三月 26. 2015 at 12:35 上午"
+                    android:textColor="@color/txt_gray"
+                    android:textSize="@dimen/txt_small"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layout_detail_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/txt_detail_edit_time"
+                    android:text="Edited:"
+                    android:textColor="@color/txt_gray"
+                    android:textSize="@dimen/txt_small"/>
+
+                <TextView
+                    android:id="@+id/txt_detail_edit_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:text="三月 26. 2015 at 12:35 上午"
+                    android:textColor="@color/txt_gray"
+                    android:textSize="@dimen/txt_small"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</com.yydcdut.note.view.scroll.ObservableScrollView>

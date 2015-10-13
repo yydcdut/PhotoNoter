@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/ic_camera_shot" android:state_pressed="false"/>
+    <item android:drawable="@drawable/ic_camera_shot_press" android:state_pressed="true"/>
+</selector>
+
+    <!--<?xml version="1.0" encoding="utf-8"?>-->
+    <!--<selector xmlns:android="http://schemas.android.com/apk/res/android">-->
+    <!--<item android:drawable="@drawable/btn_opencam" android:state_pressed="false"/>-->
+    <!--<item android:drawable="@drawable/btn_opencam_click" android:state_pressed="true"/>-->
+    <!--</selector>-->

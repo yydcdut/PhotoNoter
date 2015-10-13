@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="fontPath" format="string"/>
+
+    <attr name="statusBarBackground1" format="color"/>
+
+    <declare-styleable name="ScrimInsetsView">
+        <attr name="insetForeground1" format="reference|color"/>
+    </declare-styleable>
+
+    <declare-styleable name="ThemeColor">
+        <attr name="color_width" format="dimension"/>
+        <attr name="color_height" format="dimension"/>
+        <attr name="color_color" format="color"/>
+    </declare-styleable>
+
+    <declare-styleable name="reveal_touch">
+        <attr name="own_touch" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="CircleProgressBar">
+        <attr name="mlpb_inner_radius" format="dimension"/>
+        <attr name="mlpb_background_color" format="color"/>
+        <attr name="mlpb_progress_color" format="color"/>
+        <attr name="mlpb_progress_stoke_width" format="dimension"/>
+        <attr name="mlpb_show_arrow" format="boolean"/>
+        <attr name="mlpb_enable_circle_background" format="boolean"/>
+        <attr name="mlpb_arrow_width" format="dimension"/>
+        <attr name="mlpb_arrow_height" format="dimension"/>
+
+        <attr name="mlpb_progress" format="integer"/>
+        <attr name="mlpb_max" format="integer"/>
+
+
+        <attr name="mlpb_progress_text_size" format="dimension"/>
+        <attr name="mlpb_progress_text_color" format="color"/>
+
+        <!--<attr name="mlpb_progress_text_offset" format="dimension"/>-->
+
+        <attr name="mlpb_progress_text_visibility" format="enum">
+            <enum name="visible" value="0"/>
+            <enum name="invisible" value="1"/>
+        </attr>
+    </declare-styleable>
+
+
+    <!-- fab -->
+    <declare-styleable name="FloatingActionButton">
+        <attr name="fab_colorPressed" format="color"/>
+        <attr name="fab_colorDisabled" format="color"/>
+        <attr name="fab_colorNormal" format="color"/>
+        <attr name="fab_icon" format="reference"/>
+        <attr name="fab_size" format="enum">
+            <enum name="normal" value="0"/>
+            <enum name="mini" value="1"/>
+        </attr>
+        <attr name="fab_title" format="string"/>
+        <attr name="fab_stroke_visible" format="boolean"/>
+    </declare-styleable>
+    <declare-styleable name="AddFloatingActionButton">
+        <attr name="fab_plusIconColor" format="color"/>
+    </declare-styleable>
+    <declare-styleable name="FloatingActionsMenu">
+        <attr name="fab_addButtonColorPressed" format="color"/>
+        <attr name="fab_addButtonColorNormal" format="color"/>
+        <attr name="fab_addButtonSize" format="enum">
+            <enum name="normal" value="0"/>
+            <enum name="mini" value="1"/>
+        </attr>
+        <attr name="fab_addButtonPlusIconColor" format="color"/>
+        <attr name="fab_addButtonStrokeVisible" format="boolean"/>
+        <attr name="fab_labelStyle" format="reference"/>
+        <attr name="fab_labelsPosition" format="enum">
+            <enum name="left" value="0"/>
+            <enum name="right" value="1"/>
+        </attr>
+        <attr name="fab_expandDirection" format="enum">
+            <enum name="up" value="0"/>
+            <enum name="down" value="1"/>
+            <enum name="left" value="2"/>
+            <enum name="right" value="3"/>
+        </attr>
+    </declare-styleable>
+
+    <!--  ripple  -->
+    <declare-styleable name="MaterialRippleLayout">
+        <attr name="mrl_rippleColor" format="color" localization="suggested"/>
+        <attr name="mrl_rippleDimension" format="dimension" localization="suggested"/>
+        <attr name="mrl_rippleOverlay" format="boolean" localization="suggested"/>
+        <attr name="mrl_rippleAlpha" format="float" localization="suggested"/>
+        <attr name="mrl_rippleDuration" format="integer" localization="suggested"/>
+        <attr name="mrl_rippleFadeDuration" format="integer" localization="suggested"/>
+        <attr name="mrl_rippleHover" format="boolean" localization="suggested"/>
+        <attr name="mrl_rippleBackground" format="color" localization="suggested"/>
+        <attr name="mrl_rippleDelayClick" format="boolean" localization="suggested"/>
+        <attr name="mrl_ripplePersistent" format="boolean" localization="suggested"/>
+        <attr name="mrl_rippleInAdapter" format="boolean" localization="suggested"/>
+        <attr name="mrl_rippleRoundedCorners" format="dimension" localization="suggested"/>
+    </declare-styleable>
+
+    <declare-styleable name="ActionView">
+        <attr name="av_color" format="color"/>
+        <attr name="av_action" format="enum">
+            <enum name="drawer" value="0"/>
+            <enum name="back" value="1"/>
+            <enum name="close" value="2"/>
+            <enum name="plus" value="3"/>
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="font_textview">
+        <attr name="fixed" format="boolean"/>
+    </declare-styleable>
+</resources>

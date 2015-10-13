@@ -1,0 +1,350 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/root"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/pg_sdk_edit_bg">
+
+    <ImageView
+        android:id="@+id/pg_sdk_edit_banner"
+        android:layout_width="95dp"
+        android:layout_height="20dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/pg_sdk_edit_banner">
+    </ImageView>
+
+    <RelativeLayout
+        android:id="@+id/first_top"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/pg_sdk_edit_top_height"
+        android:visibility="invisible"
+        android:background="@color/pg_sdk_edit_top_bg">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/pg_sdk_edit_photo_edit"
+            android:textColor="@color/pg_sdk_edit_txt_normal"
+            android:textSize="21sp"/>
+
+        <TextView
+            android:id="@+id/quit"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="18dp"
+            android:gravity="center"
+            android:text="@string/pg_sdk_edit_quit"
+            android:textColor="@drawable/pg_sdk_edit_txt"
+            android:textSize="18sp"/>
+
+
+        <TextView
+            android:id="@+id/save_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="18dp"
+            android:gravity="center"
+            android:text="@string/pg_sdk_edit_save"
+            android:textColor="@drawable/pg_sdk_edit_txt"
+            android:textSize="18sp"/>
+
+
+    </RelativeLayout>
+
+
+    <us.pinguo.edit.sdk.base.widget.LinearHoriScrollView
+        android:id="@+id/first_menus"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/pg_sdk_edit_bottom_height"
+        android:background="@color/pg_sdk_edit_top_bg"
+        android:layout_alignParentBottom="true"
+        android:scrollbars="none"/>
+
+
+    <RelativeLayout
+        android:id="@+id/second_menus_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/pg_sdk_edit_second_bottom_height"
+        android:layout_alignParentBottom="true"
+
+        android:visibility="invisible">
+
+
+        <RelativeLayout
+            android:id="@+id/second_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/pg_sdk_edit_second_bottom_down_height"
+            android:layout_alignParentBottom="true"
+            android:background="#111213">
+
+            <TextView
+                android:id="@+id/second_bottom_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textColor="@color/pg_sdk_edit_txt_normal"
+                android:textSize="18sp"/>
+
+            <ImageButton
+                android:id="@+id/back_main"
+                android:layout_width="@dimen/pg_sdk_edit_second_bottom_item_size"
+                android:layout_height="@dimen/pg_sdk_edit_second_bottom_item_size"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="18dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/pg_sdk_edit_back"/>
+
+            <ImageButton
+                android:id="@+id/save_effect"
+                android:layout_width="@dimen/pg_sdk_edit_second_bottom_item_size"
+                android:layout_height="@dimen/pg_sdk_edit_second_bottom_item_size"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="18dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/pg_sdk_edit_save"/>
+
+            <!-- 人像界面使用 -->
+            <TextView
+                android:id="@+id/face_confirm"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="18dp"
+                android:gravity="center"
+                android:text="@string/pg_sdk_edit_ok"
+                android:textColor="@color/pg_sdk_edit_txt_normal"
+                android:textSize="16sp"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/face_cancel"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="18dp"
+                android:gravity="center"
+                android:text="@string/pg_sdk_edit_quit"
+                android:textColor="@color/pg_sdk_edit_txt_normal"
+                android:textSize="16sp"
+                android:visibility="gone"/>
+
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/second_bottom_top_color"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/second_bottom"
+            android:background="@color/pg_sdk_edit_top_bg"/>
+
+
+        <us.pinguo.edit.sdk.base.widget.LinearHoriScrollView
+            android:id="@+id/second_menus"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/second_bottom"
+            android:scrollbars="none"/>
+
+        <us.pinguo.edit.sdk.base.widget.LinearHoriScrollView
+            android:id="@+id/third_menus"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/second_bottom"
+            android:scrollbars="none"
+            android:visibility="invisible"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/second_bottom">
+
+            <ImageView
+                android:id="@+id/effect_back"
+                android:layout_width="@dimen/pg_sdk_edit_effect_back_size"
+                android:layout_height="@dimen/pg_sdk_edit_effect_back_size"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="7.5dp"
+                android:src="@drawable/pg_sdk_edit_effect_back"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/move_tips_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="@string/pg_sdk_edit_face_move_three_feature_point"
+                android:textColor="@color/pg_sdk_edit_txt_normal"
+                android:textSize="14sp"
+                android:visibility="gone"/>
+
+            <LinearLayout
+                android:id="@+id/face_check"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pg_sdk_edit_face_checking"
+                    android:textColor="@color/pg_sdk_edit_txt_normal"
+                    android:textSize="21sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="9dp"
+                    android:text="@string/pg_sdk_edit_face_plus_plus_support"
+                    android:textColor="#575859"
+                    android:textSize="12sp"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/center_layout_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/pg_sdk_edit_bottom_height"
+        android:paddingTop="@dimen/pg_sdk_edit_top_height">
+
+        <RelativeLayout
+            android:id="@+id/center_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <us.pinguo.edit.sdk.view.PGEditCompareGLSurfaceView
+                android:id="@+id/compare_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/pg_sdk_edit_center_margin_bottom"
+                android:layout_marginLeft="@dimen/pg_sdk_edit_center_margin_left_right"
+                android:layout_marginRight="@dimen/pg_sdk_edit_center_margin_left_right"
+                android:layout_marginTop="@dimen/pg_sdk_edit_center_margin_top"/>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <us.pinguo.edit.sdk.base.view.PGEditAutoHideTextView
+                    android:id="@+id/name_auto_hide_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/pg_sdk_edit_txt_normal"
+                    android:textSize="22sp"
+                    android:visibility="gone"/>
+
+                <us.pinguo.edit.sdk.base.view.PGEditAutoHideTextView
+                    android:id="@+id/value_auto_hide_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/pg_sdk_edit_txt_normal"
+                    android:textSize="56sp"
+                    android:visibility="gone"/>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/step_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="25dp">
+
+                <ImageButton
+                    android:id="@+id/last_step"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_marginRight="25dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/pg_sdk_edit_last"/>
+
+                <ImageButton
+                    android:id="@+id/next_step"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_marginLeft="25dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/pg_sdk_edit_next"/>
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+    </LinearLayout>
+
+    <us.pinguo.edit.sdk.view.PGEditFaceThirdBottomLayout
+        android:id="@+id/face_third_buttom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"/>
+
+
+    <us.pinguo.edit.sdk.view.PGEditSeekbarLayout
+        android:id="@+id/seekbar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"/>
+
+    <us.pinguo.edit.sdk.view.PGEditThreeSeekbarLayout
+        android:id="@+id/three_seekbar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"/>
+
+    <us.pinguo.edit.sdk.view.PGEditLightingSeekbarLayout
+        android:id="@+id/lighting_seekbar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"/>
+
+    <us.pinguo.edit.sdk.view.PGEditTiltShiftSeekBarLayout
+        android:id="@+id/tiltshift_seekbar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/show_point_iv"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_above="@+id/second_menus_layout"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:src="@drawable/pg_sdk_edit_face_show_point"
+        android:visibility="gone"/>
+
+    <include
+        android:id="@+id/progress_dialog"
+        layout="@layout/pg_sdk_edit_progress_dialog"/>
+
+</RelativeLayout>

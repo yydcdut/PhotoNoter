@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/layout_personal"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="150dip"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dip"
+        android:orientation="horizontal"
+        android:weightSum="4">
+
+        <RelativeLayout
+            android:id="@+id/btn_ratio_1_1"
+            android:layout_width="0dip"
+            android:layout_height="120dip"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/img_ratio_1_1"
+                android:layout_width="36dip"
+                android:layout_height="36dip"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_camera_ratio_1_1_unchecked"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/btn_ratio_4_3"
+            android:layout_width="0dip"
+            android:layout_height="120dip"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/img_ratio_4_3"
+                android:layout_width="36dip"
+                android:layout_height="36dip"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_camera_ratio_4_3_checked"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/btn_ratio_full"
+            android:layout_width="0dip"
+            android:layout_height="120dip"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/img_ratio_full"
+                android:layout_width="36dip"
+                android:layout_height="36dip"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_camera_ratio_full_unchecked"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/btn_timer"
+            android:layout_width="0dip"
+            android:layout_height="120dip"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/img_timer"
+                android:layout_width="36dip"
+                android:layout_height="36dip"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_delay_0"/>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/btn_down"
+        android:layout_width="fill_parent"
+        android:layout_height="30dip"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:background="@android:color/darker_gray"/>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="19dip">
+
+            <ImageView
+                android:layout_width="29dip"
+                android:layout_height="29dip"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_back_bottom"/>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
+

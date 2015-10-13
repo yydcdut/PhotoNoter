@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="254dip"
+    android:layout_marginBottom="@dimen/activity_vertical_margin_small"
+    android:orientation="vertical">
+
+    <!-- 这个有54dip -->
+    <TextView
+        android:id="@+id/txt_setting_title"
+        android:layout_width="fill_parent"
+        android:layout_height="30dip"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_marginLeft="@dimen/setting_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin_small"
+        android:gravity="center_vertical"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="@dimen/txt_mid"/>
+
+    <com.yydcdut.note.view.ripple.MaterialRippleLayout
+        android:id="@+id/layout_ripple_theme"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/setting_height"
+        app:mrl_rippleAlpha="0.2"
+        app:mrl_rippleColor="#585858"
+        app:mrl_rippleHover="true"
+        app:mrl_rippleOverlay="false">
+
+        <include
+            android:id="@+id/layout_setting_theme"
+            layout="@layout/item_setting"/>
+    </com.yydcdut.note.view.ripple.MaterialRippleLayout>
+
+    <com.yydcdut.note.view.ripple.MaterialRippleLayout
+        android:id="@+id/layout_ripple_sort"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/setting_height"
+        app:mrl_rippleAlpha="0.2"
+        app:mrl_rippleColor="#585858"
+        app:mrl_rippleHover="true"
+        app:mrl_rippleOverlay="false">
+
+        <include
+            android:id="@+id/layout_setting_font"
+            layout="@layout/item_setting"/>
+    </com.yydcdut.note.view.ripple.MaterialRippleLayout>
+
+    <com.yydcdut.note.view.ripple.MaterialRippleLayout
+        android:id="@+id/layout_ripple_edit_category"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/setting_height"
+        app:mrl_rippleAlpha="0.2"
+        app:mrl_rippleColor="#585858"
+        app:mrl_rippleHover="true"
+        app:mrl_rippleOverlay="false">
+
+        <include
+            android:id="@+id/layout_setting_edit_category"
+            layout="@layout/item_setting"/>
+    </com.yydcdut.note.view.ripple.MaterialRippleLayout>
+
+    <com.yydcdut.note.view.ripple.MaterialRippleLayout
+        android:id="@+id/layout_ripple_detail"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/setting_height"
+        app:mrl_rippleAlpha="0.2"
+        app:mrl_rippleColor="#585858"
+        app:mrl_rippleHover="true"
+        app:mrl_rippleOverlay="false">
+
+        <include
+            android:id="@+id/layout_setting_note_style"
+            layout="@layout/item_setting"/>
+    </com.yydcdut.note.view.ripple.MaterialRippleLayout>
+
+
+</LinearLayout>
