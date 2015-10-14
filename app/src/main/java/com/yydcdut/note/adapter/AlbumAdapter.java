@@ -2,6 +2,7 @@ package com.yydcdut.note.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,9 @@ import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by yuyidong on 15/10/14.
@@ -65,7 +68,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
      */
     public void setSelectedPosition(boolean selected, int position) {
         mPhotoNoteList.get(position).setSelected(selected);
-        notifyDataSetChanged();
+        notifyItemChanged(position);
     }
 
     /**
@@ -73,28 +76,29 @@ public class AlbumAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
      */
     public void deleteSelectedPhotos() {
         //注意java.util.ConcurrentModificationException at java.util.ArrayList$ArrayListIterator.next(ArrayList.java:573)
-        List<PhotoNote> positions = new ArrayList<PhotoNote>();
+        HashMap<Integer, PhotoNote> map = new HashMap<>();
         for (int i = 0; i < mPhotoNoteList.size(); i++) {
             PhotoNote photoNote = mPhotoNoteList.get(i);
             if (photoNote.isSelected()) {
-                positions.add(photoNote);
+                map.put(i, photoNote);
             }
         }
-        for (int i = 0; i < positions.size(); i++) {
-            PhotoNoteDBModel.getInstance().delete(positions.get(i));
-            mPhotoNoteList.remove(positions.get(i));
+        for (Map.Entry<Integer, PhotoNote> entry : map.entrySet()) {
+            mPhotoNoteList.remove(entry.getValue());
+            Log.i("yuyidong", "entry.getKey()--->" + entry.getKey());
+            notifyItemRemoved(entry.getKey());
+//            PhotoNoteDBModel.getInstance().delete(entry.getValue());
         }
-        notifyDataSetChanged();
     }
 
     /**
      * 全选
      */
     public void selectAllPhotos() {
-        for (PhotoNote photoNote : mPhotoNoteList) {
-            photoNote.setSelected(true);
+        for (int i = 0; i < mPhotoNoteList.size(); i++) {
+            mPhotoNoteList.get(i).setSelected(true);
+            notifyItemChanged(i);
         }
-        notifyDataSetChanged();
     }
 
     /**
@@ -103,8 +107,9 @@ public class AlbumAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
     public void cancelSelectPhotos() {
         for (PhotoNote photoNote : mPhotoNoteList) {
             photoNote.setSelected(false);
+            int index = mPhotoNoteList.indexOf(photoNote);
+            notifyItemChanged(index);
         }
-        notifyDataSetChanged();
     }
 
     /**

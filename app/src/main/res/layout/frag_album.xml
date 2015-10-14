@@ -22,7 +22,7 @@
         android:layout_height="fill_parent">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/gv_album"
+            android:id="@+id/rv_album"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="vertical"/>

@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -150,9 +151,7 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
      * @param view
      */
     private void initListView(View view) {
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.gv_album);
-        mGridLayoutManager = new GridLayoutManager(getContext(), 3);
-        mRecyclerView.setLayoutManager(mGridLayoutManager);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.rv_album);
     }
 
     /**
@@ -190,12 +189,14 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
     @Override
     public void initData() {
         initReceiver();
-
         mAlbumSortKind = LocalStorageUtils.getInstance().getSortKind();
         mPhotoNoteList = PhotoNoteDBModel.getInstance().findByCategoryLabel(mCategoryLabel, mAlbumSortKind);
 
         mAdapter = new AlbumAdapter(getContext(), mPhotoNoteList, this, this);
         mRecyclerView.setAdapter(mAdapter);
+        mGridLayoutManager = new GridLayoutManager(getContext(), 3);
+        mRecyclerView.setLayoutManager(mGridLayoutManager);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
 
@@ -206,7 +207,6 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
 
     @Override
     public void onItemClick(View v, int layoutPosition, int adapterPosition) {
-        YLog.i("yuyidong", "layoutPosition--->" + layoutPosition + "   adapterPosition--->" + adapterPosition);
         if (mIsMenuSelectMode) {
             if (!mAdapter.isPhotoSelected(adapterPosition)) {
                 mAdapter.setSelectedPosition(true, adapterPosition);
@@ -335,6 +335,7 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_album, menu);
+        boolean isNotMenuExist = mMainMenu == null;
         mMainMenu = menu;
         mSortMenuItem = menu.findItem(R.id.menu_sort);
         mTrashMenuItem = menu.findItem(R.id.menu_trash);
@@ -344,8 +345,10 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
         mSettingMenuItem = menu.findItem(R.id.menu_setting);
         mMoveMenuItem = menu.findItem(R.id.menu_move);
         setAlbumSortKind(mAlbumSortKind, menu);
+        if (isNotMenuExist) {
+            sortData(ComparatorFactory.get(mAlbumSortKind));
+        }
     }
-
 
     /**
      * 在menu中设置排序方式
@@ -353,7 +356,6 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
      * @param sort
      * @param menu
      */
-
     private void setAlbumSortKind(int sort, Menu menu) {
         switch (sort) {
             case 1:
@@ -369,7 +371,6 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
                 menu.findItem(R.id.menu_sort_edit_close).setChecked(true);
                 break;
         }
-        sortData(ComparatorFactory.get(sort));
         mAlbumSortKind = sort;
     }
 
@@ -381,7 +382,6 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
      */
     private void setAlbumSortKind(int sort, MenuItem menuItem) {
         menuItem.setChecked(true);
-        sortData(ComparatorFactory.get(sort));
         mAlbumSortKind = sort;
     }
 
@@ -428,19 +428,24 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
         switch (item.getItemId()) {
             case R.id.menu_sort_create_far:
                 setAlbumSortKind(1, item);
+                sortData(ComparatorFactory.get(mAlbumSortKind));
                 break;
             case R.id.menu_sort_create_close:
                 setAlbumSortKind(2, item);
+                sortData(ComparatorFactory.get(mAlbumSortKind));
                 break;
             case R.id.menu_sort_edit_far:
                 setAlbumSortKind(3, item);
+                sortData(ComparatorFactory.get(mAlbumSortKind));
                 break;
             case R.id.menu_sort_edit_close:
                 setAlbumSortKind(4, item);
+                sortData(ComparatorFactory.get(mAlbumSortKind));
                 break;
             case R.id.menu_trash:
                 mAdapter.deleteSelectedPhotos();
-                sendDataUpdateBroadcast(true, mCategoryLabel, false, false, true);
+                sendDataUpdateBroadcast(true, mCategoryLabel, false, false, false);
+                mPhotoNoteList = PhotoNoteDBModel.getInstance().findByCategoryLabel(mCategoryLabel, mAlbumSortKind);
                 menuPreviewMode();
                 break;
             case R.id.menu_all_select:
