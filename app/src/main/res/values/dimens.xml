@@ -95,4 +95,8 @@
     <dimen name="focus_length_max">100dip</dimen>
     <dimen name="focus_length_min">75dip</dimen>
 
+    <!-- CardView -->
+    <dimen name="card_corner">3dip</dimen>
+    <dimen name="card_elevation">5dip</dimen>
+
 </resources>

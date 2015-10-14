@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.media.ExifInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +33,8 @@ import com.yydcdut.note.view.FontTextView;
 import com.yydcdut.note.view.RevealView;
 import com.yydcdut.note.view.scroll.ObservableScrollView;
 import com.yydcdut.note.view.scroll.ScrollState;
+
+import java.io.IOException;
 
 /**
  * Created by yyd on 15-3-29.
@@ -131,10 +135,38 @@ public class DetailTextFragment extends BaseFragment implements ObservableScroll
         mToolBarTitleView.setText("");
         getActivity().setTitle(null);
         initSize();
-        mTitleView.setText(mPhotoNote.getTitle());
-        mContentView.setText(mPhotoNote.getContent());
+        if (TextUtils.isEmpty(mPhotoNote.getTitle())) {
+            getView().findViewById(R.id.card_detail_title).setVisibility(View.GONE);
+        } else {
+            mTitleView.setText(mPhotoNote.getTitle());
+        }
+        if (TextUtils.isEmpty(mPhotoNote.getContent())) {
+            getView().findViewById(R.id.card_detail_content).setVisibility(View.GONE);
+        } else {
+            mContentView.setText(mPhotoNote.getContent());
+        }
+        try {
+            initExif(getView());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         mCreateView.setText(Utils.decodeTimeInTextDetail(mPhotoNote.getCreatedNoteTime()));
         mEditView.setText(Utils.decodeTimeInTextDetail(mPhotoNote.getEditedNoteTime()));
+    }
+
+    private void initExif(View v) throws IOException {
+        ExifInterface exifInterface = new ExifInterface(mPhotoNote.getBigPhotoPathWithoutFile());
+        String text1 = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
+        String text2 = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+        TextView textView = (TextView) v.findViewById(R.id.txt_detail_location);
+        ImageView imageView = (ImageView) v.findViewById(R.id.img_detail_location);
+        if (TextUtils.isEmpty(text1)) {
+            imageView.setImageResource(R.drawable.ic_map_grey);
+            textView.setText(getResources().getString(R.string.detail_location));
+        } else {
+            imageView.setImageResource(R.drawable.ic_map);
+            textView.setText(text1 + "   " + text2);
+        }
     }
 
     @Override

@@ -2,6 +2,8 @@
 <com.yydcdut.note.view.scroll.ObservableScrollView
     android:id="@+id/scroll_detail"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
@@ -22,105 +24,193 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/white"
+            android:background="@color/bg_background"
             android:orientation="vertical">
 
-            <com.yydcdut.note.view.FontTextView
-                android:id="@+id/txt_detail_content_title"
-                android:layout_width="match_parent"
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_detail_title"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:singleLine="true"
-                android:text=""
-                android:textColor="@color/black"
-                android:textSize="@dimen/txt_large"
-                />
+                android:layout_marginBottom="3dip"
+                android:layout_marginLeft="3dip"
+                android:layout_marginRight="3dip"
+                card_view:cardBackgroundColor="@color/white"
+                card_view:cardCornerRadius="3dip"
+                card_view:cardElevation="5dip"
+                card_view:cardUseCompatPadding="true">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dip"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:background="@color/divider_gray"/>
+                <com.yydcdut.note.view.ripple.MaterialRippleLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:mrl_rippleAlpha="0.2"
+                    app:mrl_rippleColor="#585858"
+                    app:mrl_rippleHover="true"
+                    app:mrl_rippleOverlay="false">
 
-            <com.yydcdut.note.view.FontTextView
-                android:id="@+id/txt_detail_content"
-                android:layout_width="match_parent"
+                    <com.yydcdut.note.view.FontTextView
+                        android:id="@+id/txt_detail_content_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:padding="@dimen/activity_margin"
+                        android:singleLine="true"
+                        android:text=""
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/txt_large"
+                        />
+                </com.yydcdut.note.view.ripple.MaterialRippleLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_detail_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:text=""
-                android:textColor="@color/txt_gray"/>
+                android:layout_marginBottom="3dip"
+                android:layout_marginLeft="3dip"
+                android:layout_marginRight="3dip"
+                card_view:cardBackgroundColor="@color/white"
+                card_view:cardCornerRadius="3dip"
+                card_view:cardElevation="5dip"
+                card_view:cardUseCompatPadding="true">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dip"
-                android:layout_marginBottom="@dimen/activity_vertical_margin"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:background="@color/divider_gray"/>
-
-            <RelativeLayout
-                android:id="@+id/layout_detail_create"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="wrap_content"
+                <com.yydcdut.note.view.ripple.MaterialRippleLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@+id/txt_detail_create_time"
-                    android:text="Created:"
-                    android:textColor="@color/txt_gray"
-                    android:textSize="@dimen/txt_small"/>
+                    app:mrl_rippleAlpha="0.2"
+                    app:mrl_rippleColor="#585858"
+                    app:mrl_rippleHover="true"
+                    app:mrl_rippleOverlay="false">
 
-                <TextView
-                    android:id="@+id/txt_detail_create_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
-                    android:text="三月 26. 2015 at 12:35 上午"
-                    android:textColor="@color/txt_gray"
-                    android:textSize="@dimen/txt_small"/>
+                    <com.yydcdut.note.view.FontTextView
+                        android:id="@+id/txt_detail_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/activity_margin"
+                        android:text=""
+                        android:textColor="@color/txt_gray"/>
+                </com.yydcdut.note.view.ripple.MaterialRippleLayout>
+            </android.support.v7.widget.CardView>
 
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/layout_detail_edit"
-                android:layout_width="match_parent"
+            <android.support.v7.widget.CardView
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/activity_vertical_margin">
+                android:layout_marginLeft="3dip"
+                android:layout_marginRight="3dip"
+                card_view:cardBackgroundColor="@color/white"
+                card_view:cardCornerRadius="3dip"
+                card_view:cardElevation="5dip"
+                card_view:cardUseCompatPadding="true">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <com.yydcdut.note.view.ripple.MaterialRippleLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@+id/txt_detail_edit_time"
-                    android:text="Edited:"
-                    android:textColor="@color/txt_gray"
-                    android:textSize="@dimen/txt_small"/>
+                    app:mrl_rippleAlpha="0.2"
+                    app:mrl_rippleColor="#585858"
+                    app:mrl_rippleHover="true"
+                    app:mrl_rippleOverlay="false">
 
-                <TextView
-                    android:id="@+id/txt_detail_edit_time"
-                    android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/activity_margin"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/img_detail_location"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_margin="12dip"
+                            android:src="@drawable/ic_map"/>
+
+                        <com.yydcdut.note.view.FontTextView
+                            android:id="@+id/txt_detail_location"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@+id/img_detail_location"
+                            android:padding="@dimen/activity_margin"
+                            android:text=" "
+                            android:textColor="@color/txt_gray"/>
+                    </RelativeLayout>
+                </com.yydcdut.note.view.ripple.MaterialRippleLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dip"
+                android:layout_marginRight="3dip"
+                card_view:cardBackgroundColor="@color/white"
+                card_view:cardCornerRadius="3dip"
+                card_view:cardElevation="5dip"
+                card_view:cardUseCompatPadding="true">
+
+                <com.yydcdut.note.view.ripple.MaterialRippleLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
-                    android:text="三月 26. 2015 at 12:35 上午"
-                    android:textColor="@color/txt_gray"
-                    android:textSize="@dimen/txt_small"/>
+                    app:mrl_rippleAlpha="0.2"
+                    app:mrl_rippleColor="#585858"
+                    app:mrl_rippleHover="true"
+                    app:mrl_rippleOverlay="false">
 
-            </RelativeLayout>
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="@dimen/activity_margin">
 
+                        <RelativeLayout
+                            android:id="@+id/layout_detail_create"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_toLeftOf="@+id/txt_detail_create_time"
+                                android:text="Created:"
+                                android:textColor="@color/txt_gray"
+                                android:textSize="@dimen/txt_small"/>
+
+                            <TextView
+                                android:id="@+id/txt_detail_create_time"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                                android:text="三月 26. 2015 at 12:35 上午"
+                                android:textColor="@color/txt_gray"
+                                android:textSize="@dimen/txt_small"/>
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/layout_detail_edit"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_toLeftOf="@+id/txt_detail_edit_time"
+                                android:text="Edited:"
+                                android:textColor="@color/txt_gray"
+                                android:textSize="@dimen/txt_small"/>
+
+                            <TextView
+                                android:id="@+id/txt_detail_edit_time"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                                android:text="三月 26. 2015 at 12:35 上午"
+                                android:textColor="@color/txt_gray"
+                                android:textSize="@dimen/txt_small"/>
+                        </RelativeLayout>
+                    </LinearLayout>
+                </com.yydcdut.note.view.ripple.MaterialRippleLayout>
+            </android.support.v7.widget.CardView>
         </LinearLayout>
-
     </LinearLayout>
 </com.yydcdut.note.view.scroll.ObservableScrollView>

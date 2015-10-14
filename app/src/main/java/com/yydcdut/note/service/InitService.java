@@ -32,6 +32,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Created by yyd on 15-4-26.
  */
+//todo 改成IntentService
 public class InitService extends Service {
     private static final int QUITE = 3;
     private static final int ADD = 1;

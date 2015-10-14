@@ -1,7 +1,6 @@
 package com.yydcdut.note.adapter;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
@@ -46,7 +45,7 @@ public class DetailPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        Fragment fragment = DetailTextFragment.newInstance();
+        DetailTextFragment fragment = DetailTextFragment.newInstance();
         Bundle bundle = new Bundle();
         bundle.putString(Const.CATEGORY_LABEL, mPhotoNoteGroup.get(position).getCategoryLabel());
         bundle.putInt(Const.PHOTO_POSITION, position);
@@ -68,6 +67,10 @@ public class DetailPagerAdapter extends PagerAdapter {
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         container.removeView(mViewCacheView.get(position)); // 移出viewpager两边之外的page布局
+        mViewCacheView.remove(position);
     }
 
+    public View getItemView(int position) {
+        return mViewCacheView.get(position);
+    }
 }

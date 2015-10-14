@@ -140,5 +140,7 @@
     <string name="about_update">检查更新</string>
     <string name="about_share">推荐给好友</string>
     <string name="about_share_content">我正在使用 照片笔记 App，十分好用。下载：http://a.app.qq.com/o/simple.jsp?pkgname=com.yydcdut.note</string>
+    <string name="general"></string>
+    <string name="detail_location">位置信息不可用</string>
 
 </resources>
