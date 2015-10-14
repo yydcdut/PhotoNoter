@@ -104,6 +104,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         View cardView = LayoutInflater.from(this).inflate(R.layout.item_setting_card_top, null);
         LinearLayout linearLayout = (LinearLayout) cardView.findViewById(R.id.layout_setting_linear);
         mScrollLinear.addView(cardView);
+        View divider = LayoutInflater.from(this).inflate(R.layout.item_setting_divider, null);
+        mScrollLinear.addView(divider);
+
         //title
         View labelView = LayoutInflater.from(this).inflate(R.layout.item_setting_label, null);
         ((TextView) labelView.findViewById(R.id.txt_setting_title)).setText(getResources().getString(R.string.preference_setting));
@@ -128,14 +131,15 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         setData(viewFont, R.drawable.ic_format_list_numbered_grey_24dp, R.string.edit_category);
         cancelDivider(viewFont);
         linearLayout.addView(viewFont);
-
     }
 
     private void initAccountSetting() {
         //cardView
-        View cardView = LayoutInflater.from(this).inflate(R.layout.item_setting_card_top, null);
+        View cardView = LayoutInflater.from(this).inflate(R.layout.item_setting_card, null);
         LinearLayout linearLayout = (LinearLayout) cardView.findViewById(R.id.layout_setting_linear);
         mScrollLinear.addView(cardView);
+        View divider = LayoutInflater.from(this).inflate(R.layout.item_setting_divider, null);
+        mScrollLinear.addView(divider);
         //title
         View labelView = LayoutInflater.from(this).inflate(R.layout.item_setting_label, null);
         ((TextView) labelView.findViewById(R.id.txt_setting_title)).setText(getResources().getString(R.string.account_setting));
@@ -191,6 +195,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         View cardView = LayoutInflater.from(this).inflate(R.layout.item_setting_card, null);
         LinearLayout linearLayout = (LinearLayout) cardView.findViewById(R.id.layout_setting_linear);
         mScrollLinear.addView(cardView);
+        View divider = LayoutInflater.from(this).inflate(R.layout.item_setting_divider, null);
+        mScrollLinear.addView(divider);
         //title
         View labelView = LayoutInflater.from(this).inflate(R.layout.item_setting_label, null);
         ((TextView) labelView.findViewById(R.id.txt_setting_title)).setText(getResources().getString(R.string.camera_setting));
@@ -308,6 +314,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         View cardView = LayoutInflater.from(this).inflate(R.layout.item_setting_card, null);
         LinearLayout linearLayout = (LinearLayout) cardView.findViewById(R.id.layout_setting_linear);
         mScrollLinear.addView(cardView);
+        View divider = LayoutInflater.from(this).inflate(R.layout.item_setting_divider, null);
+        mScrollLinear.addView(divider);
         //title
         View labelView = LayoutInflater.from(this).inflate(R.layout.item_setting_label, null);
         ((TextView) labelView.findViewById(R.id.txt_setting_title)).setText(getResources().getString(R.string.sync_setting));
@@ -339,6 +347,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         View cardView = LayoutInflater.from(this).inflate(R.layout.item_setting_card, null);
         LinearLayout linearLayout = (LinearLayout) cardView.findViewById(R.id.layout_setting_linear);
         mScrollLinear.addView(cardView);
+        View divider = LayoutInflater.from(this).inflate(R.layout.item_setting_divider, null);
+        mScrollLinear.addView(divider);
         //title
         View labelView = LayoutInflater.from(this).inflate(R.layout.item_setting_label, null);
         ((TextView) labelView.findViewById(R.id.txt_setting_title)).setText(getResources().getString(R.string.about_setting));

@@ -6,8 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="6dip"
     card_view:cardBackgroundColor="@color/white"
-    card_view:cardElevation="5dip"
-    card_view:cardUseCompatPadding="true">
+    card_view:cardElevation="5dip">
 
     <LinearLayout
         android:id="@+id/layout_setting_linear"
