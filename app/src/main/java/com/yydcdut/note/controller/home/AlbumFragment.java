@@ -206,6 +206,7 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
 
     @Override
     public void onItemClick(View v, int layoutPosition, int adapterPosition) {
+        YLog.i("yuyidong", "layoutPosition--->" + layoutPosition + "   adapterPosition--->" + adapterPosition);
         if (mIsMenuSelectMode) {
             if (!mAdapter.isPhotoSelected(adapterPosition)) {
                 mAdapter.setSelectedPosition(true, adapterPosition);

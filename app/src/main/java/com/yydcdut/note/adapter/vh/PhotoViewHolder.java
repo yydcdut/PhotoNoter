@@ -18,6 +18,8 @@ public class PhotoViewHolder extends RecyclerView.ViewHolder implements View.OnC
 
     public PhotoViewHolder(View itemView, OnItemClickListener onItemClickListener, OnItemLongClickListener onItemLongClickListener) {
         super(itemView);
+        itemView.setOnLongClickListener(this);
+        itemView.setOnClickListener(this);
         mOnItemClickListener = onItemClickListener;
         mOnItemLongClickListener = onItemLongClickListener;
         imageView = (GridItemImageView) itemView.findViewById(R.id.img_item_album);
