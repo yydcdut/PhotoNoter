@@ -6,13 +6,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 
 import com.yydcdut.note.R;
 import com.yydcdut.note.controller.BaseActivity;
 import com.yydcdut.note.utils.LocalStorageUtils;
-import com.yydcdut.note.utils.Utils;
+import com.yydcdut.note.utils.LollipopUtils;
 
 /**
  * Created by yuyidong on 15/7/16.
@@ -56,13 +54,7 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     public int setContentView() {
-        Window window = getWindow();
-        if (Utils.AFTER_LOLLIPOP) {
-            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
-                    | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION | 128);
-        } else {
-            window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        }
+        LollipopUtils.setFullWindow(getWindow());
         return R.layout.activity_splash;
     }
 

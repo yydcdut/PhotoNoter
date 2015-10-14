@@ -15,8 +15,8 @@ import com.yydcdut.note.R;
 import com.yydcdut.note.utils.ActivityCollector;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.LocalStorageUtils;
+import com.yydcdut.note.utils.LollipopUtils;
 import com.yydcdut.note.utils.ThemeHelper;
-import com.yydcdut.note.utils.Utils;
 
 /**
  * Created by yyd on 15-4-6.
@@ -52,7 +52,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void setStatusBarColor(int color) {
-        if (Utils.AFTER_LOLLIPOP) {
+        if (LollipopUtils.AFTER_LOLLIPOP) {
             Window window = getWindow();
             window.setStatusBarColor(color);
             window.setNavigationBarColor(color);

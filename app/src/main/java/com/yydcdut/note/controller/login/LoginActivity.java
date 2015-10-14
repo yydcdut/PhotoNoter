@@ -21,6 +21,7 @@ import com.yydcdut.note.model.UserCenter;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
+import com.yydcdut.note.utils.LollipopUtils;
 import com.yydcdut.note.view.CircleProgressBarLayout;
 
 import org.json.JSONException;
@@ -66,6 +67,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         toolbar.setTitle(getResources().getString(R.string.app_setting));
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        LollipopUtils.setElevation(toolbar, getResources().getDimension(R.dimen.ui_elevation));
     }
 
     @Override

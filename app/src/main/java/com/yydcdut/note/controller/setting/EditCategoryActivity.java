@@ -21,6 +21,7 @@ import com.yydcdut.note.R;
 import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.controller.BaseActivity;
 import com.yydcdut.note.model.CategoryDBModel;
+import com.yydcdut.note.utils.LollipopUtils;
 import com.yydcdut.note.utils.RandomColor;
 import com.yydcdut.note.view.CircleProgressBarLayout;
 import com.yydcdut.note.view.TextDrawable;
@@ -71,6 +72,7 @@ public class EditCategoryActivity extends BaseActivity implements SlideAndDragLi
         toolbar.setTitle(getResources().getString(R.string.edit_category));
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_check_white_24dp);
+        LollipopUtils.setElevation(toolbar, getResources().getDimension(R.dimen.ui_elevation));
     }
 
     private void initCircleProgressBar() {

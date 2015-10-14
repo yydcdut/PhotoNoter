@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.SurfaceHolder;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 
 import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
@@ -15,7 +13,7 @@ import com.yydcdut.note.camera.param.Size;
 import com.yydcdut.note.camera.view.AutoFitSurfaceView;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.LocalStorageUtils;
-import com.yydcdut.note.utils.Utils;
+import com.yydcdut.note.utils.LollipopUtils;
 import com.yydcdut.note.utils.compare.SizeComparator;
 
 import org.json.JSONException;
@@ -45,13 +43,7 @@ public class AdjustCamera extends AppCompatActivity implements SurfaceHolder.Cal
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Window window = getWindow();
-        if (Utils.AFTER_LOLLIPOP) {
-            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
-                    | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION | 128);
-        } else {
-            window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        }
+        LollipopUtils.setFullWindow(getWindow());
         setContentView(R.layout.activity_adjust_camera);
 
         mScreenWidth = getResources().getDisplayMetrics().widthPixels;

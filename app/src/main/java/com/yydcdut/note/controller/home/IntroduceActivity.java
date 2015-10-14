@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.nineoldandroids.animation.Animator;
@@ -14,7 +12,7 @@ import com.nineoldandroids.animation.ObjectAnimator;
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.IntroducePagerAdapter;
 import com.yydcdut.note.controller.BaseActivity;
-import com.yydcdut.note.utils.Utils;
+import com.yydcdut.note.utils.LollipopUtils;
 
 /**
  * Created by yuyidong on 15/8/9.
@@ -26,13 +24,7 @@ public class IntroduceActivity extends BaseActivity implements OnPageChangeListe
 
     @Override
     public int setContentView() {
-        Window window = getWindow();
-        if (Utils.AFTER_LOLLIPOP) {
-            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
-                    | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION | 128);
-        } else {
-            window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        }
+        LollipopUtils.setFullWindow(getWindow());
         return R.layout.activity_introduce;
     }
 

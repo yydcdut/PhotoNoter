@@ -10,8 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 
 import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
@@ -29,7 +27,7 @@ import com.yydcdut.note.camera.view.MenuLayout;
 import com.yydcdut.note.camera.view.callback.OnLayoutItemClickListener;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.LocalStorageUtils;
-import com.yydcdut.note.utils.Utils;
+import com.yydcdut.note.utils.LollipopUtils;
 import com.yydcdut.note.utils.compare.SizeComparator;
 
 import org.json.JSONException;
@@ -95,13 +93,7 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
         super.onCreate(savedInstanceState);
         Bundle bundle = getIntent().getExtras();
         mCategory = bundle.getString(Const.CATEGORY_LABEL);
-        Window window = getWindow();
-        if (Utils.AFTER_LOLLIPOP) {
-            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
-                    | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION | 128);
-        } else {
-            window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        }
+        LollipopUtils.setFullWindow(getWindow());
         setContentView(R.layout.activity_camera);
         initData();
         initUIAndListener();

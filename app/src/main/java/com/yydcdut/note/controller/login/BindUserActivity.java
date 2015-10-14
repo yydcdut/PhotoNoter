@@ -14,6 +14,7 @@ import com.yydcdut.note.model.UserCenter;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
+import com.yydcdut.note.utils.LollipopUtils;
 import com.yydcdut.note.view.RoundedImageView;
 
 import java.io.File;
@@ -101,6 +102,7 @@ public class BindUserActivity extends BaseActivity implements View.OnClickListen
         toolbar.setTitle(getResources().getString(R.string.personal_page));
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        LollipopUtils.setElevation(toolbar, getResources().getDimension(R.dimen.ui_elevation));
     }
 
     @Override

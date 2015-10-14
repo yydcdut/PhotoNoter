@@ -20,7 +20,6 @@ import android.app.Activity;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -40,6 +39,7 @@ import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.NavigationCategoryAdapter;
 import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.controller.BaseActivity;
+import com.yydcdut.note.utils.LollipopUtils;
 import com.yydcdut.note.view.RoundedImageView;
 
 import java.util.List;
@@ -107,7 +107,7 @@ public abstract class NavigationActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (LollipopUtils.AFTER_LOLLIPOP) {
             try {
                 Resources.Theme theme = this.getTheme();
                 TypedArray typedArray = theme.obtainStyledAttributes(new int[]{android.R.attr.colorPrimary});
@@ -116,8 +116,8 @@ public abstract class NavigationActivity extends BaseActivity {
                 e.getMessage();
             }
 
-            this.setElevationToolBar(15);
         }
+        LollipopUtils.setElevation(mToolbar, getResources().getDimension(R.dimen.ui_elevation));
 
         if (mList != null) {
             mountListNavigation(savedInstanceState);
@@ -349,26 +349,6 @@ public abstract class NavigationActivity extends BaseActivity {
      */
     public int getCurrentPosition() {
         return this.mCurrentPosition;
-    }
-
-    /**
-     * public void setElevation (float elevation)
-     * Added in API level 21
-     * Default value is 15
-     *
-     * @param elevation Sets the base elevation of this view, in pixels.
-     */
-    public void setElevationToolBar(float elevation) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            this.getToolbar().setElevation(elevation);
-        }
-    }
-
-    /**
-     * get toolbar
-     */
-    public Toolbar getToolbar() {
-        return this.mToolbar;
     }
 
     /**

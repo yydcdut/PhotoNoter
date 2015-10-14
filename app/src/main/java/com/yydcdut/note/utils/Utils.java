@@ -1,7 +1,5 @@
 package com.yydcdut.note.utils;
 
-import android.os.Build;
-
 import java.text.SimpleDateFormat;
 
 /**
@@ -85,15 +83,6 @@ public class Utils {
         java.text.DateFormat format1 = new java.text.SimpleDateFormat("yyyyMMddhhmmss");
         s = format1.format(time);
         return s;
-    }
-
-    /**
-     * 5.0之后的SDK
-     */
-    public static final boolean AFTER_LOLLIPOP = afterLollipop();
-
-    private static boolean afterLollipop() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
 
     /**

@@ -99,4 +99,6 @@
     <dimen name="card_corner">3dip</dimen>
     <dimen name="card_elevation">5dip</dimen>
 
+    <dimen name="ui_elevation">5dip</dimen>
+
 </resources>
