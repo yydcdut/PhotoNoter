@@ -1,19 +1,3 @@
-/*
- * Copyright 2015 Rudson Lima
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.yydcdut.note.controller.home;
 
 import android.app.Activity;
@@ -44,40 +28,31 @@ import com.yydcdut.note.view.RoundedImageView;
 
 import java.util.List;
 
-
 public abstract class NavigationActivity extends BaseActivity {
-
     public static final int USER_ONE = 1;
     public static final int USER_TWO = 2;
-
+    /* User */
     public TextView mUserName;
     public RoundedImageView mUserPhoto;
     public RoundedImageView mUserPhotoTwo;
     public ImageView mUserBackground;
-
+    /* Cloud */
     public View mCloudSyncImage;
     public TextView mCloudUseText;
     public ProgressBar mCloudUseProgress;
-
-    private ListView mList;
-    private Toolbar mToolbar;
-
-    private int mCurrentPosition = 0;
-
+    /* Drawer */
+    private ListView mMenuListView;
+    private int mCurrentListCheckedPosition = 0;
     private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggleCompat mDrawerToggle;
+    /* Fragment */
     private FrameLayout mRelativeDrawer;
 
-    private ActionBarDrawerToggleCompat mDrawerToggle;
-    private NavigationLiveoListener mNavigationListener;
+    private NavigationListener mNavigationListener;
+
+    private NavigationCategoryAdapter mCategoryAdapter;
 
     public static final String CURRENT_POSITION = "CURRENT_POSITION";
-
-    /**
-     * onCreate(Bundle savedInstanceState).
-     *
-     * @param savedInstanceState onCreate(Bundle savedInstanceState).
-     */
-    public abstract void onCreateInit(Bundle savedInstanceState);
 
     @Override
     public int setContentView() {
@@ -89,23 +64,18 @@ public abstract class NavigationActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null) {
-            setCurrentPosition(savedInstanceState.getInt(CURRENT_POSITION));
+            mCurrentListCheckedPosition = savedInstanceState.getInt(CURRENT_POSITION);
         }
 
-        mList = (ListView) findViewById(R.id.list);
-        mList.setOnItemClickListener(new DrawerItemClickListener());
+        mMenuListView = (ListView) findViewById(R.id.lv_navigation);
+        mMenuListView.setOnItemClickListener(new DrawerItemClickListener());
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-
-        mDrawerToggle = new ActionBarDrawerToggleCompat(this, mDrawerLayout, mToolbar);
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-        mRelativeDrawer = (FrameLayout) this.findViewById(R.id.relativeDrawer);
-
-        this.setSupportActionBar(mToolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
 
         if (LollipopCompat.AFTER_LOLLIPOP) {
             try {
@@ -117,29 +87,39 @@ public abstract class NavigationActivity extends BaseActivity {
             }
 
         }
-        LollipopCompat.setElevation(mToolbar, getResources().getDimension(R.dimen.ui_elevation));
+        LollipopCompat.setElevation(toolbar, getResources().getDimension(R.dimen.ui_elevation));
 
-        if (mList != null) {
-            mountListNavigation(savedInstanceState);
+        mDrawerToggle = new ActionBarDrawerToggleCompat(this, mDrawerLayout, toolbar);
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        mRelativeDrawer = (FrameLayout) this.findViewById(R.id.relativeDrawer);
+
+        if (mMenuListView != null) {
+            createUserDefaultHeader();
+            createFooter();
+            onUserInformation();
+            onCloudInformation();
+            initNavigationListener();
+            setNavigationAdapter();
         }
 
         if (savedInstanceState == null) {
-            mNavigationListener.onItemClickNavigation(mCurrentPosition, R.id.container);
+            mNavigationListener.onItemClickNavigation(mCurrentListCheckedPosition, R.id.container);
         }
 
-        setCheckedItemNavigation(mCurrentPosition, true);
+        setCheckedItemNavigation(mCurrentListCheckedPosition, true);
     }
+
+    public abstract void initNavigationListener();
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        // TODO Auto-generated method stub
         super.onSaveInstanceState(outState);
-        outState.putInt(CURRENT_POSITION, mCurrentPosition);
+        outState.putInt(CURRENT_POSITION, mCurrentListCheckedPosition);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         if (mDrawerToggle != null) {
             if (mDrawerToggle.onOptionsItemSelected(item)) {
                 return true;
@@ -151,7 +131,7 @@ public abstract class NavigationActivity extends BaseActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(mRelativeDrawer);
-        mNavigationListener.onPrepareOptionsMenuNavigation(menu, mCurrentPosition, drawerOpen);
+        mNavigationListener.onPrepareOptionsMenuNavigation(menu, mCurrentListCheckedPosition, drawerOpen);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -200,68 +180,50 @@ public abstract class NavigationActivity extends BaseActivity {
         }
     }
 
+    /**
+     * ListView的Item点击事件
+     */
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            int mPosition = (position - 1);
+            //因为有header
+            int realPosition = (position - 1);
             if (position == parent.getCount() - 1) {
                 //footer
                 return;
             }
 
             if (position != 0) {
-                mNavigationListener.onItemClickNavigation(mPosition, R.id.container);
-                setCurrentPosition(mPosition);
-                setCheckedItemNavigation(mPosition, true);
+                mNavigationListener.onItemClickNavigation(realPosition, R.id.container);
+                setCurrentListCheckedPosition(realPosition);
+                setCheckedItemNavigation(realPosition, true);
             }
-
             mDrawerLayout.closeDrawer(mRelativeDrawer);
         }
     }
 
-    public void setCheckedItemNavigation(int position, boolean checked) {
-        this.mCategoryAdapter.resetCheck();
-        this.mCategoryAdapter.setChecked(position, checked);
-    }
-
-    private OnClickListener onClickHeaderAndFooter = new OnClickListener() {
+    private OnClickListener mOnHeaderAndFooterClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.userPhoto:
+                case R.id.img_userPhoto:
                     mNavigationListener.onClickUserPhotoNavigation(v, USER_ONE);
                     mDrawerLayout.closeDrawer(mRelativeDrawer);
                     break;
-                case R.id.userPhotoTwo:
+                case R.id.img_userPhotoTwo:
                     mNavigationListener.onClickUserPhotoNavigation(v, USER_TWO);
                     break;
                 case R.id.img_list_footer_cloud:
                     mNavigationListener.onClickCloudSync(v);
                     break;
-                case R.id.userData:
-
-                    break;
             }
         }
     };
 
-
-    private void mountListNavigation(Bundle savedInstanceState) {
-        createUserDefaultHeader();
-        createFooter();
-        onUserInformation();
-        onUserAccounts();
-        onCloudInformation();
-        onCreateInit(savedInstanceState);
-        setAdapterNavigation();
-    }
-
-    public abstract List<Category> setCategoryAdapter();
-
-    private NavigationCategoryAdapter mCategoryAdapter;
-
-    private void setAdapterNavigation() {
-
+    /**
+     * 设置Adapter
+     */
+    private void setNavigationAdapter() {
         if (mNavigationListener == null) {
             throw new RuntimeException(getString(R.string.start_navigation_listener));
         }
@@ -269,40 +231,39 @@ public abstract class NavigationActivity extends BaseActivity {
         List<Category> list = setCategoryAdapter();
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).isCheck()) {
-                mCurrentPosition = i;
+                setCurrentListCheckedPosition(i);
             }
         }
         mCategoryAdapter = new NavigationCategoryAdapter(NavigationActivity.this, list);
-        mList.setAdapter(mCategoryAdapter);
+        mMenuListView.setAdapter(mCategoryAdapter);
     }
+
+    public abstract List<Category> setCategoryAdapter();
 
     public NavigationCategoryAdapter getCategoryAdapter() {
         return mCategoryAdapter;
     }
 
-    /**
-     * Create user default header
-     */
     private void createUserDefaultHeader() {
-        View header = getLayoutInflater().inflate(R.layout.navigation_list_header, mList, false);
+        View header = getLayoutInflater().inflate(R.layout.layout_navigation_list_header, mMenuListView, false);
 
-        mUserName = (TextView) header.findViewById(R.id.userName);
-        mUserPhoto = (RoundedImageView) header.findViewById(R.id.userPhoto);
-        mUserPhoto.setOnClickListener(onClickHeaderAndFooter);
-        mUserPhotoTwo = (RoundedImageView) header.findViewById(R.id.userPhotoTwo);
-        mUserPhotoTwo.setOnClickListener(onClickHeaderAndFooter);
-        mUserBackground = (ImageView) header.findViewById(R.id.userBackground);
-        mList.addHeaderView(header);
+        mUserName = (TextView) header.findViewById(R.id.txt_userName);
+        mUserPhoto = (RoundedImageView) header.findViewById(R.id.img_userPhoto);
+        mUserPhoto.setOnClickListener(mOnHeaderAndFooterClickListener);
+        mUserPhotoTwo = (RoundedImageView) header.findViewById(R.id.img_userPhotoTwo);
+        mUserPhotoTwo.setOnClickListener(mOnHeaderAndFooterClickListener);
+        mUserBackground = (ImageView) header.findViewById(R.id.img_userBackground);
+        mMenuListView.addHeaderView(header);
     }
 
     private void createFooter() {
         View footer = getLayoutInflater().inflate(R.layout.navigation_list_footer, null, false);
         mCloudSyncImage = footer.findViewById(R.id.img_list_footer_cloud);
-        mCloudSyncImage.setOnClickListener(onClickHeaderAndFooter);
+        mCloudSyncImage.setOnClickListener(mOnHeaderAndFooterClickListener);
         mCloudUseText = (TextView) footer.findViewById(R.id.txt_list_footer_use);
         mCloudUseProgress = (ProgressBar) footer.findViewById(R.id.pb_list_footer);
         mCloudUseProgress.setProgress(0);
-        mList.addFooterView(footer);
+        mMenuListView.addFooterView(footer);
     }
 
     /**
@@ -310,45 +271,23 @@ public abstract class NavigationActivity extends BaseActivity {
      */
     public abstract void onUserInformation();
 
-    public abstract void onUserAccounts();
-
     /**
      * footer cloud
      */
     public abstract void onCloudInformation();
 
     /**
-     * Starting listener navigation
+     * 设置当前在Menu的ListView中哪个为选中
      *
-     * @param navigationListener listener.
+     * @param position
      */
-    public void setNavigationListener(NavigationLiveoListener navigationListener) {
-        this.mNavigationListener = navigationListener;
+    public void setCurrentListCheckedPosition(int position) {
+        mCurrentListCheckedPosition = position;
     }
 
-    /**
-     * First item of the position selected from the list
-     *
-     * @param position ...
-     */
-    public void setDefaultStartPositionNavigation(int position) {
-        this.mCurrentPosition = position;
-    }
-
-    /**
-     * Position in the last clicked item list
-     *
-     * @param position ...
-     */
-    public void setCurrentPosition(int position) {
-        this.mCurrentPosition = position;
-    }
-
-    /**
-     * get position in the last clicked item list
-     */
-    public int getCurrentPosition() {
-        return this.mCurrentPosition;
+    public void setCheckedItemNavigation(int position, boolean checked) {
+        this.mCategoryAdapter.resetCheck();
+        this.mCategoryAdapter.setChecked(position, checked);
     }
 
     /**
@@ -375,15 +314,24 @@ public abstract class NavigationActivity extends BaseActivity {
         }
     }
 
-    public interface NavigationLiveoListener {
+    /**
+     * 设置navigation监听器
+     *
+     * @param navigationListener listener.
+     */
+    public void setNavigationListener(NavigationListener navigationListener) {
+        this.mNavigationListener = navigationListener;
+    }
+
+    public interface NavigationListener {
 
         /**
-         * Item click Navigation (ListView.OnItemClickListener)
+         * ListView的点击了哪个item
          *
-         * @param position          position of the item that was clicked.
-         * @param layoutContainerId Default layout. Tell the replace - FragmentManager.beginTransaction().replace(layoutContainerId, yourFragment).commit()
+         * @param position
+         * @param layoutContainerId
          */
-        public void onItemClickNavigation(int position, int layoutContainerId);
+        void onItemClickNavigation(int position, int layoutContainerId);
 
         /**
          * Prepare options menu navigation (onPrepareOptionsMenu(Menu menu))
@@ -392,7 +340,7 @@ public abstract class NavigationActivity extends BaseActivity {
          * @param position last position of the item that was clicked.
          * @param visible  use to hide the menu when the navigation is open.
          */
-        public void onPrepareOptionsMenuNavigation(Menu menu, int position, boolean visible);
+        void onPrepareOptionsMenuNavigation(Menu menu, int position, boolean visible);
 
         /**
          * Click user photo navigation
@@ -400,20 +348,14 @@ public abstract class NavigationActivity extends BaseActivity {
          * @param v     view.
          * @param which 点击的哪一个
          */
-        public void onClickUserPhotoNavigation(View v, final int which);
+        void onClickUserPhotoNavigation(View v, final int which);
 
         /**
          * 点击异步云同步
          *
          * @param v
          */
-        public void onClickCloudSync(View v);
-    }
-
-    public interface OnDrawerListener {
-        public void onOpen();
-
-        public void onClose();
+        void onClickCloudSync(View v);
     }
 
     private OnDrawerListener mOnDrawerListener;
@@ -422,5 +364,10 @@ public abstract class NavigationActivity extends BaseActivity {
         mOnDrawerListener = listener;
     }
 
+    public interface OnDrawerListener {
+        void onOpen();
+
+        void onClose();
+    }
 
 }

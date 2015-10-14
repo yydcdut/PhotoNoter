@@ -9,7 +9,7 @@
                 tools:ignore="MissingPrefix">
 
     <ListView
-        android:id="@+id/list"
+        android:id="@+id/lv_navigation"
         android:layout_width="@dimen/drawer_layout_width"
         android:layout_height="match_parent"
         android:layout_gravity="start"

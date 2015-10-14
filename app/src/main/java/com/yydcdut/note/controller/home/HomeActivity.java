@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.animation.Animation;
@@ -38,7 +37,8 @@ import java.util.List;
 /**
  * Created by yuyidong on 15-3-23.
  */
-public class HomeActivity extends NavigationActivity implements NavigationActivity.NavigationLiveoListener, NavigationActivity.OnDrawerListener {
+public class HomeActivity extends NavigationActivity implements NavigationActivity.NavigationListener,
+        NavigationActivity.OnDrawerListener {
     /**
      * 数据
      */
@@ -149,20 +149,15 @@ public class HomeActivity extends NavigationActivity implements NavigationActivi
     }
 
     @Override
-    public void onUserAccounts() {
-    }
-
-    @Override
     public void onCloudInformation() {
 
     }
 
     @Override
-    public void onCreateInit(Bundle savedInstanceState) {
-        this.setNavigationListener(this);
-        this.setOnDrawerListener(this);
-        //First item of the position selected from the list
-        this.setDefaultStartPositionNavigation(0);
+    public void initNavigationListener() {
+        setNavigationListener(this);
+        setOnDrawerListener(this);
+        setCurrentListCheckedPosition(0);
     }
 
     @Override
@@ -193,7 +188,7 @@ public class HomeActivity extends NavigationActivity implements NavigationActivi
         mListData = CategoryDBModel.getInstance().findAll();
         getCategoryAdapter().resetGroup(mListData);
         getCategoryAdapter().notifyDataSetChanged();
-        setCurrentPosition(mListData.size() - 1);
+        setCurrentListCheckedPosition(mListData.size() - 1);
         setCheckedItemNavigation(mListData.size() - 1, true);
         mCategoryLabel = category.getLabel();
         mFragment.changePhotos4Category(mCategoryLabel);
@@ -306,31 +301,23 @@ public class HomeActivity extends NavigationActivity implements NavigationActivi
 
     }
 
-
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    public void onBackPressed() {
         try {
-            switch (keyCode) {
-                case KeyEvent.KEYCODE_BACK:
-                    if (mFragment.ifRevealOpenAndCloseIt()) {//就在那个函数里面关闭了
-                    } else if (mFragment.isMenuSelectModeAndChangeIt()) {//就在那个函数里面换了模式了
-                    } else if (mFragment.isLayoutRevealOpen()) {//不做其他操作
-                    } else {
-                        if (System.currentTimeMillis() - mLastBackTime > 2000) {
-                            Toast.makeText(HomeActivity.this, "再点击一次退出!", Toast.LENGTH_SHORT).show();
-                            mLastBackTime = System.currentTimeMillis();
-                        } else {
-                            return super.onKeyDown(keyCode, event);
-                        }
-                    }
-                    return true;
-                default:
-                    return super.onKeyDown(keyCode, event);
+            if (mFragment.ifRevealOpenAndCloseIt()) {//就在那个函数里面关闭了
+            } else if (mFragment.isMenuSelectModeAndChangeIt()) {//就在那个函数里面换了模式了
+            } else if (mFragment.isLayoutRevealOpen()) {//不做其他操作
+            } else {
+                if (System.currentTimeMillis() - mLastBackTime > 2000) {
+                    Toast.makeText(HomeActivity.this, "再点击一次退出!", Toast.LENGTH_SHORT).show();
+                    mLastBackTime = System.currentTimeMillis();
+                } else {
+                    super.onBackPressed();
+                }
             }
         } catch (Exception e) {
             //有时候mFragment会为空
         }
-        return super.onKeyDown(keyCode, event);
     }
 
     @Override

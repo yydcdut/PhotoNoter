@@ -12,15 +12,16 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.DetailPagerAdapter;
 import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.controller.BaseActivity;
 import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.utils.Const;
+import com.yydcdut.note.utils.Evi;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.LollipopCompat;
-import com.yydcdut.note.utils.ZoomOutPageTransformer;
 
 import java.util.List;
 
@@ -144,7 +145,6 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
             CardView cardView = (CardView) view.findViewById(R.id.card_detail_layout);
             cardView.setCardElevation(0);
             cardView.setRadius(0);
-            cardView.setCardBackgroundColor(Color.TRANSPARENT);
         }
     }
 
@@ -184,7 +184,51 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
                 }
             });
         }
+    }
 
+
+    class ZoomOutPageTransformer implements ViewPager.PageTransformer {
+        private static final float MIN_SCALE = 0.85f;
+
+        @Override
+        public void transformPage(View view, float position) {
+            CardView cardView = (CardView) view.findViewById(R.id.card_detail_layout);
+
+
+            int pageWidth = view.getWidth();
+            int pageHeight = view.getHeight();
+
+            if (position < -1) { // [-Infinity,-1)
+                cardView.setCardElevation(0);
+                cardView.setRadius(0);
+                cardView.setCardBackgroundColor(Color.TRANSPARENT);
+            } else if (position == -1 || position == 1) {
+                cardView.setCardElevation(0);
+                cardView.setRadius(0);
+                cardView.setCardBackgroundColor(Color.TRANSPARENT);
+            } else if (position < 1) { // (-1,1)
+                // Modify the default slide transition to
+                // shrink the page as well
+                cardView.setCardElevation(NoteApplication.getContext().getResources().getDimension(R.dimen.card_elevation) * 2);
+                cardView.setRadius(NoteApplication.getContext().getResources().getDimension(R.dimen.card_corner) * 3);
+                float scaleFactor = Math.max(MIN_SCALE, 1 - Math.abs(position));
+                float vertMargin = pageHeight * (1 - scaleFactor) / 2;
+                float horzMargin = pageWidth * (1 - scaleFactor) / 2;
+                if (position < 0) {
+                    view.setTranslationX(horzMargin - vertMargin / 2);
+                } else {
+                    view.setTranslationX(-horzMargin + vertMargin / 2);
+                }
+                // Scale the page down (between MIN_SCALE and 1)
+                view.setPivotX(Evi.sScreenWidth / 2);
+                view.setPivotY(Evi.sScreenHeight - 1);
+                view.setScaleX(scaleFactor);
+                view.setScaleY(scaleFactor);
+            } else { // (1,+Infinity]
+                cardView.setCardElevation(0);
+                cardView.setRadius(0);
+            }
+        }
     }
 
 }

@@ -8,13 +8,13 @@
                 tools:ignore="MissingPrefix">
 
     <ImageView
-        android:id="@+id/userBackground"
+        android:id="@+id/img_userBackground"
         android:layout_width="match_parent"
         android:layout_height="@dimen/userBackground_layout_height"
         android:scaleType="fitXY"/>
 
     <com.yydcdut.note.view.RoundedImageView
-        android:id="@+id/userPhoto"
+        android:id="@+id/img_userPhoto"
         android:layout_width="@dimen/userPhoto_layout_width"
         android:layout_height="@dimen/userPhoto_layout_height"
         android:layout_alignParentLeft="true"
@@ -25,21 +25,20 @@
         android:layout_marginTop="@dimen/userPhoto_layout_marginTop"/>
 
     <com.yydcdut.note.view.RoundedImageView
-        android:id="@+id/userPhotoTwo"
+        android:id="@+id/img_userPhotoTwo"
         android:layout_width="@dimen/userPhotoTwo_layout_width"
         android:layout_height="@dimen/userPhotoTwo_layout_height"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/userPhoto"
+        android:layout_alignTop="@+id/img_userPhoto"
         android:layout_marginEnd="@dimen/userPhotoTwo_layout_marginRight"
         android:layout_marginRight="@dimen/userPhotoTwo_layout_marginRight"
         android:visibility="invisible"/>
 
     <RelativeLayout
-        android:id="@+id/userData"
         android:layout_width="match_parent"
         android:layout_height="@dimen/userData_layout_height"
-        android:layout_alignBottom="@+id/userBackground"
+        android:layout_alignBottom="@+id/img_userBackground"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="@dimen/userData_layout_marginBottom"
@@ -47,7 +46,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/userName"
+            android:id="@+id/txt_userName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
