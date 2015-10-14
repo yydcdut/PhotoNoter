@@ -1,10 +1,11 @@
 package com.yydcdut.note.listener;
 
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.AbsListView;
 
 import com.yydcdut.note.view.fab.FloatingActionsMenu;
 
@@ -12,7 +13,7 @@ import com.yydcdut.note.view.fab.FloatingActionsMenu;
 /**
  * Created by yuyidong on 15-3-25.
  */
-public class FloatingScrollHideListener implements AbsListView.OnScrollListener {
+public class FloatingScrollHideListener extends RecyclerView.OnScrollListener {
     private static final int SATISFIED_HIDE_TIMES = 3;
     private static final int DIRECTION_CHANGE_THRESHOLD = 1;
     private int mPrevPosition;
@@ -21,20 +22,23 @@ public class FloatingScrollHideListener implements AbsListView.OnScrollListener 
     private boolean mHide;
     private FloatingActionsMenu mFloatingActionsMenu;
     private int mTime = 0;
+    private GridLayoutManager mGridLayoutManager;
 
-    public FloatingScrollHideListener(FloatingActionsMenu mFloatingActionsMenu) {
+    public FloatingScrollHideListener(FloatingActionsMenu mFloatingActionsMenu, GridLayoutManager manager) {
         this.mFloatingActionsMenu = mFloatingActionsMenu;
+        mGridLayoutManager = manager;
         reset();
     }
 
     @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+        int firstVisibleItem = mGridLayoutManager.findFirstVisibleItemPosition();
         //如果是打开状态，就不操作
         if (mFloatingActionsMenu.isExpanded()) {
             return;
         }
         //得到第一个childView
-        final View topChild = view.getChildAt(0);
+        final View topChild = recyclerView.getChildAt(0);
         //得到第一个childView的Top
         int firstViewTop = 0;
         if (topChild != null) {
@@ -73,7 +77,7 @@ public class FloatingScrollHideListener implements AbsListView.OnScrollListener 
     }
 
     @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
+    public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
 //        switch (scrollState) {
 //            case SCROLL_STATE_IDLE:
 //                onDirectionChanged(false);

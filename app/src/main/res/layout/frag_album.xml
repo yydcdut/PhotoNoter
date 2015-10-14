@@ -21,15 +21,11 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
 
-        <GridView
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/gv_album"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:horizontalSpacing="3dip"
-            android:numColumns="3"
-            android:verticalSpacing="3dip"
-            />
-
+            android:scrollbars="vertical"/>
     </FrameLayout>
 
 

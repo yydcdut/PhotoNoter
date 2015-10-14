@@ -15,6 +15,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,14 +24,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.Toast;
 
 import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
-import com.yydcdut.note.adapter.AlbumItemAdapter;
+import com.yydcdut.note.adapter.AlbumAdapter;
+import com.yydcdut.note.adapter.vh.PhotoViewHolder;
 import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.camera.controller.CameraActivity;
@@ -61,8 +62,8 @@ import java.util.List;
 /**
  * Created by yuyidong on 15-3-23.
  */
-public class AlbumFragment extends BaseFragment implements View.OnClickListener, AdapterView.OnItemLongClickListener,
-        FloatingActionsMenu.OnFloatingActionsMenuUpdateListener, AdapterView.OnItemClickListener, Handler.Callback {
+public class AlbumFragment extends BaseFragment implements View.OnClickListener, PhotoViewHolder.OnItemClickListener,
+        PhotoViewHolder.OnItemLongClickListener, FloatingActionsMenu.OnFloatingActionsMenuUpdateListener, Handler.Callback {
     private static final String TAG = AlbumFragment.class.getSimpleName();
 
     private static final int INTENT_REQUEST_LOCAL = 101;
@@ -71,12 +72,14 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
 
     private static final int MSG_UPDATE_DATA = 100;
 
-    /* Gridview */
-    private GridView mGridView;
-    /* GridView的数据 */
+    /* RecyclerView */
+    private RecyclerView mRecyclerView;
+    /* RecyclerView布局 */
+    private GridLayoutManager mGridLayoutManager;
+    /* RecyclerView的数据 */
     private List<PhotoNote> mPhotoNoteList;
-    /* GridView的适配器 */
-    private AlbumItemAdapter mAdapter;
+    /* RecyclerView的适配器 */
+    private AlbumAdapter mAdapter;
     /* RevealColor */
     private RevealView mLayoutRevealView;
     private RevealView mAlbumRevealView;
@@ -147,7 +150,9 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
      * @param view
      */
     private void initListView(View view) {
-        mGridView = (GridView) view.findViewById(R.id.gv_album);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.gv_album);
+        mGridLayoutManager = new GridLayoutManager(getContext(), 3);
+        mRecyclerView.setLayoutManager(mGridLayoutManager);
     }
 
     /**
@@ -177,10 +182,8 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
         view.findViewById(R.id.fab_camera).setOnClickListener(this);
         view.findViewById(R.id.fab_local).setOnClickListener(this);
         mFloatingActionsMenu.setOnFloatingActionsMenuUpdateListener(this);
-        mFloatingScrollHideListener = new FloatingScrollHideListener(mFloatingActionsMenu);
-        mGridView.setOnScrollListener(mFloatingScrollHideListener);
-        mGridView.setOnItemClickListener(this);
-        mGridView.setOnItemLongClickListener(this);
+        mFloatingScrollHideListener = new FloatingScrollHideListener(mFloatingActionsMenu, mGridLayoutManager);
+        mRecyclerView.addOnScrollListener(mFloatingScrollHideListener);
     }
 
 
@@ -191,8 +194,8 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
         mAlbumSortKind = LocalStorageUtils.getInstance().getSortKind();
         mPhotoNoteList = PhotoNoteDBModel.getInstance().findByCategoryLabel(mCategoryLabel, mAlbumSortKind);
 
-        mAdapter = new AlbumItemAdapter(getContext(), mPhotoNoteList);
-        mGridView.setAdapter(mAdapter);
+        mAdapter = new AlbumAdapter(getContext(), mPhotoNoteList, this, this);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
 
@@ -202,19 +205,19 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+    public void onItemClick(View v, int layoutPosition, int adapterPosition) {
         if (mIsMenuSelectMode) {
-            if (!mAdapter.isPhotoSelected(position)) {
-                mAdapter.setSelectedPosition(true, position);
+            if (!mAdapter.isPhotoSelected(adapterPosition)) {
+                mAdapter.setSelectedPosition(true, adapterPosition);
             } else {
-                mAdapter.setSelectedPosition(false, position);
+                mAdapter.setSelectedPosition(false, adapterPosition);
             }
             return;
         }
         Intent intent = new Intent(getContext(), DetailActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString(Const.CATEGORY_LABEL, mCategoryLabel);
-        bundle.putInt(Const.PHOTO_POSITION, position);
+        bundle.putInt(Const.PHOTO_POSITION, adapterPosition);
         bundle.putInt(Const.COMPARATOR_FACTORY, mAlbumSortKind);
         intent.putExtras(bundle);
         getContext().startActivity(intent);
@@ -388,7 +391,7 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
      */
     private void sortData(Comparator<PhotoNote> comparator) {
         Collections.sort(mPhotoNoteList, comparator);
-        mAdapter.resetGroup(mPhotoNoteList);
+        mAdapter.updateData(mPhotoNoteList);
     }
 
     /**
@@ -582,11 +585,11 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
     }
 
     @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+    public boolean onItemLongClick(View v, int layoutPosition, int adapterPosition) {
         if (!mIsMenuSelectMode) {
             menuSelectMode();
         }
-        mAdapter.setSelectedPosition(true, position);
+        mAdapter.setSelectedPosition(true, adapterPosition);
         return true;
     }
 
@@ -711,7 +714,7 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
         menuPreviewMode();
         mCategoryLabel = categoryLabel;
         mPhotoNoteList = PhotoNoteDBModel.getInstance().findByCategoryLabel(mCategoryLabel, mAlbumSortKind);
-        mAdapter.resetGroup(mPhotoNoteList);
+        mAdapter.updateData(mPhotoNoteList);
     }
 
     /**
@@ -734,7 +737,7 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
             if (intent.getBooleanExtra(Const.TARGET_BROADCAST_CATEGORY_PHOTO, false) ||
                     intent.getBooleanExtra(Const.TARGET_BROADCAST_PROCESS, false)) {
                 mPhotoNoteList = PhotoNoteDBModel.getInstance().findByCategoryLabel(mCategoryLabel, mAlbumSortKind);
-                mAdapter.resetGroup(mPhotoNoteList);
+                mAdapter.updateData(mPhotoNoteList);
             }
         }
     };
