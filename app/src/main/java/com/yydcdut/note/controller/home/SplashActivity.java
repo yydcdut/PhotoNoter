@@ -10,7 +10,7 @@ import android.view.View;
 import com.yydcdut.note.R;
 import com.yydcdut.note.controller.BaseActivity;
 import com.yydcdut.note.utils.LocalStorageUtils;
-import com.yydcdut.note.utils.LollipopUtils;
+import com.yydcdut.note.utils.LollipopCompat;
 
 /**
  * Created by yuyidong on 15/7/16.
@@ -54,7 +54,7 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     public int setContentView() {
-        LollipopUtils.setFullWindow(getWindow());
+        LollipopCompat.setFullWindow(getWindow());
         return R.layout.activity_splash;
     }
 

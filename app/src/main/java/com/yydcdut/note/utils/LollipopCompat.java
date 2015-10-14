@@ -10,7 +10,7 @@ import android.view.WindowManager;
  * Created by yuyidong on 15/10/14.
  */
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-public class LollipopUtils {
+public class LollipopCompat {
 
     /**
      * 5.0之后的SDK
@@ -28,11 +28,19 @@ public class LollipopUtils {
     }
 
     public static void setFullWindow(Window window) {
-        if (LollipopUtils.AFTER_LOLLIPOP) {
+        if (LollipopCompat.AFTER_LOLLIPOP) {
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
                     | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION | 128);
         } else {
             window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }
+    }
+
+    public static void setStatuColor(Window window) {
+        int index = LocalStorageUtils.getInstance().getThemeColor();
+        if (AFTER_LOLLIPOP) {
+            window.setStatusBarColor(ThemeHelper.THEME.get(index).getStatusColor());
+            window.setNavigationBarColor(ThemeHelper.THEME.get(index).getStatusColor());
         }
     }
 

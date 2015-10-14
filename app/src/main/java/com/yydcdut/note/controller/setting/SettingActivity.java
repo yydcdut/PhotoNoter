@@ -31,7 +31,7 @@ import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.LocalStorageUtils;
-import com.yydcdut.note.utils.LollipopUtils;
+import com.yydcdut.note.utils.LollipopCompat;
 import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.view.ColorChooserDialog;
 import com.yydcdut.note.view.RoundedImageView;
@@ -97,7 +97,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         mToolbar.setTitle(getResources().getString(R.string.app_setting));
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        LollipopUtils.setElevation(mToolbar, getResources().getDimension(R.dimen.ui_elevation));
+        LollipopCompat.setElevation(mToolbar, getResources().getDimension(R.dimen.ui_elevation));
     }
 
     private void initPreferenceSetting() {
@@ -414,7 +414,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 break;
             case TAG_CAMERA2:
                 boolean use = LocalStorageUtils.getInstance().getCameraSystem();
-                if ((!LollipopUtils.AFTER_LOLLIPOP || !SUPPORT_CAMERA_5_0) && !use) {
+                if ((!LollipopCompat.AFTER_LOLLIPOP || !SUPPORT_CAMERA_5_0) && !use) {
                     toastNotSupport();
                     return;
                 }

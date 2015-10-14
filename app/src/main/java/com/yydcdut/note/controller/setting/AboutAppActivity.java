@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.yydcdut.note.R;
 import com.yydcdut.note.controller.BaseActivity;
-import com.yydcdut.note.utils.LollipopUtils;
+import com.yydcdut.note.utils.LollipopCompat;
 
 /**
  * Created by yuyidong on 15/9/2.
@@ -39,7 +39,7 @@ public class AboutAppActivity extends BaseActivity implements View.OnClickListen
         toolbar.setTitle(getResources().getString(R.string.about_setting));
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        LollipopUtils.setElevation(toolbar, getResources().getDimension(R.dimen.ui_elevation));
+        LollipopCompat.setElevation(toolbar, getResources().getDimension(R.dimen.ui_elevation));
     }
 
     private void initListener() {

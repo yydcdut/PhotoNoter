@@ -27,7 +27,7 @@ import com.yydcdut.note.camera.view.MenuLayout;
 import com.yydcdut.note.camera.view.callback.OnLayoutItemClickListener;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.LocalStorageUtils;
-import com.yydcdut.note.utils.LollipopUtils;
+import com.yydcdut.note.utils.LollipopCompat;
 import com.yydcdut.note.utils.compare.SizeComparator;
 
 import org.json.JSONException;
@@ -93,7 +93,7 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
         super.onCreate(savedInstanceState);
         Bundle bundle = getIntent().getExtras();
         mCategory = bundle.getString(Const.CATEGORY_LABEL);
-        LollipopUtils.setFullWindow(getWindow());
+        LollipopCompat.setFullWindow(getWindow());
         setContentView(R.layout.activity_camera);
         initData();
         initUIAndListener();

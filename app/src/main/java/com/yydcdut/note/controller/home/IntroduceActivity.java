@@ -12,7 +12,7 @@ import com.nineoldandroids.animation.ObjectAnimator;
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.IntroducePagerAdapter;
 import com.yydcdut.note.controller.BaseActivity;
-import com.yydcdut.note.utils.LollipopUtils;
+import com.yydcdut.note.utils.LollipopCompat;
 
 /**
  * Created by yuyidong on 15/8/9.
@@ -24,7 +24,7 @@ public class IntroduceActivity extends BaseActivity implements OnPageChangeListe
 
     @Override
     public int setContentView() {
-        LollipopUtils.setFullWindow(getWindow());
+        LollipopCompat.setFullWindow(getWindow());
         return R.layout.activity_introduce;
     }
 

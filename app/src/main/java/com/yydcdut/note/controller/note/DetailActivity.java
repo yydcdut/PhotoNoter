@@ -19,7 +19,7 @@ import com.yydcdut.note.controller.BaseActivity;
 import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
-import com.yydcdut.note.utils.LollipopUtils;
+import com.yydcdut.note.utils.LollipopCompat;
 import com.yydcdut.note.utils.ZoomOutPageTransformer;
 
 import java.util.List;
@@ -41,7 +41,7 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
 
     @Override
     public int setContentView() {
-        if (LollipopUtils.AFTER_LOLLIPOP) {
+        if (LollipopCompat.AFTER_LOLLIPOP) {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
                     | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION | 128);

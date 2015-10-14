@@ -39,7 +39,7 @@ import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.NavigationCategoryAdapter;
 import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.controller.BaseActivity;
-import com.yydcdut.note.utils.LollipopUtils;
+import com.yydcdut.note.utils.LollipopCompat;
 import com.yydcdut.note.view.RoundedImageView;
 
 import java.util.List;
@@ -107,7 +107,7 @@ public abstract class NavigationActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        if (LollipopUtils.AFTER_LOLLIPOP) {
+        if (LollipopCompat.AFTER_LOLLIPOP) {
             try {
                 Resources.Theme theme = this.getTheme();
                 TypedArray typedArray = theme.obtainStyledAttributes(new int[]{android.R.attr.colorPrimary});
@@ -117,7 +117,7 @@ public abstract class NavigationActivity extends BaseActivity {
             }
 
         }
-        LollipopUtils.setElevation(mToolbar, getResources().getDimension(R.dimen.ui_elevation));
+        LollipopCompat.setElevation(mToolbar, getResources().getDimension(R.dimen.ui_elevation));
 
         if (mList != null) {
             mountListNavigation(savedInstanceState);
