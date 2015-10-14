@@ -20,7 +20,9 @@ public class SandSQLite extends SQLiteOpenHelper {
                 "data BLOB NOT NULL, " +
                 "time LONG NOT NULL, " +
                 "cameraId CHAR(1) NOT NULL, " +
-                "category VARCHAR(50) NOT NULL);";
+                "category VARCHAR(50) NOT NULL, " +
+                "mirror CHAR(1) NOT NULL DEFAULT '0', " +
+                "ratio INTEGER NOT NULL DEFAULT 0);";
         db.execSQL(sql);
     }
 
