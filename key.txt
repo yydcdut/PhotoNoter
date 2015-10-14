@@ -1,9 +1,0 @@
-
-    signingConfigs {
-        release {
-            storeFile file('photosnoter.jks')
-            storePassword "Br1ght1992"
-            keyAlias "photosnoter"
-            keyPassword "Br1ght1992"
-        }
-    }

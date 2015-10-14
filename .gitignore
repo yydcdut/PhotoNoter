@@ -27,6 +27,6 @@ proguard/
 *.log
 
 /.idea
-/*iml
+*.iml
 /.DS_Store
-key.txt
+*.txt
