@@ -2,7 +2,6 @@ package com.yydcdut.note.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,7 +84,6 @@ public class AlbumAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
         }
         for (Map.Entry<Integer, PhotoNote> entry : map.entrySet()) {
             mPhotoNoteList.remove(entry.getValue());
-            Log.i("yuyidong", "entry.getKey()--->" + entry.getKey());
             notifyItemRemoved(entry.getKey());
             PhotoNoteDBModel.getInstance().delete(entry.getValue());
         }
