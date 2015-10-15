@@ -145,7 +145,7 @@ public class InitService extends Service {
      * 处理Category
      */
     private void initDefaultCategory() {
-        CategoryDBModel.getInstance().saveCategory(new Category(0, "斯里兰卡 游记", 16, 0, true));
+        CategoryDBModel.getInstance().saveCategory(new Category(0, "App介绍", 16, 0, true));
         mHandler.sendEmptyMessage(ADD);
     }
 
@@ -154,22 +154,61 @@ public class InitService extends Service {
             @Override
             public void run() {
                 String[] outFileName = new String[]{
-                        "0.jpg",
-                        "1.jpg",
-                        "2.jpg",
-                        "3.jpg",
-                        "4.jpg",
-                        "5.jpg",
-                        "6.jpg",
-                        "7.jpg",
-                        "8.jpg",
-                        "9.jpg",
-                        "10.jpg",
-                        "11.jpg",
-                        "12.jpg",
-                        "13.jpg",
-                        "14.jpg",
-                        "15.jpg"
+                        "s0.png",
+                        "s1.png",
+                        "s2.png",
+                        "s3.png",
+                        "s4.png",
+                        "s5.png",
+                        "s6.png",
+                        "s7.png",
+                        "s8.png",
+                        "s9.png",
+                        "s10.png",
+                        "s11.png",
+                        "s12.png",
+                        "s13.png",
+                        "s14.png",
+                        "s15.png",
+                };
+                String[] titles = new String[]{
+                        "欢迎界面",//1
+                        "相册界面（选择状态）",//2
+                        "功能选择",//3
+                        "分类界面",//4
+                        "登录界面",//5
+                        "设置界面",//6
+                        "编辑分类（设置）",//7
+                        "编辑分类（设置）",//8
+                        "App相机界面",//9
+                        "App相机比例界面",//10
+                        "App相机参数界面",//11
+                        "详情界面",//12
+                        "文字编辑界面",//13
+                        "详情界面",//14
+                        "详情界面切换",//15
+                        "图片详情界面",//16
+                };
+                String[] contents = new String[]{
+                        "可以在设置中关闭欢迎界面",
+                        "已开始进入相册界面是非选择界面，菜单选项为“新建分类”、“排序类型”、“进入选择状态”、“设置”，当单击图片之后进入详情页面；" +
+                                "长点击某张图片便可以进入选择界面。当进入选择界面的时候，菜单变为“全选”、“移动到其他分类”、“删除”，当单击其他图片时，图片状态变为选中或者非选中状态。",
+                        "当点击FloatingActionButton时弹出功能选择框，依次是“拍照”、“本地”，拍照可使用系统相机，但是如果这样，每次只能拍一张照片，而使用App相机，可以连续多拍，更多相机参数选项等，可以在设置中选择相机功能；" +
+                                "接下来是本地，本地是将本地的照片复制到 照片笔记 当中来。",
+                        "当从屏幕最左边往右滑动或者点击最左上菜单按钮的时候弹出分类界面，在这里可以登录第三方帐号、可以查看和选择分类、查看云空间大小。",
+                        "登录界面中可以第三方平台登录，提供多种登录方式，同时可以登录多格帐号。",
+                        "设置界面中用户可以根据自己的喜好选择主题、选择字体、编辑分类、处理第三方帐号、设置相机等。",
+                        "设置里面的编辑分类功能，将用户创建的分类全部显示在这里，分别左滑和右滑显示不同的菜单",
+                        "设置里面的编辑分类功能，将用户创建的分类全部显示在这里，分别左滑和右滑显示不同的菜单",
+                        "App相机中下方按钮分别是“设置比例和延迟拍照事件”、“拍照”、“相机参数（前置后置摄像头、闪光灯、白平衡等）”。",
+                        "1:1、4:3、Full可拍摄三中比例图片，延迟拍照时间分别为：关闭、3s、5s、10s和15s。",
+                        "界面下方按钮分别是前后置摄像头、闪光灯、手电筒、白平衡、缩放、拍照声音、GPS和放个辅助拍照",
+                        "在详情界面中、图片部分与文字部分的比例大约在7：3，文字部分如果被覆盖的话可往上滑动，文字部分一次是“标题”、“内容”、“GPS”和“事件”。" +
+                                "点击图片进入图片详情界面；点击FloatingActionButton进入文字编辑界面。",
+                        "文字编辑界面，上方是标题，下方是内容",
+                        "文字编辑之后返回的效果",
+                        "详情界面切换效果",
+                        "图片详情界面，菜单中的选项分别是：“滤镜”、“照片信息”、“收起菜单”"
                 };
                 boolean bool = false;
                 try {
@@ -181,22 +220,9 @@ public class InitService extends Service {
                     mHandler.sendEmptyMessage(ADD);
                     return;
                 }
-                PhotoNoteDBModel.getInstance().save(new PhotoNote(outFileName[0], System.currentTimeMillis(), System.currentTimeMillis(), 800, 1067, "佛牙寺主殿外墙", "佛牙寺主殿外墙", System.currentTimeMillis(), System.currentTimeMillis(), "斯里兰卡 游记"));
-                PhotoNoteDBModel.getInstance().save(new PhotoNote(outFileName[1], System.currentTimeMillis(), System.currentTimeMillis(), 800, 1067, "佛牙寺主殿外墙.", "佛牙寺主殿外墙.", System.currentTimeMillis(), System.currentTimeMillis(), "斯里兰卡 游记"));
-                PhotoNoteDBModel.getInstance().save(new PhotoNote(outFileName[2], System.currentTimeMillis(), System.currentTimeMillis(), 800, 1067, "康提咦著名的佛牙寺", "康提咦著名的佛牙寺", System.currentTimeMillis(), System.currentTimeMillis(), "斯里兰卡 游记"));
-                PhotoNoteDBModel.getInstance().save(new PhotoNote(outFileName[3], System.currentTimeMillis(), System.currentTimeMillis(), 800, 600, "刚好赶上当地的波耶节，佛牙寺内人头攒动", "刚好赶上当地的波耶节，佛牙寺内人头攒动", System.currentTimeMillis(), System.currentTimeMillis(), "斯里兰卡 游记"));
-                PhotoNoteDBModel.getInstance().save(new PhotoNote(outFileName[4], System.currentTimeMillis(), System.currentTimeMillis(), 800, 600, "狮子岩壁上的精美画壁", "狮子岩壁上的精美画壁", System.currentTimeMillis(), System.currentTimeMillis(), "斯里兰卡 游记"));
-                PhotoNoteDBModel.getInstance().save(new PhotoNote(outFileName[5], System.currentTimeMillis(), System.currentTimeMillis(), 800, 600, "加勒海岸线.", "加勒海岸线.", System.currentTimeMillis(), System.currentTimeMillis(), "斯里兰卡 游记"));
-                PhotoNoteDBModel.getInstance().save(new PhotoNote(outFileName[6], System.currentTimeMillis(), System.currentTimeMillis(), 800, 600, "加勒海岸线", "加勒海岸线", System.currentTimeMillis(), System.currentTimeMillis(), "斯里兰卡 游记"));
-                PhotoNoteDBModel.getInstance().save(new PhotoNote(outFileName[7], System.currentTimeMillis(), System.currentTimeMillis(), 800, 600, "加勒海岸线", "加勒海岸线", System.currentTimeMillis(), System.currentTimeMillis(), "斯里兰卡 游记"));
-                PhotoNoteDBModel.getInstance().save(new PhotoNote(outFileName[8], System.currentTimeMillis(), System.currentTimeMillis(), 800, 600, "加勒海岸线-高跷海钓", "加勒海岸线-高跷海钓", System.currentTimeMillis(), System.currentTimeMillis(), "斯里兰卡 游记"));
-                PhotoNoteDBModel.getInstance().save(new PhotoNote(outFileName[9], System.currentTimeMillis(), System.currentTimeMillis(), 800, 600, "加勒海岸线-高跷海钓", "加勒海岸线-高跷海钓", System.currentTimeMillis(), System.currentTimeMillis(), "斯里兰卡 游记"));
-                PhotoNoteDBModel.getInstance().save(new PhotoNote(outFileName[10], System.currentTimeMillis(), System.currentTimeMillis(), 800, 600, "加勒海岸线-高跷海钓", "加勒海岸线-高跷海钓", System.currentTimeMillis(), System.currentTimeMillis(), "斯里兰卡 游记"));
-                PhotoNoteDBModel.getInstance().save(new PhotoNote(outFileName[11], System.currentTimeMillis(), System.currentTimeMillis(), 720, 1280, "加勒古堡街景", "加勒古堡街景", System.currentTimeMillis(), System.currentTimeMillis(), "斯里兰卡 游记"));
-                PhotoNoteDBModel.getInstance().save(new PhotoNote(outFileName[12], System.currentTimeMillis(), System.currentTimeMillis(), 720, 1280, "加勒古堡街景", "加勒古堡街景", System.currentTimeMillis(), System.currentTimeMillis(), "斯里兰卡 游记"));
-                PhotoNoteDBModel.getInstance().save(new PhotoNote(outFileName[13], System.currentTimeMillis(), System.currentTimeMillis(), 720, 1280, "加勒古堡街景", "加勒古堡街景", System.currentTimeMillis(), System.currentTimeMillis(), "斯里兰卡 游记"));
-                PhotoNoteDBModel.getInstance().save(new PhotoNote(outFileName[14], System.currentTimeMillis(), System.currentTimeMillis(), 800, 600, "卧佛寺", "卧佛寺", System.currentTimeMillis(), System.currentTimeMillis(), "斯里兰卡 游记"));
-                PhotoNoteDBModel.getInstance().save(new PhotoNote(outFileName[15], System.currentTimeMillis(), System.currentTimeMillis(), 800, 1067, "科伦坡，致命时期英国建筑", "科伦坡，致命时期英国建筑", System.currentTimeMillis(), System.currentTimeMillis(), "斯里兰卡 游记"));
+                for (int i = 0; i < outFileName.length; i++) {
+                    PhotoNoteDBModel.getInstance().save(new PhotoNote(outFileName[i], System.currentTimeMillis(), System.currentTimeMillis(), titles[i], contents[i], System.currentTimeMillis(), System.currentTimeMillis(), "App介绍"));
+                }
                 mHandler.sendEmptyMessage(ADD);
             }
         });

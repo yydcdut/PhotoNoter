@@ -121,7 +121,7 @@ public class CameraService extends Service {
             FilePathUtils.saveSmallPhoto(fileName, newBitmap);
         }
 
-        PhotoNote photoNote = new PhotoNote(fileName, sandPhoto.getTime(), sandPhoto.getTime(), newBitmap.getWidth(), newBitmap.getHeight(), "", "", sandPhoto.getTime(), sandPhoto.getTime(), sandPhoto.getCategory());
+        PhotoNote photoNote = new PhotoNote(fileName, sandPhoto.getTime(), sandPhoto.getTime(), "", "", sandPhoto.getTime(), sandPhoto.getTime(), sandPhoto.getCategory());
         boolean bool = PhotoNoteDBModel.getInstance().save(photoNote);
         if (bool) {
             sendBroadcast2UpdateData();

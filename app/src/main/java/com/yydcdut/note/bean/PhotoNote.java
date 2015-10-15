@@ -2,12 +2,10 @@ package com.yydcdut.note.bean;
 
 import com.yydcdut.note.utils.FilePathUtils;
 
-import org.litepal.crud.DataSupport;
-
 /**
  * Created by yyd on 15-3-29.
  */
-public class PhotoNote extends DataSupport implements IObject {
+public class PhotoNote implements IObject {
     /**
      * ID
      */
@@ -17,21 +15,13 @@ public class PhotoNote extends DataSupport implements IObject {
      */
     private String photoName;
     /**
-     * 照片路径
+     * 照片创建时间
      */
     private long createdPhotoTime;
     /**
      * 照片编辑时间
      */
     private long editedPhotoTime;
-    /**
-     * 照片宽度
-     */
-    private int width;
-    /**
-     * 照片高度
-     */
-    private int height;
     /**
      * 照片是否被选中
      */
@@ -52,20 +42,35 @@ public class PhotoNote extends DataSupport implements IObject {
      * 最后修改笔记时间
      */
     private long editedNoteTime;
-
     /**
      * Category中的类别
      */
     private String categoryLabel;
+    /**
+     * 标记
+     */
+    private int tag;
 
     public PhotoNote(String photoName, long createdPhotoTime, long editedPhotoTime,
-                     int width, int height, String title, String content, long createdNoteTime,
+                     String title, String content, long createdNoteTime,
                      long editedNoteTime, String categoryLabel) {
         this.photoName = photoName;
         this.createdPhotoTime = createdPhotoTime;
         this.editedPhotoTime = editedPhotoTime;
-        this.width = width;
-        this.height = height;
+        this.title = title;
+        this.content = content;
+        this.createdNoteTime = createdNoteTime;
+        this.editedNoteTime = editedNoteTime;
+        this.categoryLabel = categoryLabel;
+    }
+
+    public PhotoNote(int id, String photoName, long createdPhotoTime, long editedPhotoTime,
+                     String title, String content, long createdNoteTime,
+                     long editedNoteTime, String categoryLabel) {
+        this.id = id;
+        this.photoName = photoName;
+        this.createdPhotoTime = createdPhotoTime;
+        this.editedPhotoTime = editedPhotoTime;
         this.title = title;
         this.content = content;
         this.createdNoteTime = createdNoteTime;
@@ -147,22 +152,6 @@ public class PhotoNote extends DataSupport implements IObject {
 
     public void setEditedNoteTime(long editedNoteTime) {
         this.editedNoteTime = editedNoteTime;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
     }
 
     public void setIsSelected(boolean isSelected) {

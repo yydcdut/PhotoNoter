@@ -1,11 +1,9 @@
 package com.yydcdut.note.bean;
 
-import org.litepal.crud.DataSupport;
-
 /**
  * Created by yuyidong on 15/7/8.
  */
-public class Category extends DataSupport implements IObject {
+public class Category implements IObject {
 
     private int id;
     private String label;
@@ -70,5 +68,16 @@ public class Category extends DataSupport implements IObject {
 
     public void setCheck(boolean isCheck) {
         this.isCheck = isCheck;
+    }
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "id=" + id +
+                ", label='" + label + '\'' +
+                ", photosNumber=" + photosNumber +
+                ", sort=" + sort +
+                ", isCheck=" + isCheck +
+                '}';
     }
 }

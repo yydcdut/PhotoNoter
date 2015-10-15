@@ -164,7 +164,7 @@ public class ZoomActivity extends BaseActivity implements View.OnClickListener, 
                 case R.id.menu_info:
                     String[] array = new String[]{
                             getResources().getString(R.string.file_name) + mPhotoNote.getPhotoName(),
-                            getResources().getString(R.string.size) + mPhotoNote.getWidth() + " * " + mPhotoNote.getHeight(),
+                            getResources().getString(R.string.size) + "0" + " * " + "0",
                             getResources().getString(R.string.date) + Utils.decodeTimeInImageDetail(mPhotoNote.getCreatedPhotoTime())
                     };
                     new AlertDialog.Builder(ZoomActivity.this, R.style.note_dialog)
@@ -257,9 +257,9 @@ public class ZoomActivity extends BaseActivity implements View.OnClickListener, 
      */
     private void updateSize() {
         int[] arr = FilePathUtils.getPictureSize(mPhotoNote.getBigPhotoPathWithoutFile());
-        mPhotoNote.setWidth(arr[0]);
-        mPhotoNote.setHeight(arr[1]);
-        PhotoNoteDBModel.getInstance().update(mPhotoNote);
+//        mPhotoNote.setWidth(arr[0]);
+//        mPhotoNote.setHeight(arr[1]);
+//        PhotoNoteDBModel.getInstance().update(mPhotoNote);
     }
 
     @Override

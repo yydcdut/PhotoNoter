@@ -264,7 +264,7 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
                     @Override
                     public void run() {
                         PhotoNote photoNote = new PhotoNote(System.currentTimeMillis() + ".jpg", System.currentTimeMillis(),
-                                System.currentTimeMillis(), width, height, "", "", System.currentTimeMillis(),
+                                System.currentTimeMillis(), "", "", System.currentTimeMillis(),
                                 System.currentTimeMillis(), mCategoryLabel);
 
                         if (PhotoNoteDBModel.getInstance().save(photoNote)) {
@@ -294,7 +294,7 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
                 @Override
                 public void run() {
                     PhotoNote photoNote = new PhotoNote(System.currentTimeMillis() + ".jpg", System.currentTimeMillis(),
-                            System.currentTimeMillis(), width, height, "", "", System.currentTimeMillis(),
+                            System.currentTimeMillis(), "", "", System.currentTimeMillis(),
                             System.currentTimeMillis(), mCategoryLabel);
                     if (PhotoNoteDBModel.getInstance().save(photoNote)) {
                         //复制大图
