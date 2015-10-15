@@ -142,6 +142,11 @@ public class AlbumAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
         notifyDataSetChanged();
     }
 
+    /**
+     * 更新数据
+     *
+     * @param photoNotes
+     */
     public void updateData(List<PhotoNote> photoNotes) {
         mPhotoNoteList = photoNotes;
         notifyDataSetChanged();
