@@ -87,7 +87,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
             mPhotoNoteList.remove(entry.getValue());
             Log.i("yuyidong", "entry.getKey()--->" + entry.getKey());
             notifyItemRemoved(entry.getKey());
-//            PhotoNoteDBModel.getInstance().delete(entry.getValue());
+            PhotoNoteDBModel.getInstance().delete(entry.getValue());
         }
     }
 
