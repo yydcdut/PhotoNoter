@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">PhotosNoter</string>
+    <string name="app_name">PhotoNoter</string>
     <string name="app_setting">Settings</string>
 
     <string name="introduce_start">Start!</string>

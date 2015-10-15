@@ -24,38 +24,6 @@ public class Const {
     public static final String TARGET_BROADCAST_CATEGORY_PHOTO = "target_broadcast_category_color";//bool
     public static final String TARGET_BROADCAST_PROCESS = "target_broadcast_process";//bool
 
-    /* 友盟 */
-    public static final String UM_EDIT_TEXT_CLICK = "um_edit_click";
-    public static final String UM_EDIT_TEXT_CLICK_FINISH = "um_edit_click_finish";
-    public static final String UM_EDIT_TEXT_CLICK_RETURN = "um_edit_click_return";
-    public static final String UM_EDIT_IMAGE_CLICK = "um_edit_image_click";
-    public static final String UM_EDIT_IMAGE_CAMERA360 = "um_edit_image_camera360";
-    public static final String UM_EDIT_IMAGE_CAMERA360_OK = "um_edit_image_camera360_ok";
-    public static final String UM_EDIT_IMAGE_CAMERA360_NO = "um_edit_image_camera360_no";
-    public static final String UM_EDIT_IMAGE_DETAIL = "um_edit_image_detail";
-    public static final String UM_SETTING_THEME = "um_setting_theme";
-    public static final String UM_SETTING_PHOTO_SORT = "um_setting_photo_sort";
-    public static final String UM_SETTING_CATEGORT_EDIT = "um_setting_category_edit";
-    public static final String UM_SETTING_NOTE_STYLE = "um_setting_note_style";
-    public static final String UM_SETTING_SYSTEM_CAMERA = "um_setting_system_camera";
-    public static final String UM_SETTING_CAMERA_SAVE = "um_setting_camera_save";
-    public static final String UM_SETTING_ABOUT = "um_setting_about";
-    public static final String UM_ALBUM_MENU_PHOTO_SORT = "um_album_menu_photo_sort";
-    public static final String UM_ALBUM_MENU_NEW_CATEGORY = "um_album_menu_new_category";
-    public static final String UM_ALBUM_MENU_SELECT_ALL = "um_album_menu_select_all";
-    public static final String UM_ALBUM_MENU_SELECT_MODE = "um_album_menu_select_mode";
-    public static final String UM_ALBUM_MENU_MOVE = "um_album_menu_move";
-    public static final String UM_ALBUM_MENU_DELETE = "um_album_menu_delete";
-    public static final String UM_ALBUM_FAB_LOCAL = "um_album_fab_local";
-    public static final String UM_ALBUM_FAB_CAMERA_SYSTEM = "um_album_fab_camera_system";
-    public static final String UM_ALBUM_FAB_CAMERA_DIY = "um_album_fab_camera_diy";
-    public static final String UM_ALBUM_FAB_NOTHING = "um_album_fab_nothing";
-    public static final String UM_CAMERA_ID = "um_camera_id";
-    public static final String UM_CAMERA_FLASH = "um_camera_flash";
-    public static final String UM_CAMERA_TIMER = "um_camera_timer";
-    public static final String UM_CAMERA_SETTING = "um_camera_setting";
-    public static final String UM_CAMERA_CAPTURE = "um_camera_capture";
-
     /* Camera */
     public static final String CAMERA_SIZE_WIDTH = "width";
     public static final String CAMERA_SIZE_HEIGHT = "height";

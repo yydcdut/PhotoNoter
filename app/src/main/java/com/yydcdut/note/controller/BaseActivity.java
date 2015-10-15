@@ -11,6 +11,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.Window;
 
+import com.umeng.analytics.MobclickAgent;
 import com.yydcdut.note.R;
 import com.yydcdut.note.utils.ActivityCollector;
 import com.yydcdut.note.utils.Const;
@@ -154,5 +155,17 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         ActivityCollector.removeActivity(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }
