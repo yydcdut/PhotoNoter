@@ -39,8 +39,8 @@ import java.io.IOException;
 /**
  * Created by yyd on 15-3-29.
  */
-public class DetailTextFragment extends BaseFragment implements ObservableScrollViewCallbacks, View.OnClickListener {
-    private static final String TAG = DetailTextFragment.class.getSimpleName();
+public class DetailFragment extends BaseFragment implements ObservableScrollViewCallbacks, View.OnClickListener {
+    private static final String TAG = DetailFragment.class.getSimpleName();
     private static final float MAX_TEXT_SCALE_DELTA = 0.3f;
     private static final boolean TOOLBAR_IS_STICKY = false;
 
@@ -69,8 +69,8 @@ public class DetailTextFragment extends BaseFragment implements ObservableScroll
     private TextView mEditView;
 
 
-    public static DetailTextFragment newInstance() {
-        return new DetailTextFragment();
+    public static DetailFragment newInstance() {
+        return new DetailFragment();
     }
 
     @Override
@@ -135,16 +135,7 @@ public class DetailTextFragment extends BaseFragment implements ObservableScroll
         mToolBarTitleView.setText("");
         getActivity().setTitle(null);
         initSize();
-        if (TextUtils.isEmpty(mPhotoNote.getTitle())) {
-            getView().findViewById(R.id.card_detail_title).setVisibility(View.GONE);
-        } else {
-            mTitleView.setText(mPhotoNote.getTitle());
-        }
-        if (TextUtils.isEmpty(mPhotoNote.getContent())) {
-            getView().findViewById(R.id.card_detail_content).setVisibility(View.GONE);
-        } else {
-            mContentView.setText(mPhotoNote.getContent());
-        }
+        setDataOrSetVisibility();
         try {
             initExif(getView());
         } catch (IOException e) {
@@ -152,6 +143,24 @@ public class DetailTextFragment extends BaseFragment implements ObservableScroll
         }
         mCreateView.setText(Utils.decodeTimeInTextDetail(mPhotoNote.getCreatedNoteTime()));
         mEditView.setText(Utils.decodeTimeInTextDetail(mPhotoNote.getEditedNoteTime()));
+    }
+
+    /**
+     * 有数据的话设置数据，没有数据的话隐藏
+     */
+    private void setDataOrSetVisibility() {
+        if (TextUtils.isEmpty(mPhotoNote.getTitle())) {
+            getView().findViewById(R.id.card_detail_title).setVisibility(View.GONE);
+        } else {
+            getView().findViewById(R.id.card_detail_title).setVisibility(View.VISIBLE);
+            mTitleView.setText(mPhotoNote.getTitle());
+        }
+        if (TextUtils.isEmpty(mPhotoNote.getContent())) {
+            getView().findViewById(R.id.card_detail_content).setVisibility(View.GONE);
+        } else {
+            getView().findViewById(R.id.card_detail_content).setVisibility(View.VISIBLE);
+            mContentView.setText(mPhotoNote.getContent());
+        }
     }
 
     private void initExif(View v) throws IOException {
@@ -410,14 +419,7 @@ public class DetailTextFragment extends BaseFragment implements ObservableScroll
 
             @Override
             public void finish() {
-                Intent intent = new Intent(getContext(), EditTextActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt(Const.PHOTO_POSITION, mPosition);
-                bundle.putString(Const.CATEGORY_LABEL, mPhotoNote.getCategoryLabel());
-                bundle.putInt(Const.COMPARATOR_FACTORY, mComparator);
-                intent.putExtras(bundle);
-                startActivityForResult(intent, REQUEST_NOTHING);
-                getActivity().overridePendingTransition(R.anim.activity_no_animation, R.anim.activity_no_animation);
+                EditTextActivity.startActivityForResult(DetailFragment.this, mPhotoNote.getCategoryLabel(), mPosition, mComparator);
                 donotIgnoreKeyListener();
             }
         });
@@ -458,8 +460,7 @@ public class DetailTextFragment extends BaseFragment implements ObservableScroll
      * 更新数据
      */
     private void updateText() {
-        mTitleView.setText(mPhotoNote.getTitle());
-        mContentView.setText(mPhotoNote.getContent());
+        setDataOrSetVisibility();
         mEditView.setText(Utils.decodeTimeInTextDetail(mPhotoNote.getEditedNoteTime()));
     }
 

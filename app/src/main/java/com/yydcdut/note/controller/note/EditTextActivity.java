@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
@@ -30,37 +31,58 @@ import com.yydcdut.note.view.fab.FloatingActionButton;
  * Created by yyd on 15-4-8.
  */
 public class EditTextActivity extends BaseActivity implements View.OnClickListener {
+    public static final int CODE_REQUEST = 1;
+
+    /* Context */
     private Context mContext = EditTextActivity.this;
-
-    private Toolbar mToolbar;
-
+    /* title是否显示出来? */
     private boolean mIsEditTextShow = true;
+    /* Views */
+    private Toolbar mToolbar;
     private View mLayoutTitle;
     private EditText mTitleEdit;
     private EditText mContentEdit;
-
-    private byte[] mTag = new byte[0];
-
-    private ImageView mMenuArrowImage;
     private FloatingActionButton mFab;
     private RevealView mRevealView;
-
+    private ImageView mMenuArrowImage;
+    /* 数据 */
     private PhotoNote mPhotoNote;
     private int mPosition;
     private int mComparator;
-
+    /* 标志位，防止多次点击出现bug效果 */
     private boolean mIsHiding = false;
+
+    private byte[] mTag = new byte[0];
 
     @Override
     public int setContentView() {
         return R.layout.activity_edit;
     }
 
+    /**
+     * 启动Activity
+     *
+     * @param fragment
+     * @param categoryLabel
+     * @param photoNotePosition
+     * @param comparator
+     */
+    public static void startActivityForResult(Fragment fragment, String categoryLabel, int photoNotePosition, int comparator) {
+        Intent intent = new Intent(fragment.getContext(), EditTextActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString(Const.CATEGORY_LABEL, categoryLabel);
+        bundle.putInt(Const.PHOTO_POSITION, photoNotePosition);
+        bundle.putInt(Const.COMPARATOR_FACTORY, comparator);
+        intent.putExtras(bundle);
+        fragment.startActivityForResult(intent, CODE_REQUEST);
+        fragment.getActivity().overridePendingTransition(R.anim.activity_no_animation, R.anim.activity_no_animation);
+    }
+
     private void getBundle() {
         Bundle bundle = getIntent().getExtras();
-        mComparator = bundle.getInt(Const.COMPARATOR_FACTORY);
         String category = bundle.getString(Const.CATEGORY_LABEL);
         mPosition = bundle.getInt(Const.PHOTO_POSITION);
+        mComparator = bundle.getInt(Const.COMPARATOR_FACTORY);
         mPhotoNote = PhotoNoteDBModel.getInstance().findByCategoryLabel(category, mComparator).get(mPosition);
     }
 
@@ -79,7 +101,7 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
     private void initToolBarUI() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar_edit);
         setSupportActionBar(mToolbar);
-        mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        mToolbar.setNavigationIcon(R.drawable.ic_clear_white_24dp);
     }
 
     private void initToolBarItem() {
