@@ -13,9 +13,10 @@ import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by yuyidong on 15/10/14.
@@ -75,17 +76,24 @@ public class AlbumAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
      */
     public void deleteSelectedPhotos() {
         //注意java.util.ConcurrentModificationException at java.util.ArrayList$ArrayListIterator.next(ArrayList.java:573)
-        HashMap<Integer, PhotoNote> map = new HashMap<>();
+        TreeMap<Integer, PhotoNote> map = new TreeMap<>(new Comparator<Integer>() {
+            @Override
+            public int compare(Integer lhs, Integer rhs) {
+                return lhs - rhs;
+            }
+        });
         for (int i = 0; i < mPhotoNoteList.size(); i++) {
             PhotoNote photoNote = mPhotoNoteList.get(i);
             if (photoNote.isSelected()) {
                 map.put(i, photoNote);
             }
         }
+        int times = 0;
         for (Map.Entry<Integer, PhotoNote> entry : map.entrySet()) {
             PhotoNoteDBModel.getInstance().delete(entry.getValue());
             mPhotoNoteList.remove(entry.getValue());
-            notifyItemRemoved(entry.getKey());
+            notifyItemRemoved(entry.getKey() - times);
+            times++;
         }
     }
 

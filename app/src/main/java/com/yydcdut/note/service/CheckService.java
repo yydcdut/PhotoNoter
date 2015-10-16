@@ -50,11 +50,6 @@ public class CheckService extends Service {
             @Override
             public void run() {
                 checkCategoryPhotoNumber();
-            }
-        });
-        NoteApplication.getInstance().getExecutorPool().execute(new Runnable() {
-            @Override
-            public void run() {
                 checkBigAndSmallPhoto();
             }
         });
@@ -65,11 +60,15 @@ public class CheckService extends Service {
      */
     private void checkCategoryPhotoNumber() {
         List<Category> categoryList = CategoryDBModel.getInstance().findAll();
+        boolean isChanged = false;
         for (Category category : categoryList) {
             List<PhotoNote> photoNoteList = PhotoNoteDBModel.getInstance().findByCategoryLabel(category.getLabel(), -1);
             if (category.getPhotosNumber() != photoNoteList.size()) {
                 category.setPhotosNumber(photoNoteList.size());
+                isChanged = true;
             }
+        }
+        if (isChanged) {
             CategoryDBModel.getInstance().updateCategoryList(categoryList);
         }
         mHandler.sendEmptyMessage(ADD);
