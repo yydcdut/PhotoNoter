@@ -69,7 +69,7 @@ public class CheckService extends Service {
             }
         }
         if (isChanged) {
-            CategoryDBModel.getInstance().updateCategoryList(categoryList);
+            CategoryDBModel.getInstance().updateCategoryListInService(categoryList);
         }
         mHandler.sendEmptyMessage(ADD);
     }
@@ -113,20 +113,12 @@ public class CheckService extends Service {
      */
     private void stopService(int number) {
         if (number == QUITE) {
-            sendDataUpdateBroadcast(true, null, true, true, true);
+            Intent intent = new Intent();
+            intent.setAction(Const.BROADCAST_PHOTONOTE_UPDATE);
+            intent.putExtra(Const.TARGET_BROADCAST_SERVICE, true);
+            sendBroadcast(intent);
             stopSelf();
         }
-    }
-
-    public void sendDataUpdateBroadcast(boolean delete, String move, boolean sort, boolean number, boolean photo) {
-        Intent intent = new Intent();
-        intent.setAction(Const.BROADCAST_PHOTONOTE_UPDATE);
-        intent.putExtra(Const.TARGET_BROADCAST_CATEGORY_DELETE, delete);
-        intent.putExtra(Const.TARGET_BROADCAST_CATEGORY_MOVE, move);
-        intent.putExtra(Const.TARGET_BROADCAST_CATEGORY_SORT, sort);
-        intent.putExtra(Const.TARGET_BROADCAST_CATEGORY_NUMBER, number);
-        intent.putExtra(Const.TARGET_BROADCAST_CATEGORY_PHOTO, photo);
-        sendBroadcast(intent);
     }
 
 }

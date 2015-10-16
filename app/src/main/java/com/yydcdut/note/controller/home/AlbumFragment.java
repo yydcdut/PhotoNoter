@@ -753,9 +753,12 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
         public void onReceive(Context context, Intent intent) {
             //当图片数据改变的时候，比如滤镜，Service作图
             //另外个进程发来广播的时候
-            if (intent.getBooleanExtra(Const.TARGET_BROADCAST_PROCESS, false)) {
+            if (intent.getBooleanExtra(Const.TARGET_BROADCAST_PROCESS, false) ||
+                    intent.getBooleanExtra(Const.TARGET_BROADCAST_SERVICE, false)) {
                 mPhotoNoteList = PhotoNoteDBModel.getInstance().findByCategoryLabel(mCategoryLabel, mAlbumSortKind);
                 mAdapter.updateData(mPhotoNoteList);
+            } else if (intent.getBooleanExtra(Const.TARGET_BROADCAST_PHOTO, false)) {
+                mAdapter.notifyDataSetChanged();
             }
         }
     };

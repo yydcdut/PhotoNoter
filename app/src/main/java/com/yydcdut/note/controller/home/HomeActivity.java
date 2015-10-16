@@ -29,8 +29,6 @@ import com.yydcdut.note.model.observer.PhotoNoteChangedObserver;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
-import com.yydcdut.note.utils.YLog;
-import com.yydcdut.note.utils.compare.ComparatorFactory;
 import com.yydcdut.note.view.RoundedImageView;
 
 import java.io.File;
@@ -342,7 +340,7 @@ public class HomeActivity extends NavigationActivity implements NavigationActivi
     private void initReceiver() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Const.BROADCAST_PHOTONOTE_UPDATE);
-//        registerReceiver(mUpdatePhotoNoteList, intentFilter);
+        registerReceiver(mUpdatePhotoNoteList, intentFilter);
     }
 
     /**
@@ -362,63 +360,6 @@ public class HomeActivity extends NavigationActivity implements NavigationActivi
                 }
             }
 
-            //有被删除的，这个时候更新一下menu上的list 一般来源于EditCategoryActivity
-            //同时Rename也用的这个
-            if (intent.getBooleanExtra(Const.TARGET_BROADCAST_CATEGORY_DELETE, false)) {
-                mListData = CategoryDBModel.getInstance().findAll();
-                String beforeLabel = mCategoryLabel;
-                for (Category category : mListData) {
-                    if (category.isCheck()) {
-                        mCategoryLabel = category.getLabel();
-                        break;
-                    }
-                }
-                getCategoryAdapter().resetGroup(CategoryDBModel.getInstance().findAll());
-                if (!mCategoryLabel.equals(beforeLabel)) {
-                    mFragment.changePhotos4Category(mCategoryLabel);
-                }
-            }
-
-            //移动，移动之后肯定会更新数目 一般来源于AlbumFragment的menu
-            if (null != intent.getStringExtra(Const.TARGET_BROADCAST_CATEGORY_MOVE)) {
-                //更新移动过去的category数目
-                String targetCategoryLabel = intent.getStringExtra(Const.TARGET_BROADCAST_CATEGORY_MOVE);
-                int targetNumber = PhotoNoteDBModel.getInstance().findByCategoryLabel(targetCategoryLabel, ComparatorFactory.FACTORY_NOT_SORT).size();
-                Category targetCategory = CategoryDBModel.getInstance().findByCategoryLabel(targetCategoryLabel);
-                targetCategory.setPhotosNumber(targetNumber);
-                CategoryDBModel.getInstance().update(targetCategory);
-                //更新原来的category数目
-                int number = PhotoNoteDBModel.getInstance().findByCategoryLabel(mCategoryLabel, ComparatorFactory.FACTORY_NOT_SORT).size();
-                Category category = CategoryDBModel.getInstance().findByCategoryLabel(mCategoryLabel);
-                if (category.getPhotosNumber() == number) {
-                    return;
-                } else {
-                    category.setPhotosNumber(number);
-                    CategoryDBModel.getInstance().update(category);
-                    getCategoryAdapter().resetGroup(CategoryDBModel.getInstance().findAll());
-                }
-            }
-
-            //更新顺序 一般来源于EditCategoryActivity
-            if (intent.getBooleanExtra(Const.TARGET_BROADCAST_CATEGORY_SORT, false)) {
-                mListData = CategoryDBModel.getInstance().refresh();
-                getCategoryAdapter().resetGroup(mListData);
-            }
-
-            //更新数目
-            if (intent.getBooleanExtra(Const.TARGET_BROADCAST_CATEGORY_NUMBER, false)) {
-                //更新数目
-                int number = PhotoNoteDBModel.getInstance().findByCategoryLabel(mCategoryLabel, -1).size();
-                Category category = CategoryDBModel.getInstance().findByCategoryLabel(mCategoryLabel);
-                if (category.getPhotosNumber() == number) {
-                    return;
-                } else {
-                    category.setPhotosNumber(number);
-                    CategoryDBModel.getInstance().update(category);
-                    getCategoryAdapter().resetGroup(CategoryDBModel.getInstance().findAll());
-                }
-            }
-
             //从另外个进程过来的数据
             if (intent.getBooleanExtra(Const.TARGET_BROADCAST_PROCESS, false)) {
                 int number = PhotoNoteDBModel.getInstance().findByCategoryLabelByForce(mCategoryLabel, -1).size();
@@ -426,6 +367,11 @@ public class HomeActivity extends NavigationActivity implements NavigationActivi
                 category.setPhotosNumber(number);
                 CategoryDBModel.getInstance().update(category);
                 getCategoryAdapter().resetGroup(CategoryDBModel.getInstance().findAll());
+            }
+
+            //从Service中来
+            if (intent.getBooleanExtra(Const.TARGET_BROADCAST_SERVICE, false)) {
+                getCategoryAdapter().resetGroup(CategoryDBModel.getInstance().refresh());
             }
         }
     };
@@ -439,7 +385,7 @@ public class HomeActivity extends NavigationActivity implements NavigationActivi
 
     @Override
     public void onDestroy() {
-//        unregisterReceiver();
+        unregisterReceiver();
         super.onDestroy();
     }
 
@@ -480,7 +426,7 @@ public class HomeActivity extends NavigationActivity implements NavigationActivi
     }
 
     @Override
-    public void onUpdate(final int CRUD, final Category[] category) {
+    public void onUpdate(final int CRUD, final Category[] categories) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -499,20 +445,10 @@ public class HomeActivity extends NavigationActivity implements NavigationActivi
                             mFragment.changePhotos4Category(mCategoryLabel);
                         }
                         break;
-                    case CategoryChangedObserver.OBSERVER_CATEGORY_UPDATE:
-                        break;
                     case CategoryChangedObserver.OBSERVER_CATEGORY_MOVE:
-                        Category oldCategory = category[0];
-                        Category targetCategory = category[1];
-                        //更新移动过去的category数目
-                        int targetNumber = PhotoNoteDBModel.getInstance().findByCategoryLabel(targetCategory.getLabel(), ComparatorFactory.FACTORY_NOT_SORT).size();
-                        YLog.i("yuyidong", "targetNumber--->" + targetNumber);
-                        targetCategory.setPhotosNumber(targetNumber);
-                        CategoryDBModel.getInstance().update(targetCategory);
-                        int oldNumber = PhotoNoteDBModel.getInstance().findByCategoryLabel(oldCategory.getLabel(), ComparatorFactory.FACTORY_NOT_SORT).size();
-                        YLog.i("yuyidong", "oldNumber--->" + oldNumber);
-                        oldCategory.setPhotosNumber(oldNumber);
-                        CategoryDBModel.getInstance().update(oldCategory);
+                    case CategoryChangedObserver.OBSERVER_CATEGORY_CREATE:
+                    case CategoryChangedObserver.OBSERVER_CATEGORY_RENAME:
+                    case CategoryChangedObserver.OBSERVER_CATEGORY_SORT:
                         getCategoryAdapter().resetGroup(CategoryDBModel.getInstance().findAll());
                         break;
                 }

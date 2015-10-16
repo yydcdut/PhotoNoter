@@ -254,7 +254,10 @@ public class ZoomActivity extends BaseActivity implements View.OnClickListener, 
 
                     FilePathUtils.saveSmallPhotoFromSDK(mPhotoNote.getPhotoName(), editResult.getThumbNail());
 
-                    sendDataUpdateBroadcast(false, null, false, false, true);
+                    Intent intent = new Intent();
+                    intent.setAction(Const.BROADCAST_PHOTONOTE_UPDATE);
+                    intent.putExtra(Const.TARGET_BROADCAST_PHOTO, true);
+                    sendBroadcast(intent);
 
                     mMainHandler.sendEmptyMessage(MSG_UPDATE_DATA);
                 }

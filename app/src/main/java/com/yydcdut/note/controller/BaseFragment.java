@@ -2,7 +2,6 @@ package com.yydcdut.note.controller;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -13,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.yydcdut.note.R;
-import com.yydcdut.note.utils.Const;
 
 /**
  * Created by yuyidong on 15-3-17.
@@ -146,14 +144,4 @@ public abstract class BaseFragment extends Fragment {
         return new Point(l1[0], l1[1]);
     }
 
-    public void sendDataUpdateBroadcast(boolean delete, String move, boolean sort, boolean number, boolean photo) {
-        Intent intent = new Intent();
-        intent.setAction(Const.BROADCAST_PHOTONOTE_UPDATE);
-        intent.putExtra(Const.TARGET_BROADCAST_CATEGORY_DELETE, delete);
-        intent.putExtra(Const.TARGET_BROADCAST_CATEGORY_MOVE, move);
-        intent.putExtra(Const.TARGET_BROADCAST_CATEGORY_SORT, sort);
-        intent.putExtra(Const.TARGET_BROADCAST_CATEGORY_NUMBER, number);
-        intent.putExtra(Const.TARGET_BROADCAST_CATEGORY_PHOTO, photo);
-        getActivity().sendBroadcast(intent);
-    }
 }

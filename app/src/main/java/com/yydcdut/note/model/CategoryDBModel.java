@@ -120,6 +120,7 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
         if (id >= 0) {
             refresh();
         }
+        doObserver(IObserver.OBSERVER_CATEGORY_CREATE, new Category[]{category});
         return id >= 0;
     }
 
@@ -129,7 +130,7 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
      * @param categoryList
      * @return
      */
-    public boolean updateCategoryList(List<Category> categoryList) {
+    public boolean updateCategoryListInService(List<Category> categoryList) {
         boolean bool = true;
         for (Category category : categoryList) {
             bool &= updateData2DB(category);
@@ -141,18 +142,19 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
     }
 
     public boolean update(Category category) {
-        boolean bool = true;
-        if (checkLabelExist(category)) {
-            bool &= updateData2DB(category);
-        }
-        if (bool) {
-            doObserver(IObserver.OBSERVER_CATEGORY_UPDATE, new Category[]{category});
-            refresh();
-        }
-        return bool;
+        return update(category, true);
     }
 
     public void updateChangeCategory(String oldCategoryLabel, String targetCategoryLabel) {
+        Category oldCategory = findByCategoryLabel(oldCategoryLabel);
+        Category targetCategory = findByCategoryLabel(targetCategoryLabel);
+        //更新移动过去的category数目
+        int targetNumber = PhotoNoteDBModel.getInstance().findByCategoryLabel(targetCategory.getLabel(), ComparatorFactory.FACTORY_NOT_SORT).size();
+        targetCategory.setPhotosNumber(targetNumber);
+        CategoryDBModel.getInstance().update(targetCategory, false);
+        int oldNumber = PhotoNoteDBModel.getInstance().findByCategoryLabel(oldCategory.getLabel(), ComparatorFactory.FACTORY_NOT_SORT).size();
+        oldCategory.setPhotosNumber(oldNumber);
+        CategoryDBModel.getInstance().update(oldCategory);
         doObserver(IObserver.OBSERVER_CATEGORY_MOVE, new Category[]{
                 findByCategoryLabel(oldCategoryLabel), findByCategoryLabel(targetCategoryLabel)
         });
@@ -190,6 +192,7 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
         if (bool) {
             refresh();
         }
+        doObserver(IObserver.OBSERVER_CATEGORY_RENAME, null);
         return bool;
     }
 
@@ -223,7 +226,7 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
             bool &= updateData2DB(category);
         }
         refresh();
-        doObserver(IObserver.OBSERVER_CATEGORY_UPDATE, null);
+        doObserver(IObserver.OBSERVER_CATEGORY_SORT, null);
         return bool;
     }
 
@@ -259,6 +262,18 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
         int rows = db.delete(NotesSQLite.TABLE_CATEGORY, "_id = ?", new String[]{category.getId() + ""});
         db.close();
         return rows;
+    }
+
+    private boolean update(Category category, boolean refresh) {
+        boolean bool = true;
+        if (checkLabelExist(category)) {
+            bool &= updateData2DB(category);
+        }
+        if (bool && refresh) {
+            refresh();
+        }
+        doObserver(IObserver.OBSERVER_CATEGORY_UPDATE, new Category[]{category});
+        return bool;
     }
 
     private boolean checkLabelExist(Category category) {

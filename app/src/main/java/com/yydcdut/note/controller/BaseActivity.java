@@ -1,7 +1,6 @@
 package com.yydcdut.note.controller;
 
 import android.annotation.TargetApi;
-import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Point;
 import android.os.Build;
@@ -14,7 +13,6 @@ import android.view.Window;
 import com.umeng.analytics.MobclickAgent;
 import com.yydcdut.note.R;
 import com.yydcdut.note.utils.ActivityCollector;
-import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.LollipopCompat;
 import com.yydcdut.note.utils.ThemeHelper;
@@ -139,17 +137,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         l1[1] = l1[1] - l0[1] + target.getHeight() / 2;
 
         return new Point(l1[0], l1[1]);
-    }
-
-    public void sendDataUpdateBroadcast(boolean delete, String move, boolean sort, boolean number, boolean photo) {
-        Intent intent = new Intent();
-        intent.setAction(Const.BROADCAST_PHOTONOTE_UPDATE);
-        intent.putExtra(Const.TARGET_BROADCAST_CATEGORY_DELETE, delete);
-        intent.putExtra(Const.TARGET_BROADCAST_CATEGORY_MOVE, move);
-        intent.putExtra(Const.TARGET_BROADCAST_CATEGORY_SORT, sort);
-        intent.putExtra(Const.TARGET_BROADCAST_CATEGORY_NUMBER, number);
-        intent.putExtra(Const.TARGET_BROADCAST_CATEGORY_PHOTO, photo);
-        sendBroadcast(intent);
     }
 
     @Override

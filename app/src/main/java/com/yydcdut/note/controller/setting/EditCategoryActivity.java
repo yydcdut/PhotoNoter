@@ -225,7 +225,6 @@ public class EditCategoryActivity extends BaseActivity implements SlideAndDragLi
                         renameCategories();
                         deleteCategories();
                         CategoryDBModel.getInstance().updateOrder(mCategoryList);
-                        sendDataUpdateBroadcast(false, null, true, false, false);
                         mHandler.sendEmptyMessage(1);
                     }
                 });
@@ -261,7 +260,6 @@ public class EditCategoryActivity extends BaseActivity implements SlideAndDragLi
                 String newLabel = entry.getValue();
                 boolean bool = CategoryDBModel.getInstance().updateLabel(originalLabel, newLabel);
             }
-            sendDataUpdateBroadcast(true, null, false, false, false);
         }
     }
 
