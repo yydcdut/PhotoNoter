@@ -17,7 +17,7 @@ import java.util.List;
 
 /**
  * Created by yuyidong on 15/7/17.
- * 只允许在AlbumFragment和HomeActivity中调用
+ * 只允许在AlbumFragment、HomeActivity和EditCategoryActivity中调用
  */
 public class CategoryDBModel extends AbsNotesDBModel implements IModel {
     private List<CategoryChangedObserver> mCategoryChangedObservers = new ArrayList<>();
@@ -95,11 +95,11 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
         for (Category category : mCache) {
             if (category.getLabel().equals(updateCategory.getLabel())) {
                 category.setCheck(true);
-                updateData(updateCategory);
+                updateData2DB(updateCategory);
             } else {
                 if (category.isCheck()) {
                     category.setCheck(false);
-                    updateData(updateCategory);
+                    updateData2DB(updateCategory);
                 }
             }
         }
@@ -116,7 +116,7 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
         if (checkLabelExist(category)) {
             return false;
         }
-        long id = saveData(category);
+        long id = saveData2DB(category);
         if (id >= 0) {
             refresh();
         }
@@ -132,7 +132,7 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
     public boolean updateCategoryList(List<Category> categoryList) {
         boolean bool = true;
         for (Category category : categoryList) {
-            bool &= updateData(category);
+            bool &= updateData2DB(category);
         }
         if (bool) {
             refresh();
@@ -143,12 +143,19 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
     public boolean update(Category category) {
         boolean bool = true;
         if (checkLabelExist(category)) {
-            bool &= updateData(category);
+            bool &= updateData2DB(category);
         }
         if (bool) {
+            doObserver(IObserver.OBSERVER_CATEGORY_UPDATE, new Category[]{category});
             refresh();
         }
         return bool;
+    }
+
+    public void updateChangeCategory(String oldCategoryLabel, String targetCategoryLabel) {
+        doObserver(IObserver.OBSERVER_CATEGORY_MOVE, new Category[]{
+                findByCategoryLabel(oldCategoryLabel), findByCategoryLabel(targetCategoryLabel)
+        });
     }
 
     /**
@@ -164,7 +171,7 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
         if (bool) {
             Category category = findByCategoryLabel(originalLabel);
             category.setLabel(newLabel);
-            bool &= updateData(category);
+            bool &= updateData2DB(category);
             if (bool) {
                 //处理PhotoNote
                 List<PhotoNote> photoNoteList = PhotoNoteDBModel.getInstance().findByCategoryLabel(originalLabel, ComparatorFactory.FACTORY_NOT_SORT);
@@ -203,6 +210,7 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
 
     /**
      * 更新顺序
+     * (目前只在EditCategoryActivity中调用了)
      *
      * @param categoryList
      * @return
@@ -212,25 +220,41 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
         for (int i = 0; i < categoryList.size(); i++) {
             Category category = categoryList.get(i);
             category.setSort(i);
-            bool &= updateData(category);
+            bool &= updateData2DB(category);
         }
         refresh();
+        doObserver(IObserver.OBSERVER_CATEGORY_UPDATE, null);
         return bool;
     }
 
+    /**
+     * 目前只在EditCategoryActivity中调用了
+     *
+     * @param category
+     */
     public void delete(Category category) {
         final String label = category.getLabel();
         mCache.remove(category);
-        deleteData(category);
+        deleteData2DB(category);
+        doObserver(IObserver.OBSERVER_CATEGORY_DELETE, null);
+        deletePhotoNotes(label);
+    }
+
+    /**
+     * 删除Category下面的图片
+     *
+     * @param label
+     */
+    private void deletePhotoNotes(final String label) {
         NoteApplication.getInstance().getExecutorPool().execute(new Runnable() {
             @Override
             public void run() {
-                PhotoNoteDBModel.getInstance().deleteByCategory(label);
+                PhotoNoteDBModel.getInstance().deleteByCategoryWithoutObserver(label);
             }
         });
     }
 
-    private int deleteData(Category category) {
+    private int deleteData2DB(Category category) {
         SQLiteDatabase db = mNotesSQLite.getWritableDatabase();
         int rows = db.delete(NotesSQLite.TABLE_CATEGORY, "_id = ?", new String[]{category.getId() + ""});
         db.close();
@@ -238,12 +262,7 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
     }
 
     private boolean checkLabelExist(Category category) {
-        for (Category item : mCache) {
-            if (item.getLabel().equals(category.getLabel())) {
-                return true;
-            }
-        }
-        return false;
+        return checkLabelExist(category.getLabel());
     }
 
     private boolean checkLabelExist(String newLabel) {
@@ -255,7 +274,7 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
         return false;
     }
 
-    private long saveData(Category category) {
+    private long saveData2DB(Category category) {
         SQLiteDatabase db = mNotesSQLite.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("label", category.getLabel());
@@ -267,7 +286,7 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
         return id;
     }
 
-    private boolean updateData(Category category) {
+    private boolean updateData2DB(Category category) {
         SQLiteDatabase db = mNotesSQLite.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("label", category.getLabel());
@@ -277,6 +296,12 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
         int rows = db.update(NotesSQLite.TABLE_CATEGORY, contentValues, "_id = ?", new String[]{category.getId() + ""});
         db.close();
         return rows >= 0;
+    }
+
+    private void doObserver(int CRUD, Category[] categories) {
+        for (CategoryChangedObserver observer : mCategoryChangedObservers) {
+            observer.onUpdate(CRUD, categories);
+        }
     }
 
 }

@@ -324,6 +324,7 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
                 //因为是最新时间，即“图片创建事件”、“图片修改时间”、“笔记创建时间”、“笔记修改时间”，所以要么在最前面，要么在最后面
                 mPhotoNoteList = PhotoNoteDBModel.getInstance().findByCategoryLabel(mCategoryLabel, mAlbumSortKind);
                 mAdapter.updateDataWithoutChanged(mPhotoNoteList);
+                //todo 上面那句注释可能有bug
                 switch (mAlbumSortKind) {
                     case ComparatorFactory.FACTORY_CREATE_CLOSE:
                     case ComparatorFactory.FACTORY_EDITED_CLOSE:
@@ -547,7 +548,8 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
 
                         if (!mCategoryLabel.equals(categoryLabelArray[which])) {
                             mAdapter.changeCategory(categoryLabelArray[which]);
-                            sendDataUpdateBroadcast(false, categoryLabelArray[which], false, false, true);
+                            mPhotoNoteList = PhotoNoteDBModel.getInstance().findByCategoryLabelByForce(mCategoryLabel, mAlbumSortKind);
+                            CategoryDBModel.getInstance().updateChangeCategory(mCategoryLabel, categoryLabelArray[which]);
                         }
                     }
                 })

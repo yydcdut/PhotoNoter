@@ -97,17 +97,17 @@ public class PhotoNoteDBModel extends AbsNotesDBModel implements IModel {
     }
 
     public void delete(PhotoNote photoNote) {
-        if (isSaved(photoNote)) {
-            mCache.get(photoNote.getCategoryLabel()).remove(photoNote);
-            //注意 java.util.ConcurrentModificationException
-            deleteData2DB(photoNote);
-            doObserver(IObserver.OBSERVER_PHOTONOTE_DELETE, photoNote.getCategoryLabel());
-            FilePathUtils.deleteAllFiles(photoNote.getPhotoName());
-        }
+        mCache.get(photoNote.getCategoryLabel()).remove(photoNote);
+        //注意 java.util.ConcurrentModificationException
+        deleteData2DB(photoNote);
+        doObserver(IObserver.OBSERVER_PHOTONOTE_DELETE, photoNote.getCategoryLabel());
+        FilePathUtils.deleteAllFiles(photoNote.getPhotoName());
     }
 
-    //todo observer
-    public void deleteByCategory(String categoryLabel) {
+    /**
+     * @param categoryLabel
+     */
+    protected void deleteByCategoryWithoutObserver(String categoryLabel) {
         List<PhotoNote> photoNoteList = findByCategoryLabel(categoryLabel, -1);
         List<PhotoNote> wait4Delete = new ArrayList<>(photoNoteList.size());
         for (int i = 0; i < photoNoteList.size(); i++) {

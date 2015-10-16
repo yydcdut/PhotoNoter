@@ -244,12 +244,9 @@ public class EditCategoryActivity extends BaseActivity implements SlideAndDragLi
                     if (mCategoryList.size() > 0) {
                         Category newCategory = mCategoryList.get(0);
                         newCategory.setCheck(true);
-                        sendDataUpdateBroadcast(true, null, false, false, false);
                     } else {
                         //todo 当所有的都没有了怎么办
                     }
-                } else {
-                    sendDataUpdateBroadcast(true, null, false, false, false);
                 }
             }
         }

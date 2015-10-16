@@ -24,10 +24,12 @@ import com.yydcdut.note.controller.login.LoginActivity;
 import com.yydcdut.note.model.CategoryDBModel;
 import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.model.UserCenter;
+import com.yydcdut.note.model.observer.CategoryChangedObserver;
 import com.yydcdut.note.model.observer.PhotoNoteChangedObserver;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
+import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.utils.compare.ComparatorFactory;
 import com.yydcdut.note.view.RoundedImageView;
 
@@ -39,7 +41,7 @@ import java.util.List;
  * Created by yuyidong on 15-3-23.
  */
 public class HomeActivity extends NavigationActivity implements NavigationActivity.NavigationListener,
-        NavigationActivity.OnDrawerListener, PhotoNoteChangedObserver {
+        NavigationActivity.OnDrawerListener, PhotoNoteChangedObserver, CategoryChangedObserver {
     /**
      * 数据
      */
@@ -165,6 +167,7 @@ public class HomeActivity extends NavigationActivity implements NavigationActivi
     public List<Category> setCategoryAdapter() {
         mListData = CategoryDBModel.getInstance().findAll();
         PhotoNoteDBModel.getInstance().addObserver(this);
+        CategoryDBModel.getInstance().addObserver(this);
         return mListData;
     }
 
@@ -464,12 +467,53 @@ public class HomeActivity extends NavigationActivity implements NavigationActivi
                         int number = PhotoNoteDBModel.getInstance().findByCategoryLabel(mCategoryLabel, -1).size();
                         Category category = CategoryDBModel.getInstance().findByCategoryLabel(mCategoryLabel);
                         if (category.getPhotosNumber() == number) {
-                            return;
+                            break;
                         } else {
                             category.setPhotosNumber(number);
                             CategoryDBModel.getInstance().update(category);
                             getCategoryAdapter().resetGroup(CategoryDBModel.getInstance().findAll());
                         }
+                        break;
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onUpdate(final int CRUD, final Category[] category) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                switch (CRUD) {
+                    case CategoryChangedObserver.OBSERVER_CATEGORY_DELETE:
+                        mListData = CategoryDBModel.getInstance().findAll();
+                        String beforeLabel = mCategoryLabel;
+                        for (Category category : mListData) {
+                            if (category.isCheck()) {
+                                mCategoryLabel = category.getLabel();
+                                break;
+                            }
+                        }
+                        getCategoryAdapter().resetGroup(CategoryDBModel.getInstance().findAll());
+                        if (!mCategoryLabel.equals(beforeLabel)) {
+                            mFragment.changePhotos4Category(mCategoryLabel);
+                        }
+                        break;
+                    case CategoryChangedObserver.OBSERVER_CATEGORY_UPDATE:
+                        break;
+                    case CategoryChangedObserver.OBSERVER_CATEGORY_MOVE:
+                        Category oldCategory = category[0];
+                        Category targetCategory = category[1];
+                        //更新移动过去的category数目
+                        int targetNumber = PhotoNoteDBModel.getInstance().findByCategoryLabel(targetCategory.getLabel(), ComparatorFactory.FACTORY_NOT_SORT).size();
+                        YLog.i("yuyidong", "targetNumber--->" + targetNumber);
+                        targetCategory.setPhotosNumber(targetNumber);
+                        CategoryDBModel.getInstance().update(targetCategory);
+                        int oldNumber = PhotoNoteDBModel.getInstance().findByCategoryLabel(oldCategory.getLabel(), ComparatorFactory.FACTORY_NOT_SORT).size();
+                        YLog.i("yuyidong", "oldNumber--->" + oldNumber);
+                        oldCategory.setPhotosNumber(oldNumber);
+                        CategoryDBModel.getInstance().update(oldCategory);
+                        getCategoryAdapter().resetGroup(CategoryDBModel.getInstance().findAll());
                         break;
                 }
             }
