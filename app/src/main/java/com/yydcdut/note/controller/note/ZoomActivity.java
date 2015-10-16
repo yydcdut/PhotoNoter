@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -41,32 +42,52 @@ import us.pinguo.edit.sdk.base.PGEditSDK;
  */
 public class ZoomActivity extends BaseActivity implements View.OnClickListener, Handler.Callback {
     private static final String TAG = ZoomActivity.class.getSimpleName();
-
     /* UI */
     private Toolbar mToolbar;
     private ZoomImageView mImage;
     private View mSpreadView;
-
     /* Progress Bar */
     private CircleProgressBarLayout mProgressLayout;
-
-    /* PhotoNote */
+    /* 数据 */
     private int mPosition;
     private PhotoNote mPhotoNote;
     private int mComparator;
-
     /* Handler */
     private Handler mMainHandler = new Handler(this);
-
     private static final int MSG_UPDATE_DATA = 100;
+    /* 图片有没有修改过 */
+    private boolean mIsChanged = false;
 
+    /**
+     * 启动Activity
+     *
+     * @param fragment
+     * @param categoryLabel
+     * @param photoNotePosition
+     * @param comparator
+     */
+    public static void startActivityForResult(Fragment fragment, String categoryLabel, int photoNotePosition, int comparator) {
+        Intent intent = new Intent(fragment.getContext(), ZoomActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString(Const.CATEGORY_LABEL, categoryLabel);
+        bundle.putInt(Const.PHOTO_POSITION, photoNotePosition);
+        bundle.putInt(Const.COMPARATOR_FACTORY, comparator);
+        intent.putExtras(bundle);
+        fragment.startActivityForResult(intent, REQUEST_NOTHING);
+    }
+
+    @Override
+    public int setContentView() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        return R.layout.activity_zoom;
+    }
 
     @Override
     public void initUiAndListener() {
         Bundle bundle = getIntent().getExtras();
+        String category = bundle.getString(Const.CATEGORY_LABEL);
         mPosition = bundle.getInt(Const.PHOTO_POSITION);
         mComparator = bundle.getInt(Const.COMPARATOR_FACTORY);
-        String category = bundle.getString(Const.CATEGORY_LABEL);
         mPhotoNote = PhotoNoteDBModel.getInstance().findByCategoryLabel(category, mComparator).get(mPosition);
         try {
             initImageView(mPhotoNote.getBigPhotoPathWithFile());
@@ -75,12 +96,6 @@ public class ZoomActivity extends BaseActivity implements View.OnClickListener, 
         }
         initToolBarUI();
         initProgress();
-    }
-
-    @Override
-    public int setContentView() {
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        return R.layout.activity_zoom;
     }
 
     private void initImageView(String path) throws IOException {
@@ -140,8 +155,12 @@ public class ZoomActivity extends BaseActivity implements View.OnClickListener, 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-
-                finish();
+                if (mIsChanged) {
+                    setResult(RESULT_PICTURE);
+                    finish();
+                } else {
+                    finish();
+                }
                 break;
         }
         return true;
@@ -226,6 +245,7 @@ public class ZoomActivity extends BaseActivity implements View.OnClickListener, 
             ImageLoaderManager.displayImage(mPhotoNote.getBigPhotoPathWithFile(), mImage);
 
             mProgressLayout.show();
+            mIsChanged = true;
             NoteApplication.getInstance().getExecutorPool().execute(new Runnable() {
                 @Override
                 public void run() {
@@ -239,6 +259,7 @@ public class ZoomActivity extends BaseActivity implements View.OnClickListener, 
                     mMainHandler.sendEmptyMessage(MSG_UPDATE_DATA);
                 }
             });
+
         }
 
         if (requestCode == PGEditSDK.PG_EDIT_SDK_REQUEST_CODE
@@ -273,4 +294,13 @@ public class ZoomActivity extends BaseActivity implements View.OnClickListener, 
         return true;
     }
 
+    @Override
+    public void onBackPressed() {
+        if (mIsChanged) {
+            setResult(RESULT_PICTURE);
+            finish();
+        } else {
+            super.onBackPressed();
+        }
+    }
 }

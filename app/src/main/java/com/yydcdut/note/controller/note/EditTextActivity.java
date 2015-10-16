@@ -31,7 +31,6 @@ import com.yydcdut.note.view.fab.FloatingActionButton;
  * Created by yyd on 15-4-8.
  */
 public class EditTextActivity extends BaseActivity implements View.OnClickListener {
-    public static final int CODE_REQUEST = 1;
 
     /* Context */
     private Context mContext = EditTextActivity.this;
@@ -74,7 +73,7 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
         bundle.putInt(Const.PHOTO_POSITION, photoNotePosition);
         bundle.putInt(Const.COMPARATOR_FACTORY, comparator);
         intent.putExtras(bundle);
-        fragment.startActivityForResult(intent, CODE_REQUEST);
+        fragment.startActivityForResult(intent, REQUEST_NOTHING);
         fragment.getActivity().overridePendingTransition(R.anim.activity_no_animation, R.anim.activity_no_animation);
     }
 

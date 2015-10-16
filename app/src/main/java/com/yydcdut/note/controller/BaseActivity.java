@@ -25,6 +25,7 @@ import com.yydcdut.note.utils.ThemeHelper;
 public abstract class BaseActivity extends AppCompatActivity {
     public static final int RESULT_NOTHING = 1;
     public static final int RESULT_DATA = 2;
+    public static final int RESULT_PICTURE = 3;
 
     public static final int REQUEST_NOTHING = 1;
 

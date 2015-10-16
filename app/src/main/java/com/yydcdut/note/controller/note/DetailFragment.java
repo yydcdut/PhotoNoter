@@ -280,7 +280,6 @@ public class DetailFragment extends BaseFragment implements ObservableScrollView
      */
     @Override
     public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
-//        Log.i("xxx", "scrollY--->" + scrollY + "   firstScroll--->" + firstScroll + "   dragging--->" + dragging);
         // Translate overlay and image
         float flexibleRange = mFlexibleSpaceImageHeight - mActionBarSize;
         int minOverlayTransitionY = mActionBarSize - mOverlayView.getHeight();
@@ -381,13 +380,7 @@ public class DetailFragment extends BaseFragment implements ObservableScrollView
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.view_trans:
-                Intent intent = new Intent(getContext(), ZoomActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt(Const.PHOTO_POSITION, mPosition);
-                bundle.putString(Const.CATEGORY_LABEL, mPhotoNote.getCategoryLabel());
-                bundle.putInt(Const.COMPARATOR_FACTORY, mComparator);
-                intent.putExtras(bundle);
-                getContext().startActivity(intent);
+                ZoomActivity.startActivityForResult(this, mPhotoNote.getCategoryLabel(), mPosition, mComparator);
                 break;
             case R.id.fab_detail:
                 showRevealColorViewAndStartActivity();
@@ -404,6 +397,8 @@ public class DetailFragment extends BaseFragment implements ObservableScrollView
             mComparator = bundle.getInt(Const.COMPARATOR_FACTORY);
             mPhotoNote = PhotoNoteDBModel.getInstance().findByCategoryLabel(category, mComparator).get(mPosition);
             updateText();
+        } else if (resultCode == RESULT_PICTURE) {
+            ImageLoaderManager.displayImage(mPhotoNote.getSmallPhotoPathWithFile(), mImageView);
         }
         closeRevealColorView();
         super.onActivityResult(requestCode, resultCode, data);
@@ -462,12 +457,6 @@ public class DetailFragment extends BaseFragment implements ObservableScrollView
     private void updateText() {
         setDataOrSetVisibility();
         mEditView.setText(Utils.decodeTimeInTextDetail(mPhotoNote.getEditedNoteTime()));
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        ImageLoaderManager.displayImage(mPhotoNote.getSmallPhotoPathWithFile(), mImageView);
     }
 
 }
