@@ -12,7 +12,6 @@ import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -134,20 +133,32 @@ public class AlbumAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
      * @param newCategoryLabel
      */
     public void changeCategory(String newCategoryLabel) {
-        List<PhotoNote> positions = new ArrayList<PhotoNote>();
+        TreeMap<Integer, PhotoNote> map = new TreeMap<>(new Comparator<Integer>() {
+            @Override
+            public int compare(Integer lhs, Integer rhs) {
+                return lhs - rhs;
+            }
+        });
         for (int i = 0; i < mPhotoNoteList.size(); i++) {
             PhotoNote photoNote = mPhotoNoteList.get(i);
             if (photoNote.isSelected()) {
                 photoNote.setSelected(false);
                 photoNote.setCategoryLabel(newCategoryLabel);
-                positions.add(photoNote);
+                map.put(i, photoNote);
             }
         }
-        for (int i = 0; i < positions.size(); i++) {
-            mPhotoNoteList.remove(positions.get(i));
+        int times = 0;
+        int total = map.size();
+        for (Map.Entry<Integer, PhotoNote> entry : map.entrySet()) {
+            mPhotoNoteList.remove(entry.getValue());
+            notifyItemRemoved(entry.getKey() + times);
+            times++;
+            if (times + 1 != total) {
+                PhotoNoteDBModel.getInstance().update(entry.getValue(), false);
+            } else {
+                PhotoNoteDBModel.getInstance().update(entry.getValue(), true);
+            }
         }
-        PhotoNoteDBModel.getInstance().updateAll(positions);
-        notifyDataSetChanged();
     }
 
     /**
@@ -158,5 +169,9 @@ public class AlbumAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
     public void updateData(List<PhotoNote> photoNotes) {
         mPhotoNoteList = photoNotes;
         notifyDataSetChanged();
+    }
+
+    public void updateDataWithoutChanged(List<PhotoNote> photoNotes) {
+        mPhotoNoteList = photoNotes;
     }
 }

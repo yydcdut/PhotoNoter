@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.bean.SandPhoto;
+import com.yydcdut.note.model.observer.IObserver;
 import com.yydcdut.note.model.sqlite.SandSQLite;
 
 import java.util.ArrayList;
@@ -93,4 +94,8 @@ public class SandBoxDBModel implements IModel {
     }
 
 
+    @Override
+    public boolean addObserver(IObserver iObserver) {
+        return false;
+    }
 }

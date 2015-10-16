@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.bean.PhotoNote;
+import com.yydcdut.note.model.observer.CategoryChangedObserver;
+import com.yydcdut.note.model.observer.IObserver;
 import com.yydcdut.note.model.sqlite.NotesSQLite;
 import com.yydcdut.note.utils.compare.ComparatorFactory;
 
@@ -15,8 +17,10 @@ import java.util.List;
 
 /**
  * Created by yuyidong on 15/7/17.
+ * 只允许在AlbumFragment和HomeActivity中调用
  */
 public class CategoryDBModel extends AbsNotesDBModel implements IModel {
+    private List<CategoryChangedObserver> mCategoryChangedObservers = new ArrayList<>();
 
     private List<Category> mCache;
 
@@ -28,6 +32,15 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
 
     public static CategoryDBModel getInstance() {
         return sInstance;
+    }
+
+    @Override
+    public boolean addObserver(IObserver iObserver) {
+        if (iObserver instanceof CategoryChangedObserver) {
+            mCategoryChangedObservers.add((CategoryChangedObserver) iObserver);
+            return true;
+        }
+        return false;
     }
 
     public List<Category> findAll() {
@@ -129,7 +142,7 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
 
     public boolean update(Category category) {
         boolean bool = true;
-        if (!checkLabelExist(category)) {
+        if (checkLabelExist(category)) {
             bool &= updateData(category);
         }
         if (bool) {
@@ -155,10 +168,16 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
             if (bool) {
                 //处理PhotoNote
                 List<PhotoNote> photoNoteList = PhotoNoteDBModel.getInstance().findByCategoryLabel(originalLabel, ComparatorFactory.FACTORY_NOT_SORT);
+                int total = photoNoteList.size();
+                int number = 0;
                 for (PhotoNote photoNote : photoNoteList) {
                     photoNote.setCategoryLabel(newLabel);
+                    if ((number++) + 1 == total) {
+                        PhotoNoteDBModel.getInstance().update(photoNote, true);
+                    } else {
+                        PhotoNoteDBModel.getInstance().update(photoNote, false);
+                    }
                 }
-                PhotoNoteDBModel.getInstance().updateAll(photoNoteList);
             }
         }
         if (bool) {
@@ -259,4 +278,5 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
         db.close();
         return rows >= 0;
     }
+
 }

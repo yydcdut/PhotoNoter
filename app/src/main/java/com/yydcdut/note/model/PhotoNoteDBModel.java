@@ -5,6 +5,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.yydcdut.note.bean.PhotoNote;
+import com.yydcdut.note.model.observer.IObserver;
+import com.yydcdut.note.model.observer.PhotoNoteChangedObserver;
 import com.yydcdut.note.model.sqlite.NotesSQLite;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.compare.ComparatorFactory;
@@ -20,6 +22,7 @@ import java.util.Map;
  * 先进行数据库操作，然后再操作动画之类的
  */
 public class PhotoNoteDBModel extends AbsNotesDBModel implements IModel {
+    private List<PhotoNoteChangedObserver> mPhotoNoteChangedObservers = new ArrayList<>();
 
     private static PhotoNoteDBModel sInstance = new PhotoNoteDBModel();
 
@@ -32,10 +35,19 @@ public class PhotoNoteDBModel extends AbsNotesDBModel implements IModel {
         return sInstance;
     }
 
+    @Override
+    public boolean addObserver(IObserver iObserver) {
+        if (iObserver instanceof PhotoNoteChangedObserver) {
+            mPhotoNoteChangedObservers.add((PhotoNoteChangedObserver) iObserver);
+            return true;
+        }
+        return false;
+    }
+
     public List<PhotoNote> findByCategoryLabel(String categoryLabel, int comparatorFactory) {
         List<PhotoNote> list = mCache.get(categoryLabel);
         if (null == list) {
-            list = findDataByLabel(categoryLabel);
+            list = findDataByLabel2DB(categoryLabel);
             mCache.put(categoryLabel, list);
         }
         if (comparatorFactory != -1) {
@@ -45,7 +57,7 @@ public class PhotoNoteDBModel extends AbsNotesDBModel implements IModel {
     }
 
     public List<PhotoNote> findByCategoryLabelByForce(String categoryLabel, int comparatorFactory) {
-        List<PhotoNote> list = findDataByLabel(categoryLabel);
+        List<PhotoNote> list = findDataByLabel2DB(categoryLabel);
         mCache.remove(categoryLabel);
         mCache.put(categoryLabel, list);
         if (comparatorFactory != -1) {
@@ -54,27 +66,32 @@ public class PhotoNoteDBModel extends AbsNotesDBModel implements IModel {
         return list;
     }
 
-    private boolean refresh(String categoryLabel) {
-        mCache.remove(categoryLabel);
-        mCache.put(categoryLabel, findDataByLabel(categoryLabel));
-        return true;
+    public boolean update(PhotoNote photoNote) {
+        return update(photoNote, true);
     }
 
-    public boolean update(PhotoNote photoNote) {
-        boolean bool = updateData(photoNote);
-        refresh(photoNote.getCategoryLabel());
+    public boolean update(PhotoNote photoNote, boolean refresh) {
+        boolean bool = updateData2DB(photoNote);
+        if (bool) {
+            doObserver(IObserver.OBSERVER_PHOTONOTE_UPDATE, photoNote.getCategoryLabel());
+        }
+        if (refresh) {
+            refreshCache(photoNote.getCategoryLabel());
+        }
         return bool;
     }
 
     public boolean save(PhotoNote photoNote) {
         boolean bool = true;
         if (isSaved(photoNote)) {
-            bool &= updateData(photoNote);
+            bool &= updateData2DB(photoNote);
+            doObserver(IObserver.OBSERVER_PHOTONOTE_UPDATE, photoNote.getCategoryLabel());
         } else {
-            bool &= saveData(photoNote) >= 0;
+            bool &= saveData2DB(photoNote) >= 0;
+            doObserver(IObserver.OBSERVER_PHOTONOTE_CREATE, photoNote.getCategoryLabel());
         }
         if (bool) {
-            bool &= refresh(photoNote.getCategoryLabel());
+            bool &= refreshCache(photoNote.getCategoryLabel());
         }
         return bool;
     }
@@ -83,11 +100,13 @@ public class PhotoNoteDBModel extends AbsNotesDBModel implements IModel {
         if (isSaved(photoNote)) {
             mCache.get(photoNote.getCategoryLabel()).remove(photoNote);
             //注意 java.util.ConcurrentModificationException
-            deleteData(photoNote);
+            deleteData2DB(photoNote);
+            doObserver(IObserver.OBSERVER_PHOTONOTE_DELETE, photoNote.getCategoryLabel());
             FilePathUtils.deleteAllFiles(photoNote.getPhotoName());
         }
     }
 
+    //todo observer
     public void deleteByCategory(String categoryLabel) {
         List<PhotoNote> photoNoteList = findByCategoryLabel(categoryLabel, -1);
         List<PhotoNote> wait4Delete = new ArrayList<>(photoNoteList.size());
@@ -100,18 +119,13 @@ public class PhotoNoteDBModel extends AbsNotesDBModel implements IModel {
         mCache.remove(categoryLabel);
     }
 
-    public void updateAll(List<PhotoNote> photoNoteList) {
-        if (photoNoteList.size() <= 0) {
-            return;
+    private void doObserver(int CRUD, String categoryLabel) {
+        for (PhotoNoteChangedObserver observer : mPhotoNoteChangedObservers) {
+            observer.onUpdate(CRUD, categoryLabel);
         }
-        String category = photoNoteList.get(0).getCategoryLabel();
-        for (PhotoNote photoNote : photoNoteList) {
-            updateData(photoNote);
-        }
-        refresh(category);
     }
 
-    private List<PhotoNote> findDataByLabel(String categoryLabel2find) {
+    private List<PhotoNote> findDataByLabel2DB(String categoryLabel2find) {
         List<PhotoNote> list = new ArrayList<>();
         SQLiteDatabase db = mNotesSQLite.getReadableDatabase();
         Cursor cursor = db.query(NotesSQLite.TABLE_PHOTONOTE, null, "categoryLabel = ?", new String[]{categoryLabel2find}, null, null, null);
@@ -135,7 +149,7 @@ public class PhotoNoteDBModel extends AbsNotesDBModel implements IModel {
         return list;
     }
 
-    private boolean updateData(PhotoNote photoNote) {
+    private boolean updateData2DB(PhotoNote photoNote) {
         SQLiteDatabase db = mNotesSQLite.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("photoName", photoNote.getPhotoName());
@@ -151,7 +165,7 @@ public class PhotoNoteDBModel extends AbsNotesDBModel implements IModel {
         return rows >= 0;
     }
 
-    private long saveData(PhotoNote photoNote) {
+    private long saveData2DB(PhotoNote photoNote) {
         SQLiteDatabase db = mNotesSQLite.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("photoName", photoNote.getPhotoName());
@@ -178,10 +192,16 @@ public class PhotoNoteDBModel extends AbsNotesDBModel implements IModel {
         return false;
     }
 
-    private int deleteData(PhotoNote photoNote) {
+    private int deleteData2DB(PhotoNote photoNote) {
         SQLiteDatabase db = mNotesSQLite.getWritableDatabase();
         int rows = db.delete(NotesSQLite.TABLE_PHOTONOTE, "_id = ?", new String[]{photoNote.getId() + ""});
         db.close();
         return rows;
+    }
+
+    private boolean refreshCache(String categoryLabel) {
+        mCache.remove(categoryLabel);
+        mCache.put(categoryLabel, findDataByLabel2DB(categoryLabel));
+        return true;
     }
 }

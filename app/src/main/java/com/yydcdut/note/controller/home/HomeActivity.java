@@ -24,6 +24,7 @@ import com.yydcdut.note.controller.login.LoginActivity;
 import com.yydcdut.note.model.CategoryDBModel;
 import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.model.UserCenter;
+import com.yydcdut.note.model.observer.PhotoNoteChangedObserver;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
@@ -38,11 +39,11 @@ import java.util.List;
  * Created by yuyidong on 15-3-23.
  */
 public class HomeActivity extends NavigationActivity implements NavigationActivity.NavigationListener,
-        NavigationActivity.OnDrawerListener {
+        NavigationActivity.OnDrawerListener, PhotoNoteChangedObserver {
     /**
      * 数据
      */
-    List<Category> mListData;
+    private List<Category> mListData;
     /**
      * 相册的fragment
      */
@@ -163,6 +164,7 @@ public class HomeActivity extends NavigationActivity implements NavigationActivi
     @Override
     public List<Category> setCategoryAdapter() {
         mListData = CategoryDBModel.getInstance().findAll();
+        PhotoNoteDBModel.getInstance().addObserver(this);
         return mListData;
     }
 
@@ -214,16 +216,17 @@ public class HomeActivity extends NavigationActivity implements NavigationActivi
         }
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_DATA) {
             updateUserInfo();
         }
-
     }
 
+    /**
+     * 更新用户信息
+     */
     private void updateUserInfo() {
         onUserInformation();
         openDrawer();
@@ -288,7 +291,7 @@ public class HomeActivity extends NavigationActivity implements NavigationActivi
     }
 
     @Override
-    public void onOpen() {
+    public void onDrawerOpen() {
         try {
             mFragment.isMenuSelectModeAndChangeIt();
         } catch (Exception e) {
@@ -297,7 +300,7 @@ public class HomeActivity extends NavigationActivity implements NavigationActivi
     }
 
     @Override
-    public void onClose() {
+    public void onDrawerClose() {
 
     }
 
@@ -336,7 +339,7 @@ public class HomeActivity extends NavigationActivity implements NavigationActivi
     private void initReceiver() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Const.BROADCAST_PHOTONOTE_UPDATE);
-        registerReceiver(mUpdatePhotoNoteList, intentFilter);
+//        registerReceiver(mUpdatePhotoNoteList, intentFilter);
     }
 
     /**
@@ -433,7 +436,7 @@ public class HomeActivity extends NavigationActivity implements NavigationActivi
 
     @Override
     public void onDestroy() {
-        unregisterReceiver();
+//        unregisterReceiver();
         super.onDestroy();
     }
 
@@ -450,4 +453,26 @@ public class HomeActivity extends NavigationActivity implements NavigationActivi
         super.onRestoreInstanceState(savedInstanceState);
     }
 
+    @Override
+    public void onUpdate(final int CRUD, String categoryLabel) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                switch (CRUD) {
+                    case PhotoNoteChangedObserver.OBSERVER_PHOTONOTE_DELETE:
+                    case PhotoNoteChangedObserver.OBSERVER_PHOTONOTE_CREATE:
+                        int number = PhotoNoteDBModel.getInstance().findByCategoryLabel(mCategoryLabel, -1).size();
+                        Category category = CategoryDBModel.getInstance().findByCategoryLabel(mCategoryLabel);
+                        if (category.getPhotosNumber() == number) {
+                            return;
+                        } else {
+                            category.setPhotosNumber(number);
+                            CategoryDBModel.getInstance().update(category);
+                            getCategoryAdapter().resetGroup(CategoryDBModel.getInstance().findAll());
+                        }
+                        break;
+                }
+            }
+        });
+    }
 }

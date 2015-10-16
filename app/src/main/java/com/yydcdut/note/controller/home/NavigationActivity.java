@@ -158,7 +158,7 @@ public abstract class NavigationActivity extends BaseActivity {
         public void onDrawerClosed(View view) {
             supportInvalidateOptionsMenu();
             if (mOnDrawerListener != null) {
-                mOnDrawerListener.onClose();
+                mOnDrawerListener.onDrawerClose();
             }
         }
 
@@ -166,7 +166,7 @@ public abstract class NavigationActivity extends BaseActivity {
         public void onDrawerOpened(View drawerView) {
             supportInvalidateOptionsMenu();
             if (mOnDrawerListener != null) {
-                mOnDrawerListener.onOpen();
+                mOnDrawerListener.onDrawerOpen();
             }
         }
     }
@@ -365,9 +365,9 @@ public abstract class NavigationActivity extends BaseActivity {
     }
 
     public interface OnDrawerListener {
-        void onOpen();
+        void onDrawerOpen();
 
-        void onClose();
+        void onDrawerClose();
     }
 
 }

@@ -321,7 +321,19 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
     public boolean handleMessage(Message msg) {
         switch (msg.what) {
             case MSG_UPDATE_DATA:
-                sendDataUpdateBroadcast(false, null, false, true, true);
+                //因为是最新时间，即“图片创建事件”、“图片修改时间”、“笔记创建时间”、“笔记修改时间”，所以要么在最前面，要么在最后面
+                mPhotoNoteList = PhotoNoteDBModel.getInstance().findByCategoryLabel(mCategoryLabel, mAlbumSortKind);
+                mAdapter.updateDataWithoutChanged(mPhotoNoteList);
+                switch (mAlbumSortKind) {
+                    case ComparatorFactory.FACTORY_CREATE_CLOSE:
+                    case ComparatorFactory.FACTORY_EDITED_CLOSE:
+                        mAdapter.notifyItemInserted(mPhotoNoteList.size() - 1);
+                        break;
+                    case ComparatorFactory.FACTORY_CREATE_FAR:
+                    case ComparatorFactory.FACTORY_EDITED_FAR:
+                        mAdapter.notifyItemInserted(0);
+                        break;
+                }
                 mProgressLayout.hide();
                 break;
             default:
@@ -444,7 +456,6 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
                 break;
             case R.id.menu_trash:
                 mAdapter.deleteSelectedPhotos();
-                sendDataUpdateBroadcast(true, mCategoryLabel, false, false, false);
                 mPhotoNoteList = PhotoNoteDBModel.getInstance().findByCategoryLabel(mCategoryLabel, mAlbumSortKind);
                 menuPreviewMode();
                 break;
@@ -740,8 +751,7 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
         public void onReceive(Context context, Intent intent) {
             //当图片数据改变的时候，比如滤镜，Service作图
             //另外个进程发来广播的时候
-            if (intent.getBooleanExtra(Const.TARGET_BROADCAST_CATEGORY_PHOTO, false) ||
-                    intent.getBooleanExtra(Const.TARGET_BROADCAST_PROCESS, false)) {
+            if (intent.getBooleanExtra(Const.TARGET_BROADCAST_PROCESS, false)) {
                 mPhotoNoteList = PhotoNoteDBModel.getInstance().findByCategoryLabel(mCategoryLabel, mAlbumSortKind);
                 mAdapter.updateData(mPhotoNoteList);
             }

@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.yydcdut.note.bean.PhotoNote;
-import com.yydcdut.note.controller.note.DetailTextFragment;
+import com.yydcdut.note.controller.note.DetailFragment;
 import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.utils.Const;
 
@@ -45,7 +45,7 @@ public class DetailPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        DetailTextFragment fragment = DetailTextFragment.newInstance();
+        DetailFragment fragment = DetailFragment.newInstance();
         Bundle bundle = new Bundle();
         bundle.putString(Const.CATEGORY_LABEL, mPhotoNoteGroup.get(position).getCategoryLabel());
         bundle.putInt(Const.PHOTO_POSITION, position);
