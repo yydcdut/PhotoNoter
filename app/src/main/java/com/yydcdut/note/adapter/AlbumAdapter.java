@@ -151,7 +151,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
         int total = map.size();
         for (Map.Entry<Integer, PhotoNote> entry : map.entrySet()) {
             mPhotoNoteList.remove(entry.getValue());
-            notifyItemRemoved(entry.getKey() + times);
+            notifyItemRemoved(entry.getKey() - times);
             if (times + 1 != total) {
                 PhotoNoteDBModel.getInstance().update(entry.getValue(), false);
             } else {

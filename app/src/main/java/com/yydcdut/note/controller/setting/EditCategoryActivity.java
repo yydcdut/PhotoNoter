@@ -236,6 +236,7 @@ public class EditCategoryActivity extends BaseActivity implements SlideAndDragLi
     private void deleteCategories() {
         if (mDeleteCategoryLabelList != null && mDeleteCategoryLabelList.size() > 0) {
             for (String label : mDeleteCategoryLabelList) {
+                CategoryDBModel.getInstance().refresh();
                 Category category = CategoryDBModel.getInstance().findByCategoryLabel(label);
                 boolean isCheck = category.isCheck();
                 CategoryDBModel.getInstance().delete(category);
@@ -258,7 +259,8 @@ public class EditCategoryActivity extends BaseActivity implements SlideAndDragLi
                 Map.Entry<String, String> entry = iterator.next();
                 String originalLabel = entry.getKey();
                 String newLabel = entry.getValue();
-                boolean bool = CategoryDBModel.getInstance().updateLabel(originalLabel, newLabel);
+                CategoryDBModel.getInstance().refresh();
+                CategoryDBModel.getInstance().updateLabel(originalLabel, newLabel);
             }
         }
     }
