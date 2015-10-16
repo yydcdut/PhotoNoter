@@ -25,6 +25,7 @@ public class LocalStorageUtils {
     private static final boolean FIRST_TIME_DEFAULT = false;
 
     private static final String INTRODUCE = "introduce";
+    private static final String INTRODUCE_1_2_0 = "introduce 1.2.0";
     private static final boolean INTRODUCE_DEFAULT = false;
 
     private static final String ALBUM_SORT_NAME = "album_sort";//相册排序方式
@@ -127,10 +128,10 @@ public class LocalStorageUtils {
      */
     public boolean notGotoIntroduce() {
 
-        boolean value = mSharedPreferences.getBoolean(INTRODUCE, INTRODUCE_DEFAULT);
+        boolean value = mSharedPreferences.getBoolean(INTRODUCE_1_2_0, INTRODUCE_DEFAULT);
         if (value == false) {
             SharedPreferences.Editor editor = mSharedPreferences.edit();
-            editor.putBoolean(INTRODUCE, true);
+            editor.putBoolean(INTRODUCE_1_2_0, true);
             editor.commit();
         }
         return value;

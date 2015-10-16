@@ -17,6 +17,7 @@ import java.util.Map;
 
 /**
  * Created by yuyidong on 15/7/17.
+ * 先进行数据库操作，然后再操作动画之类的
  */
 public class PhotoNoteDBModel extends AbsNotesDBModel implements IModel {
 

@@ -83,9 +83,9 @@ public class AlbumAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
             }
         }
         for (Map.Entry<Integer, PhotoNote> entry : map.entrySet()) {
+            PhotoNoteDBModel.getInstance().delete(entry.getValue());
             mPhotoNoteList.remove(entry.getValue());
             notifyItemRemoved(entry.getKey());
-            PhotoNoteDBModel.getInstance().delete(entry.getValue());
         }
     }
 
