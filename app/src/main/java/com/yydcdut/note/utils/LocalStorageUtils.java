@@ -22,7 +22,7 @@ public class LocalStorageUtils {
     private static final String SETTING_NAME = "Setting";
 
     private static final String FIRST_TIME = "first_time";
-    private static final boolean FIRST_TIME_DEFAULT = false;
+    private static final boolean FIRST_TIME_DEFAULT = true;
 
     private static final String INTRODUCE = "introduce";
     private static final String INTRODUCE_1_2_0 = "introduce 1.2.0";
@@ -111,11 +111,10 @@ public class LocalStorageUtils {
      * @return
      */
     public boolean isFirstTime() {
-
         boolean value = mSharedPreferences.getBoolean(FIRST_TIME, FIRST_TIME_DEFAULT);
-        if (value == false) {
+        if (value) {
             SharedPreferences.Editor editor = mSharedPreferences.edit();
-            editor.putBoolean(FIRST_TIME, true);
+            editor.putBoolean(FIRST_TIME, false);
             editor.commit();
         }
         return value;

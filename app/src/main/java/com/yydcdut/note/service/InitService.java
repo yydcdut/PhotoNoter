@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
+import android.os.Binder;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
@@ -32,7 +33,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Created by yyd on 15-4-26.
  */
-//todo 改成IntentService
 public class InitService extends Service {
     private static final int QUITE = 3;
     private static final int ADD = 1;
@@ -42,7 +42,22 @@ public class InitService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return new InitBinder();
+    }
+
+    public class InitBinder extends Binder {
+        public boolean isFinished() {
+            int number = mNumber.get();
+            if (number == QUITE) {
+                Intent intent = new Intent();
+                intent.setAction(Const.BROADCAST_PHOTONOTE_UPDATE);
+                intent.putExtra(Const.TARGET_BROADCAST_SERVICE, true);
+                sendBroadcast(intent);
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 
     @Override
@@ -73,7 +88,7 @@ public class InitService extends Service {
             public boolean handleMessage(Message msg) {
                 switch (msg.what) {
                     case ADD:
-                        stopService(mNumber.incrementAndGet());
+                        mNumber.incrementAndGet();
                         break;
                 }
                 return false;
@@ -241,21 +256,6 @@ public class InitService extends Service {
             FilePathUtils.saveSmallPhoto(outFileName[i], bitmap);
         }
         return true;
-    }
-
-    /**
-     * 退出
-     *
-     * @param number 当值满足为QUITE的时候退出
-     */
-    private void stopService(int number) {
-        if (number == QUITE) {
-            Intent intent = new Intent();
-            intent.setAction(Const.BROADCAST_PHOTONOTE_UPDATE);
-            intent.putExtra(Const.TARGET_BROADCAST_SERVICE, true);
-            sendBroadcast(intent);
-            stopSelf();
-        }
     }
 
 }

@@ -57,6 +57,12 @@
             android:layout_marginRight="10dip"
             android:src="@drawable/img_introduce_dot"/>
 
+        <ImageView
+            android:id="@+id/img_introduce_6"
+            android:layout_width="10dip"
+            android:layout_height="10dip"
+            android:layout_marginRight="10dip"
+            android:src="@drawable/img_introduce_dot"/>
     </LinearLayout>
 
     <ImageView
@@ -67,6 +73,13 @@
         android:layout_centerHorizontal="true"
         android:src="@drawable/btn_guide_enter"
         android:visibility="gone"/>
+
+    <com.yydcdut.note.view.CircleProgressBarLayout
+        android:id="@+id/layout_progress"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="gone">
+    </com.yydcdut.note.view.CircleProgressBarLayout>
 
 
 </RelativeLayout>

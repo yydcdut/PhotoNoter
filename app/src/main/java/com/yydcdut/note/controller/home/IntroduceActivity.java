@@ -1,6 +1,11 @@
 package com.yydcdut.note.controller.home;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.Handler;
+import android.os.IBinder;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.View;
@@ -12,15 +17,19 @@ import com.nineoldandroids.animation.ObjectAnimator;
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.IntroducePagerAdapter;
 import com.yydcdut.note.controller.BaseActivity;
+import com.yydcdut.note.service.InitService;
 import com.yydcdut.note.utils.LollipopCompat;
+import com.yydcdut.note.view.CircleProgressBarLayout;
 
 /**
  * Created by yuyidong on 15/8/9.
  */
 public class IntroduceActivity extends BaseActivity implements OnPageChangeListener, View.OnClickListener {
-    private ImageView mImageDot1, mImageDot2, mImageDot3, mImageDot4, mImageDot5;
-
+    private ImageView mImageDot1, mImageDot2, mImageDot3, mImageDot4, mImageDot5, mImageDot6;
     private View mBtnStart;
+    private CircleProgressBarLayout mCircleProgressBar;
+
+    private InitService.InitBinder mInitBinder;
 
     @Override
     public int setContentView() {
@@ -33,6 +42,25 @@ public class IntroduceActivity extends BaseActivity implements OnPageChangeListe
         initViewPager();
         initDots();
         initBtn();
+        initService();
+        mCircleProgressBar = (CircleProgressBarLayout) findViewById(R.id.layout_progress);
+    }
+
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mInitBinder = (InitService.InitBinder) service;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mInitBinder = null;
+        }
+    };
+
+    private void initService() {
+        Intent initIntent = new Intent(this, InitService.class);
+        bindService(initIntent, serviceConnection, Context.BIND_AUTO_CREATE);
     }
 
     private void initViewPager() {
@@ -52,6 +80,7 @@ public class IntroduceActivity extends BaseActivity implements OnPageChangeListe
         mImageDot3 = (ImageView) findViewById(R.id.img_introduce_3);
         mImageDot4 = (ImageView) findViewById(R.id.img_introduce_4);
         mImageDot5 = (ImageView) findViewById(R.id.img_introduce_5);
+        mImageDot6 = (ImageView) findViewById(R.id.img_introduce_6);
     }
 
     @Override
@@ -75,6 +104,9 @@ public class IntroduceActivity extends BaseActivity implements OnPageChangeListe
                 break;
             case 4:
                 resetDots(mImageDot5);
+                break;
+            case 5:
+                resetDots(mImageDot6);
                 if (mBtnStart.getVisibility() == View.GONE) {
                     AnimatorSet animation = new AnimatorSet();
                     animation.setDuration(300);
@@ -114,6 +146,7 @@ public class IntroduceActivity extends BaseActivity implements OnPageChangeListe
         mImageDot3.setImageDrawable(getResources().getDrawable(R.drawable.img_introduce_dot));
         mImageDot4.setImageDrawable(getResources().getDrawable(R.drawable.img_introduce_dot));
         mImageDot5.setImageDrawable(getResources().getDrawable(R.drawable.img_introduce_dot));
+        mImageDot6.setImageDrawable(getResources().getDrawable(R.drawable.img_introduce_dot));
         imageView.setImageDrawable(getResources().getDrawable(R.drawable.img_introduce_dot_foucs));
     }
 
@@ -124,8 +157,34 @@ public class IntroduceActivity extends BaseActivity implements OnPageChangeListe
 
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent(IntroduceActivity.this, HomeActivity.class);
-        startActivity(intent);
-        IntroduceActivity.this.finish();
+        if (mInitBinder.isFinished()) {
+            IntroduceActivity.this.unbindService(serviceConnection);
+            Intent intent = new Intent(IntroduceActivity.this, HomeActivity.class);
+            startActivity(intent);
+            IntroduceActivity.this.finish();
+        } else {
+            mCircleProgressBar.show();
+            finishAndJump();
+        }
+    }
+
+    /**
+     * 递归，不断的判断
+     */
+    private void finishAndJump() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!mInitBinder.isFinished()) {
+                    finishAndJump();
+                } else {
+                    mCircleProgressBar.hide();
+                    IntroduceActivity.this.unbindService(serviceConnection);
+                    Intent intent = new Intent(IntroduceActivity.this, HomeActivity.class);
+                    startActivity(intent);
+                    IntroduceActivity.this.finish();
+                }
+            }
+        }, 500);
     }
 }

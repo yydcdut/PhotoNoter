@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.yydcdut.note.R;
+import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +18,8 @@ import java.util.Map;
  */
 public class IntroducePagerAdapter extends PagerAdapter {
 
-    private int[] mRes = new int[]{R.drawable.image_introduce_1, R.drawable.image_introduce_2, R.drawable.image_introduce_3, R.drawable.image_introduce_4, R.drawable.image_introduce_5};
+    private String[] mUrl = new String[]{"assets://img_introduce_0.png", "assets://img_introduce_1.png", "assets://img_introduce_2.png",
+            "assets://img_introduce_3.png", "assets://img_introduce_4.png", "assets://img_introduce_5.png"};
     private Context mContext;
 
     private Map<Integer, View> mViewMap;
@@ -29,7 +31,7 @@ public class IntroducePagerAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return mRes.length;
+        return mUrl.length;
     }
 
     @Override
@@ -41,7 +43,7 @@ public class IntroducePagerAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         View v = LayoutInflater.from(mContext).inflate(R.layout.item_vp_img, null);
         ImageView imageView = (ImageView) v.findViewById(R.id.img_vp_login);
-        imageView.setImageResource(mRes[position]);
+        ImageLoaderManager.displayImage(mUrl[position], imageView);
         mViewMap.put(position, v);
         container.addView(v);
         return v;

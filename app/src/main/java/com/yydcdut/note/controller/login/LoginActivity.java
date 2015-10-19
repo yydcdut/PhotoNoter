@@ -31,13 +31,6 @@ import org.json.JSONObject;
  * Created by yuyidong on 15-3-25.
  */
 public class LoginActivity extends BaseActivity implements View.OnClickListener, Handler.Callback {
-    public static final String SINA_APP_KEY = "1445060792";
-    public static final String REDIRECT_URL = "http://www.sina.com";// 应用的回调页
-    public static final String SCOPE =
-            "email,direct_messages_read,direct_messages_write," +
-                    "friendships_groups_read,friendships_groups_write,statuses_to_me_read," +
-                    "follow_app_official_microblog," +
-                    "invitation_write";
     private static final String TAG = LoginActivity.class.getSimpleName();
 
     private static final int MESSAGE_LOGIN_QQ_OK = 1;
@@ -64,7 +57,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
     private void initToolBarUI() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(getResources().getString(R.string.app_setting));
+        toolbar.setTitle(getResources().getString(R.string.app_login));
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         LollipopCompat.setElevation(toolbar, getResources().getDimension(R.dimen.ui_elevation));

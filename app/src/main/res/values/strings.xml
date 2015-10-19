@@ -3,6 +3,7 @@
 
     <string name="app_name">PhotoNoter</string>
     <string name="app_setting">Settings</string>
+    <string name="app_login">Login</string>
 
     <string name="introduce_start">Start!</string>
 

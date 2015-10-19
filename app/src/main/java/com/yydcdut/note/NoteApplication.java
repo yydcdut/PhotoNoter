@@ -8,7 +8,6 @@ import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 import com.umeng.analytics.MobclickAgent;
 import com.yydcdut.note.service.CheckService;
-import com.yydcdut.note.service.InitService;
 import com.yydcdut.note.utils.Evi;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
@@ -117,9 +116,6 @@ public class NoteApplication extends Application {
      */
     private void initService() {
         if (!LocalStorageUtils.getInstance().isFirstTime()) {
-            Intent initIntent = new Intent(this, InitService.class);
-            startService(initIntent);
-        } else {
             Intent checkIntent = new Intent(this, CheckService.class);
             startService(checkIntent);
         }
