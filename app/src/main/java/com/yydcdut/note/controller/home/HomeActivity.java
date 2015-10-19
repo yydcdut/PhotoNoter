@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.view.Menu;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -68,11 +67,35 @@ public class HomeActivity extends NavigationActivity implements NavigationActivi
         }
     }
 
-
     @Override
     public int setContentView() {
         initReceiver();
         return super.setContentView();
+    }
+
+    @Override
+    public void initNavigationListener() {
+        setNavigationListener(this);
+        setOnDrawerListener(this);
+    }
+
+    @Override
+    public List<Category> setCategoryAdapter() {
+        mListData = CategoryDBModel.getInstance().findAll();
+        PhotoNoteDBModel.getInstance().addObserver(this);
+        CategoryDBModel.getInstance().addObserver(this);
+        return mListData;
+    }
+
+    @Override
+    public int getCheckedPosition() {
+        List<Category> categoryList = CategoryDBModel.getInstance().findAll();
+        for (int i = 0; i < categoryList.size(); i++) {
+            if (categoryList.get(i).isCheck()) {
+                return i;
+            }
+        }
+        return 0;
     }
 
     @Override
@@ -155,24 +178,10 @@ public class HomeActivity extends NavigationActivity implements NavigationActivi
     }
 
     @Override
-    public void initNavigationListener() {
-        setNavigationListener(this);
-        setOnDrawerListener(this);
-        setCurrentListCheckedPosition(0);
-    }
-
-    @Override
-    public List<Category> setCategoryAdapter() {
-        mListData = CategoryDBModel.getInstance().findAll();
-        PhotoNoteDBModel.getInstance().addObserver(this);
-        CategoryDBModel.getInstance().addObserver(this);
-        return mListData;
-    }
-
-
-    @Override
     public void onItemClickNavigation(int position, int layoutContainerId) {
+        //更新位置信息
         CategoryDBModel.getInstance().setCategoryMenuPosition(mListData.get(position));
+        getCategoryAdapter().resetGroup(mListData);
         mCategoryLabel = mListData.get(position).getLabel();
         if (mFragment == null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -187,18 +196,12 @@ public class HomeActivity extends NavigationActivity implements NavigationActivi
     }
 
     public void changeCategoryAfterSaving(Category category) {
+        //更新位置信息
         CategoryDBModel.getInstance().setCategoryMenuPosition(category);
-        mListData = CategoryDBModel.getInstance().findAll();
-        getCategoryAdapter().resetGroup(mListData);
+        mListData = CategoryDBModel.getInstance().refresh();
         getCategoryAdapter().notifyDataSetChanged();
-        setCurrentListCheckedPosition(mListData.size() - 1);
-        setCheckedItemNavigation(mListData.size() - 1, true);
         mCategoryLabel = category.getLabel();
         mFragment.changePhotos4Category(mCategoryLabel);
-    }
-
-    @Override
-    public void onPrepareOptionsMenuNavigation(Menu menu, int position, boolean visible) {
     }
 
     @Override
@@ -426,7 +429,7 @@ public class HomeActivity extends NavigationActivity implements NavigationActivi
     }
 
     @Override
-    public void onUpdate(final int CRUD, final Category[] categories) {
+    public void onUpdate(final int CRUD) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {

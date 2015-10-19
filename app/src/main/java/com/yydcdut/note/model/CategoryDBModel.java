@@ -116,12 +116,22 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
         if (checkLabelExist(category)) {
             return false;
         }
+        if (category.isCheck()) {
+            resetCheck();
+        }
         long id = saveData2DB(category);
         if (id >= 0) {
             refresh();
         }
-        doObserver(IObserver.OBSERVER_CATEGORY_CREATE, new Category[]{category});
+        doObserver(IObserver.OBSERVER_CATEGORY_CREATE);
         return id >= 0;
+    }
+
+    private void resetCheck() {
+        for (Category category : mCache) {
+            category.setCheck(false);
+            updateData2DB(category);
+        }
     }
 
     /**
@@ -155,9 +165,7 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
         int oldNumber = PhotoNoteDBModel.getInstance().findByCategoryLabel(oldCategory.getLabel(), ComparatorFactory.FACTORY_NOT_SORT).size();
         oldCategory.setPhotosNumber(oldNumber);
         CategoryDBModel.getInstance().update(oldCategory);
-        doObserver(IObserver.OBSERVER_CATEGORY_MOVE, new Category[]{
-                findByCategoryLabel(oldCategoryLabel), findByCategoryLabel(targetCategoryLabel)
-        });
+        doObserver(IObserver.OBSERVER_CATEGORY_MOVE);
     }
 
     /**
@@ -193,7 +201,7 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
         if (bool) {
             refresh();
         }
-        doObserver(IObserver.OBSERVER_CATEGORY_RENAME, null);
+        doObserver(IObserver.OBSERVER_CATEGORY_RENAME);
         return bool;
     }
 
@@ -227,7 +235,7 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
             bool &= updateData2DB(category);
         }
         refresh();
-        doObserver(IObserver.OBSERVER_CATEGORY_SORT, null);
+        doObserver(IObserver.OBSERVER_CATEGORY_SORT);
         return bool;
     }
 
@@ -240,7 +248,7 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
         final String label = category.getLabel();
         mCache.remove(category);
         deleteData2DB(category);
-        doObserver(IObserver.OBSERVER_CATEGORY_DELETE, null);
+        doObserver(IObserver.OBSERVER_CATEGORY_DELETE);
         deletePhotoNotes(label);
     }
 
@@ -273,7 +281,7 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
         if (bool && refresh) {
             refresh();
         }
-        doObserver(IObserver.OBSERVER_CATEGORY_UPDATE, new Category[]{category});
+        doObserver(IObserver.OBSERVER_CATEGORY_UPDATE);
         return bool;
     }
 
@@ -295,7 +303,7 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
         ContentValues contentValues = new ContentValues();
         contentValues.put("label", category.getLabel());
         contentValues.put("photosNumber", category.getPhotosNumber());
-        contentValues.put("isCheck", category.isCheck());
+        contentValues.put("isCheck", category.isCheck() ? 1 : 0);
         contentValues.put("sort", category.getSort());
         long id = db.insert(NotesSQLite.TABLE_CATEGORY, null, contentValues);
         db.close();
@@ -307,16 +315,16 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
         ContentValues contentValues = new ContentValues();
         contentValues.put("label", category.getLabel());
         contentValues.put("photosNumber", category.getPhotosNumber());
-        contentValues.put("isCheck", category.isCheck());
+        contentValues.put("isCheck", category.isCheck() ? 1 : 0);
         contentValues.put("sort", category.getSort());
         int rows = db.update(NotesSQLite.TABLE_CATEGORY, contentValues, "_id = ?", new String[]{category.getId() + ""});
         db.close();
         return rows >= 0;
     }
 
-    private void doObserver(int CRUD, Category[] categories) {
+    private void doObserver(int CRUD) {
         for (CategoryChangedObserver observer : mCategoryChangedObservers) {
-            observer.onUpdate(CRUD, categories);
+            observer.onUpdate(CRUD);
         }
     }
 

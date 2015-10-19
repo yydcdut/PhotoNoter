@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -42,7 +41,6 @@ public abstract class NavigationActivity extends BaseActivity {
     public ProgressBar mCloudUseProgress;
     /* Drawer */
     private ListView mMenuListView;
-    private int mCurrentListCheckedPosition = 0;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggleCompat mDrawerToggle;
     /* Fragment */
@@ -62,10 +60,6 @@ public abstract class NavigationActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (savedInstanceState != null) {
-            mCurrentListCheckedPosition = savedInstanceState.getInt(CURRENT_POSITION);
-        }
 
         mMenuListView = (ListView) findViewById(R.id.lv_navigation);
         mMenuListView.setOnItemClickListener(new DrawerItemClickListener());
@@ -103,20 +97,13 @@ public abstract class NavigationActivity extends BaseActivity {
             setNavigationAdapter();
         }
 
-        if (savedInstanceState == null) {
-            mNavigationListener.onItemClickNavigation(mCurrentListCheckedPosition, R.id.container);
-        }
-
-        setCheckedItemNavigation(mCurrentListCheckedPosition, true);
+        int position = getCheckedPosition();
+        mNavigationListener.onItemClickNavigation(position, R.id.container);
     }
+
+    public abstract int getCheckedPosition();
 
     public abstract void initNavigationListener();
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt(CURRENT_POSITION, mCurrentListCheckedPosition);
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -126,13 +113,6 @@ public abstract class NavigationActivity extends BaseActivity {
             }
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mRelativeDrawer);
-        mNavigationListener.onPrepareOptionsMenuNavigation(menu, mCurrentListCheckedPosition, drawerOpen);
-        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -195,8 +175,6 @@ public abstract class NavigationActivity extends BaseActivity {
 
             if (position != 0) {
                 mNavigationListener.onItemClickNavigation(realPosition, R.id.container);
-                setCurrentListCheckedPosition(realPosition);
-                setCheckedItemNavigation(realPosition, true);
             }
             mDrawerLayout.closeDrawer(mRelativeDrawer);
         }
@@ -229,11 +207,6 @@ public abstract class NavigationActivity extends BaseActivity {
         }
 
         List<Category> list = setCategoryAdapter();
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).isCheck()) {
-                setCurrentListCheckedPosition(i);
-            }
-        }
         mCategoryAdapter = new NavigationCategoryAdapter(NavigationActivity.this, list);
         mMenuListView.setAdapter(mCategoryAdapter);
     }
@@ -277,19 +250,6 @@ public abstract class NavigationActivity extends BaseActivity {
     public abstract void onCloudInformation();
 
     /**
-     * 设置当前在Menu的ListView中哪个为选中
-     *
-     * @param position
-     */
-    public void setCurrentListCheckedPosition(int position) {
-        mCurrentListCheckedPosition = position;
-    }
-
-    public void setCheckedItemNavigation(int position, boolean checked) {
-        this.mCategoryAdapter.setChecked(position, checked);
-    }
-
-    /**
      * Open drawer
      */
     public void openDrawer() {
@@ -331,15 +291,6 @@ public abstract class NavigationActivity extends BaseActivity {
          * @param layoutContainerId
          */
         void onItemClickNavigation(int position, int layoutContainerId);
-
-        /**
-         * Prepare options menu navigation (onPrepareOptionsMenu(Menu menu))
-         *
-         * @param menu     menu.
-         * @param position last position of the item that was clicked.
-         * @param visible  use to hide the menu when the navigation is open.
-         */
-        void onPrepareOptionsMenuNavigation(Menu menu, int position, boolean visible);
 
         /**
          * Click user photo navigation

@@ -36,6 +36,12 @@ public class YLog {
         }
     }
 
+    public static void wtf(String tag, String msg) {
+        if (DEBUG) {
+            Log.wtf(tag, buildMessage(msg));
+        }
+    }
+
     private static String buildMessage(String msg) {
         StackTraceElement[] trace = new Throwable().fillInStackTrace().getStackTrace();
 

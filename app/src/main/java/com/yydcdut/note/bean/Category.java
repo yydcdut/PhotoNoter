@@ -42,10 +42,6 @@ public class Category implements IObject {
         this.id = id;
     }
 
-    public void setIsCheck(boolean isCheck) {
-        this.isCheck = isCheck;
-    }
-
     public String getLabel() {
         return label;
     }
