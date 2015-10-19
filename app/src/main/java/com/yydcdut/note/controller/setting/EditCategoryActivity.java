@@ -242,6 +242,7 @@ public class EditCategoryActivity extends BaseActivity implements SlideAndDragLi
                 boolean isCheck = category.isCheck();
                 CategoryDBModel.getInstance().delete(category);
                 if (isCheck) {//如果是menu中当前选中的这个
+                    resetAllCategoriesCheck();
                     if (mCategoryList.size() > 0) {
                         Category newCategory = mCategoryList.get(0);
                         newCategory.setCheck(true);
@@ -250,6 +251,15 @@ public class EditCategoryActivity extends BaseActivity implements SlideAndDragLi
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * 取消所有的check
+     */
+    private void resetAllCategoriesCheck() {
+        for (Category category : mCategoryList) {
+            category.setCheck(false);
         }
     }
 

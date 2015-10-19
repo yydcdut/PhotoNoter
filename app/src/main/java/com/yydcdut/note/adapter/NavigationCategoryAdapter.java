@@ -27,11 +27,12 @@ public class NavigationCategoryAdapter extends BaseListAdapter<Category> {
     }
 
     public void setChecked(int pos, boolean checked) {
+        resetCheck();
         getGroup().get(pos).setCheck(checked);
         notifyDataSetChanged();
     }
 
-    public void resetCheck() {
+    private void resetCheck() {
         for (int i = 0; i < getGroup().size(); i++) {
             getGroup().get(i).setCheck(false);
         }
