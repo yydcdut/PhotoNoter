@@ -3,6 +3,7 @@ package com.yydcdut.note.model.sqlite;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Color;
 
 /**
  * Created by yuyidong on 15/10/15.
@@ -33,12 +34,21 @@ public class NotesSQLite extends SQLiteOpenHelper {
                 "createdNoteTime LONG NOT NULL, " +
                 "editedNoteTime LONG NOT NULL, " +
                 "tag INTEGER DEFAULT 0, " +//还没用
+                "palette INTEGER DEFAULT " + Color.WHITE + ", " +
                 "categoryLabel TEXT NOT NULL);";
         db.execSQL(sql_photoNote);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        if (oldVersion == 1 && newVersion == 2) {
+            updateDBFrom1to2(db);
+        }
     }
+
+    private void updateDBFrom1to2(SQLiteDatabase db) {
+        String sql = "ALTER TABLE " + TABLE_PHOTONOTE + " ADD palette INTEGER DEFAULT -1;";
+        db.execSQL(sql);
+    }
+
 }

@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.os.IBinder;
 import android.os.RemoteException;
@@ -16,6 +17,7 @@ import com.yydcdut.note.model.SandBoxDBModel;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.TimeDecoder;
+import com.yydcdut.note.utils.UiHelper;
 import com.yydcdut.note.utils.YLog;
 
 import java.io.File;
@@ -121,7 +123,9 @@ public class CameraService extends Service {
             FilePathUtils.saveSmallPhoto(fileName, newBitmap);
         }
 
-        PhotoNote photoNote = new PhotoNote(fileName, sandPhoto.getTime(), sandPhoto.getTime(), "", "", sandPhoto.getTime(), sandPhoto.getTime(), sandPhoto.getCategory());
+        PhotoNote photoNote = new PhotoNote(fileName, sandPhoto.getTime(), sandPhoto.getTime(), "", "",
+                sandPhoto.getTime(), sandPhoto.getTime(), Color.WHITE, sandPhoto.getCategory());
+        photoNote.setPaletteColor(UiHelper.getPaletteColor(newBitmap));
         boolean bool = PhotoNoteDBModel.getInstance().save(photoNote);
         if (bool) {
             sendBroadcast2UpdateData();

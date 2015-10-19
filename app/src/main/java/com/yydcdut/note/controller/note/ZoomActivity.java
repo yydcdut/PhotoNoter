@@ -27,6 +27,7 @@ import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.TimeDecoder;
+import com.yydcdut.note.utils.UiHelper;
 import com.yydcdut.note.view.CircleProgressBarLayout;
 import com.yydcdut.note.view.ZoomImageView;
 
@@ -181,9 +182,12 @@ public class ZoomActivity extends BaseActivity implements View.OnClickListener, 
                 case R.id.menu_trash:
                     break;
                 case R.id.menu_info:
+                    int[] arr = FilePathUtils.getPictureSize(mPhotoNote.getBigPhotoPathWithoutFile());
+                    final int width = arr[0];
+                    final int height = arr[1];
                     String[] array = new String[]{
                             getResources().getString(R.string.file_name) + mPhotoNote.getPhotoName(),
-                            getResources().getString(R.string.size) + "0" + " * " + "0",
+                            getResources().getString(R.string.size) + width + " * " + height,
                             getResources().getString(R.string.date) + TimeDecoder.decodeTimeInImageDetail(mPhotoNote.getCreatedPhotoTime())
                     };
                     new AlertDialog.Builder(ZoomActivity.this, R.style.note_dialog)
@@ -250,9 +254,10 @@ public class ZoomActivity extends BaseActivity implements View.OnClickListener, 
                 @Override
                 public void run() {
 
-                    updateSize();
-
                     FilePathUtils.saveSmallPhotoFromSDK(mPhotoNote.getPhotoName(), editResult.getThumbNail());
+
+                    mPhotoNote.setPaletteColor(UiHelper.getPaletteColor(ImageLoaderManager.loadImageSync(mPhotoNote.getBigPhotoPathWithFile())));
+                    PhotoNoteDBModel.getInstance().update(mPhotoNote);
 
                     Intent intent = new Intent();
                     intent.setAction(Const.BROADCAST_PHOTONOTE_UPDATE);
@@ -274,16 +279,6 @@ public class ZoomActivity extends BaseActivity implements View.OnClickListener, 
                 && resultCode == PGEditSDK.PG_EDIT_SDK_RESULT_CODE_NOT_CHANGED) {
             // 照片没有修改
         }
-    }
-
-    /**
-     * 更新图片大小
-     */
-    private void updateSize() {
-        int[] arr = FilePathUtils.getPictureSize(mPhotoNote.getBigPhotoPathWithoutFile());
-//        mPhotoNote.setWidth(arr[0]);
-//        mPhotoNote.setHeight(arr[1]);
-//        PhotoNoteDBModel.getInstance().update(mPhotoNote);
     }
 
     @Override

@@ -1,10 +1,8 @@
 package com.yydcdut.note.controller.note;
 
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -20,7 +18,6 @@ import com.yydcdut.note.controller.BaseActivity;
 import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.Evi;
-import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.LollipopCompat;
 
 import java.util.List;
@@ -110,6 +107,7 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
             int newB = (int) (b1 - deltaB * positionOffset);
             int newColor = Color.rgb(newR, newG, newB);
             mBackgroundImage.setBackgroundColor(newColor);
+
         } else {//left
             int r0 = Color.red(mColorArray[0]);
             int r1 = Color.red(mColorArray[1]);
@@ -125,6 +123,11 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
             int newB = (int) (b1 - deltaB * (1 - positionOffset));
             int newColor = Color.rgb(newR, newG, newB);
             mBackgroundImage.setBackgroundColor(newColor);
+        }
+        if (positionOffset < 0.01 || positionOffset > 0.95) {
+            //重新计算方向
+            mIntention = INTENTION_STOP;
+            mLastTimePositionOffset = -1;
         }
     }
 
@@ -148,41 +151,13 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
         }
     }
 
-    //todo 暂时的办法，最终写到数据库中
     private void getPaletteColor(int position) {
-        Bitmap bitmap1 = ImageLoaderManager.loadImageSync(mPhotoNoteList.get(position).getSmallPhotoPathWithFile());
-        Palette.generateAsync(bitmap1, new Palette.PaletteAsyncListener() {
-            @Override
-            public void onGenerated(Palette palette) {
-                Palette.Swatch swatch = palette.getVibrantSwatch();
-                if (null != swatch) {
-                    mColorArray[1] = swatch.getRgb();
-                }
-            }
-        });
+        mColorArray[1] = mPhotoNoteList.get(position).getPaletteColor();
         if (position != 0) {
-            Bitmap bitmap0 = ImageLoaderManager.loadImageSync(mPhotoNoteList.get(position - 1).getSmallPhotoPathWithFile());
-            Palette.generateAsync(bitmap0, new Palette.PaletteAsyncListener() {
-                @Override
-                public void onGenerated(Palette palette) {
-                    Palette.Swatch swatch = palette.getVibrantSwatch();
-                    if (null != swatch) {
-                        mColorArray[0] = swatch.getRgb();
-                    }
-                }
-            });
+            mColorArray[0] = mPhotoNoteList.get(position - 1).getPaletteColor();
         }
         if (position != mPhotoNoteList.size() - 1) {
-            Bitmap bitmap2 = ImageLoaderManager.loadImageSync(mPhotoNoteList.get(position + 1).getSmallPhotoPathWithFile());
-            Palette.generateAsync(bitmap2, new Palette.PaletteAsyncListener() {
-                @Override
-                public void onGenerated(Palette palette) {
-                    Palette.Swatch swatch = palette.getVibrantSwatch();
-                    if (null != swatch) {
-                        mColorArray[2] = swatch.getRgb();
-                    }
-                }
-            });
+            mColorArray[2] = mPhotoNoteList.get(position + 1).getPaletteColor();
         }
     }
 
@@ -193,7 +168,6 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
         @Override
         public void transformPage(View view, float position) {
             CardView cardView = (CardView) view.findViewById(R.id.card_detail_layout);
-
 
             int pageWidth = view.getWidth();
             int pageHeight = view.getHeight();

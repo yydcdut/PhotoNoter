@@ -3,6 +3,7 @@ package com.yydcdut.note.service;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.hardware.Camera;
 import android.os.Binder;
 import android.os.Environment;
@@ -19,7 +20,9 @@ import com.yydcdut.note.model.CategoryDBModel;
 import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
+import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.LocalStorageUtils;
+import com.yydcdut.note.utils.UiHelper;
 
 import org.json.JSONException;
 
@@ -236,7 +239,9 @@ public class InitService extends Service {
                     return;
                 }
                 for (int i = 0; i < outFileName.length; i++) {
-                    PhotoNoteDBModel.getInstance().save(new PhotoNote(outFileName[i], System.currentTimeMillis(), System.currentTimeMillis(), titles[i], contents[i], System.currentTimeMillis(), System.currentTimeMillis(), "App介绍"));
+                    PhotoNote photoNote = new PhotoNote(outFileName[i], System.currentTimeMillis(), System.currentTimeMillis(), titles[i], contents[i], System.currentTimeMillis(), System.currentTimeMillis(), Color.WHITE, "App介绍");
+                    photoNote.setPaletteColor(UiHelper.getPaletteColor(ImageLoaderManager.loadImageSync(photoNote.getBigPhotoPathWithFile())));
+                    PhotoNoteDBModel.getInstance().save(photoNote);
                 }
                 mHandler.sendEmptyMessage(ADD);
             }

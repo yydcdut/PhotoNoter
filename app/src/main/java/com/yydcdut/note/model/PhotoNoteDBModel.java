@@ -138,10 +138,11 @@ public class PhotoNoteDBModel extends AbsNotesDBModel implements IModel {
             String content = cursor.getString(cursor.getColumnIndex("content"));
             long createdNoteTime = cursor.getLong(cursor.getColumnIndex("createdNoteTime"));
             long editedNoteTime = cursor.getLong(cursor.getColumnIndex("editedNoteTime"));
+            int color = cursor.getInt(cursor.getColumnIndex("palette"));
             int tag = cursor.getInt(cursor.getColumnIndex("tag"));
             String categoryLabel = cursor.getString(cursor.getColumnIndex("categoryLabel"));
             PhotoNote photoNote = new PhotoNote(id, photoName, createdPhotoTime, editedPhotoTime, title, content,
-                    createdNoteTime, editedNoteTime, categoryLabel);
+                    createdNoteTime, editedNoteTime, color, categoryLabel);
             list.add(photoNote);
         }
         cursor.close();
@@ -159,6 +160,7 @@ public class PhotoNoteDBModel extends AbsNotesDBModel implements IModel {
         contentValues.put("content", photoNote.getContent());
         contentValues.put("createdNoteTime", photoNote.getCreatedNoteTime());
         contentValues.put("editedNoteTime", photoNote.getEditedNoteTime());
+        contentValues.put("palette", photoNote.getPaletteColor());
         contentValues.put("categoryLabel", photoNote.getCategoryLabel());
         int rows = db.update(NotesSQLite.TABLE_PHOTONOTE, contentValues, "_id = ?", new String[]{photoNote.getId() + ""});
         db.close();
@@ -175,6 +177,7 @@ public class PhotoNoteDBModel extends AbsNotesDBModel implements IModel {
         contentValues.put("content", photoNote.getContent());
         contentValues.put("createdNoteTime", photoNote.getCreatedNoteTime());
         contentValues.put("editedNoteTime", photoNote.getEditedNoteTime());
+        contentValues.put("palette", photoNote.getPaletteColor());
         contentValues.put("categoryLabel", photoNote.getCategoryLabel());
         long id = db.insert(NotesSQLite.TABLE_PHOTONOTE, null, contentValues);
         db.close();

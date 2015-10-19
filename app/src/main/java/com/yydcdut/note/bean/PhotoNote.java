@@ -1,5 +1,7 @@
 package com.yydcdut.note.bean;
 
+import android.graphics.Color;
+
 import com.yydcdut.note.utils.FilePathUtils;
 
 /**
@@ -50,10 +52,14 @@ public class PhotoNote implements IObject {
      * 标记
      */
     private int tag;
+    /**
+     * 颜色
+     */
+    private int mPaletteColor = Color.WHITE;
 
     public PhotoNote(String photoName, long createdPhotoTime, long editedPhotoTime,
                      String title, String content, long createdNoteTime,
-                     long editedNoteTime, String categoryLabel) {
+                     long editedNoteTime, int paletteColor, String categoryLabel) {
         this.photoName = photoName;
         this.createdPhotoTime = createdPhotoTime;
         this.editedPhotoTime = editedPhotoTime;
@@ -61,12 +67,13 @@ public class PhotoNote implements IObject {
         this.content = content;
         this.createdNoteTime = createdNoteTime;
         this.editedNoteTime = editedNoteTime;
+        this.mPaletteColor = paletteColor;
         this.categoryLabel = categoryLabel;
     }
 
     public PhotoNote(int id, String photoName, long createdPhotoTime, long editedPhotoTime,
                      String title, String content, long createdNoteTime,
-                     long editedNoteTime, String categoryLabel) {
+                     long editedNoteTime, int paletteColor, String categoryLabel) {
         this.id = id;
         this.photoName = photoName;
         this.createdPhotoTime = createdPhotoTime;
@@ -75,6 +82,7 @@ public class PhotoNote implements IObject {
         this.content = content;
         this.createdNoteTime = createdNoteTime;
         this.editedNoteTime = editedNoteTime;
+        this.mPaletteColor = paletteColor;
         this.categoryLabel = categoryLabel;
     }
 
@@ -178,4 +186,11 @@ public class PhotoNote implements IObject {
         this.categoryLabel = categoryLabel;
     }
 
+    public int getPaletteColor() {
+        return mPaletteColor;
+    }
+
+    public void setPaletteColor(int paletteColor) {
+        mPaletteColor = paletteColor;
+    }
 }

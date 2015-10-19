@@ -8,7 +8,7 @@ import com.yydcdut.note.model.sqlite.NotesSQLite;
  */
 public abstract class AbsNotesDBModel implements IModel {
     private static final String NAME = "Notes.db";
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
 
     protected NotesSQLite mNotesSQLite;
 

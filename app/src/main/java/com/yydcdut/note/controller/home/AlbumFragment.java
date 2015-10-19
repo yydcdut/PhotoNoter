@@ -47,8 +47,9 @@ import com.yydcdut.note.service.SandBoxService;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.Evi;
 import com.yydcdut.note.utils.FilePathUtils;
+import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.LocalStorageUtils;
-import com.yydcdut.note.utils.YLog;
+import com.yydcdut.note.utils.UiHelper;
 import com.yydcdut.note.view.CircleProgressBarLayout;
 import com.yydcdut.note.view.RevealView;
 import com.yydcdut.note.view.fab.FloatingActionsMenu;
@@ -255,59 +256,48 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
         if (resultCode == Activity.RESULT_OK && requestCode == INTENT_REQUEST_LOCAL) {
             final Uri uri = data.getData();
             final ContentResolver cr = getActivity().getContentResolver();
-            try {
-                int[] arr = FilePathUtils.getPictureSize(cr.openInputStream(uri));
-                final int width = arr[0];
-                final int height = arr[1];
-                mProgressLayout.show();
-                NoteApplication.getInstance().getExecutorPool().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        PhotoNote photoNote = new PhotoNote(System.currentTimeMillis() + ".jpg", System.currentTimeMillis(),
-                                System.currentTimeMillis(), "", "", System.currentTimeMillis(),
-                                System.currentTimeMillis(), mCategoryLabel);
-
-                        if (PhotoNoteDBModel.getInstance().save(photoNote)) {
-                            //复制大图
-                            try {
-                                FilePathUtils.copyFile(cr.openInputStream(uri), photoNote.getBigPhotoPathWithoutFile());
-                            } catch (FileNotFoundException e) {
-                                e.printStackTrace();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            //保存小图
-                            FilePathUtils.saveSmallPhotoFromBigPhoto(photoNote);
-                        }
-                        mMainHandler.sendEmptyMessage(MSG_UPDATE_DATA);
-                    }
-                });
-            } catch (FileNotFoundException e) {
-                YLog.e(TAG, e.getMessage());
-            }
-        } else if (resultCode == Activity.RESULT_OK && requestCode == INTENT_REQUEST_CAMERA) {
             mProgressLayout.show();
-            int[] arr = FilePathUtils.getPictureSize(FilePathUtils.getTempFilePath());
-            final int width = arr[0];
-            final int height = arr[1];
             NoteApplication.getInstance().getExecutorPool().execute(new Runnable() {
                 @Override
                 public void run() {
                     PhotoNote photoNote = new PhotoNote(System.currentTimeMillis() + ".jpg", System.currentTimeMillis(),
                             System.currentTimeMillis(), "", "", System.currentTimeMillis(),
-                            System.currentTimeMillis(), mCategoryLabel);
-                    if (PhotoNoteDBModel.getInstance().save(photoNote)) {
-                        //复制大图
-                        try {
-                            FilePathUtils.copyFile(FilePathUtils.getTempFilePath(), photoNote.getBigPhotoPathWithoutFile());
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        //保存小图
-                        FilePathUtils.saveSmallPhotoFromBigPhoto(photoNote);
+                            System.currentTimeMillis(), Color.WHITE, mCategoryLabel);
+                    //复制大图
+                    try {
+                        FilePathUtils.copyFile(cr.openInputStream(uri), photoNote.getBigPhotoPathWithoutFile());
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
+                    //保存小图
+                    FilePathUtils.saveSmallPhotoFromBigPhoto(photoNote);
+                    photoNote.setPaletteColor(UiHelper.getPaletteColor(ImageLoaderManager.loadImageSync(photoNote.getBigPhotoPathWithFile())));
+                    PhotoNoteDBModel.getInstance().save(photoNote);
+                    mMainHandler.sendEmptyMessage(MSG_UPDATE_DATA);
+                }
+            });
+        } else if (resultCode == Activity.RESULT_OK && requestCode == INTENT_REQUEST_CAMERA) {
+            mProgressLayout.show();
+            NoteApplication.getInstance().getExecutorPool().execute(new Runnable() {
+                @Override
+                public void run() {
+                    PhotoNote photoNote = new PhotoNote(System.currentTimeMillis() + ".jpg", System.currentTimeMillis(),
+                            System.currentTimeMillis(), "", "", System.currentTimeMillis(),
+                            System.currentTimeMillis(), Color.WHITE, mCategoryLabel);
+                    //复制大图
+                    try {
+                        FilePathUtils.copyFile(FilePathUtils.getTempFilePath(), photoNote.getBigPhotoPathWithoutFile());
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    //保存小图
+                    FilePathUtils.saveSmallPhotoFromBigPhoto(photoNote);
+                    photoNote.setPaletteColor(UiHelper.getPaletteColor(ImageLoaderManager.loadImageSync(photoNote.getBigPhotoPathWithFile())));
+                    PhotoNoteDBModel.getInstance().save(photoNote);
                     mMainHandler.sendEmptyMessage(MSG_UPDATE_DATA);
                 }
             });
