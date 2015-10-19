@@ -5,11 +5,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.yydcdut.note.bean.PhotoNote;
+import com.yydcdut.note.model.compare.ComparatorFactory;
 import com.yydcdut.note.model.observer.IObserver;
 import com.yydcdut.note.model.observer.PhotoNoteChangedObserver;
 import com.yydcdut.note.model.sqlite.NotesSQLite;
 import com.yydcdut.note.utils.FilePathUtils;
-import com.yydcdut.note.utils.compare.ComparatorFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;

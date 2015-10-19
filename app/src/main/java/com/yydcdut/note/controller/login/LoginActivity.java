@@ -22,6 +22,7 @@ import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.LollipopCompat;
+import com.yydcdut.note.utils.NetworkUtils;
 import com.yydcdut.note.view.CircleProgressBarLayout;
 
 import org.json.JSONException;
@@ -87,7 +88,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     public void onClick(View v) {
-        //todo 网络
+        if (!NetworkUtils.isNetworkConnected(this)) {
+            //没有网络
+            Toast.makeText(this, getResources().getString(R.string.toast_no_connection), Toast.LENGTH_SHORT).show();
+            return;
+        }
         switch (v.getId()) {
             case R.id.btn_login_qq:
                 mTencent.login(LoginActivity.this, "all", new BaseUiListener());

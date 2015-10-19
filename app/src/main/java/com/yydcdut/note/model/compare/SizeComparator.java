@@ -1,4 +1,4 @@
-package com.yydcdut.note.utils.compare;
+package com.yydcdut.note.model.compare;
 
 
 import com.yydcdut.note.camera.param.Size;

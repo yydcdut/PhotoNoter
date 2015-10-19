@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 /**
  * Created by yyd on 15-3-21.
  */
-public class Utils {
+public class TimeDecoder {
     /**
      * Image Style里面的时间显示
      *

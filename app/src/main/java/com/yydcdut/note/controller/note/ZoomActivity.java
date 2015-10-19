@@ -26,7 +26,7 @@ import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
-import com.yydcdut.note.utils.Utils;
+import com.yydcdut.note.utils.TimeDecoder;
 import com.yydcdut.note.view.CircleProgressBarLayout;
 import com.yydcdut.note.view.ZoomImageView;
 
@@ -184,7 +184,7 @@ public class ZoomActivity extends BaseActivity implements View.OnClickListener, 
                     String[] array = new String[]{
                             getResources().getString(R.string.file_name) + mPhotoNote.getPhotoName(),
                             getResources().getString(R.string.size) + "0" + " * " + "0",
-                            getResources().getString(R.string.date) + Utils.decodeTimeInImageDetail(mPhotoNote.getCreatedPhotoTime())
+                            getResources().getString(R.string.date) + TimeDecoder.decodeTimeInImageDetail(mPhotoNote.getCreatedPhotoTime())
                     };
                     new AlertDialog.Builder(ZoomActivity.this, R.style.note_dialog)
                             .setPositiveButton(getResources().getString(R.string.dialog_btn_ok), new DialogInterface.OnClickListener() {

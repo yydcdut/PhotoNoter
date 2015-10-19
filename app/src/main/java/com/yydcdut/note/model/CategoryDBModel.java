@@ -7,10 +7,10 @@ import android.database.sqlite.SQLiteDatabase;
 import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.bean.PhotoNote;
+import com.yydcdut.note.model.compare.ComparatorFactory;
 import com.yydcdut.note.model.observer.CategoryChangedObserver;
 import com.yydcdut.note.model.observer.IObserver;
 import com.yydcdut.note.model.sqlite.NotesSQLite;
-import com.yydcdut.note.utils.compare.ComparatorFactory;
 
 import java.util.ArrayList;
 import java.util.List;

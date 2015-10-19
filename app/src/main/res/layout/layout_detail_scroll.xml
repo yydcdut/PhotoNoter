@@ -56,7 +56,7 @@
                         android:singleLine="true"
                         android:text=""
                         android:textColor="@color/black"
-                        android:textSize="@dimen/txt_large"
+                        android:textSize="17sp"
                         />
                 </com.yydcdut.note.view.ripple.MaterialRippleLayout>
             </android.support.v7.widget.CardView>
@@ -112,7 +112,6 @@
                     <RelativeLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/activity_margin"
                         android:orientation="horizontal">
 
                         <ImageView
@@ -127,8 +126,8 @@
                             android:id="@+id/txt_detail_location"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
                             android:layout_toRightOf="@+id/img_detail_location"
-                            android:padding="@dimen/activity_margin"
                             android:text=" "
                             android:textColor="@color/txt_gray"/>
                     </RelativeLayout>

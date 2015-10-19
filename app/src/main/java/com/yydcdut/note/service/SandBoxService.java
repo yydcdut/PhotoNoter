@@ -21,7 +21,7 @@ import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.model.SandBoxDBModel;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
-import com.yydcdut.note.utils.Utils;
+import com.yydcdut.note.utils.TimeDecoder;
 import com.yydcdut.note.utils.YLog;
 
 import java.util.List;
@@ -120,7 +120,7 @@ public class SandBoxService extends Service implements Handler.Callback {
         bitmap.recycle();
         bitmap = null;
         System.gc();
-        String fileName = Utils.getTime4Photo(sandPhoto.getTime()) + ".jpg";
+        String fileName = TimeDecoder.getTime4Photo(sandPhoto.getTime()) + ".jpg";
 
         if (FilePathUtils.savePhoto(fileName, newBitmap)) {
             FilePathUtils.saveSmallPhoto(fileName, newBitmap);

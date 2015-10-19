@@ -11,10 +11,10 @@ import com.yydcdut.note.camera.model.AbsCameraModel;
 import com.yydcdut.note.camera.model.camera.CameraModel;
 import com.yydcdut.note.camera.param.Size;
 import com.yydcdut.note.camera.view.AutoFitSurfaceView;
+import com.yydcdut.note.model.compare.SizeComparator;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.LollipopCompat;
-import com.yydcdut.note.utils.compare.SizeComparator;
 
 import org.json.JSONException;
 

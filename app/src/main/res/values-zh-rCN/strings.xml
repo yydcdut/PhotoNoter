@@ -121,6 +121,7 @@
     <string name="toast_success">成功!</string>
     <string name="toast_not_support">所选项暂不支持!</string>
     <string name="toast_sandbox_fail">某些刚拍摄完的照片可能丢失!</string>
+    <string name="toast_no_connection">没有网络连接!</string>
 
     <string name="make_photo_notification">正在后台作图，请不要退出程序！</string>
     <string name="toast_storage">存储不足！</string>
