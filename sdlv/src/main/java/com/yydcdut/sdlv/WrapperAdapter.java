@@ -27,7 +27,7 @@ abstract class WrapperAdapter implements WrapperListAdapter, ItemMainLayout.OnIt
     private int mSlideItemPosition = -1;
     /* 监听器 */
     private OnAdapterSlideListenerProxy mOnAdapterSlideListenerProxy;
-    private OnAdapterButtonClickListenerProxy mOnAdapterButtonClickListenerProxy;
+    private OnAdapterMenuClickListenerProxy mOnAdapterMenuClickListenerProxy;
 
     public WrapperAdapter(Context context, SlideAndDragListView listView, ListAdapter adapter, Menu menu) {
         mContext = context;
@@ -198,23 +198,6 @@ abstract class WrapperAdapter implements WrapperListAdapter, ItemMainLayout.OnIt
     }
 
     /**
-     * 通过点击位置来判断是点击到的哪个位置
-     *
-     * @param x
-     * @return
-     */
-    public boolean isTriggerButtonClick(float x) {
-        if (mSlideItemPosition != -1) {
-            ItemMainLayout itemMainLayout = (ItemMainLayout) mListView.getChildAt(mSlideItemPosition - mListView.getFirstVisiblePosition());
-            if (itemMainLayout != null) {
-                int scrollX = -itemMainLayout.getItemCustomLayout().getScrollX();
-                return x < scrollX ? true : false;
-            }
-        }
-        return false;
-    }
-
-    /**
      * 设置监听器
      *
      * @param onAdapterSlideListenerProxy
@@ -242,18 +225,22 @@ abstract class WrapperAdapter implements WrapperListAdapter, ItemMainLayout.OnIt
     /**
      * 设置监听器
      *
-     * @param onAdapterButtonClickListenerProxy
+     * @param onAdapterMenuClickListenerProxy
      */
-    public void setOnAdapterButtonClickListenerProxy(OnAdapterButtonClickListenerProxy onAdapterButtonClickListenerProxy) {
-        mOnAdapterButtonClickListenerProxy = onAdapterButtonClickListenerProxy;
+    public void setOnAdapterMenuClickListenerProxy(OnAdapterMenuClickListenerProxy onAdapterMenuClickListenerProxy) {
+        mOnAdapterMenuClickListenerProxy = onAdapterMenuClickListenerProxy;
     }
 
     @Override
     public void onClick(View v) {
-        if (mOnAdapterButtonClickListenerProxy != null) {
-            mOnAdapterButtonClickListenerProxy.onClick(v, mSlideItemPosition,
+        if (mOnAdapterMenuClickListenerProxy != null) {
+            boolean isScrollBack = mOnAdapterMenuClickListenerProxy.onMenuItemClick(v, mSlideItemPosition,
                     (Integer) (v.getTag(TAG_LEFT) != null ? v.getTag(TAG_LEFT) : v.getTag(TAG_RIGHT)),
                     v.getTag(TAG_LEFT) != null ? MenuItem.DIRECTION_LEFT : MenuItem.DIRECTION_RIGHT);
+            if (isScrollBack) {
+                //归位
+                returnSlideItemPosition();
+            }
         }
     }
 
@@ -271,8 +258,8 @@ abstract class WrapperAdapter implements WrapperListAdapter, ItemMainLayout.OnIt
         onScrollProxy(view, firstVisibleItem, visibleItemCount, totalItemCount);
     }
 
-    public interface OnAdapterButtonClickListenerProxy {
-        void onClick(View v, int itemPosition, int buttonPosition, int direction);
+    public interface OnAdapterMenuClickListenerProxy {
+        boolean onMenuItemClick(View v, int itemPosition, int buttonPosition, int direction);
     }
 
     public interface OnAdapterSlideListenerProxy {

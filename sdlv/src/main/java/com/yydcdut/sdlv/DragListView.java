@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Created by yuyidong on 15/9/30.
  */
-class DragListView<T> extends ListView implements View.OnDragListener {
+public class DragListView<T> extends ListView implements View.OnDragListener {
     /* 判断drag往上还是往下 */
     private boolean mUp = false;
     /* 当前drag所在ListView中的位置 */
@@ -180,7 +180,7 @@ class DragListView<T> extends ListView implements View.OnDragListener {
             view.getItemRightBackGroundLayout().setVisibility(GONE);
             ClipData.Item item = new ClipData.Item("1");
             ClipData data = new ClipData("1", new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN}, item);
-            view.startDrag(data, new View.DragShadowBuilder(view), null, 0);
+            view.startDrag(data, new DragShadowBuilder(view), null, 0);
             mOnDragListener.onDragViewStart(position);
         }
     }

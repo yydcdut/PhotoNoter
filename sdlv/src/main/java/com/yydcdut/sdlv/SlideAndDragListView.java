@@ -15,7 +15,7 @@ import android.widget.ListAdapter;
  * Created by yuyidong on 15/9/28.
  */
 public class SlideAndDragListView<T> extends DragListView<T> implements WrapperAdapter.OnAdapterSlideListenerProxy,
-        WrapperAdapter.OnAdapterButtonClickListenerProxy, Handler.Callback {
+        WrapperAdapter.OnAdapterMenuClickListenerProxy, Handler.Callback {
     /* Handler 的 Message 信息 */
     private static final int MSG_WHAT_LONG_CLICK = 1;
     /* Handler 发送message需要延迟的时间 */
@@ -42,7 +42,7 @@ public class SlideAndDragListView<T> extends DragListView<T> implements WrapperA
     private WrapperAdapter mWrapperAdapter;
     /* 监听器 */
     private OnSlideListener mOnSlideListener;
-    private OnButtonClickListener mOnButtonClickListener;
+    private OnMenuItemClickListener mOnMenuItemClickListener;
     private OnListItemLongClickListener mOnListItemLongClickListener;
     private OnListItemClickListener mOnListItemClickListener;
 
@@ -244,7 +244,7 @@ public class SlideAndDragListView<T> extends DragListView<T> implements WrapperA
             }
         };
         mWrapperAdapter.setOnAdapterSlideListenerProxy(this);
-        mWrapperAdapter.setOnAdapterButtonClickListenerProxy(this);
+        mWrapperAdapter.setOnAdapterMenuClickListenerProxy(this);
         setRawAdapter(adapter);
         super.setAdapter(mWrapperAdapter);
     }
@@ -298,16 +298,16 @@ public class SlideAndDragListView<T> extends DragListView<T> implements WrapperA
     /**
      * 设置item中的button点击事件的监听器
      *
-     * @param onButtonClickListener
+     * @param onMenuItemClickListener
      */
-    public void setOnButtonClickListener(OnButtonClickListener onButtonClickListener) {
-        mOnButtonClickListener = onButtonClickListener;
+    public void setOnMenuItemClickListener(OnMenuItemClickListener onMenuItemClickListener) {
+        mOnMenuItemClickListener = onMenuItemClickListener;
     }
 
     /**
      * item中的button监听器
      */
-    public interface OnButtonClickListener {
+    public interface OnMenuItemClickListener {
         /**
          * 点击事件
          *
@@ -315,15 +315,17 @@ public class SlideAndDragListView<T> extends DragListView<T> implements WrapperA
          * @param itemPosition   第几个item
          * @param buttonPosition 第几个button
          * @param direction      方向
+         * @return true--->复原  false--->不动
          */
-        void onClick(View v, int itemPosition, int buttonPosition, int direction);
+        boolean onMenuItemClick(View v, int itemPosition, int buttonPosition, int direction);
     }
 
     @Override
-    public void onClick(View v, int itemPosition, int buttonPosition, int direction) {
-        if (mOnButtonClickListener != null) {
-            mOnButtonClickListener.onClick(v, itemPosition, buttonPosition, direction);
+    public boolean onMenuItemClick(View v, int itemPosition, int buttonPosition, int direction) {
+        if (mOnMenuItemClickListener != null) {
+            return mOnMenuItemClickListener.onMenuItemClick(v, itemPosition, buttonPosition, direction);
         }
+        return false;
     }
 
     @Deprecated

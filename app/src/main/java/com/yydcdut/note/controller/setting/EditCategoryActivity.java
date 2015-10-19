@@ -39,7 +39,7 @@ import java.util.Map;
  * Created by yuyidong on 15/10/13.
  */
 public class EditCategoryActivity extends BaseActivity implements SlideAndDragListView.OnDragListener,
-        SlideAndDragListView.OnSlideListener, SlideAndDragListView.OnButtonClickListener, Handler.Callback {
+        SlideAndDragListView.OnSlideListener, SlideAndDragListView.OnMenuItemClickListener, Handler.Callback {
     private SlideAndDragListView mListView;
     private CircleProgressBarLayout mProgressLayout;
     private List<Category> mCategoryList;
@@ -86,7 +86,7 @@ public class EditCategoryActivity extends BaseActivity implements SlideAndDragLi
         mListView.setAdapter(mCategoryAdapter);
         mListView.setOnDragListener(this, mCategoryList);
         mListView.setOnSlideListener(this);
-        mListView.setOnButtonClickListener(this);
+        mListView.setOnMenuItemClickListener(this);
     }
 
     private void initData() {
@@ -136,7 +136,14 @@ public class EditCategoryActivity extends BaseActivity implements SlideAndDragLi
     }
 
     @Override
-    public void onClick(View v, int itemPosition, int buttonPosition, int direction) {
+    public boolean handleMessage(Message msg) {
+        finish();
+        mProgressLayout.hide();
+        return true;
+    }
+
+    @Override
+    public boolean onMenuItemClick(View v, int itemPosition, int buttonPosition, int direction) {
         switch (direction) {
             case MenuItem.DIRECTION_LEFT:
                 if (mDeleteCategoryLabelList == null) {
@@ -146,18 +153,12 @@ public class EditCategoryActivity extends BaseActivity implements SlideAndDragLi
                 String label = category.getLabel();
                 mCategoryAdapter.notifyDataSetChanged();
                 mDeleteCategoryLabelList.add(label);
-                break;
+                return true;
             case MenuItem.DIRECTION_RIGHT:
                 renameDialog(itemPosition);
-                break;
+                return true;
         }
-    }
-
-    @Override
-    public boolean handleMessage(Message msg) {
-        finish();
-        mProgressLayout.hide();
-        return true;
+        return false;
     }
 
 
