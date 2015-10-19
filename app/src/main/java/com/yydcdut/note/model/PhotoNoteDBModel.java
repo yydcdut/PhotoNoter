@@ -142,7 +142,8 @@ public class PhotoNoteDBModel extends AbsNotesDBModel implements IModel {
             int tag = cursor.getInt(cursor.getColumnIndex("tag"));
             String categoryLabel = cursor.getString(cursor.getColumnIndex("categoryLabel"));
             PhotoNote photoNote = new PhotoNote(id, photoName, createdPhotoTime, editedPhotoTime, title, content,
-                    createdNoteTime, editedNoteTime, color, categoryLabel);
+                    createdNoteTime, editedNoteTime, categoryLabel);
+            photoNote.setPaletteColor(color);
             list.add(photoNote);
         }
         cursor.close();

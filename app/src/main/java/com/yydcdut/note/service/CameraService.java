@@ -4,7 +4,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.os.IBinder;
 import android.os.RemoteException;
@@ -124,7 +123,7 @@ public class CameraService extends Service {
         }
 
         PhotoNote photoNote = new PhotoNote(fileName, sandPhoto.getTime(), sandPhoto.getTime(), "", "",
-                sandPhoto.getTime(), sandPhoto.getTime(), Color.WHITE, sandPhoto.getCategory());
+                sandPhoto.getTime(), sandPhoto.getTime(), sandPhoto.getCategory());
         photoNote.setPaletteColor(UiHelper.getPaletteColor(newBitmap));
         boolean bool = PhotoNoteDBModel.getInstance().save(photoNote);
         if (bool) {

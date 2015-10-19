@@ -4,6 +4,8 @@ import android.graphics.Color;
 
 import com.yydcdut.note.utils.FilePathUtils;
 
+import java.util.Random;
+
 /**
  * Created by yyd on 15-3-29.
  */
@@ -55,11 +57,11 @@ public class PhotoNote implements IObject {
     /**
      * 颜色
      */
-    private int mPaletteColor = Color.WHITE;
+    private int mPaletteColor = Color.argb(255, new Random().nextInt(255), new Random().nextInt(255), new Random().nextInt(255));
 
     public PhotoNote(String photoName, long createdPhotoTime, long editedPhotoTime,
                      String title, String content, long createdNoteTime,
-                     long editedNoteTime, int paletteColor, String categoryLabel) {
+                     long editedNoteTime, String categoryLabel) {
         this.photoName = photoName;
         this.createdPhotoTime = createdPhotoTime;
         this.editedPhotoTime = editedPhotoTime;
@@ -67,13 +69,12 @@ public class PhotoNote implements IObject {
         this.content = content;
         this.createdNoteTime = createdNoteTime;
         this.editedNoteTime = editedNoteTime;
-        this.mPaletteColor = paletteColor;
         this.categoryLabel = categoryLabel;
     }
 
     public PhotoNote(int id, String photoName, long createdPhotoTime, long editedPhotoTime,
                      String title, String content, long createdNoteTime,
-                     long editedNoteTime, int paletteColor, String categoryLabel) {
+                     long editedNoteTime, String categoryLabel) {
         this.id = id;
         this.photoName = photoName;
         this.createdPhotoTime = createdPhotoTime;
@@ -82,7 +83,6 @@ public class PhotoNote implements IObject {
         this.content = content;
         this.createdNoteTime = createdNoteTime;
         this.editedNoteTime = editedNoteTime;
-        this.mPaletteColor = paletteColor;
         this.categoryLabel = categoryLabel;
     }
 

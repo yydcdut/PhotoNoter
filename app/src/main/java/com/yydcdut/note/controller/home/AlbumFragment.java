@@ -262,7 +262,7 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
                 public void run() {
                     PhotoNote photoNote = new PhotoNote(System.currentTimeMillis() + ".jpg", System.currentTimeMillis(),
                             System.currentTimeMillis(), "", "", System.currentTimeMillis(),
-                            System.currentTimeMillis(), Color.WHITE, mCategoryLabel);
+                            System.currentTimeMillis(), mCategoryLabel);
                     //复制大图
                     try {
                         FilePathUtils.copyFile(cr.openInputStream(uri), photoNote.getBigPhotoPathWithoutFile());
@@ -285,7 +285,7 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
                 public void run() {
                     PhotoNote photoNote = new PhotoNote(System.currentTimeMillis() + ".jpg", System.currentTimeMillis(),
                             System.currentTimeMillis(), "", "", System.currentTimeMillis(),
-                            System.currentTimeMillis(), Color.WHITE, mCategoryLabel);
+                            System.currentTimeMillis(), mCategoryLabel);
                     //复制大图
                     try {
                         FilePathUtils.copyFile(FilePathUtils.getTempFilePath(), photoNote.getBigPhotoPathWithoutFile());

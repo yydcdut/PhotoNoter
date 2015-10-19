@@ -27,7 +27,7 @@ import java.util.List;
  */
 public class DetailActivity extends BaseActivity implements ViewPager.OnPageChangeListener {
     private List<PhotoNote> mPhotoNoteList;
-    private int[] mColorArray = new int[3];
+    private int[] mColorArray = new int[]{Color.WHITE, Color.WHITE, Color.WHITE};
     private ImageView mBackgroundImage;
     private static final int INTENTION_LEFT = -1;
     private static final int INTENTION_RIGHT = 1;
@@ -152,6 +152,7 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
     }
 
     private void getPaletteColor(int position) {
+        //这里代码为了兼容以前的
         mColorArray[1] = mPhotoNoteList.get(position).getPaletteColor();
         if (position != 0) {
             mColorArray[0] = mPhotoNoteList.get(position - 1).getPaletteColor();
