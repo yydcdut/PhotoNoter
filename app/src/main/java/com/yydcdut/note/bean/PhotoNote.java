@@ -191,6 +191,8 @@ public class PhotoNote implements IObject {
     }
 
     public void setPaletteColor(int paletteColor) {
-        mPaletteColor = paletteColor;
+        if (paletteColor != Color.WHITE) {
+            mPaletteColor = paletteColor;
+        }
     }
 }

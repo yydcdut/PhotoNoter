@@ -47,7 +47,7 @@ public class NotesSQLite extends SQLiteOpenHelper {
     }
 
     private void updateDBFrom1to2(SQLiteDatabase db) {
-        String sql = "ALTER TABLE " + TABLE_PHOTONOTE + " ADD palette INTEGER DEFAULT -1;";
+        String sql = "ALTER TABLE " + TABLE_PHOTONOTE + " ADD palette INTEGER DEFAULT " + Color.WHITE + ";";
         db.execSQL(sql);
     }
 
