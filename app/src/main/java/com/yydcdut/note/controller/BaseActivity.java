@@ -17,6 +17,8 @@ import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.LollipopCompat;
 import com.yydcdut.note.utils.ThemeHelper;
 
+import java.lang.reflect.Field;
+
 /**
  * Created by yyd on 15-4-6.
  */
@@ -102,6 +104,28 @@ public abstract class BaseActivity extends AppCompatActivity {
         int actionBarSize = a.getDimensionPixelSize(indexOfAttrTextSize, -1);
         a.recycle();
         return actionBarSize;
+    }
+
+    /**
+     * 得到stausBar高度
+     *
+     * @return
+     */
+    public int getStatusBarSize() {
+        Class<?> c = null;
+        Object obj = null;
+        Field field = null;
+        int x = 0, sbar = 38;//默认为38，貌似大部分是这样的
+        try {
+            c = Class.forName("com.android.internal.R$dimen");
+            obj = c.newInstance();
+            field = c.getField("status_bar_height");
+            x = Integer.parseInt(field.get(obj).toString());
+            sbar = getResources().getDimensionPixelSize(x);
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        return sbar;
     }
 
     /**

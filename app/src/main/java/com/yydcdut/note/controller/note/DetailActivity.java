@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
@@ -36,6 +37,8 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
 
     private ViewPager mViewPager;
     private DetailPagerAdapter mDetailPagerAdapter;
+    private View mPositionView;
+    private float mDelta = 0.0f;
 
     @Override
     public int setContentView() {
@@ -53,13 +56,30 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
         mPhotoNoteList = PhotoNoteDBModel.getInstance().findByCategoryLabel(bundle.getString(Const.CATEGORY_LABEL),
                 bundle.getInt(Const.COMPARATOR_FACTORY));
         initToolBar();
-        initViewPager(bundle);
         initBGView();
+        initViewPager(bundle);
+        initPositionLocation(bundle);
     }
 
     @Override
     public void startActivityAnimation() {
 
+    }
+
+    private void initPositionLocation(Bundle bundle) {
+        mPositionView = findViewById(R.id.img_position_line);
+        int total = mPhotoNoteList.size();
+        mDelta = (Evi.sScreenWidth - getResources().getDimension(R.dimen.dimen_24dip)) / total;
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mPositionView.getLayoutParams();
+        layoutParams.leftMargin = (int) (bundle.getInt(Const.PHOTO_POSITION) * mDelta);
+        mPositionView.requestLayout();
+        if (LollipopCompat.AFTER_LOLLIPOP) {
+            int height = getStatusBarSize();
+            View view = findViewById(R.id.layout_position_line);
+            RelativeLayout.LayoutParams layoutParams1 = (RelativeLayout.LayoutParams) view.getLayoutParams();
+            layoutParams1.topMargin = (int) (height + getResources().getDimension(R.dimen.dimen_24dip) / 2);
+            view.requestLayout();
+        }
     }
 
     private void initToolBar() {
@@ -75,8 +95,8 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
                 bundle.getString(Const.CATEGORY_LABEL), bundle.getInt(Const.COMPARATOR_FACTORY));
         mViewPager.setAdapter(mDetailPagerAdapter);
         mViewPager.setCurrentItem(bundle.getInt(Const.PHOTO_POSITION));
+        mBackgroundImage.setBackgroundColor(mPhotoNoteList.get(bundle.getInt(Const.PHOTO_POSITION)).getPaletteColor());
     }
-
 
     private void initBGView() {
         mBackgroundImage = (ImageView) findViewById(R.id.img_detail_bg);
@@ -92,7 +112,7 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
             } else {
                 mIntention = positionOffset - mLastTimePositionOffset >= 0 ? INTENTION_RIGHT : INTENTION_LEFT;
             }
-        } else if (mIntention == INTENTION_RIGHT) {//right
+        } else if (mIntention == INTENTION_RIGHT && positionOffset < 0.95) {//right
             int r2 = Color.red(mColorArray[2]);
             int r1 = Color.red(mColorArray[1]);
             int g2 = Color.green(mColorArray[2]);
@@ -107,8 +127,10 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
             int newB = (int) (b1 - deltaB * positionOffset);
             int newColor = Color.rgb(newR, newG, newB);
             mBackgroundImage.setBackgroundColor(newColor);
-
-        } else {//left
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mPositionView.getLayoutParams();
+            layoutParams.leftMargin = (int) (position * mDelta + (mDelta * positionOffset));
+            mPositionView.requestLayout();
+        } else if (mIntention == INTENTION_LEFT && positionOffset > 0.01) {//left
             int r0 = Color.red(mColorArray[0]);
             int r1 = Color.red(mColorArray[1]);
             int g0 = Color.green(mColorArray[0]);
@@ -123,6 +145,9 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
             int newB = (int) (b1 - deltaB * (1 - positionOffset));
             int newColor = Color.rgb(newR, newG, newB);
             mBackgroundImage.setBackgroundColor(newColor);
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mPositionView.getLayoutParams();
+            layoutParams.leftMargin = (int) ((position + 1) * mDelta - (mDelta * (1 - positionOffset)));
+            mPositionView.requestLayout();
         }
         if (positionOffset < 0.01 || positionOffset > 0.95) {
             //重新计算方向

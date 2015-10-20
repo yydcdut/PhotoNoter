@@ -17,6 +17,33 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"/>
 
+            <RelativeLayout
+                android:id="@+id/layout_position_line"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginTop="@dimen/dimen_24dip">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dimen_24dip">
+
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="1.5dip"
+                        android:layout_centerVertical="true"
+                        android:background="#88ffffff"/>
+
+                    <ImageView
+                        android:id="@+id/img_position_line"
+                        android:layout_width="@dimen/dimen_24dip"
+                        android:layout_height="@dimen/dimen_24dip"
+                        android:layout_alignParentLeft="true"
+                        android:src="@drawable/ic_location"/>
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
             <android.support.v4.view.ViewPager
                 android:id="@+id/vp_detail"
                 android:layout_width="match_parent"
