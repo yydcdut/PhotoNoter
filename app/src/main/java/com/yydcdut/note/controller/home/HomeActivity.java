@@ -415,9 +415,7 @@ public class HomeActivity extends NavigationActivity implements NavigationActivi
                     case PhotoNoteChangedObserver.OBSERVER_PHOTONOTE_CREATE:
                         int number = PhotoNoteDBModel.getInstance().findByCategoryLabel(mCategoryLabel, -1).size();
                         Category category = CategoryDBModel.getInstance().findByCategoryLabel(mCategoryLabel);
-                        if (category.getPhotosNumber() == number) {
-                            break;
-                        } else {
+                        if (category.getPhotosNumber() != number) {
                             category.setPhotosNumber(number);
                             CategoryDBModel.getInstance().update(category);
                             getCategoryAdapter().resetGroup(CategoryDBModel.getInstance().findAll());
