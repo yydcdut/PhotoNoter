@@ -8,7 +8,6 @@ import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 import com.umeng.analytics.MobclickAgent;
 import com.yydcdut.note.service.CheckService;
-import com.yydcdut.note.utils.CrashHandler;
 import com.yydcdut.note.utils.Evi;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
@@ -68,14 +67,14 @@ public class NoteApplication extends Application {
         PGEditSDK.instance().initSDK(this);
 
         //打点
-        MobclickAgent.setDebugMode(false);
+        MobclickAgent.setDebugMode(true);
         MobclickAgent.openActivityDurationTrack(true);
         MobclickAgent.updateOnlineConfig(this);
         MobclickAgent.setCatchUncaughtExceptions(true);
 
-        CrashHandler.getInstance().init(getApplicationContext());
+//        CrashHandler.getInstance().init(getApplicationContext());
 
-        YLog.setDEBUG(false);
+        YLog.setDEBUG(true);
 
 
     }

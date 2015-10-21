@@ -8,9 +8,11 @@ import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -50,10 +52,9 @@ public abstract class NavigationActivity extends BaseActivity {
 
     private NavigationCategoryAdapter mCategoryAdapter;
 
-    public static final String CURRENT_POSITION = "CURRENT_POSITION";
-
     @Override
     public int setContentView() {
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         return R.layout.navigation_main;
     }
 
@@ -114,6 +115,12 @@ public abstract class NavigationActivity extends BaseActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return super.onPrepareOptionsMenu(menu);
+    }
+
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
