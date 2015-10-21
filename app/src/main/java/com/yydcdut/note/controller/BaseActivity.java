@@ -7,8 +7,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
 
 import com.umeng.analytics.MobclickAgent;
 import com.yydcdut.note.R;
@@ -30,26 +33,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     public static final int REQUEST_NOTHING = 1;
 
     /**
-     * 是否要设置statusBar的颜色
-     *
-     * @return
-     */
-    public boolean setStatusColor() {
-        return true;
-    }
-
-    /**
      * 设置主题
-     *
-     * @param setStatusColor
      */
-    private void setTheme(boolean setStatusColor) {
+    private void setTheme() {
         int index = LocalStorageUtils.getInstance().getThemeColor();
-
         setTheme(ThemeHelper.THEME.get(index).getStyle());
-        if (setStatusColor) {
-            setStatusBarColor(ThemeHelper.THEME.get(index).getStatusColor());
-        }
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -60,6 +48,22 @@ public abstract class BaseActivity extends AppCompatActivity {
             window.setNavigationBarColor(color);
         }
     }
+
+    /**
+     * 设置状态栏
+     *
+     * @param wannaSet
+     * @return
+     */
+    public boolean setWindowStatusBar(boolean wannaSet) {
+        if (LollipopCompat.AFTER_LOLLIPOP && wannaSet) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            return true;
+        }
+        return false;
+    }
+
+    public abstract boolean setStatusBar();
 
     /**
      * 设置view
@@ -79,14 +83,30 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void startActivityAnimation() {
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         ActivityCollector.addActivity(this);
+        boolean isSet = setWindowStatusBar(true && setStatusBar());
         super.onCreate(savedInstanceState);
-        setTheme(setStatusColor());
+        setTheme();
         int layout = setContentView();
-        setContentView(layout);
+        if (isSet) {
+            View contentView = LayoutInflater.from(this).inflate(layout, null);
+            View totalContentView = null;
+            if (LocalStorageUtils.getInstance().getStatusBarTranslation()) {
+                totalContentView = LayoutInflater.from(this).inflate(R.layout.layout_status_bar_translation, null);
+            } else {
+                totalContentView = LayoutInflater.from(this).inflate(R.layout.layout_status_bar_immersive, null);
+            }
+            FrameLayout frameLayout = (FrameLayout) totalContentView.findViewById(R.id.layout_content);
+            frameLayout.addView(contentView);
+            setContentView(totalContentView);
+            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) frameLayout.getLayoutParams();
+            layoutParams.topMargin = getStatusBarSize();
+            frameLayout.requestLayout();
+        } else {
+            setContentView(layout);
+        }
         initUiAndListener();
         startActivityAnimation();
     }

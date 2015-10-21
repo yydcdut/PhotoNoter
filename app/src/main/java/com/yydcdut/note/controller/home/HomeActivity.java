@@ -68,6 +68,11 @@ public class HomeActivity extends NavigationActivity implements NavigationActivi
     }
 
     @Override
+    public boolean setStatusBar() {
+        return false;
+    }
+
+    @Override
     public int setContentView() {
         initReceiver();
         return super.setContentView();

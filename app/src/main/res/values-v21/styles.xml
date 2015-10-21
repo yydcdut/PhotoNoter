@@ -1,41 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="menu_labels_style">
-        <item name="android:background">@drawable/fab_label_background</item>
-        <item name="android:textColor">@color/fab_white</item>
-    </style>
-
-    <style name="AppTheme.DarkActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowActionModeOverlay">true</item>
-        <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
-        <item name="popupTheme">@style/note.popupTheme</item>
-        <!--<item name="android:windowIsTranslucent">true</item>-->
-        <item name="android:windowBackground">@android:color/transparent</item>
-
-    </style>
-
-    <style name="note.popupTheme" parent="ThemeOverlay.AppCompat.Light">
-        <item name="android:textColor">@color/black</item>
-    </style>
-
-    <style name="note.dialog" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:textColor">@color/black</item>
-        <item name="android:textColorAlertDialogListItem">@color/black</item>
-        <item name="android:editTextColor">@color/black</item>
-    </style>
-
-    <style name="note.Theme.DarkActionBar" parent="AppTheme.DarkActionBar">
-    </style>
-
     <style name="noteBlue" parent="note.Theme.DarkActionBar">
         <item name="colorPrimary">@color/blue_colorPrimary</item>
         <item name="colorPrimaryDark">@color/blue_colorPrimaryDark</item>
         <item name="colorAccent">@color/blue_colorPrimary</item>
         <item name="colorControlHighlight">@color/blue_colorPrimary</item>
+        <item name="android:navigationBarColor">@color/blue_colorPrimaryDark</item>
         <item name="android:textColorPrimary">@android:color/white</item>
     </style>
 
@@ -44,6 +15,7 @@
         <item name="colorPrimaryDark">@color/blue2_colorPrimaryDark</item>
         <item name="colorAccent">@color/blue2_colorPrimary</item>
         <item name="colorControlHighlight">@color/blue2_colorPrimary</item>
+        <item name="android:navigationBarColor">@color/blue2_colorPrimaryDark</item>
     </style>
 
     <style name="noteIndigo" parent="note.Theme.DarkActionBar">
@@ -51,6 +23,7 @@
         <item name="colorPrimaryDark">@color/indigo_colorPrimaryDark</item>
         <item name="colorAccent">@color/indigo_colorPrimary</item>
         <item name="colorControlHighlight">@color/indigo_colorPrimary</item>
+        <item name="android:navigationBarColor">@color/indigo_colorPrimaryDark</item>
     </style>
 
     <style name="noteBlue3" parent="note.Theme.DarkActionBar">
@@ -58,6 +31,7 @@
         <item name="colorPrimaryDark">@color/blue3_colorPrimaryDark</item>
         <item name="colorAccent">@color/blue3_colorPrimary</item>
         <item name="colorControlHighlight">@color/blue3_colorPrimary</item>
+        <item name="android:navigationBarColor">@color/blue3_colorPrimary</item>
     </style>
 
     <style name="noteCyan" parent="note.Theme.DarkActionBar">
@@ -65,6 +39,7 @@
         <item name="colorPrimaryDark">@color/cyan_colorPrimaryDark</item>
         <item name="colorAccent">@color/cyan_colorPrimary</item>
         <item name="colorControlHighlight">@color/cyan_colorPrimary</item>
+        <item name="android:navigationBarColor">@color/cyan_colorPrimaryDark</item>
     </style>
 
     <style name="noteTeal" parent="note.Theme.DarkActionBar">
@@ -72,6 +47,7 @@
         <item name="colorPrimaryDark">@color/teal_colorPrimaryDark</item>
         <item name="colorAccent">@color/teal_colorPrimary</item>
         <item name="colorControlHighlight">@color/teal_colorPrimary</item>
+        <item name="android:navigationBarColor">@color/teal_colorPrimaryDark</item>
     </style>
 
     <style name="noteGreen" parent="note.Theme.DarkActionBar">
@@ -79,6 +55,7 @@
         <item name="colorPrimaryDark">@color/green_colorPrimaryDark</item>
         <item name="colorAccent">@color/green_colorPrimary</item>
         <item name="colorControlHighlight">@color/green_colorPrimary</item>
+        <item name="android:navigationBarColor">@color/green_colorPrimaryDark</item>
     </style>
 
     <style name="noteGreen2" parent="note.Theme.DarkActionBar">
@@ -86,6 +63,7 @@
         <item name="colorPrimaryDark">@color/green2_colorPrimaryDark</item>
         <item name="colorAccent">@color/green2_colorPrimary</item>
         <item name="colorControlHighlight">@color/green2_colorPrimary</item>
+        <item name="android:navigationBarColor">@color/green2_colorPrimaryDark</item>
     </style>
 
     <style name="noteLime" parent="note.Theme.DarkActionBar">
@@ -93,6 +71,7 @@
         <item name="colorPrimaryDark">@color/lime_colorPrimaryDark</item>
         <item name="colorAccent">@color/lime_colorPrimary</item>
         <item name="colorControlHighlight">@color/lime_colorPrimary</item>
+        <item name="android:navigationBarColor">@color/lime_colorPrimaryDark</item>
     </style>
 
     <style name="noteYellow" parent="note.Theme.DarkActionBar">
@@ -100,6 +79,7 @@
         <item name="colorPrimaryDark">@color/yellow_colorPrimaryDark</item>
         <item name="colorAccent">@color/yellow_colorPrimary</item>
         <item name="colorControlHighlight">@color/yellow_colorPrimary</item>
+        <item name="android:navigationBarColor">@color/yellow_colorPrimaryDark</item>
     </style>
 
     <style name="noteYellow2" parent="note.Theme.DarkActionBar">
@@ -107,6 +87,7 @@
         <item name="colorPrimaryDark">@color/yellow2_colorPrimaryDark</item>
         <item name="colorAccent">@color/yellow2_colorPrimary</item>
         <item name="colorControlHighlight">@color/yellow2_colorPrimary</item>
+        <item name="android:navigationBarColor">@color/yellow2_colorPrimaryDark</item>
     </style>
 
     <style name="noteOrange" parent="note.Theme.DarkActionBar">
@@ -114,6 +95,7 @@
         <item name="colorPrimaryDark">@color/orange_colorPrimaryDark</item>
         <item name="colorAccent">@color/orange_colorPrimary</item>
         <item name="colorControlHighlight">@color/orange_colorPrimary</item>
+        <item name="android:navigationBarColor">@color/orange_colorPrimaryDark</item>
     </style>
 
     <style name="noteOrange1" parent="note.Theme.DarkActionBar">
@@ -121,6 +103,7 @@
         <item name="colorPrimaryDark">@color/orange1_colorPrimaryDark</item>
         <item name="colorAccent">@color/orange1_colorPrimary</item>
         <item name="colorControlHighlight">@color/orange1_colorPrimary</item>
+        <item name="android:navigationBarColor">@color/orange1_colorPrimaryDark</item>
     </style>
 
     <style name="noteRed" parent="note.Theme.DarkActionBar">
@@ -128,6 +111,7 @@
         <item name="colorPrimaryDark">@color/red_colorPrimaryDark</item>
         <item name="colorAccent">@color/red_colorPrimary</item>
         <item name="colorControlHighlight">@color/red_colorPrimary</item>
+        <item name="android:navigationBarColor">@color/red_colorPrimaryDark</item>
     </style>
 
     <style name="noteRed2" parent="note.Theme.DarkActionBar">
@@ -135,6 +119,7 @@
         <item name="colorPrimaryDark">@color/red2_colorPrimaryDark</item>
         <item name="colorAccent">@color/red2_colorPrimary</item>
         <item name="colorControlHighlight">@color/red2_colorPrimary</item>
+        <item name="android:navigationBarColor">@color/red2_colorPrimaryDark</item>
     </style>
 
     <style name="notePurple" parent="note.Theme.DarkActionBar">
@@ -142,6 +127,7 @@
         <item name="colorPrimaryDark">@color/purple_colorPrimaryDark</item>
         <item name="colorAccent">@color/purple_colorPrimary</item>
         <item name="colorControlHighlight">@color/purple_colorPrimary</item>
+        <item name="android:navigationBarColor">@color/purple_colorPrimaryDark</item>
     </style>
 
     <style name="noteBrown" parent="note.Theme.DarkActionBar">
@@ -149,6 +135,7 @@
         <item name="colorPrimaryDark">@color/brown_colorPrimaryDark</item>
         <item name="colorAccent">@color/brown_colorPrimary</item>
         <item name="colorControlHighlight">@color/brown_colorPrimary</item>
+        <item name="android:navigationBarColor">@color/brown_colorPrimaryDark</item>
     </style>
 
     <style name="noteGray" parent="note.Theme.DarkActionBar">
@@ -156,6 +143,7 @@
         <item name="colorPrimaryDark">@color/gray_colorPrimaryDark</item>
         <item name="colorAccent">@color/gray_colorPrimary</item>
         <item name="colorControlHighlight">@color/gray_colorPrimary</item>
+        <item name="android:navigationBarColor">@color/gray_colorPrimaryDark</item>
     </style>
 
     <style name="noteBlueGray" parent="note.Theme.DarkActionBar">
@@ -163,6 +151,7 @@
         <item name="colorPrimaryDark">@color/blue_gray_colorPrimaryDark</item>
         <item name="colorAccent">@color/blue_gray_colorPrimary</item>
         <item name="colorControlHighlight">@color/blue_gray_colorPrimary</item>
+        <item name="android:navigationBarColor">@color/blue_gray_colorPrimaryDark</item>
     </style>
 
     <style name="noteBlack" parent="note.Theme.DarkActionBar">
@@ -170,14 +159,6 @@
         <item name="colorPrimaryDark">@color/black_colorPrimaryDark</item>
         <item name="colorAccent">@color/black_colorPrimary</item>
         <item name="colorControlHighlight">@color/black_colorPrimary</item>
+        <item name="android:navigationBarColor">@color/black_colorPrimaryDark</item>
     </style>
-
-
-    <style name="StorageProgressBar" parent="@android:style/Widget.ProgressBar.Horizontal">
-        <item name="android:maxHeight">10.0dip</item>
-        <item name="android:indeterminateDrawable">@drawable/progress_bar_storage</item>
-        <item name="android:progressDrawable">@drawable/progress_bar_storage</item>
-        <item name="android:minHeight">10.0dip</item>
-    </style>
-
 </resources>

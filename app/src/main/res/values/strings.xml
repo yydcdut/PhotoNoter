@@ -92,6 +92,9 @@
 
     <string name="preference_setting">Preference</string>
     <string name="theme">Theme</string>
+    <string name="status_bar">Status Bar Style</string>
+    <string name="status_bar_immersive">Immersive Mode</string>
+    <string name="status_bar_translation">Translucent Bars</string>
     <string name="font">Content Font</string>
     <string name="edit_category">Edit Category</string>
     <string name="note_style">Note Style</string>

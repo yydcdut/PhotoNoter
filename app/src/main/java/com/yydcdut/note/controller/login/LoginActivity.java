@@ -43,6 +43,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private CircleProgressBarLayout mCircleProgressBar;
 
     @Override
+    public boolean setStatusBar() {
+        return true;
+    }
+
+    @Override
     public int setContentView() {
         return R.layout.activity_login;
     }

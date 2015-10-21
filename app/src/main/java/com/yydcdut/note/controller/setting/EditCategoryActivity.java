@@ -53,6 +53,11 @@ public class EditCategoryActivity extends BaseActivity implements SlideAndDragLi
     private Map<String, String> mRenameCategoryLabelMap;
 
     @Override
+    public boolean setStatusBar() {
+        return true;
+    }
+
+    @Override
     public int setContentView() {
         return R.layout.activity_edit_category;
     }

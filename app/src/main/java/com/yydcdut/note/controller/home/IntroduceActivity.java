@@ -32,6 +32,11 @@ public class IntroduceActivity extends BaseActivity implements OnPageChangeListe
     private InitService.InitBinder mInitBinder;
 
     @Override
+    public boolean setStatusBar() {
+        return false;
+    }
+
+    @Override
     public int setContentView() {
         LollipopCompat.setFullWindow(getWindow());
         return R.layout.activity_introduce;

@@ -48,6 +48,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     private static final String TAG = SettingActivity.class.getSimpleName();
 
     private static final String TAG_THEME = "theme";
+    private static final String TAG_STATUS_BAR = "status_bar";
     private static final String TAG_FONT = "font";
     private static final String TAG_CATEGORY = "category";
     private static final String TAG_CAMERA2 = "camera2";
@@ -70,6 +71,11 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     private View mScrollView;
     private LinearLayout mScrollLinear;
     private boolean mIsHiding = false;
+
+    @Override
+    public boolean setStatusBar() {
+        return true;
+    }
 
     @Override
     public int setContentView() {
@@ -118,6 +124,16 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         setTag(themeView, TAG_THEME);
         setData(themeView, R.drawable.ic_color_lens_gray_24dp, R.string.theme);
         linearLayout.addView(themeView);
+
+        View statusbarView = getItemView();
+        setClick(statusbarView);
+        setTag(statusbarView, TAG_STATUS_BAR);
+        setData(statusbarView, R.drawable.ic_settings_cell_black_24dp, R.string.status_bar);
+        linearLayout.addView(statusbarView);
+        if (!LollipopCompat.AFTER_LOLLIPOP) {
+            ((TextView) statusbarView.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
+            statusbarView.findViewById(R.id.layout_ripple_setting).setOnClickListener(this);
+        }
 
         View viewSort = getItemView();
         setClick(viewSort);
@@ -405,6 +421,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             case TAG_THEME:
                 showThemeColorChooser();
                 break;
+            case TAG_STATUS_BAR:
+                showStatusBarStyleDialog();
+                break;
             case TAG_FONT:
                 showFontChooser();
                 break;
@@ -475,7 +494,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             case TAG_ABOUT:
                 startActivity(new Intent(this, AboutAppActivity.class));
                 break;
-
         }
     }
 
@@ -549,6 +567,29 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         } else {
             mFontDialog.show();
         }
+    }
+
+    private void showStatusBarStyleDialog() {
+        new AlertDialog.Builder(this, R.style.note_dialog)
+                .setTitle(R.string.status_bar)
+                .setCancelable(true)
+                .setItems(new String[]{
+                                getResources().getString(R.string.status_bar_immersive),
+                                getResources().getString(R.string.status_bar_translation)},
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                switch (which) {
+                                    case 0:
+                                        LocalStorageUtils.getInstance().setStatusBarTranslation(false);
+                                        break;
+                                    case 1:
+                                        LocalStorageUtils.getInstance().setStatusBarTranslation(true);
+                                        break;
+                                }
+                                ActivityCollector.reStart(SettingActivity.this, HomeActivity.class, SettingActivity.class);
+                            }
+                        }).show();
     }
 
     private View.OnClickListener mFontDialogClickListener = new View.OnClickListener() {

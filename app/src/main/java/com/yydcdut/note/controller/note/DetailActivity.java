@@ -41,6 +41,11 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
     private float mDelta = 0.0f;
 
     @Override
+    public boolean setStatusBar() {
+        return false;
+    }
+
+    @Override
     public int setContentView() {
         if (LollipopCompat.AFTER_LOLLIPOP) {
             Window window = getWindow();

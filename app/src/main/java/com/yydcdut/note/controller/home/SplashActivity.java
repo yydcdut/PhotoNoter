@@ -53,6 +53,11 @@ public class SplashActivity extends BaseActivity {
     }
 
     @Override
+    public boolean setStatusBar() {
+        return false;
+    }
+
+    @Override
     public int setContentView() {
         LollipopCompat.setFullWindow(getWindow());
         return R.layout.activity_splash;

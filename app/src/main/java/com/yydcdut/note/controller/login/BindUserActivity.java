@@ -26,6 +26,11 @@ public class BindUserActivity extends BaseActivity implements View.OnClickListen
     private IUser mUser;
 
     @Override
+    public boolean setStatusBar() {
+        return true;
+    }
+
+    @Override
     public int setContentView() {
         return R.layout.activity_bind_user;
     }

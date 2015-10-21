@@ -90,6 +90,9 @@
 
     <string name="preference_setting">偏好设置</string>
     <string name="theme">主题颜色</string>
+    <string name="status_bar">状态栏样式</string>
+    <string name="status_bar_immersive">沉浸状态栏</string>
+    <string name="status_bar_translation">透明状态栏</string>
     <string name="font">内容字体</string>
     <string name="edit_category">编辑分类</string>
     <string name="note_style">内容样式</string>

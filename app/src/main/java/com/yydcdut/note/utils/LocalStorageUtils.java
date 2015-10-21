@@ -91,6 +91,9 @@ public class LocalStorageUtils {
     private static final String SETTING_SPLASH_OPEN = "setting_splash_close";//是否打开引导页
     private static final boolean SETTING_SPLASH_OPEN_DEFAULT = true;//默认开启
 
+    private static final String SETTING_STATUS_BAR_TRANSLATION = "setting_status_bar_translation";//状态栏是透明的还是沉浸的
+    private static final boolean SETTING_STATUS_BAR_TRANSLATION_DEFAULT = false;//默认沉浸
+
     private static SharedPreferences mSharedPreferences;
 
     public static LocalStorageUtils getInstance() {
@@ -629,6 +632,26 @@ public class LocalStorageUtils {
     public void setSettingFontSystem(boolean useSystem) {
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putBoolean(SETTING_FONT_SYSTEM, useSystem);
+        editor.commit();
+    }
+
+    /**
+     * 获得状态栏是透明的还是沉浸的
+     *
+     * @return
+     */
+    public boolean getStatusBarTranslation() {
+        return mSharedPreferences.getBoolean(SETTING_STATUS_BAR_TRANSLATION, SETTING_STATUS_BAR_TRANSLATION_DEFAULT);
+    }
+
+    /**
+     * 设置状态栏味沉浸还是透明
+     *
+     * @param translation
+     */
+    public void setStatusBarTranslation(boolean translation) {
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putBoolean(SETTING_STATUS_BAR_TRANSLATION, translation);
         editor.commit();
     }
 }

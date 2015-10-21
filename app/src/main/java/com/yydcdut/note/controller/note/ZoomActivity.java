@@ -78,6 +78,11 @@ public class ZoomActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     @Override
+    public boolean setStatusBar() {
+        return false;
+    }
+
+    @Override
     public int setContentView() {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         return R.layout.activity_zoom;

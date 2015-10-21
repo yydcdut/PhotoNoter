@@ -55,16 +55,37 @@ public class ThemeHelper {
                 R.color.gray_colorPrimaryDark,
                 R.color.blue_gray_colorPrimaryDark,
                 R.color.black_colorPrimaryDark
+        ), Arrays.asList(
+                R.color.blue_colorPrimary,
+                R.color.blue2_colorPrimary,
+                R.color.indigo_colorPrimary,
+                R.color.blue3_colorPrimary,
+                R.color.cyan_colorPrimary,
+                R.color.teal_colorPrimary,
+                R.color.green_colorPrimary,
+                R.color.green2_colorPrimary,
+                R.color.lime_colorPrimary,
+                R.color.yellow_colorPrimary,
+                R.color.yellow2_colorPrimary,
+                R.color.orange_colorPrimary,
+                R.color.orange1_colorPrimary,
+                R.color.red_colorPrimary,
+                R.color.red2_colorPrimary,
+                R.color.purple_colorPrimary,
+                R.color.brown_colorPrimary,
+                R.color.gray_colorPrimary,
+                R.color.blue_gray_colorPrimary,
+                R.color.black_colorPrimary
         ));
     }
 
-    private static ArrayList<ThemeHelper> create(List<Integer> styleList, List<Integer> statusColorList) {
+    private static ArrayList<ThemeHelper> create(List<Integer> styleList, List<Integer> statusColorList, List<Integer> colorPrimaryList) {
         if (statusColorList.size() != statusColorList.size()) {
             throw new IllegalArgumentException("两个必须得相同");
         }
         ArrayList<ThemeHelper> themeHelperList = new ArrayList<>(20);
         for (int i = 0; i < styleList.size(); i++) {
-            themeHelperList.add(new ThemeHelper(styleList.get(i), statusColorList.get(i)));
+            themeHelperList.add(new ThemeHelper(styleList.get(i), statusColorList.get(i), colorPrimaryList.get(i)));
         }
         return themeHelperList;
     }
@@ -79,9 +100,13 @@ public class ThemeHelper {
      */
     private int statusColor;
 
-    public ThemeHelper(int style, int statusColor) {
+    private int colorPrimary;
+
+    public ThemeHelper(int style, int statusColor, int colorPrimary) {
         this.style = style;
         this.statusColor = statusColor;
+        this.colorPrimary = colorPrimary;
+
     }
 
     public int getStyle() {
@@ -90,5 +115,9 @@ public class ThemeHelper {
 
     public int getStatusColor() {
         return statusColor;
+    }
+
+    public int getColorPrimary() {
+        return colorPrimary;
     }
 }

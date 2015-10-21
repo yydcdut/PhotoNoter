@@ -54,6 +54,11 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
     private byte[] mTag = new byte[0];
 
     @Override
+    public boolean setStatusBar() {
+        return true;
+    }
+
+    @Override
     public int setContentView() {
         return R.layout.activity_edit;
     }

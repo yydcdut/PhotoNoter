@@ -19,6 +19,11 @@ import com.yydcdut.note.utils.LollipopCompat;
  */
 public class AboutAppActivity extends BaseActivity implements View.OnClickListener {
     @Override
+    public boolean setStatusBar() {
+        return true;
+    }
+
+    @Override
     public int setContentView() {
         return R.layout.activity_about;
     }
