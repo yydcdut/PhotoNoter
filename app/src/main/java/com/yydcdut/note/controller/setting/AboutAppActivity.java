@@ -8,7 +8,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.yydcdut.note.R;
 import com.yydcdut.note.controller.BaseActivity;
@@ -76,13 +75,13 @@ public class AboutAppActivity extends BaseActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.layout_update:
-                Toast.makeText(this, "目前暂时不支持直接升级~", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "目前暂时不支持直接升级~", Toast.LENGTH_SHORT).show();
                 Uri uri = Uri.parse("http://a.app.qq.com/o/simple.jsp?pkgname=com.yydcdut.note");
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
                 break;
             case R.id.layout_contact:
-                Toast.makeText(this, "目前暂时不支持对话级别联系我们~", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "目前暂时不支持对话级别联系我们~", Toast.LENGTH_SHORT).show();
                 Intent data = new Intent(Intent.ACTION_SENDTO);
                 data.setData(Uri.parse("mailto:378040621@qq.com"));
                 data.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.about_contact));
@@ -90,15 +89,17 @@ public class AboutAppActivity extends BaseActivity implements View.OnClickListen
                 startActivity(data);
                 break;
             case R.id.layout_share:
-                Toast.makeText(this, "目前暂时不支持直接分享~", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "目前暂时不支持直接分享~", Toast.LENGTH_SHORT).show();
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
                 sendIntent.putExtra(Intent.EXTRA_TEXT, getResources().getText(R.string.about_share_content));
                 sendIntent.setType("text/plain");
-                startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.about_share_content)));
+                startActivity(Intent.createChooser(sendIntent, "Share"));
                 break;
             case R.id.layout_github:
-                Toast.makeText(this, "下个版本我们将开源~尽请期待!", Toast.LENGTH_SHORT).show();
+                Uri githubUrl = Uri.parse("https://github.com/yydcdut/PhotoNoter");
+                Intent githubIntent = new Intent(Intent.ACTION_VIEW, githubUrl);
+                startActivity(githubIntent);
                 break;
         }
     }
