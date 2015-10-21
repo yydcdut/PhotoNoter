@@ -4,10 +4,9 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
 import com.umeng.analytics.MobclickAgent;
 import com.yydcdut.note.service.CheckService;
+import com.yydcdut.note.utils.CrashHandler;
 import com.yydcdut.note.utils.Evi;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
@@ -28,7 +27,7 @@ public class NoteApplication extends Application {
     private static NoteApplication mInstance;
     private static final int MAX_THREAD_POOL_NUMBER = 5;
     private ExecutorService mPool;
-    private RefWatcher mRefWatcher;
+//    private RefWatcher mRefWatcher;
 
     private static Context mContext;
 
@@ -54,7 +53,7 @@ public class NoteApplication extends Application {
         mInstance = NoteApplication.this;
         super.onCreate();
 
-        mRefWatcher = LeakCanary.install(this);
+//        mRefWatcher = LeakCanary.install(this);
 
         initImageLoader();
         initExecutor();
@@ -67,14 +66,14 @@ public class NoteApplication extends Application {
         PGEditSDK.instance().initSDK(this);
 
         //打点
-        MobclickAgent.setDebugMode(true);
-        MobclickAgent.openActivityDurationTrack(false);
+        MobclickAgent.setDebugMode(false);
+        MobclickAgent.openActivityDurationTrack(true);
         MobclickAgent.updateOnlineConfig(this);
         MobclickAgent.setCatchUncaughtExceptions(true);
 
-//        CrashHandler.getInstance().init(getApplicationContext());
+        CrashHandler.getInstance().init(getApplicationContext());
 
-        YLog.setDEBUG(true);
+        YLog.setDEBUG(false);
     }
 
 
