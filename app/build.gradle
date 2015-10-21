@@ -1,17 +1,20 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion '22.0.1'
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
         applicationId "com.yydcdut.note"
-        minSdkVersion 14
-        targetSdkVersion 22
-        versionCode 5
-        versionName "1.1.2"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode Integer.parseInt(project.VERSION_CODE)
+        versionName project.VERSION_NAME
         renderscriptTargetApi 19
         renderscriptSupportModeEnabled true
+
+        buildConfigField "String", "EVERNOTE_CONSUMER_KEY", (project.hasProperty('EVERNOTE_CONSUMER_KEY') ? "\"$EVERNOTE_CONSUMER_KEY\"" : "\"Your consumer key\"")
+        buildConfigField "String", "EVERNOTE_CONSUMER_SECRET", (project.hasProperty('EVERNOTE_CONSUMER_SECRET') ? "\"$EVERNOTE_CONSUMER_SECRET\"" : "\"Your consumer secret\"")
     }
 
     compileOptions {
@@ -79,10 +82,11 @@ dependencies {
     compile files('src/libs/umeng-analytics-v5.5.3.jar')
     compile files('src/libs/com.umeng.message.lib_v2.4.1.jar')
     compile project(':PG_Edit_SDK')
-//    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3'
-//    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3'
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3'
     compile files('src/libs/mta-sdk-1.6.2.jar')
     compile files('src/libs/open_sdk_r5043.jar')
 //    compile 'com.facebook.fresco:fresco:0.7.0'
     compile project(':sdlv')
+    compile 'com.evernote:android-sdk:2.0.0-RC3'
 }
