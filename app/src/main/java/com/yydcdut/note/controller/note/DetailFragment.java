@@ -22,7 +22,6 @@ import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.yydcdut.note.R;
 import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.controller.BaseFragment;
-import com.yydcdut.note.listener.ObservableScrollViewCallbacks;
 import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
@@ -32,6 +31,7 @@ import com.yydcdut.note.utils.TimeDecoder;
 import com.yydcdut.note.view.FontTextView;
 import com.yydcdut.note.view.RevealView;
 import com.yydcdut.note.view.scroll.ObservableScrollView;
+import com.yydcdut.note.view.scroll.ObservableScrollViewCallbacks;
 import com.yydcdut.note.view.scroll.ScrollState;
 
 import java.io.IOException;

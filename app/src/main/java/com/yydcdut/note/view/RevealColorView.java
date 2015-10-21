@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 
-import com.yydcdut.note.R;
 import com.yydcdut.note.utils.BakedBezierInterpolator;
 import com.yydcdut.note.utils.UiHelper;
 
@@ -82,11 +81,6 @@ public class RevealColorView extends ViewGroup {
         inkView.measure(sizeSpec, sizeSpec);
     }
 
-    public void reveal(final int x, final int y, final int color, Animator.AnimatorListener listener) {
-        final int duration = getResources().getInteger(R.integer.rcv_animationDurationReveal);
-        reveal(x, y, color, 0, duration, listener);
-    }
-
     /**
      * 打开
      *
@@ -151,11 +145,6 @@ public class RevealColorView extends ViewGroup {
         });
         prepareAnimator(animator, ANIMATION_REVEAL);
         animator.start();
-    }
-
-    public void hide(final int x, final int y, final int color, final Animator.AnimatorListener listener) {
-        final int duration = getResources().getInteger(R.integer.rcv_animationDurationHide);
-        hide(x, y, color, 0, duration, listener);
     }
 
     public void hide(final int x, final int y, final int color, final int endRadius, final long duration, final Animator.AnimatorListener listener) {
