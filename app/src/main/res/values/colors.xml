@@ -40,84 +40,53 @@
 
     <color name="blue_colorPrimary">#2196F3</color>
     <color name="blue_colorPrimaryDark">#1976D2</color>
-    <color name="blue_alpha_colorPrimaryDark">#801976D2</color>
 
-    <color name="blue2_colorPrimary">#1E88E5</color>
-    <color name="blue2_colorPrimaryDark">#1976D2</color>
-    <color name="blue2_alpha_colorPrimaryDark">#801976D2</color>
+    <color name="light_blue_colorPrimary">#03a9f4</color>
+    <color name="light_blue_colorPrimaryDark">#0277bd</color>
 
     <color name="indigo_colorPrimary">#3F51B5</color>
-    <color name="indigo_colorPrimaryDark">#30379F</color>
-    <color name="indigo_alpha_colorPrimaryDark">#8030379F</color>
-
-    <color name="blue3_colorPrimary">#03A9F4</color>
-    <color name="blue3_colorPrimaryDark">#0097A7</color>
-    <color name="blue3_alpha_colorPrimaryDark">#800097A7</color>
+    <color name="indigo_colorPrimaryDark">#303f9f</color>
 
     <color name="cyan_colorPrimary">#00BCD4</color>
-    <color name="cyan_colorPrimaryDark">#0097A7</color>
-    <color name="cyan_alpha_colorPrimaryDark">#800097A7</color>
+    <color name="cyan_colorPrimaryDark">#0097a7</color>
 
     <color name="teal_colorPrimary">#009688</color>
     <color name="teal_colorPrimaryDark">#00796B</color>
-    <color name="teal_alpha_colorPrimaryDark">#8000796B</color>
 
     <color name="green_colorPrimary">#4CAF50</color>
-    <color name="green_colorPrimaryDark">#388E3C</color>
-    <color name="green_alpha_colorPrimaryDark">#80388E3C</color>
+    <color name="green_colorPrimaryDark">#388e3c</color>
 
-    <color name="green2_colorPrimary">#8BC34A</color>
-    <color name="green2_colorPrimaryDark">#388E3C</color>
-    <color name="green2_alpha_colorPrimaryDark">#80388E3C</color>
+    <color name="light_green_colorPrimary">#8BC34A</color>
+    <color name="light_green_colorPrimaryDark">#689f38</color>
 
     <color name="lime_colorPrimary">#CDDC39</color>
-    <color name="lime_colorPrimaryDark">#AFB42B</color>
-    <color name="lime_alpha_colorPrimaryDark">#80AFB42B</color>
+    <color name="lime_colorPrimaryDark">#afb428</color>
 
     <color name="yellow_colorPrimary">#FFEB3B</color>
-    <color name="yellow_colorPrimaryDark">#AFB42B</color>
-    <color name="yellow_alpha_colorPrimaryDark">#80AFB42B</color>
+    <color name="yellow_colorPrimaryDark">#fbc02d</color>
 
-    <color name="yellow2_colorPrimary">#FFC107</color>
-    <color name="yellow2_colorPrimaryDark">#AFB42B</color>
-    <color name="yellow2_alpha_colorPrimaryDark">#80AFB42B</color>
+    <color name="amber_colorPrimary">#FFC107</color>
+    <color name="amber_colorPrimaryDark">#ffa000</color>
 
     <color name="orange_colorPrimary">#FF9800</color>
-    <color name="orange_colorPrimaryDark">#F57C00</color>
-    <color name="orange_alpha_colorPrimaryDark">#80F57C00</color>
+    <color name="orange_colorPrimaryDark">#f57c00</color>
 
-    <color name="orange1_colorPrimary">#FF5722</color>
-    <color name="orange1_colorPrimaryDark">#F57C00</color>
-    <color name="orange1_alpha_colorPrimaryDark">#80F57C00</color>
+    <color name="deep_orange_colorPrimary">#FF5722</color>
+    <color name="deep_orange_colorPrimaryDark">#e64a19</color>
 
     <color name="red_colorPrimary">#F44336</color>
-    <color name="red_colorPrimaryDark">#D32F2F</color>
-    <color name="red_alpha_colorPrimaryDark">#80D32F2F</color>
-
-    <color name="red2_colorPrimary">#E91E63</color>
-    <color name="red2_colorPrimaryDark">#D32F2F</color>
-    <color name="red2_alpha_colorPrimaryDark">#80D32F2F</color>
+    <color name="red_colorPrimaryDark">#d32f2f</color>
 
     <color name="purple_colorPrimary">#9C27B0</color>
-    <color name="purple_colorPrimaryDark">#aa9C27B0</color>
-    <color name="purple_alpha_colorPrimaryDark">#80D32F2F</color>
-
+    <color name="purple_colorPrimaryDark">#7b1fa2</color>
 
     <color name="brown_colorPrimary">#795548</color>
-    <color name="brown_colorPrimaryDark">#5D4037</color>
-    <color name="brown_alpha_colorPrimaryDark">#805D4037</color>
+    <color name="brown_colorPrimaryDark">#5d4037</color>
 
     <color name="gray_colorPrimary">#9E9E9E</color>
-    <color name="gray_colorPrimaryDark">#80455A64</color>
-    <color name="gray_alpha_colorPrimaryDark">#80455A64</color>
-
+    <color name="gray_colorPrimaryDark">#616161</color>
 
     <color name="blue_gray_colorPrimary">#607D8B</color>
-    <color name="blue_gray_colorPrimaryDark">#80455A64</color>
-    <color name="blue_gray_alpha_colorPrimaryDark">#80455A64</color>
-
-    <color name="black_colorPrimary">#1F1F1F</color>
-    <color name="black_colorPrimaryDark">#000000</color>
-    <color name="black_alpha_colorPrimaryDark">#cc000000</color>
+    <color name="blue_gray_colorPrimaryDark">#455a64</color>
 
 </resources>

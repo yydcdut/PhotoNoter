@@ -56,7 +56,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dip"
                 android:layout_alignParentBottom="true"
-                android:background="@color/blue_gray_alpha_colorPrimaryDark"/>
+                android:background="@android:color/darker_gray"/>
 
         </RelativeLayout>
 

@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 
+import com.evernote.client.android.EvernoteSession;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 import com.umeng.analytics.MobclickAgent;
@@ -14,6 +15,7 @@ import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.YLog;
 
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -29,6 +31,9 @@ public class NoteApplication extends Application {
     private static final int MAX_THREAD_POOL_NUMBER = 5;
     private ExecutorService mPool;
     private RefWatcher mRefWatcher;
+
+    private static final EvernoteSession.EvernoteService EVERNOTE_SERVICE = EvernoteSession.EvernoteService.SANDBOX;
+    private static final boolean SUPPORT_APP_LINKED_NOTEBOOKS = true;
 
     private static Context mContext;
 
@@ -61,6 +66,7 @@ public class NoteApplication extends Application {
         FilePathUtils.initEnvironment();
         Evi.init();
         initService();
+        initEvernote();
 
         /* Camera360 */
         PGEditImageLoader.initImageLoader(this);
@@ -75,8 +81,6 @@ public class NoteApplication extends Application {
 //        CrashHandler.getInstance().init(getApplicationContext());
 
         YLog.setDEBUG(true);
-
-
     }
 
 
@@ -120,6 +124,22 @@ public class NoteApplication extends Application {
         if (!LocalStorageUtils.getInstance().isFirstTime()) {
             Intent checkIntent = new Intent(this, CheckService.class);
             startService(checkIntent);
+        }
+    }
+
+    private void initEvernote() {
+        //Set up the Evernote singleton session, use EvernoteSession.getInstance() later
+        new EvernoteSession.Builder(this)
+                .setLocale(Locale.SIMPLIFIED_CHINESE)
+                .setEvernoteService(EVERNOTE_SERVICE)
+                .setSupportAppLinkedNotebooks(SUPPORT_APP_LINKED_NOTEBOOKS)
+                .setForceAuthenticationInThirdPartyApp(true)
+                .build(BuildConfig.EVERNOTE_CONSUMER_KEY, BuildConfig.EVERNOTE_CONSUMER_SECRET)
+                .asSingleton();
+        if (EvernoteSession.getInstance().isLoggedIn()) {
+            YLog.i("yuyidong", "11111122222212121");
+        } else {
+            YLog.i("yuyidong", "2222222222");
         }
     }
 
