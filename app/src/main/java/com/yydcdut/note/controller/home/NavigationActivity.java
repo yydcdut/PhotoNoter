@@ -24,6 +24,7 @@ import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.NavigationCategoryAdapter;
 import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.controller.BaseActivity;
+import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.LollipopCompat;
 import com.yydcdut.note.view.RoundedImageView;
 
@@ -75,7 +76,12 @@ public abstract class NavigationActivity extends BaseActivity {
         if (LollipopCompat.AFTER_LOLLIPOP) {
             try {
                 Resources.Theme theme = this.getTheme();
-                TypedArray typedArray = theme.obtainStyledAttributes(new int[]{android.R.attr.colorPrimary});
+                TypedArray typedArray = null;
+                if (LocalStorageUtils.getInstance().getStatusBarTranslation()) {
+                    typedArray = theme.obtainStyledAttributes(new int[]{android.R.attr.colorPrimary});
+                } else {
+                    typedArray = theme.obtainStyledAttributes(new int[]{android.R.attr.colorPrimaryDark});
+                }
                 mDrawerLayout.setStatusBarBackground(typedArray.getResourceId(0, 0));
             } catch (Exception e) {
                 e.getMessage();

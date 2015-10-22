@@ -187,7 +187,11 @@ public class LocalStorageUtils {
      * @return
      */
     public int getThemeColor() {
-        return mSharedPreferences.getInt(THEME_NAME, THEME_DEFAULT);
+        int colorIndex = mSharedPreferences.getInt(THEME_NAME, THEME_DEFAULT);
+        if (colorIndex > 15) {
+            colorIndex = 15;
+        }
+        return colorIndex;
     }
 
     /**

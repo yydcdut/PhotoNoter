@@ -38,13 +38,6 @@
         <item name="colorControlHighlight">@color/blue_colorPrimary</item>
     </style>
 
-    <style name="noteLightBlue" parent="note.Theme.DarkActionBar">
-        <item name="colorPrimary">@color/light_blue_colorPrimary</item>
-        <item name="colorPrimaryDark">@color/light_blue_colorPrimaryDark</item>
-        <item name="colorAccent">@color/light_blue_colorPrimary</item>
-        <item name="colorControlHighlight">@color/light_blue_colorPrimary</item>
-    </style>
-
     <style name="noteIndigo" parent="note.Theme.DarkActionBar">
         <item name="colorPrimary">@color/indigo_colorPrimary</item>
         <item name="colorPrimaryDark">@color/indigo_colorPrimaryDark</item>

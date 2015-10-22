@@ -15,7 +15,6 @@ public class ThemeHelper {
     static {
         THEME = create(Arrays.asList(
                 R.style.noteBlue,
-                R.style.noteLightBlue,
                 R.style.noteIndigo,
                 R.style.noteCyan,
                 R.style.noteTeal,
@@ -33,7 +32,6 @@ public class ThemeHelper {
                 R.style.noteBlueGray
         ), Arrays.asList(
                 R.color.blue_colorPrimaryDark,
-                R.color.light_blue_colorPrimaryDark,
                 R.color.indigo_colorPrimaryDark,
                 R.color.cyan_colorPrimaryDark,
                 R.color.teal_colorPrimaryDark,
@@ -51,7 +49,6 @@ public class ThemeHelper {
                 R.color.blue_gray_colorPrimaryDark
         ), Arrays.asList(
                 R.color.blue_colorPrimary,
-                R.color.light_blue_colorPrimary,
                 R.color.indigo_colorPrimary,
                 R.color.cyan_colorPrimary,
                 R.color.teal_colorPrimary,

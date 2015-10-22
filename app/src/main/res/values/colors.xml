@@ -41,9 +41,6 @@
     <color name="blue_colorPrimary">#2196F3</color>
     <color name="blue_colorPrimaryDark">#1976D2</color>
 
-    <color name="light_blue_colorPrimary">#03a9f4</color>
-    <color name="light_blue_colorPrimaryDark">#0277bd</color>
-
     <color name="indigo_colorPrimary">#3F51B5</color>
     <color name="indigo_colorPrimaryDark">#303f9f</color>
 
