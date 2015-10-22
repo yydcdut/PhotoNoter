@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
@@ -13,25 +15,47 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 
+import com.evernote.client.android.EvernoteSession;
+import com.evernote.client.android.EvernoteUtil;
+import com.evernote.client.android.asyncclient.EvernoteNoteStoreClient;
+import com.evernote.client.conn.mobile.FileData;
+import com.evernote.edam.error.EDAMNotFoundException;
+import com.evernote.edam.error.EDAMSystemException;
+import com.evernote.edam.error.EDAMUserException;
+import com.evernote.edam.type.Note;
+import com.evernote.edam.type.Notebook;
+import com.evernote.edam.type.Resource;
+import com.evernote.edam.type.ResourceAttributes;
+import com.evernote.thrift.TException;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
+import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.controller.BaseActivity;
 import com.yydcdut.note.model.PhotoNoteDBModel;
+import com.yydcdut.note.model.UserCenter;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.Evi;
+import com.yydcdut.note.utils.YLog;
+import com.yydcdut.note.view.CircleProgressBarLayout;
 import com.yydcdut.note.view.RevealView;
 import com.yydcdut.note.view.fab.FloatingActionButton;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 
 /**
  * Created by yyd on 15-4-8.
  */
-public class EditTextActivity extends BaseActivity implements View.OnClickListener {
-
+public class EditTextActivity extends BaseActivity implements View.OnClickListener, Handler.Callback {
     /* Context */
     private Context mContext = EditTextActivity.this;
     /* title是否显示出来? */
@@ -44,14 +68,18 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
     private FloatingActionButton mFab;
     private RevealView mRevealView;
     private ImageView mMenuArrowImage;
+    /* Progress Bar */
+    private CircleProgressBarLayout mProgressLayout;
     /* 数据 */
     private PhotoNote mPhotoNote;
     private int mPosition;
     private int mComparator;
     /* 标志位，防止多次点击出现bug效果 */
     private boolean mIsHiding = false;
+    private Handler mHandler;
 
-    private byte[] mTag = new byte[0];
+    private static final String TAG_ARROW = "tag_arrow";
+    private static final String TAG_UPDATE = "tag_update";
 
     @Override
     public boolean setStatusBar() {
@@ -97,9 +125,9 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
         initToolBarItem();
         initEditText();
         initFloatingButton();
-        initListener();
         initRevealView();
         initData();
+        mProgressLayout = (CircleProgressBarLayout) findViewById(R.id.layout_progress);
     }
 
     private void initToolBarUI() {
@@ -112,18 +140,30 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
         int actionbarHeight = getActionBarSize();
         float dimen24dip = getResources().getDimension(R.dimen.dimen_24dip);
         int margin = (int) ((actionbarHeight - dimen24dip) / 2);
-        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.layout_toolbar);
+        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.layout_toolbar);
+
+        ViewGroup.MarginLayoutParams mp2 = new ViewGroup.MarginLayoutParams((int) dimen24dip, (int) dimen24dip);  //item的宽高
+        mp2.setMargins(margin, margin, 0, margin);//分别是margin_top那四个属性
+        LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(mp2);
+        ImageView imageView = new ImageView(mContext);
+        imageView.setImageResource(R.drawable.ic_backup_white_24dp);
+        imageView.setLayoutParams(lp2);
+        imageView.setTag(TAG_UPDATE);
+        imageView.setOnClickListener(this);
+
+        linearLayout.addView(imageView);
+
         ViewGroup.MarginLayoutParams mp = new ViewGroup.MarginLayoutParams((int) dimen24dip, (int) dimen24dip);  //item的宽高
         mp.setMargins(margin, margin, margin, margin);//分别是margin_top那四个属性
-        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(mp);
-        lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(mp);
 
         mMenuArrowImage = new ImageView(mContext);
         mMenuArrowImage.setImageResource(R.drawable.ic_keyboard_arrow_down_white_24dp);
         mMenuArrowImage.setLayoutParams(lp);
-        mMenuArrowImage.setTag(mTag);
+        mMenuArrowImage.setTag(TAG_ARROW);
+        mMenuArrowImage.setOnClickListener(this);
 
-        relativeLayout.addView(mMenuArrowImage);
+        linearLayout.addView(mMenuArrowImage);
     }
 
     @Override
@@ -144,10 +184,6 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
 
     private void initFloatingButton() {
         mFab = (FloatingActionButton) findViewById(R.id.fab_finish);
-    }
-
-    private void initListener() {
-        mMenuArrowImage.setOnClickListener(this);
         mFab.setOnClickListener(this);
     }
 
@@ -160,6 +196,7 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
             mTitleEdit.setText(mPhotoNote.getTitle());
             mContentEdit.setText(mPhotoNote.getContent());
         }
+        mHandler = new Handler(this);
     }
 
     @Override
@@ -210,15 +247,32 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        if (v.getTag() instanceof byte[]) {
-            if (mIsEditTextShow) {
-                mIsEditTextShow = false;
-                closeEditTextAnimation();
-            } else {
-                mIsEditTextShow = true;
-                openEditTextAnimation();
-                mLayoutTitle.setVisibility(View.VISIBLE);
+        if (v.getTag() instanceof String) {
+            switch ((String) v.getTag()) {
+                case TAG_ARROW:
+                    if (mIsEditTextShow) {
+                        mIsEditTextShow = false;
+                        closeEditTextAnimation();
+                    } else {
+                        mIsEditTextShow = true;
+                        openEditTextAnimation();
+                        mLayoutTitle.setVisibility(View.VISIBLE);
+                    }
+                    break;
+                case TAG_UPDATE:
+                    if (UserCenter.getInstance().isLoginEvernote()) {
+                        mProgressLayout.show();
+                        NoteApplication.getInstance().getExecutorPool().submit(new Runnable() {
+                            @Override
+                            public void run() {
+                                update2Evernote();
+                                mHandler.sendEmptyMessage(1);
+                            }
+                        });
+                    }
+                    break;
             }
+
             return;
         }
         switch (v.getId()) {
@@ -226,6 +280,83 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
                 saveText();
                 showRevealColorViewAndcloseActivity();
                 break;
+        }
+    }
+
+    private void update2Evernote() {
+        try {
+            EvernoteNoteStoreClient noteStoreClient = EvernoteSession.getInstance().getEvernoteClientFactory().getNoteStoreClient();
+            List<Notebook> notebookList = noteStoreClient.listNotebooks();
+            boolean hasNoteBook = false;
+            Notebook appNoteBook = null;
+            for (Notebook notebook : notebookList) {
+                if (notebook.getName().equals(getResources().getString(R.string.app_name))) {
+                    hasNoteBook = true;
+                    appNoteBook = notebook;
+                }
+            }
+            if (!hasNoteBook) {
+                Notebook notebook = new Notebook();
+                notebook.setName(getResources().getString(R.string.app_name));
+                appNoteBook = noteStoreClient.createNotebook(notebook);
+            }
+
+            Note note = new Note();
+            note.setTitle(mTitleEdit.getText().toString());
+            if (appNoteBook != null) {
+                note.setNotebookGuid(appNoteBook.getGuid());
+            }
+            InputStream in = null;
+            try {
+                // Hash the data in the image file. The hash is used to reference the file in the ENML note content.
+                in = new BufferedInputStream(new FileInputStream(mPhotoNote.getBigPhotoPathWithoutFile()));
+                FileData data = null;
+                data = new FileData(EvernoteUtil.hash(in), new File(mPhotoNote.getBigPhotoPathWithoutFile()));
+                ResourceAttributes attributes = new ResourceAttributes();
+                attributes.setFileName(mPhotoNote.getPhotoName());
+
+                // Create a new Resource
+                Resource resource = new Resource();
+                resource.setData(data);
+                resource.setMime("image/jpeg");
+                resource.setAttributes(attributes);
+
+                note.addToResources(resource);
+
+                // Set the note's ENML content
+                String content = EvernoteUtil.NOTE_PREFIX
+                        + mContentEdit.getText().toString()
+                        + EvernoteUtil.createEnMediaTag(resource)
+                        + EvernoteUtil.NOTE_SUFFIX;
+
+                note.setContent(content);
+                try {
+                    noteStoreClient.createNote(note);
+                } catch (EDAMNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                YLog.i("yuyidong", "IOException--->" + e.getMessage());
+            } finally {
+                if (in != null) {
+                    try {
+                        in.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } catch (EDAMUserException e) {
+            e.printStackTrace();
+            YLog.i("yuyidong", "EDAMUserException--->" + e.getMessage());
+        } catch (EDAMSystemException e) {
+            e.printStackTrace();
+            YLog.i("yuyidong", "EDAMSystemException--->" + e.getMessage());
+        } catch (TException e) {
+            e.printStackTrace();
+            YLog.i("yuyidong", "TException--->" + e.getMessage());
         }
     }
 
@@ -339,4 +470,9 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
         PhotoNoteDBModel.getInstance().update(mPhotoNote);
     }
 
+    @Override
+    public boolean handleMessage(Message msg) {
+        mProgressLayout.hide();
+        return false;
+    }
 }

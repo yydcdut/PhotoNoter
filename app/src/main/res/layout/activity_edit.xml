@@ -41,12 +41,14 @@
                 android:background="?attr/colorPrimary"
                 android:minHeight="?attr/actionBarSize">
 
-                <RelativeLayout
+                <LinearLayout
                     android:id="@+id/layout_toolbar"
                     android:layout_width="fill_parent"
                     android:layout_height="?attr/actionBarSize"
-                    android:minHeight="?attr/actionBarSize">
-                </RelativeLayout>
+                    android:gravity="right|center_vertical"
+                    android:minHeight="?attr/actionBarSize"
+                    android:orientation="horizontal">
+                </LinearLayout>
 
             </android.support.v7.widget.Toolbar>
 
@@ -77,6 +79,12 @@
                 app:fab_icon="@drawable/ic_check_white_24dp"/>
         </RelativeLayout>
     </FrameLayout>
+
+    <com.yydcdut.note.view.CircleProgressBarLayout
+        android:id="@+id/layout_progress"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="gone"/>
 
     <com.yydcdut.note.view.RevealView
         android:id="@+id/reveal"
