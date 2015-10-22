@@ -24,7 +24,7 @@
         android:layout_marginStart="@dimen/userPhoto_layout_marginLeft"
         android:layout_marginTop="@dimen/userPhoto_layout_marginTop"/>
 
-    <com.yydcdut.note.view.RoundedImageView
+    <ImageView
         android:id="@+id/img_userPhotoTwo"
         android:layout_width="@dimen/userPhotoTwo_layout_width"
         android:layout_height="@dimen/userPhotoTwo_layout_height"
@@ -33,7 +33,7 @@
         android:layout_alignTop="@+id/img_userPhoto"
         android:layout_marginEnd="@dimen/userPhotoTwo_layout_marginRight"
         android:layout_marginRight="@dimen/userPhotoTwo_layout_marginRight"
-        android:visibility="invisible"/>
+        android:src="@drawable/ic_evernote_gray"/>
 
     <RelativeLayout
         android:layout_width="match_parent"

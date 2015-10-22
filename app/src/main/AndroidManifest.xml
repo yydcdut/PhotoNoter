@@ -133,6 +133,11 @@
         </activity>
         <!-- ************ QQ End ************ -->
 
+        <!-- ************ Evernote Begin ************ -->
+        <activity android:name="com.evernote.client.android.EvernoteOAuthActivity"/>
+        <activity android:name="com.evernote.client.android.login.EvernoteLoginActivity"/>
+        <!-- ************ Evernote End ************ -->
+
     </application>
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>

@@ -1,7 +1,5 @@
 package com.yydcdut.note.bean;
 
-import com.yydcdut.note.model.UserCenter;
-
 /**
  * Created by yuyidong on 15/8/11.
  */
@@ -26,11 +24,6 @@ public class QQUser implements IUser {
 
     public String getAccessToken() {
         return accessToken;
-    }
-
-    @Override
-    public String getType() {
-        return UserCenter.USER_TYPE_QQ;
     }
 
     @Override

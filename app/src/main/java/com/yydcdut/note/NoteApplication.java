@@ -8,6 +8,7 @@ import com.evernote.client.android.EvernoteSession;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 import com.umeng.analytics.MobclickAgent;
+import com.yydcdut.note.model.UserCenter;
 import com.yydcdut.note.service.CheckService;
 import com.yydcdut.note.utils.Evi;
 import com.yydcdut.note.utils.FilePathUtils;
@@ -66,7 +67,7 @@ public class NoteApplication extends Application {
         FilePathUtils.initEnvironment();
         Evi.init();
         initService();
-        initEvernote();
+        initUser();
 
         /* Camera360 */
         PGEditImageLoader.initImageLoader(this);
@@ -127,7 +128,7 @@ public class NoteApplication extends Application {
         }
     }
 
-    private void initEvernote() {
+    private void initUser() {
         //Set up the Evernote singleton session, use EvernoteSession.getInstance() later
         new EvernoteSession.Builder(this)
                 .setLocale(Locale.SIMPLIFIED_CHINESE)
@@ -136,10 +137,8 @@ public class NoteApplication extends Application {
                 .setForceAuthenticationInThirdPartyApp(true)
                 .build(BuildConfig.EVERNOTE_CONSUMER_KEY, BuildConfig.EVERNOTE_CONSUMER_SECRET)
                 .asSingleton();
-        if (EvernoteSession.getInstance().isLoggedIn()) {
-            YLog.i("yuyidong", "11111122222212121");
-        } else {
-            YLog.i("yuyidong", "2222222222");
+        if (UserCenter.getInstance().isLoginEvernote()) {
+            UserCenter.getInstance().LoginEvernote();
         }
     }
 

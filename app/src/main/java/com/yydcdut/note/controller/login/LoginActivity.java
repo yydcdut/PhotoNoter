@@ -1,6 +1,5 @@
 package com.yydcdut.note.controller.login;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
@@ -9,6 +8,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.evernote.client.android.EvernoteSession;
+import com.evernote.client.android.login.EvernoteLoginFragment;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.auth.QQToken;
 import com.tencent.tauth.IUiListener;
@@ -18,7 +19,6 @@ import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.controller.BaseActivity;
 import com.yydcdut.note.model.UserCenter;
-import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.LollipopCompat;
@@ -31,10 +31,14 @@ import org.json.JSONObject;
 /**
  * Created by yuyidong on 15-3-25.
  */
-public class LoginActivity extends BaseActivity implements View.OnClickListener, Handler.Callback {
+public class LoginActivity extends BaseActivity implements View.OnClickListener, Handler.Callback,
+        EvernoteLoginFragment.ResultCallback {
+    public static final int RESULT_DATA_QQ = 123;
+    public static final int RESULT_DATA_EVERNOTE = 321;
     private static final String TAG = LoginActivity.class.getSimpleName();
 
     private static final int MESSAGE_LOGIN_QQ_OK = 1;
+    private static final int MESSAGE_LOGIN_EVERNOTE_OK = 2;
 
     private Tencent mTencent;
 
@@ -88,7 +92,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
     private void initLoginButtonListener() {
         findViewById(R.id.btn_login_qq).setOnClickListener(this);
-        findViewById(R.id.btn_login_sina).setOnClickListener(this);
+        findViewById(R.id.btn_login_evernote).setOnClickListener(this);
     }
 
     @Override
@@ -102,25 +106,39 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             case R.id.btn_login_qq:
                 mTencent.login(LoginActivity.this, "all", new BaseUiListener());
                 break;
-            case R.id.btn_login_sina:
-                Toast.makeText(this, getResources().getString(R.string.toast_not_support), Toast.LENGTH_SHORT).show();
-//                mSsoHandler.authorize(new SinaAuthListener());
+            case R.id.btn_login_evernote:
+                EvernoteSession.getInstance().authenticate(LoginActivity.this);
                 break;
         }
     }
+
 
     @Override
     public boolean handleMessage(Message msg) {
         switch (msg.what) {
             case MESSAGE_LOGIN_QQ_OK:
-                mCircleProgressBar.setVisibility(View.GONE);
-                Intent intent = new Intent();
-                intent.putExtra(Const.USER, UserCenter.USER_TYPE_QQ);
-                setResult(RESULT_DATA, intent);
+                mCircleProgressBar.show();
+                setResult(RESULT_DATA_QQ, null);
+                finish();
+                break;
+            case MESSAGE_LOGIN_EVERNOTE_OK:
+                mCircleProgressBar.hide();
+                setResult(RESULT_DATA_EVERNOTE, null);
                 finish();
                 break;
         }
         return false;
+    }
+
+    @Override
+    public void onLoginFinished(boolean successful) {
+        if (successful) {
+            mCircleProgressBar.show();
+            UserCenter.getInstance().LoginEvernote();
+            mHandler.sendEmptyMessage(MESSAGE_LOGIN_EVERNOTE_OK);
+        } else {
+
+        }
     }
 
     /**
@@ -206,8 +224,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     NoteApplication.getInstance().getExecutorPool().execute(new Runnable() {
                         @Override
                         public void run() {
-                            if (UserCenter.getInstance().set(UserCenter.USER_TYPE_QQ, finalOpenid,
-                                    finalAccessToken, finalName, finalImage, true)) {
+                            if (UserCenter.getInstance().LoginQQ(finalOpenid,
+                                    finalAccessToken, finalName, finalImage)) {
                                 Bitmap bitmap = ImageLoaderManager.loadImageSync(finalImage);
                                 FilePathUtils.saveOtherImage(FilePathUtils.getQQImagePath(), bitmap);
                                 //登录成功

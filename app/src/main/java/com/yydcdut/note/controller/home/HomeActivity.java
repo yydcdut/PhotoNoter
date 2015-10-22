@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
@@ -13,8 +12,6 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
 
-import com.nineoldandroids.animation.AnimatorSet;
-import com.nineoldandroids.animation.ObjectAnimator;
 import com.yydcdut.note.R;
 import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.bean.IUser;
@@ -28,7 +25,6 @@ import com.yydcdut.note.model.observer.PhotoNoteChangedObserver;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
-import com.yydcdut.note.view.RoundedImageView;
 
 import java.io.File;
 import java.util.List;
@@ -93,6 +89,13 @@ public class HomeActivity extends NavigationActivity implements NavigationActivi
     }
 
     @Override
+    public void onUserInformation() {
+        mUserBackground.setImageDrawable(getResources().getDrawable(R.drawable.bg_user_background));
+        updateQQUserInfo();
+        updateEvernoteUserInfo();
+    }
+
+    @Override
     public int getCheckedPosition() {
         List<Category> categoryList = CategoryDBModel.getInstance().findAll();
         for (int i = 0; i < categoryList.size(); i++) {
@@ -101,80 +104,6 @@ public class HomeActivity extends NavigationActivity implements NavigationActivi
             }
         }
         return 0;
-    }
-
-    @Override
-    public void onUserInformation() {
-        mUserBackground.setImageDrawable(getResources().getDrawable(R.drawable.bg_user_background));
-        int number = UserCenter.getInstance().existUserNumber();
-        if (number == 0) {
-            user1Manager(null);
-            user2Manager(null, false);
-        } else if (number == 1) {
-            String userType = UserCenter.getInstance().getFirstUserType();
-            IUser iUser = UserCenter.getInstance().userFactory(userType);
-            user1Manager(iUser);
-            user2Manager(null, true);
-        } else {
-            String userType = UserCenter.getInstance().getFirstUserType();
-            IUser iUser = UserCenter.getInstance().userFactory(userType);
-            user1Manager(iUser);
-            String userType2 = UserCenter.getInstance().getAnotherUser();
-            IUser iUser2 = UserCenter.getInstance().userFactory(userType2);
-            user2Manager(iUser2, true);
-        }
-
-    }
-
-    /**
-     * 第一个帐号的显示逻辑
-     *
-     * @param user
-     */
-    private void user1Manager(IUser user) {
-        mUserPhoto.setVisibility(View.VISIBLE);
-        if (user != null) {
-            mUserName.setVisibility(View.VISIBLE);
-            mUserName.setText(user.getName());
-            loadImage(user, mUserPhoto);
-        } else {
-            mUserPhoto.setImageResource(R.drawable.ic_no_user);
-            mUserName.setVisibility(View.GONE);
-        }
-    }
-
-    /**
-     * 第二个帐号的显示逻辑
-     *
-     * @param user
-     * @param user1Exist
-     */
-    private void user2Manager(IUser user, boolean user1Exist) {
-        if (user != null) {
-            mUserPhotoTwo.setVisibility(View.VISIBLE);
-            loadImage(user, mUserPhotoTwo);
-        } else if (user1Exist) {
-            mUserPhotoTwo.setVisibility(View.VISIBLE);
-            mUserPhotoTwo.setImageDrawable(getResources().getDrawable(R.drawable.ic_no_user));
-        } else {
-            mUserPhotoTwo.setVisibility(View.GONE);
-        }
-    }
-
-    private void loadImage(IUser iUser, RoundedImageView view) {
-        if (iUser.getType().equals(UserCenter.USER_TYPE_QQ)) {
-            if (new File(FilePathUtils.getQQImagePath()).exists()) {
-                ImageLoaderManager.displayImage("file://" + FilePathUtils.getQQImagePath(), view);
-            } else {
-                ImageLoaderManager.displayImage(iUser.getNetImagePath(), view);
-            }
-        } else {
-            if (new File(FilePathUtils.getSinaImagePath()).exists()) {
-                ImageLoaderManager.displayImage("file://" + FilePathUtils.getSinaImagePath(), view);
-            } else {
-                ImageLoaderManager.displayImage(iUser.getNetImagePath(), view);
-            }
-        }
     }
 
     @Override
@@ -213,14 +142,13 @@ public class HomeActivity extends NavigationActivity implements NavigationActivi
     public void onClickUserPhotoNavigation(View v, final int which) {
         switch (which) {
             case USER_ONE:
-                if (UserCenter.getInstance().existUserNumber() > 0) {
+                if (UserCenter.getInstance().getQQ() != null) {
                     startActivityForResult(new Intent(HomeActivity.this, BindUserActivity.class), REQUEST_NOTHING);
                 } else {
                     startActivityForResult(new Intent(HomeActivity.this, LoginActivity.class), REQUEST_NOTHING);
                 }
                 break;
             case USER_TWO:
-                changeUserPhoto2to1();
                 break;
         }
     }
@@ -228,17 +156,37 @@ public class HomeActivity extends NavigationActivity implements NavigationActivi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_DATA) {
-            updateUserInfo();
+        if (resultCode == LoginActivity.RESULT_DATA_QQ) {
+            updateQQUserInfo();
+            openDrawer();
+        } else if (resultCode == LoginActivity.RESULT_DATA_EVERNOTE) {
+            updateEvernoteUserInfo();
+            openDrawer();
         }
     }
 
-    /**
-     * 更新用户信息
-     */
-    private void updateUserInfo() {
-        onUserInformation();
-        openDrawer();
+    private void updateQQUserInfo() {
+        if (UserCenter.getInstance().getQQ() != null && UserCenter.getInstance().isLoginQQ()) {
+            IUser qqUser = UserCenter.getInstance().getQQ();
+            if (new File(FilePathUtils.getQQImagePath()).exists()) {
+                ImageLoaderManager.displayImage("file://" + FilePathUtils.getQQImagePath(), mUserPhoto);
+            } else {
+                ImageLoaderManager.displayImage(qqUser.getNetImagePath(), mUserPhoto);
+            }
+            mUserName.setVisibility(View.VISIBLE);
+            mUserName.setText(qqUser.getName());
+        } else {
+            mUserName.setVisibility(View.INVISIBLE);
+            mUserPhoto.setImageResource(R.drawable.ic_no_user);
+        }
+    }
+
+    private void updateEvernoteUserInfo() {
+        if (UserCenter.getInstance().isLoginEvernote()) {
+            mUserPhotoTwo.setImageResource(R.drawable.ic_evernote_icon);
+        } else {
+            mUserPhotoTwo.setImageResource(R.drawable.ic_evernote_gray);
+        }
     }
 
     @Override
@@ -247,56 +195,6 @@ public class HomeActivity extends NavigationActivity implements NavigationActivi
         LinearInterpolator lin = new LinearInterpolator();
         operatingAnim.setInterpolator(lin);
         mCloudSyncImage.startAnimation(operatingAnim);
-    }
-
-    /**
-     * 第二个头像余第一个头像切换
-     */
-    private void changeUserPhoto2to1() {
-        if (mUserPhotoTwo.getVisibility() != View.VISIBLE) {
-            return;
-        }
-        startOutAnimation(mUserPhoto);
-        startOutAnimation(mUserPhotoTwo);
-        Drawable drawable1 = mUserPhotoTwo.getDrawable();
-        mUserPhotoTwo.setImageDrawable(mUserPhoto.getDrawable());
-        mUserPhoto.setImageDrawable(drawable1);
-        startInAnimation(mUserPhoto);
-        startInAnimation(mUserPhotoTwo);
-    }
-
-    /**
-     * 淡入动画
-     *
-     * @param view 哪个view做动画
-     */
-    private void startInAnimation(View view) {
-        AnimatorSet animation = new AnimatorSet();
-        animation.setDuration(1000);
-        animation.playTogether(
-                ObjectAnimator.ofFloat(view, "scaleX", 0f, 1f),
-                ObjectAnimator.ofFloat(view, "scaleY", 0f, 1f),
-                ObjectAnimator.ofFloat(view, "alpha", 0f, 1f),
-                ObjectAnimator.ofFloat(view, "alpha", 0f, 1f)
-        );
-        animation.start();
-    }
-
-    /**
-     * 淡出动画
-     *
-     * @param view 哪个view做动画
-     */
-    private void startOutAnimation(View view) {
-        AnimatorSet animation = new AnimatorSet();
-        animation.setDuration(1000);
-        animation.playTogether(
-                ObjectAnimator.ofFloat(view, "scaleX", 1f, 0f),
-                ObjectAnimator.ofFloat(view, "scaleY", 1f, 0f),
-                ObjectAnimator.ofFloat(view, "alpha", 1f, 0f),
-                ObjectAnimator.ofFloat(view, "alpha", 1f, 0f)
-        );
-        animation.start();
     }
 
     @Override

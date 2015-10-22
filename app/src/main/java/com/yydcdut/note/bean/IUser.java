@@ -15,5 +15,4 @@ public interface IUser extends IObject {
 
     String getAccessToken();
 
-    String getType();
 }

@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.evernote.client.android.EvernoteSession;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
@@ -163,7 +164,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         linearLayout.addView(labelView);
         //QQ
         View accountView = LayoutInflater.from(this).inflate(R.layout.item_setting_account, null);
-        IUser iQQUser = UserCenter.getInstance().userFactory(UserCenter.USER_TYPE_QQ);
+        IUser iQQUser = UserCenter.getInstance().getQQ();
         RoundedImageView imageView1 = (RoundedImageView) accountView.findViewById(R.id.img_item_setting_logo);
         imageView1.setImageResource(R.drawable.ic_person_info_qq);
         TextView textName1 = (TextView) accountView.findViewById(R.id.txt_item_setting_user_name);
@@ -180,24 +181,19 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         }
         linearLayout.addView(accountView);
 
-        IUser iSinaUser = UserCenter.getInstance().userFactory(UserCenter.USER_TYPE_SINA);
+        boolean isLoginEvernote = EvernoteSession.getInstance().isLoggedIn();
         View accountView2 = LayoutInflater.from(this).inflate(R.layout.item_setting_account, null);
         RoundedImageView imageView2 = (RoundedImageView) accountView2.findViewById(R.id.img_item_setting_logo);
-        imageView2.setImageResource(R.drawable.ic_person_info_elephant);
+        imageView2.setImageResource(R.drawable.ic_evernote_fab);
         TextView textName2 = (TextView) accountView2.findViewById(R.id.txt_item_setting_user_name);
-        textName2.setText(iSinaUser == null ? getResources().getString(R.string.not_login) : iSinaUser.getName());
+        textName2.setText(getResources().getString(R.string.not_login));
         RoundedImageView imageUser2 = (RoundedImageView) accountView2.findViewById(R.id.img_item_setting_user);
-        if (iSinaUser == null) {
-            imageUser2.setImageResource(R.drawable.ic_no_user);
+        if (isLoginEvernote) {
+            imageUser2.setImageResource(R.drawable.ic_evernote_icon);
         } else {
-            if (new File(FilePathUtils.getSinaImagePath()).exists()) {
-                ImageLoaderManager.displayImage("file://" + FilePathUtils.getSinaImagePath(), imageUser2);
-            } else {
-                ImageLoaderManager.displayImage(iSinaUser.getNetImagePath(), imageUser2);
-            }
+            imageUser2.setImageResource(R.drawable.ic_no_user);
         }
         linearLayout.addView(accountView2);
-
 
         View pgView = LayoutInflater.from(this).inflate(R.layout.item_setting_pb, null);
         ProgressBar pg = (ProgressBar) pgView.findViewById(R.id.pg_setting);

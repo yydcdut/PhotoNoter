@@ -36,7 +36,7 @@ public abstract class NavigationActivity extends BaseActivity {
     /* User */
     public TextView mUserName;
     public RoundedImageView mUserPhoto;
-    public RoundedImageView mUserPhotoTwo;
+    public ImageView mUserPhotoTwo;
     public ImageView mUserBackground;
     /* Cloud */
     public View mCloudSyncImage;
@@ -231,12 +231,11 @@ public abstract class NavigationActivity extends BaseActivity {
     }
 
     private void createUserDefaultHeader() {
-        View header = getLayoutInflater().inflate(R.layout.layout_navigation_list_header, mMenuListView, false);
-
+        View header = getLayoutInflater().inflate(R.layout.navigation_list_header, mMenuListView, false);
         mUserName = (TextView) header.findViewById(R.id.txt_userName);
         mUserPhoto = (RoundedImageView) header.findViewById(R.id.img_userPhoto);
         mUserPhoto.setOnClickListener(mOnHeaderAndFooterClickListener);
-        mUserPhotoTwo = (RoundedImageView) header.findViewById(R.id.img_userPhotoTwo);
+        mUserPhotoTwo = (ImageView) header.findViewById(R.id.img_userPhotoTwo);
         mUserPhotoTwo.setOnClickListener(mOnHeaderAndFooterClickListener);
         mUserBackground = (ImageView) header.findViewById(R.id.img_userBackground);
         mMenuListView.addHeaderView(header);
