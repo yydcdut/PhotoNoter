@@ -69,7 +69,7 @@
     <dimen name="userBackground_layout_height">164dp</dimen>
     <dimen name="userPhoto_layout_width">64dp</dimen>
     <dimen name="userPhoto_layout_height">64dp</dimen>
-    <dimen name="userPhoto_layout_marginTop">32dp</dimen>
+    <dimen name="userPhoto_layout_marginTop">40dp</dimen>
     <dimen name="userPhoto_layout_marginLeft">16dp</dimen>
     <dimen name="userPhoto_layout_margin">16dp</dimen>
     <dimen name="userPhotoTwo_layout_width">40dp</dimen>

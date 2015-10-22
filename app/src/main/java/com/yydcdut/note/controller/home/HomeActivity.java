@@ -183,7 +183,7 @@ public class HomeActivity extends NavigationActivity implements NavigationActivi
 
     private void updateEvernoteUserInfo() {
         if (UserCenter.getInstance().isLoginEvernote()) {
-            mUserPhotoTwo.setImageResource(R.drawable.ic_evernote_icon);
+            mUserPhotoTwo.setImageResource(R.drawable.ic_evernote_color);
         } else {
             mUserPhotoTwo.setImageResource(R.drawable.ic_evernote_gray);
         }

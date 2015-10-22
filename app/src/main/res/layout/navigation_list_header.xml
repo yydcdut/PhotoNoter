@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/userBackground_layout_height"
                 android:background="@color/white"
                 android:fitsSystemWindows="true"
                 tools:ignore="MissingPrefix">
@@ -11,56 +11,45 @@
         android:id="@+id/img_userBackground"
         android:layout_width="match_parent"
         android:layout_height="@dimen/userBackground_layout_height"
-        android:scaleType="fitXY"/>
-
-    <com.yydcdut.note.view.RoundedImageView
-        android:id="@+id/img_userPhoto"
-        android:layout_width="@dimen/userPhoto_layout_width"
-        android:layout_height="@dimen/userPhoto_layout_height"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="@dimen/userPhoto_layout_marginLeft"
-        android:layout_marginStart="@dimen/userPhoto_layout_marginLeft"
-        android:layout_marginTop="@dimen/userPhoto_layout_marginTop"/>
+        android:scaleType="fitXY"
+        android:src="@drawable/bg_user_background"/>
 
     <ImageView
         android:id="@+id/img_userPhotoTwo"
         android:layout_width="@dimen/userPhotoTwo_layout_width"
         android:layout_height="@dimen/userPhotoTwo_layout_height"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/img_userPhoto"
-        android:layout_marginEnd="@dimen/userPhotoTwo_layout_marginRight"
         android:layout_marginRight="@dimen/userPhotoTwo_layout_marginRight"
+        android:layout_marginTop="25dip"
         android:src="@drawable/ic_evernote_gray"/>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/userData_layout_height"
-        android:layout_alignBottom="@+id/img_userBackground"
+    <com.yydcdut.note.view.RoundedImageView
+        android:id="@+id/img_userPhoto"
+        android:layout_width="@dimen/userPhoto_layout_width"
+        android:layout_height="@dimen/userPhoto_layout_height"
+        android:layout_above="@+id/txt_userName"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="@dimen/userPhoto_layout_marginLeft"
+        android:src="@drawable/ic_no_user"/>
+
+    <TextView
+        android:id="@+id/txt_userName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="@dimen/userData_layout_marginBottom"
-        android:gravity="center_vertical"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/txt_userName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/userName_layout_marginLeft"
-            android:layout_marginStart="@dimen/userName_layout_marginLeft"
-            android:ellipsize="end"
-            android:maxEms="12"
-            android:maxLength="12"
-            android:singleLine="true"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/userName_textSize"/>
-
-    </RelativeLayout>
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="16dip"
+        android:layout_marginLeft="@dimen/userName_layout_marginLeft"
+        android:layout_marginTop="8dip"
+        android:ellipsize="end"
+        android:maxEms="12"
+        android:maxLength="12"
+        android:singleLine="true"
+        android:text="11111"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/userName_textSize"/>
 
 
 </RelativeLayout>

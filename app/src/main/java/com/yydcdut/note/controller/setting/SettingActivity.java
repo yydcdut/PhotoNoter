@@ -16,7 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.evernote.client.android.EvernoteSession;
+import com.evernote.edam.type.User;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
@@ -181,17 +181,19 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         }
         linearLayout.addView(accountView);
 
-        boolean isLoginEvernote = EvernoteSession.getInstance().isLoggedIn();
+        boolean isLoginEvernote = UserCenter.getInstance().isLoginEvernote();
         View accountView2 = LayoutInflater.from(this).inflate(R.layout.item_setting_account, null);
         RoundedImageView imageView2 = (RoundedImageView) accountView2.findViewById(R.id.img_item_setting_logo);
         imageView2.setImageResource(R.drawable.ic_evernote_fab);
         TextView textName2 = (TextView) accountView2.findViewById(R.id.txt_item_setting_user_name);
-        textName2.setText(getResources().getString(R.string.not_login));
         RoundedImageView imageUser2 = (RoundedImageView) accountView2.findViewById(R.id.img_item_setting_user);
         if (isLoginEvernote) {
-            imageUser2.setImageResource(R.drawable.ic_evernote_icon);
+            imageUser2.setImageResource(R.drawable.ic_evernote_color);
+            User user = UserCenter.getInstance().getEvernote();
+            textName2.setText(user.getUsername());
         } else {
             imageUser2.setImageResource(R.drawable.ic_no_user);
+            textName2.setText(getResources().getString(R.string.not_login));
         }
         linearLayout.addView(accountView2);
 
