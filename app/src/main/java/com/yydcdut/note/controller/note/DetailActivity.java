@@ -117,7 +117,7 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
             } else {
                 mIntention = positionOffset - mLastTimePositionOffset >= 0 ? INTENTION_RIGHT : INTENTION_LEFT;
             }
-        } else if (mIntention == INTENTION_RIGHT && positionOffset < 0.95) {//right
+        } else if (mIntention == INTENTION_RIGHT && positionOffset < 0.99) {//right
             int r2 = Color.red(mColorArray[2]);
             int r1 = Color.red(mColorArray[1]);
             int g2 = Color.green(mColorArray[2]);
@@ -154,7 +154,7 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
             layoutParams.leftMargin = (int) ((position + 1) * mDelta - (mDelta * (1 - positionOffset)));
             mPositionView.requestLayout();
         }
-        if (positionOffset < 0.01 || positionOffset > 0.95) {
+        if (positionOffset < 0.01 || positionOffset > 0.99) {
             //重新计算方向
             mIntention = INTENTION_STOP;
             mLastTimePositionOffset = -1;

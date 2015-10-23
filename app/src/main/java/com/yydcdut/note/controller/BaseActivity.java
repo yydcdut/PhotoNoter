@@ -1,15 +1,12 @@
 package com.yydcdut.note.controller;
 
-import android.annotation.TargetApi;
 import android.content.res.TypedArray;
 import android.graphics.Point;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
@@ -38,15 +35,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     private void setTheme() {
         int index = LocalStorageUtils.getInstance().getThemeColor();
         setTheme(ThemeHelper.THEME.get(index).getStyle());
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void setStatusBarColor(int color) {
-        if (LollipopCompat.AFTER_LOLLIPOP) {
-            Window window = getWindow();
-            window.setStatusBarColor(color);
-            window.setNavigationBarColor(color);
-        }
     }
 
     /**

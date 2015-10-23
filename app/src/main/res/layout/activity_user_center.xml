@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@android:color/white"
+              android:orientation="vertical">
+
+    <include
+        layout="@layout/layout_toolbar"/>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_24dip">
+
+            <com.yydcdut.note.view.RoundedImageView
+                android:id="@+id/img_user"
+                android:layout_width="96dip"
+                android:layout_height="96dip"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/bg_user_background"/>
+
+            <ImageView
+                android:id="@+id/img_user_two"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/img_user"
+                android:layout_marginLeft="@dimen/dimen_12dip"
+                android:layout_toRightOf="@+id/img_user"
+                android:src="@drawable/ic_evernote_color"/>
+
+            <TextView
+                android:id="@+id/txt_name"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/img_user"
+                android:layout_marginTop="@dimen/dimen_12dip"
+                android:gravity="center"
+                android:text="1111111"
+                android:textColor="@color/txt_gray"
+                android:textSize="@dimen/txt_big"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_12dip"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/img_user_detail"
+                    android:layout_width="@dimen/dimen_24dip"
+                    android:layout_height="@dimen/dimen_24dip"
+                    android:src="@drawable/ic_storage_gray_24dp"/>
+
+                <ImageView
+                    android:id="@+id/img_user_image"
+                    android:layout_width="@dimen/dimen_24dip"
+                    android:layout_height="@dimen/dimen_24dip"
+                    android:layout_marginLeft="@dimen/dimen_36dip"
+                    android:layout_marginRight="@dimen/dimen_36dip"
+                    android:src="@drawable/ic_collections_gray_24dp"/>
+
+                <ImageView
+                    android:id="@+id/img_user_person"
+                    android:layout_width="@dimen/dimen_24dip"
+                    android:layout_height="@dimen/dimen_24dip"
+                    android:layout_marginBottom="2dip"
+                    android:src="@drawable/ic_contacts_gray_24dp"/>
+            </LinearLayout>
+
+            <com.yydcdut.note.view.UserCenterArrowView
+                android:id="@+id/view_arrow"
+                android:layout_width="fill_parent"
+                android:layout_height="12dip"
+                android:layout_marginBottom="-3dip"/>
+
+            <FrameLayout
+                android:id="@+id/layout_user_vp_bg"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="@color/green_colorPrimary">
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/vp_user"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                </android.support.v4.view.ViewPager>
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

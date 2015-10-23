@@ -77,6 +77,8 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
     /* 标志位，防止多次点击出现bug效果 */
     private boolean mIsHiding = false;
     private Handler mHandler;
+    private static final int MSG_SUCCESS = 1;
+    private static final int MSG_NOT_SUCCESS = 2;
 
     private static final String TAG_ARROW = "tag_arrow";
     private static final String TAG_UPDATE = "tag_update";
@@ -265,10 +267,12 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
                         NoteApplication.getInstance().getExecutorPool().submit(new Runnable() {
                             @Override
                             public void run() {
-                                update2Evernote();
-                                mHandler.sendEmptyMessage(1);
+                                boolean isSuccess = update2Evernote();
+                                mHandler.sendEmptyMessage(isSuccess ? MSG_SUCCESS : MSG_NOT_SUCCESS);
                             }
                         });
+                    } else {
+                        //todo 没有登录
                     }
                     break;
             }
@@ -283,7 +287,8 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
-    private void update2Evernote() {
+    private boolean update2Evernote() {
+        boolean isSuccess = true;
         try {
             EvernoteNoteStoreClient noteStoreClient = EvernoteSession.getInstance().getEvernoteClientFactory().getNoteStoreClient();
             List<Notebook> notebookList = noteStoreClient.listNotebooks();
@@ -339,25 +344,31 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
             } catch (IOException e) {
                 e.printStackTrace();
                 YLog.i("yuyidong", "IOException--->" + e.getMessage());
+                isSuccess = false;
             } finally {
                 if (in != null) {
                     try {
                         in.close();
                     } catch (IOException e) {
                         e.printStackTrace();
+                        isSuccess = false;
                     }
                 }
             }
         } catch (EDAMUserException e) {
             e.printStackTrace();
             YLog.i("yuyidong", "EDAMUserException--->" + e.getMessage());
+            isSuccess = false;
         } catch (EDAMSystemException e) {
             e.printStackTrace();
             YLog.i("yuyidong", "EDAMSystemException--->" + e.getMessage());
+            isSuccess = false;
         } catch (TException e) {
             e.printStackTrace();
             YLog.i("yuyidong", "TException--->" + e.getMessage());
+            isSuccess = false;
         }
+        return isSuccess;
     }
 
     /**
@@ -472,6 +483,13 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public boolean handleMessage(Message msg) {
+        //todo snackBar
+        switch (msg.what) {
+            case MSG_NOT_SUCCESS:
+                break;
+            case MSG_SUCCESS:
+                break;
+        }
         mProgressLayout.hide();
         return false;
     }

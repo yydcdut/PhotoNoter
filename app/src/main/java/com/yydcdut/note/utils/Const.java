@@ -8,7 +8,7 @@ public interface Const {
     String PHOTO_POSITION = "photoPosition";
     String CATEGORY_LABEL = "categoryLabel";
     String COMPARATOR_FACTORY = "camparator";
-    String USER = "user";
+    String USER_DETAIL_TYPE = "user_detail_type";
     /* 动画 */
     int DURATION = 1000;
     int DURATION_ACTIVITY = 2000;

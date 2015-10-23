@@ -51,7 +51,7 @@
             android:name=".controller.setting.AboutAppActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".controller.login.BindUserActivity"
+            android:name=".controller.login.UserCenterActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".camera.controller.AdjustCamera"

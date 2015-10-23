@@ -15,8 +15,8 @@ import android.widget.Toast;
 import com.yydcdut.note.R;
 import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.bean.IUser;
-import com.yydcdut.note.controller.login.BindUserActivity;
 import com.yydcdut.note.controller.login.LoginActivity;
+import com.yydcdut.note.controller.login.UserCenterActivity;
 import com.yydcdut.note.model.CategoryDBModel;
 import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.model.UserCenter;
@@ -143,7 +143,7 @@ public class HomeActivity extends NavigationActivity implements NavigationActivi
         switch (which) {
             case USER_ONE:
                 if (UserCenter.getInstance().getQQ() != null) {
-                    startActivityForResult(new Intent(HomeActivity.this, BindUserActivity.class), REQUEST_NOTHING);
+                    startActivityForResult(new Intent(HomeActivity.this, UserCenterActivity.class), REQUEST_NOTHING);
                 } else {
                     startActivityForResult(new Intent(HomeActivity.this, LoginActivity.class), REQUEST_NOTHING);
                 }
