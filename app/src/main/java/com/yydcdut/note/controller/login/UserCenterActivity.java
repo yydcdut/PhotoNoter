@@ -34,6 +34,7 @@ public class UserCenterActivity extends BaseActivity implements View.OnClickList
     private int mIntention = INTENTION_STOP;
     private float mLastTimePositionOffset = -1;
     private UserCenterArrowView mUserCenterArrowView;
+    private ViewPager mViewPager;
 
     private float mScrollWidth = 0f;
 
@@ -68,7 +69,7 @@ public class UserCenterActivity extends BaseActivity implements View.OnClickList
                 getResources().getColor(R.color.blue_colorPrimary),
                 getResources().getColor(R.color.amber_colorPrimary)};
         mScrollWidth = getResources().getDimension(R.dimen.dimen_36dip) + getResources().getDimension(R.dimen.dimen_24dip);
-        mUserCenterArrowView.setColorAndMarginWidth(getResources().getColor(R.color.green_colorPrimary), (int) -mScrollWidth);
+        mUserCenterArrowView.setColorAndMarginWidth(mColorArray[0], (int) -mScrollWidth);
     }
 
     private void initToolBarUI() {
@@ -105,9 +106,9 @@ public class UserCenterActivity extends BaseActivity implements View.OnClickList
     }
 
     private void initViewPager() {
-        ViewPager viewPager = (ViewPager) findViewById(R.id.vp_user);
-        viewPager.setAdapter(new UserCenterFragmentAdapter(getSupportFragmentManager()));
-        viewPager.addOnPageChangeListener(this);
+        mViewPager = (ViewPager) findViewById(R.id.vp_user);
+        mViewPager.setAdapter(new UserCenterFragmentAdapter(getSupportFragmentManager()));
+        mViewPager.addOnPageChangeListener(this);
     }
 
 
@@ -143,12 +144,25 @@ public class UserCenterActivity extends BaseActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
+        int index = mViewPager.getCurrentItem();
         switch (v.getId()) {
             case R.id.img_user_detail:
+                if (index == 0) {
+                    break;
+                }
+                mViewPager.setCurrentItem(0, true);
                 break;
             case R.id.img_user_image:
+                if (index == 1) {
+                    break;
+                }
+                mViewPager.setCurrentItem(1, true);
                 break;
             case R.id.img_user_person:
+                if (index == 2) {
+                    break;
+                }
+                mViewPager.setCurrentItem(2, true);
                 break;
         }
     }
