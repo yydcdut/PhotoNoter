@@ -144,5 +144,13 @@
     <string name="about_share">Share to Friends</string>
     <string name="about_share_content">I am using App called Photos Noter, very easy to use. Download:http://a.app.qq.com/o/simple.jsp?pkgname=com.yydcdut.note</string>
 
-
+    <!-- User Center-->
+    <string name="uc_city">City</string>
+    <string name="uc_usage_age">Usage Age</string>
+    <string name="uc_phone">Phone</string>
+    <string name="uc_android">Android</string>
+    <string name="uc_storage">Storage</string>
+    <string name="uc_cloud">Cloud</string>
+    <string name="uc_unkown">Unkown</string>
+    <string name="uc_no_sdcard">No SDCard</string>
 </resources>

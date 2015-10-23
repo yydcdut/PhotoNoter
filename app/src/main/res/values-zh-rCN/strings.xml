@@ -144,4 +144,13 @@
     <string name="general"></string>
     <string name="detail_location">位置信息不可用</string>
 
+    <!-- User Center-->
+    <string name="uc_city">城市</string>
+    <string name="uc_usage_age">使用时间</string>
+    <string name="uc_phone">手机</string>
+    <string name="uc_android">安卓</string>
+    <string name="uc_storage">存储</string>
+    <string name="uc_cloud">云</string>
+    <string name="uc_unkown">未知</string>
+
 </resources>

@@ -3,6 +3,7 @@ package com.yydcdut.note.utils;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
 import android.widget.Toast;
@@ -295,9 +296,19 @@ public class FilePathUtils {
         if (Environment.MEDIA_MOUNTED.equals(state)) {
             File sdcardDir = Environment.getExternalStorageDirectory();
             StatFs sf = new StatFs(sdcardDir.getPath());
-            long blockSize = sf.getBlockSize();
-            long availCount = sf.getAvailableBlocks();
-            long available = (availCount * blockSize / 1024) / 1024;//单位MB
+
+            long blockSize = 0;
+            long availCount = 0;
+            long available = 0;
+            if (Build.VERSION.SDK_INT < 18) {
+                blockSize = sf.getBlockSize();
+                availCount = sf.getAvailableBlocks();
+                available = availCount * blockSize / 1024 / 1024;//单位MB;
+            } else {
+                blockSize = sf.getBlockSizeLong();
+                availCount = sf.getAvailableBlocksLong();
+                available = availCount * blockSize / 1024 / 1024;//单位MB;
+            }
             if (available > 5) {//大于5M
                 return true;
             } else {
@@ -306,6 +317,32 @@ public class FilePathUtils {
         } else {
             return false;
         }
+    }
+
+    public static long[] getSDCardStorage() {
+        long[] storage = new long[]{-1, -1};
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            File sdcardDir = Environment.getExternalStorageDirectory();
+            StatFs sf = new StatFs(sdcardDir.getPath());
+            long blockSize = 0;
+            long availCount = 0;
+            long totalCount = 0;
+            if (Build.VERSION.SDK_INT < 18) {
+                blockSize = sf.getBlockSize();
+                availCount = sf.getAvailableBlocks();
+                totalCount = sf.getBlockCount();
+                storage[0] = availCount * blockSize / 1024 / 1024;//单位MB;
+                storage[1] = totalCount * blockSize / 1024 / 1024;
+            } else {
+                blockSize = sf.getBlockSizeLong();
+                availCount = sf.getAvailableBlocksLong();
+                totalCount = sf.getBlockCountLong();
+                storage[0] = availCount * blockSize / 1024 / 1024;//单位MB;
+                storage[1] = totalCount * blockSize / 1024 / 1024;
+            }
+        }
+        return storage;
     }
 
     /**
