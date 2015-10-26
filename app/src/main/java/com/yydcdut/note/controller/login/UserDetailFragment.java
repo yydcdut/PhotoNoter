@@ -15,6 +15,7 @@ import com.yydcdut.note.adapter.FrequentImageAdapter;
 import com.yydcdut.note.controller.BaseFragment;
 import com.yydcdut.note.model.CategoryDBModel;
 import com.yydcdut.note.model.PhotoNoteDBModel;
+import com.yydcdut.note.model.SandBoxDBModel;
 import com.yydcdut.note.model.UserCenter;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
@@ -127,7 +128,6 @@ public class UserDetailFragment extends BaseFragment implements View.OnClickList
 
     private void initUserInfo(LinearLayout linearLayout) {
         View qqView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail_image, null);
-        qqView.setTag(TAG_QQ);
         ((ImageView) qqView.findViewById(R.id.img_item_icon)).setImageResource(R.drawable.ic_person_info_qq);
         if (UserCenter.getInstance().isLoginQQ()) {
             ((TextView) qqView.findViewById(R.id.txt_item_column)).setText(UserCenter.getInstance().getQQ().getName());
@@ -136,10 +136,11 @@ public class UserDetailFragment extends BaseFragment implements View.OnClickList
             ((TextView) qqView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.not_login));
             ((ImageView) qqView.findViewById(R.id.img_item_user)).setImageResource(R.drawable.ic_link_white_24dp);
         }
+        qqView.findViewById(R.id.img_item_user).setOnClickListener(this);
+        qqView.findViewById(R.id.img_item_user).setTag(TAG_QQ);
         linearLayout.addView(qqView);
 
         View evernoteView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail_image, null);
-        evernoteView.setTag(TAG_EVERNOTE);
         ((ImageView) evernoteView.findViewById(R.id.img_item_icon)).setImageResource(R.drawable.ic_evernote_fab);
         if (UserCenter.getInstance().isLoginEvernote()) {
             ((TextView) evernoteView.findViewById(R.id.txt_item_column)).setText(UserCenter.getInstance().getEvernote().getUsername());
@@ -148,6 +149,8 @@ public class UserDetailFragment extends BaseFragment implements View.OnClickList
             ((TextView) evernoteView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.not_login));
             ((ImageView) evernoteView.findViewById(R.id.img_item_user)).setImageResource(R.drawable.ic_link_white_24dp);
         }
+        evernoteView.findViewById(R.id.img_item_user).setOnClickListener(this);
+        evernoteView.findViewById(R.id.img_item_user).setTag(TAG_EVERNOTE);
         linearLayout.addView(evernoteView);
 
         View folderView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail_text, null);
@@ -167,17 +170,17 @@ public class UserDetailFragment extends BaseFragment implements View.OnClickList
         }
         linearLayout.addView(folderView);
 
-        View imageView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail_text, null);
-        ((ImageView) imageView.findViewById(R.id.img_item_icon)).setImageResource(R.drawable.ic_crop_original_white_24dp);
-        ((TextView) imageView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.uc_images));
-        ((TextView) imageView.findViewById(R.id.txt_item_user)).setText(getContext().getResources().getString(R.string.uc_unkown));
-        linearLayout.addView(imageView);
-
         View noteView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail_text, null);
         ((ImageView) noteView.findViewById(R.id.img_item_icon)).setImageResource(R.drawable.ic_content_paste_white_24dp);
         ((TextView) noteView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.uc_notes));
-        ((TextView) noteView.findViewById(R.id.txt_item_user)).setText(getContext().getResources().getString(R.string.uc_unkown));
+        ((TextView) noteView.findViewById(R.id.txt_item_user)).setText(PhotoNoteDBModel.getInstance().getAllNumber() + "");
         linearLayout.addView(noteView);
+
+        View sandboxView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail_text, null);
+        ((ImageView) sandboxView.findViewById(R.id.img_item_icon)).setImageResource(R.drawable.ic_crop_original_white_24dp);
+        ((TextView) sandboxView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.uc_sanbox));
+        ((TextView) sandboxView.findViewById(R.id.txt_item_user)).setText(SandBoxDBModel.getInstance().getAllNumber() + "");
+        linearLayout.addView(sandboxView);
 
         View wordView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail_text, null);
         ((ImageView) wordView.findViewById(R.id.img_item_icon)).setImageResource(R.drawable.ic_text_format_white_24dp);
@@ -213,14 +216,23 @@ public class UserDetailFragment extends BaseFragment implements View.OnClickList
             case TAG_QQ:
                 if (UserCenter.getInstance().isLoginQQ()) {
                     UserCenter.getInstance().logoutQQ();
-                    //todo 界面
+                    LinearLayout linearLayout = (LinearLayout) getView().findViewById(R.id.layout_user_detail);
+                    View qqView = linearLayout.getChildAt(0);
+                    ((TextView) qqView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.not_login));
+                    ((ImageView) qqView.findViewById(R.id.img_item_user)).setImageResource(R.drawable.ic_link_white_24dp);
                 } else {
+                    //todo 界面
 
                 }
                 break;
             case TAG_EVERNOTE:
                 if (UserCenter.getInstance().isLoginEvernote()) {
                     UserCenter.getInstance().logoutEvernote();
+                    LinearLayout linearLayout = (LinearLayout) getView().findViewById(R.id.layout_user_detail);
+                    View qqView = linearLayout.getChildAt(1);
+                    ((TextView) qqView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.not_login));
+                    ((ImageView) qqView.findViewById(R.id.img_item_user)).setImageResource(R.drawable.ic_link_white_24dp);
+                } else {
                     //todo 界面
                 }
                 break;

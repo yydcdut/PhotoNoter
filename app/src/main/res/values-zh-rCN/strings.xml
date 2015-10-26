@@ -154,7 +154,7 @@
     <string name="uc_cloud">云</string>
     <string name="uc_unkown">未知</string>
     <string name="uc_folder">文件夹大小</string>
-    <string name="uc_images">照片数量</string>
+    <string name="uc_sanbox">沙盒照片数量</string>
     <string name="uc_notes">笔记数量</string>
     <string name="uc_words">总字数</string>
 

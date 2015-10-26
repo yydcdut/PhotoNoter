@@ -4,7 +4,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="150dip"
-    android:layout_margin="@dimen/dimen_12dip"
+    android:layout_margin="6dip"
     card_view:cardBackgroundColor="@color/white"
     card_view:cardCornerRadius="2dip"
     card_view:cardElevation="3dip">

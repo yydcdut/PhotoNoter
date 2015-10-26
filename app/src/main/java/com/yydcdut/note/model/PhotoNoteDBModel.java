@@ -20,6 +20,7 @@ import java.util.Map;
 /**
  * Created by yuyidong on 15/7/17.
  * 先进行数据库操作，然后再操作动画之类的
+ * //todo DAO设计模式
  */
 public class PhotoNoteDBModel extends AbsNotesDBModel implements IModel {
     private List<PhotoNoteChangedObserver> mPhotoNoteChangedObservers = new ArrayList<>();
@@ -102,6 +103,19 @@ public class PhotoNoteDBModel extends AbsNotesDBModel implements IModel {
         deleteData2DB(photoNote);
         doObserver(IObserver.OBSERVER_PHOTONOTE_DELETE, photoNote.getCategoryLabel());
         FilePathUtils.deleteAllFiles(photoNote.getPhotoName());
+    }
+
+    public int getAllNumber() {
+        int number = 0;
+        SQLiteDatabase db = mNotesSQLite.getReadableDatabase();
+        String sql = "select count(*) from " + NotesSQLite.TABLE_PHOTONOTE + ";";
+        Cursor cursor = db.rawQuery(sql, null);
+        while (cursor.moveToNext()) {
+            number = cursor.getInt(cursor.getColumnIndex("count(*)"));
+        }
+        cursor.close();
+        db.close();
+        return number;
     }
 
     /**

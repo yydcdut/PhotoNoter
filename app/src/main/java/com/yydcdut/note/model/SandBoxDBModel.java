@@ -93,6 +93,19 @@ public class SandBoxDBModel implements IModel {
         return rows;
     }
 
+    public int getAllNumber() {
+        int number = 0;
+        SQLiteDatabase db = mSandSQLite.getReadableDatabase();
+        String sql = "select count(*) from " + SandSQLite.TABLE + ";";
+        Cursor cursor = db.rawQuery(sql, null);
+        while (cursor.moveToNext()) {
+            number = cursor.getInt(cursor.getColumnIndex("count(*)"));
+        }
+        cursor.close();
+        db.close();
+        return number;
+    }
+
 
     @Override
     public boolean addObserver(IObserver iObserver) {
