@@ -5,7 +5,7 @@
         android:id="@+id/menu_share"
         android:icon="@drawable/ic_share_gray_24dp"
         android:title="@string/share"
-        android:visible="true"
+        android:visible="false"
         app:showAsAction="always"/>
 
 </menu>

@@ -144,11 +144,10 @@
         <item name="colorControlHighlight">@color/blue_gray_colorPrimary</item>
     </style>
 
-    <style name="StorageProgressBar" parent="@android:style/Widget.ProgressBar.Horizontal">
+    <style name="storageProgressBar" parent="@android:style/Widget.ProgressBar.Horizontal">
         <item name="android:maxHeight">10.0dip</item>
         <item name="android:indeterminateDrawable">@drawable/progress_bar_storage</item>
         <item name="android:progressDrawable">@drawable/progress_bar_storage</item>
         <item name="android:minHeight">10.0dip</item>
     </style>
-
 </resources>

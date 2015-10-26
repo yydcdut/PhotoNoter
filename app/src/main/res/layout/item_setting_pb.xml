@@ -7,7 +7,7 @@
 
     <ProgressBar
         android:id="@+id/pg_setting"
-        style="@style/StorageProgressBar"
+        style="@style/storageProgressBar"
         android:layout_width="fill_parent"
         android:layout_height="10dip"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
