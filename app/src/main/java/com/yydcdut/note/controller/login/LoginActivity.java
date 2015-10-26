@@ -7,7 +7,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.evernote.client.android.EvernoteSession;
 import com.evernote.client.android.login.EvernoteLoginFragment;
@@ -100,20 +99,20 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     public void onClick(View v) {
         if (!NetworkUtils.isNetworkConnected(this)) {
             //没有网络
-            Toast.makeText(this, getResources().getString(R.string.toast_no_connection), Toast.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(R.id.cl_login), getResources().getString(R.string.toast_no_connection), Snackbar.LENGTH_SHORT).show();
             return;
         }
         switch (v.getId()) {
             case R.id.btn_login_qq:
                 if (UserCenter.getInstance().isLoginQQ()) {
-                    Snackbar.make(findViewById(R.id.cl_login), getResources().getString(R.string.toast_already_login), Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(R.id.cl_login), getResources().getString(R.string.toast_already_login), Snackbar.LENGTH_SHORT).show();
                 } else {
                     mTencent.login(LoginActivity.this, "all", new BaseUiListener());
                 }
                 break;
             case R.id.btn_login_evernote:
                 if (UserCenter.getInstance().isLoginEvernote()) {
-                    Snackbar.make(findViewById(R.id.cl_login), getResources().getString(R.string.toast_already_login), Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(R.id.cl_login), getResources().getString(R.string.toast_already_login), Snackbar.LENGTH_SHORT).show();
                 } else {
                     EvernoteSession.getInstance().authenticate(LoginActivity.this);
                 }

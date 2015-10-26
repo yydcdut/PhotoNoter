@@ -167,6 +167,10 @@ public class HomeActivity extends NavigationActivity implements NavigationActivi
         } else if (resultCode == RESULT_DATA_EVERNOTE) {
             updateEvernoteUserInfo();
             openDrawer();
+        } else if (resultCode == RESULT_DATA_USER) {
+            updateQQUserInfo();
+            updateEvernoteUserInfo();
+            openDrawer();
         }
     }
 

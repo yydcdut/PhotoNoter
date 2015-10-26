@@ -17,7 +17,7 @@ import java.util.List;
 public class UserCenterFragmentAdapter extends FragmentPagerAdapter {
     private List<Fragment> mFragmentList;
 
-    public UserCenterFragmentAdapter(FragmentManager fm, UserDetailFragment.OnUserLoginStateChangedListener listener) {
+    public UserCenterFragmentAdapter(FragmentManager fm) {
         super(fm);
         mFragmentList = new ArrayList<>(3);
         UserDetailFragment firstFragment = UserDetailFragment.newInstance();
@@ -34,7 +34,6 @@ public class UserCenterFragmentAdapter extends FragmentPagerAdapter {
         Bundle thirdBundle = new Bundle();
         thirdBundle.putInt(Const.USER_DETAIL_TYPE, 2);
         thirdFragment.setArguments(thirdBundle);
-        thirdFragment.setOnUserLoginStateChangedListener(listener);
 
         mFragmentList.add(firstFragment);
         mFragmentList.add(secondFragment);

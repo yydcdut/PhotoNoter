@@ -1,7 +1,10 @@
 package com.yydcdut.note.controller.login;
 
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,8 +13,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.evernote.client.android.EvernoteSession;
+import com.evernote.client.android.login.EvernoteLoginFragment;
+import com.tencent.connect.UserInfo;
+import com.tencent.connect.auth.QQToken;
+import com.tencent.tauth.IUiListener;
+import com.tencent.tauth.Tencent;
+import com.tencent.tauth.UiError;
+import com.yydcdut.note.BuildConfig;
+import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.FrequentImageAdapter;
+import com.yydcdut.note.bean.IUser;
 import com.yydcdut.note.controller.BaseFragment;
 import com.yydcdut.note.model.CategoryDBModel;
 import com.yydcdut.note.model.PhotoNoteDBModel;
@@ -19,19 +32,30 @@ import com.yydcdut.note.model.SandBoxDBModel;
 import com.yydcdut.note.model.UserCenter;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
+import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.TimeDecoder;
+import com.yydcdut.note.view.CircleProgressBarLayout;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
 import java.text.DecimalFormat;
 
 /**
  * Created by yuyidong on 15/10/22.
  */
-public class UserDetailFragment extends BaseFragment implements View.OnClickListener {
+public class UserDetailFragment extends BaseFragment implements View.OnClickListener, Handler.Callback,
+        EvernoteLoginFragment.ResultCallback {
     private static final String TAG_QQ = "tag_qq";
     private static final String TAG_EVERNOTE = "tag_evernote";
 
-    private OnUserLoginStateChangedListener mOnUserLoginStateChangedListener;
+    private static final int MESSAGE_LOGIN_QQ_OK = 1;
+    private static final int MESSAGE_LOGIN_EVERNOTE_OK = 2;
+    private Handler mHandler;
+
+    private Tencent mTencent;
 
     private int mType = 0;
 
@@ -65,6 +89,7 @@ public class UserDetailFragment extends BaseFragment implements View.OnClickList
                 initUserImage(linearLayout);
                 break;
             case 2:
+                mHandler = new Handler(this);
                 initUserInfo(linearLayout);
                 break;
         }
@@ -223,12 +248,12 @@ public class UserDetailFragment extends BaseFragment implements View.OnClickList
                         View qqView = linearLayout.getChildAt(0);
                         ((TextView) qqView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.not_login));
                         ((ImageView) qqView.findViewById(R.id.img_item_user)).setImageResource(R.drawable.ic_link_white_24dp);
-                        if (mOnUserLoginStateChangedListener != null) {
-                            mOnUserLoginStateChangedListener.onStateChanged(OnUserLoginStateChangedListener.TYPE_QQ, OnUserLoginStateChangedListener.STATE_LOGOUT);
-                        }
-                    } else {
-                        //todo 界面
 
+                        ((ImageView) getActivity().findViewById(R.id.img_user)).setImageResource(R.drawable.ic_no_user);
+                        getActivity().findViewById(R.id.txt_name).setVisibility(View.INVISIBLE);
+                    } else {
+                        mTencent = Tencent.createInstance(BuildConfig.TENCENT_KEY, getActivity().getApplicationContext());
+                        mTencent.login(this, "all", new BaseUiListener());
                     }
                     break;
                 case TAG_EVERNOTE:
@@ -238,27 +263,163 @@ public class UserDetailFragment extends BaseFragment implements View.OnClickList
                         View evernoteView = linearLayout.getChildAt(1);
                         ((TextView) evernoteView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.not_login));
                         ((ImageView) evernoteView.findViewById(R.id.img_item_user)).setImageResource(R.drawable.ic_link_white_24dp);
-                        if (mOnUserLoginStateChangedListener != null) {
-                            mOnUserLoginStateChangedListener.onStateChanged(OnUserLoginStateChangedListener.TYPE_EVERNOTE, OnUserLoginStateChangedListener.STATE_LOGOUT);
-                        }
                     } else {
-                        //todo 界面
+                        EvernoteSession.getInstance().authenticate(getActivity());
                     }
                     break;
             }
         }
     }
 
-    public void setOnUserLoginStateChangedListener(OnUserLoginStateChangedListener onUserLoginStateChangedListener) {
-        mOnUserLoginStateChangedListener = onUserLoginStateChangedListener;
+    @Override
+    public boolean handleMessage(Message msg) {
+        switch (msg.what) {
+            case MESSAGE_LOGIN_QQ_OK:
+                IUser qqUser = UserCenter.getInstance().getQQ();
+                if (new File(FilePathUtils.getQQImagePath()).exists()) {
+                    ImageLoaderManager.displayImage("file://" + FilePathUtils.getQQImagePath(),
+                            ((ImageView) getActivity().findViewById(R.id.img_user)));
+                } else {
+                    ImageLoaderManager.displayImage(qqUser.getNetImagePath(),
+                            ((ImageView) getActivity().findViewById(R.id.img_user)));
+                }
+                getActivity().findViewById(R.id.txt_name).setVisibility(View.VISIBLE);
+                ((TextView) getActivity().findViewById(R.id.txt_name)).setText(qqUser.getName());
+
+                LinearLayout linearLayout = (LinearLayout) getView().findViewById(R.id.layout_user_detail);
+                View qqView = linearLayout.getChildAt(0);
+                ((TextView) qqView.findViewById(R.id.txt_item_column)).setText(qqUser.getName());
+                ((ImageView) qqView.findViewById(R.id.img_item_user)).setImageResource(R.drawable.ic_clear_white_24dp);
+                ((CircleProgressBarLayout) getActivity().findViewById(R.id.layout_progress)).hide();
+                break;
+            case MESSAGE_LOGIN_EVERNOTE_OK:
+                ((ImageView) getActivity().findViewById(R.id.img_user_two)).setImageResource(R.drawable.ic_evernote_color);
+
+                LinearLayout linearLayout2 = (LinearLayout) getView().findViewById(R.id.layout_user_detail);
+                View evernoteView = linearLayout2.getChildAt(1);
+                ((TextView) evernoteView.findViewById(R.id.txt_item_column)).setText(UserCenter.getInstance().getEvernote().getUsername());
+                ((ImageView) evernoteView.findViewById(R.id.img_item_user)).setImageResource(R.drawable.ic_clear_white_24dp);
+                ((CircleProgressBarLayout) getActivity().findViewById(R.id.layout_progress)).hide();
+                break;
+        }
+        return false;
     }
 
-    public interface OnUserLoginStateChangedListener {
-        int TYPE_QQ = 1;
-        int TYPE_EVERNOTE = 2;
-        int STATE_LOGIN = 1;
-        int STATE_LOGOUT = 2;
-
-        void onStateChanged(int type, int state);
+    @Override
+    public void onLoginFinished(boolean successful) {
+        if (successful) {
+            ((CircleProgressBarLayout) getActivity().findViewById(R.id.layout_progress)).show();
+            UserCenter.getInstance().LoginEvernote();
+            mHandler.sendEmptyMessage(MESSAGE_LOGIN_EVERNOTE_OK);
+        }
     }
+
+    /**
+     * 当自定义的监听器实现IUiListener接口后，必须要实现接口的三个方法，
+     * onComplete  onCancel onError
+     * 分别表示第三方登录成功，取消 ，错误。
+     */
+    private class BaseUiListener implements IUiListener {
+
+        public void onCancel() {
+        }
+
+        /*
+            {
+                "access_token": "15D69FFB81BC403D9DB3DFACCF2FDDFF",
+	            "authority_cost": 2490,
+	            "expires_in": 7776000,
+	            "login_cost": 775,
+	            "msg": "",
+	            "openid": "563559BEF3E2F97B693A6F88308F8D21",
+	            "pay_token": "0E13A21128EAFB5E39048E5DE9478AD4",
+	            "pf": "desktop_m_qq-10000144-android-2002-",
+	            "pfkey": "11157020df5d6a8ebeaa150e2a7c68ce",
+	            "query_authority_cost": 788,
+	            "ret": 0
+            }
+        */
+        public void onComplete(Object response) {
+            String openid = null;
+            String accessToken = null;
+            try {
+                openid = ((JSONObject) response).getString("openid");
+                accessToken = ((JSONObject) response).getString("access_token");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            /*
+              到此已经获得OpenID以及其他你想获得的内容了
+              QQ登录成功了，我们还想获取一些QQ的基本信息，比如昵称，头像
+              sdk给我们提供了一个类UserInfo，这个类中封装了QQ用户的一些信息，我么可以通过这个类拿到这些信息
+             */
+            QQToken qqToken = mTencent.getQQToken();
+            UserInfo info = new UserInfo(UserDetailFragment.this.getActivity().getApplicationContext(), qqToken);
+            //这样我们就拿到这个类了，之后的操作就跟上面的一样了，同样是解析JSON
+            final String finalOpenid = openid;
+            final String finalAccessToken = accessToken;
+            info.getUserInfo(new IUiListener() {
+                /*
+                  {
+	                 "city": "成都",
+	                 "figureurl": "http://qzapp.qlogo.cn/qzapp/1104732115/563559BEF3E2F97B693A6F88308F8D21/30",
+	                 "figureurl_1": "http://qzapp.qlogo.cn/qzapp/1104732115/563559BEF3E2F97B693A6F88308F8D21/50",
+	                 "figureurl_2": "http://qzapp.qlogo.cn/qzapp/1104732115/563559BEF3E2F97B693A6F88308F8D21/100",
+	                 "figureurl_qq_1": "http://q.qlogo.cn/qqapp/1104732115/563559BEF3E2F97B693A6F88308F8D21/40",
+	                 "figureurl_qq_2": "http://q.qlogo.cn/qqapp/1104732115/563559BEF3E2F97B693A6F88308F8D21/100",
+	                 "gender": "男",
+	                 "is_lost": 0,
+	                 "is_yellow_vip": "0",
+	                 "is_yellow_year_vip": "0",
+	                 "level": "0",
+	                 "msg": "",
+	                 "nickname": "生命短暂，快乐至上。",
+	                 "province": "四川",
+	                 "ret": 0,
+	                 "vip": "0",
+	                 "yellow_vip_level": "0"
+                    }
+                 */
+                public void onComplete(final Object response) {
+
+                    JSONObject json = (JSONObject) response;
+                    String name = null;
+                    String image = null;
+                    try {
+                        name = json.getString("nickname");
+                        image = json.getString("figureurl_qq_2");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    ((CircleProgressBarLayout) getActivity().findViewById(R.id.layout_progress)).show();
+                    final String finalImage = image;
+                    final String finalName = name;
+                    NoteApplication.getInstance().getExecutorPool().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (UserCenter.getInstance().LoginQQ(finalOpenid,
+                                    finalAccessToken, finalName, finalImage)) {
+                                Bitmap bitmap = ImageLoaderManager.loadImageSync(finalImage);
+                                FilePathUtils.saveOtherImage(FilePathUtils.getQQImagePath(), bitmap);
+                                //登录成功
+                                mHandler.sendEmptyMessage(MESSAGE_LOGIN_QQ_OK);
+                            }
+                        }
+                    });
+                }
+
+                public void onCancel() {
+                }
+
+                public void onError(UiError arg0) {
+                }
+
+            });
+        }
+
+        @Override
+        public void onError(UiError uiError) {
+        }
+    }
+
 }
