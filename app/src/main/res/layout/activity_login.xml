@@ -6,42 +6,46 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_login_cloud_guide">
 
-    <include
-        layout="@layout/layout_toolbar"/>
-
-    <LinearLayout
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/cl_login"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/dimen_48dip"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:layout_height="fill_parent">
 
-            <com.yydcdut.note.view.fab.FloatingActionButton
-                android:id="@+id/btn_login_qq"
-                android:layout_width="wrap_content"
+            <include
+                layout="@layout/layout_toolbar"/>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/dimen_24dip"
-                app:fab_colorNormal="?attr/colorPrimary"
-                app:fab_colorPressed="?attr/colorPrimaryDark"
-                app:fab_icon="@drawable/ic_qq_fab"/>
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="@dimen/dimen_48dip"
+                android:gravity="center"
+                android:orientation="horizontal">
 
-            <com.yydcdut.note.view.fab.FloatingActionButton
-                android:id="@+id/btn_login_evernote"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:fab_colorNormal="?attr/colorPrimary"
-                app:fab_colorPressed="?attr/colorPrimaryDark"
-                app:fab_icon="@drawable/ic_evernote_fab"/>
-        </LinearLayout>
+                <com.yydcdut.note.view.fab.FloatingActionButton
+                    android:id="@+id/btn_login_qq"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/dimen_24dip"
+                    app:fab_colorNormal="?attr/colorPrimary"
+                    app:fab_colorPressed="?attr/colorPrimaryDark"
+                    app:fab_icon="@drawable/ic_qq_fab"/>
 
-    </LinearLayout>
+                <com.yydcdut.note.view.fab.FloatingActionButton
+                    android:id="@+id/btn_login_evernote"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:fab_colorNormal="?attr/colorPrimary"
+                    app:fab_colorPressed="?attr/colorPrimaryDark"
+                    app:fab_icon="@drawable/ic_evernote_fab"/>
+            </LinearLayout>
+
+        </RelativeLayout>
+    </android.support.design.widget.CoordinatorLayout>
 
     <com.yydcdut.note.view.CircleProgressBarLayout
         android:id="@+id/layout_progress"

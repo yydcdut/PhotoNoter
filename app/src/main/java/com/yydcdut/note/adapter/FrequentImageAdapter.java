@@ -35,7 +35,7 @@ public class FrequentImageAdapter extends RecyclerView.Adapter<PhotoCardViewHold
     public void onBindViewHolder(PhotoCardViewHolder holder, int position) {
         holder.cardView.setCardBackgroundColor(mPhotoNoteList.get(position).getPaletteColor());
         ImageLoaderManager.displayImage(mPhotoNoteList.get(position).getSmallPhotoPathWithFile(), holder.imageView);
-        holder.textView.setText(mPhotoNoteList.get(position).getPhotoName());
+        holder.textView.setText("See you soon~");
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.yydcdut.note.controller.login;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.tencent.connect.auth.QQToken;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
+import com.yydcdut.note.BuildConfig;
 import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.controller.BaseActivity;
@@ -33,8 +35,7 @@ import org.json.JSONObject;
  */
 public class LoginActivity extends BaseActivity implements View.OnClickListener, Handler.Callback,
         EvernoteLoginFragment.ResultCallback {
-    public static final int RESULT_DATA_QQ = 123;
-    public static final int RESULT_DATA_EVERNOTE = 321;
+
     private static final String TAG = LoginActivity.class.getSimpleName();
 
     private static final int MESSAGE_LOGIN_QQ_OK = 1;
@@ -87,7 +88,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
      * 初始化腾讯的接口
      */
     private void initTencent() {
-        mTencent = Tencent.createInstance("1104732115", getApplicationContext());
+        mTencent = Tencent.createInstance(BuildConfig.TENCENT_KEY, getApplicationContext());
     }
 
     private void initLoginButtonListener() {
@@ -104,10 +105,18 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         }
         switch (v.getId()) {
             case R.id.btn_login_qq:
-                mTencent.login(LoginActivity.this, "all", new BaseUiListener());
+                if (UserCenter.getInstance().isLoginQQ()) {
+                    Snackbar.make(findViewById(R.id.cl_login), getResources().getString(R.string.toast_already_login), Snackbar.LENGTH_LONG).show();
+                } else {
+                    mTencent.login(LoginActivity.this, "all", new BaseUiListener());
+                }
                 break;
             case R.id.btn_login_evernote:
-                EvernoteSession.getInstance().authenticate(LoginActivity.this);
+                if (UserCenter.getInstance().isLoginEvernote()) {
+                    Snackbar.make(findViewById(R.id.cl_login), getResources().getString(R.string.toast_already_login), Snackbar.LENGTH_LONG).show();
+                } else {
+                    EvernoteSession.getInstance().authenticate(LoginActivity.this);
+                }
                 break;
         }
     }
@@ -117,7 +126,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     public boolean handleMessage(Message msg) {
         switch (msg.what) {
             case MESSAGE_LOGIN_QQ_OK:
-                mCircleProgressBar.show();
+                mCircleProgressBar.hide();
                 setResult(RESULT_DATA_QQ, null);
                 finish();
                 break;
@@ -136,8 +145,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             mCircleProgressBar.show();
             UserCenter.getInstance().LoginEvernote();
             mHandler.sendEmptyMessage(MESSAGE_LOGIN_EVERNOTE_OK);
-        } else {
-
         }
     }
 

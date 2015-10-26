@@ -142,13 +142,18 @@ public class HomeActivity extends NavigationActivity implements NavigationActivi
     public void onClickUserPhotoNavigation(View v, final int which) {
         switch (which) {
             case USER_ONE:
-                if (UserCenter.getInstance().getQQ() != null) {
+                if (UserCenter.getInstance().isLoginQQ()) {
                     startActivityForResult(new Intent(HomeActivity.this, UserCenterActivity.class), REQUEST_NOTHING);
                 } else {
                     startActivityForResult(new Intent(HomeActivity.this, LoginActivity.class), REQUEST_NOTHING);
                 }
                 break;
             case USER_TWO:
+                if (UserCenter.getInstance().isLoginEvernote()) {
+                    startActivityForResult(new Intent(HomeActivity.this, UserCenterActivity.class), REQUEST_NOTHING);
+                } else {
+                    startActivityForResult(new Intent(HomeActivity.this, LoginActivity.class), REQUEST_NOTHING);
+                }
                 break;
         }
     }
@@ -156,10 +161,10 @@ public class HomeActivity extends NavigationActivity implements NavigationActivi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == LoginActivity.RESULT_DATA_QQ) {
+        if (resultCode == RESULT_DATA_QQ) {
             updateQQUserInfo();
             openDrawer();
-        } else if (resultCode == LoginActivity.RESULT_DATA_EVERNOTE) {
+        } else if (resultCode == RESULT_DATA_EVERNOTE) {
             updateEvernoteUserInfo();
             openDrawer();
         }

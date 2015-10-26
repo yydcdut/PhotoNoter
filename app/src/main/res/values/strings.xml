@@ -125,6 +125,7 @@
     <string name="toast_not_support">Not Support Now!</string>
     <string name="toast_sandbox_fail">Some Photos may be lost!</string>
     <string name="toast_no_connection">No Internet connection!</string>
+    <string name="toast_already_login">Have already login</string>
 
     <string name="make_photo_notification">Make Photos In the background, please do not exit the Application!</string>
     <string name="toast_storage">There is not enough Storage!</string>
@@ -136,7 +137,7 @@
     <string name="unbind_sina">Unbind Sina</string>
     <string name="bind_qq">Bind QQ</string>
     <string name="bind_sina">Bind Sina</string>
-    <string name="not_login">Not Login...</string>
+    <string name="not_login">Not logged in..</string>
     <string name="personal_page">Personal Page</string>
     <string name="about_update">Update</string>
     <string name="about_contact">Contact Us</string>

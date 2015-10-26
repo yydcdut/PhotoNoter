@@ -31,6 +31,8 @@ public class UserDetailFragment extends BaseFragment implements View.OnClickList
     private static final String TAG_QQ = "tag_qq";
     private static final String TAG_EVERNOTE = "tag_evernote";
 
+    private OnUserLoginStateChangedListener mOnUserLoginStateChangedListener;
+
     private int mType = 0;
 
     public static UserDetailFragment newInstance() {
@@ -212,30 +214,51 @@ public class UserDetailFragment extends BaseFragment implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        switch (((String) v.getTag())) {
-            case TAG_QQ:
-                if (UserCenter.getInstance().isLoginQQ()) {
-                    UserCenter.getInstance().logoutQQ();
-                    LinearLayout linearLayout = (LinearLayout) getView().findViewById(R.id.layout_user_detail);
-                    View qqView = linearLayout.getChildAt(0);
-                    ((TextView) qqView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.not_login));
-                    ((ImageView) qqView.findViewById(R.id.img_item_user)).setImageResource(R.drawable.ic_link_white_24dp);
-                } else {
-                    //todo 界面
+        if (mType == 2) {
+            switch (((String) v.getTag())) {
+                case TAG_QQ:
+                    if (UserCenter.getInstance().isLoginQQ()) {
+                        UserCenter.getInstance().logoutQQ();
+                        LinearLayout linearLayout = (LinearLayout) getView().findViewById(R.id.layout_user_detail);
+                        View qqView = linearLayout.getChildAt(0);
+                        ((TextView) qqView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.not_login));
+                        ((ImageView) qqView.findViewById(R.id.img_item_user)).setImageResource(R.drawable.ic_link_white_24dp);
+                        if (mOnUserLoginStateChangedListener != null) {
+                            mOnUserLoginStateChangedListener.onStateChanged(OnUserLoginStateChangedListener.TYPE_QQ, OnUserLoginStateChangedListener.STATE_LOGOUT);
+                        }
+                    } else {
+                        //todo 界面
 
-                }
-                break;
-            case TAG_EVERNOTE:
-                if (UserCenter.getInstance().isLoginEvernote()) {
-                    UserCenter.getInstance().logoutEvernote();
-                    LinearLayout linearLayout = (LinearLayout) getView().findViewById(R.id.layout_user_detail);
-                    View qqView = linearLayout.getChildAt(1);
-                    ((TextView) qqView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.not_login));
-                    ((ImageView) qqView.findViewById(R.id.img_item_user)).setImageResource(R.drawable.ic_link_white_24dp);
-                } else {
-                    //todo 界面
-                }
-                break;
+                    }
+                    break;
+                case TAG_EVERNOTE:
+                    if (UserCenter.getInstance().isLoginEvernote()) {
+                        UserCenter.getInstance().logoutEvernote();
+                        LinearLayout linearLayout = (LinearLayout) getView().findViewById(R.id.layout_user_detail);
+                        View evernoteView = linearLayout.getChildAt(1);
+                        ((TextView) evernoteView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.not_login));
+                        ((ImageView) evernoteView.findViewById(R.id.img_item_user)).setImageResource(R.drawable.ic_link_white_24dp);
+                        if (mOnUserLoginStateChangedListener != null) {
+                            mOnUserLoginStateChangedListener.onStateChanged(OnUserLoginStateChangedListener.TYPE_EVERNOTE, OnUserLoginStateChangedListener.STATE_LOGOUT);
+                        }
+                    } else {
+                        //todo 界面
+                    }
+                    break;
+            }
         }
+    }
+
+    public void setOnUserLoginStateChangedListener(OnUserLoginStateChangedListener onUserLoginStateChangedListener) {
+        mOnUserLoginStateChangedListener = onUserLoginStateChangedListener;
+    }
+
+    public interface OnUserLoginStateChangedListener {
+        int TYPE_QQ = 1;
+        int TYPE_EVERNOTE = 2;
+        int STATE_LOGIN = 1;
+        int STATE_LOGOUT = 2;
+
+        void onStateChanged(int type, int state);
     }
 }
