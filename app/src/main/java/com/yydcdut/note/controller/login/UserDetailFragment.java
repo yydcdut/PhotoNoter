@@ -15,16 +15,22 @@ import com.yydcdut.note.adapter.FrequentImageAdapter;
 import com.yydcdut.note.controller.BaseFragment;
 import com.yydcdut.note.model.CategoryDBModel;
 import com.yydcdut.note.model.PhotoNoteDBModel;
+import com.yydcdut.note.model.UserCenter;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
+import com.yydcdut.note.utils.LocalStorageUtils;
+import com.yydcdut.note.utils.TimeDecoder;
 
 import java.text.DecimalFormat;
 
 /**
  * Created by yuyidong on 15/10/22.
  */
-public class UserDetailFragment extends BaseFragment {
-    private int type = 0;
+public class UserDetailFragment extends BaseFragment implements View.OnClickListener {
+    private static final String TAG_QQ = "tag_qq";
+    private static final String TAG_EVERNOTE = "tag_evernote";
+
+    private int mType = 0;
 
     public static UserDetailFragment newInstance() {
         return new UserDetailFragment();
@@ -32,7 +38,7 @@ public class UserDetailFragment extends BaseFragment {
 
     @Override
     public void getBundle(Bundle bundle) {
-        type = bundle.getInt(Const.USER_DETAIL_TYPE);
+        mType = bundle.getInt(Const.USER_DETAIL_TYPE);
     }
 
     @Override
@@ -48,7 +54,7 @@ public class UserDetailFragment extends BaseFragment {
     @Override
     public void initUI(View view) {
         LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.layout_user_detail);
-        switch (type) {
+        switch (mType) {
             case 0:
                 initUserDetail(linearLayout);
                 break;
@@ -62,31 +68,34 @@ public class UserDetailFragment extends BaseFragment {
     }
 
     private void initUserDetail(LinearLayout linearLayout) {
-        View citeView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail, null);
+        View citeView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail_text, null);
         ((ImageView) citeView.findViewById(R.id.img_item_icon)).setImageResource(R.drawable.ic_pin_drop_white_24dp);
         ((TextView) citeView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.uc_city));
         ((TextView) citeView.findViewById(R.id.txt_item_user)).setText(getContext().getResources().getString(R.string.uc_unkown));
         linearLayout.addView(citeView);
 
-        View usageView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail, null);
+        View usageView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail_text, null);
         ((ImageView) usageView.findViewById(R.id.img_item_icon)).setImageResource(R.drawable.ic_person_pin_white_24dp);
         ((TextView) usageView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.uc_usage_age));
-        ((TextView) usageView.findViewById(R.id.txt_item_user)).setText(getContext().getResources().getString(R.string.uc_unkown));
+        long startTime = LocalStorageUtils.getInstance().getStartUsageTime();
+        long now = System.currentTimeMillis();
+        ((TextView) usageView.findViewById(R.id.txt_item_user)).setText(TimeDecoder.calculateDeltaTime(now, startTime) + " " +
+                getResources().getString(R.string.uc_usage_age_unit));
         linearLayout.addView(usageView);
 
-        View phoneView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail, null);
+        View phoneView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail_text, null);
         ((ImageView) phoneView.findViewById(R.id.img_item_icon)).setImageResource(R.drawable.ic_phone_android_white_24dp);
         ((TextView) phoneView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.uc_phone));
         ((TextView) phoneView.findViewById(R.id.txt_item_user)).setText(android.os.Build.MODEL + "");
         linearLayout.addView(phoneView);
 
-        View androidView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail, null);
+        View androidView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail_text, null);
         ((ImageView) androidView.findViewById(R.id.img_item_icon)).setImageResource(R.drawable.ic_android_white_24dp);
         ((TextView) androidView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.uc_android));
         ((TextView) androidView.findViewById(R.id.txt_item_user)).setText(Build.VERSION.RELEASE + "");
         linearLayout.addView(androidView);
 
-        View storageView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail, null);
+        View storageView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail_text, null);
         ((ImageView) storageView.findViewById(R.id.img_item_icon)).setImageResource(R.drawable.ic_sd_storage_white_24dp);
         ((TextView) storageView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.uc_storage));
         long[] storages = FilePathUtils.getSDCardStorage();
@@ -96,7 +105,7 @@ public class UserDetailFragment extends BaseFragment {
             if (storages[0] > 1024) {
                 float avail = ((float) storages[0]) / 1024;
                 float total = ((float) storages[1]) / 1024;
-                DecimalFormat decimalFormat = new DecimalFormat(".00");//构造方法的字符格式这里如果小数不足2位,会以0补足
+                DecimalFormat decimalFormat = new DecimalFormat(".0");//构造方法的字符格式这里如果小数不足2位,会以0补足
                 ((TextView) storageView.findViewById(R.id.txt_item_user)).setText((decimalFormat.format(avail) + "G / ") + (decimalFormat.format(total) + "G"));
             } else {
                 ((TextView) storageView.findViewById(R.id.txt_item_user)).setText((storages[0] + "M / ") + (storages[1] + "M"));
@@ -104,11 +113,6 @@ public class UserDetailFragment extends BaseFragment {
         }
         linearLayout.addView(storageView);
 
-        View cloudView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail, null);
-        ((ImageView) cloudView.findViewById(R.id.img_item_icon)).setImageResource(R.drawable.ic_cloud_circle_white_24dp);
-        ((TextView) cloudView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.uc_cloud));
-        ((TextView) cloudView.findViewById(R.id.txt_item_user)).setText(getContext().getResources().getString(R.string.uc_unkown));
-        linearLayout.addView(cloudView);
     }
 
     private void initUserImage(LinearLayout linearLayout) {
@@ -122,6 +126,35 @@ public class UserDetailFragment extends BaseFragment {
     }
 
     private void initUserInfo(LinearLayout linearLayout) {
+        View qqView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail_image, null);
+        qqView.setTag(TAG_QQ);
+        ((ImageView) qqView.findViewById(R.id.img_item_icon)).setImageResource(R.drawable.ic_person_info_qq);
+        if (UserCenter.getInstance().isLoginQQ()) {
+            ((TextView) qqView.findViewById(R.id.txt_item_column)).setText(UserCenter.getInstance().getQQ().getName());
+            ((ImageView) qqView.findViewById(R.id.img_item_user)).setImageResource(R.drawable.ic_clear_white_24dp);
+        } else {
+            ((TextView) qqView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.not_login));
+            ((ImageView) qqView.findViewById(R.id.img_item_user)).setImageResource(R.drawable.ic_link_white_24dp);
+        }
+        linearLayout.addView(qqView);
+
+        View evernoteView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail_image, null);
+        evernoteView.setTag(TAG_EVERNOTE);
+        ((ImageView) evernoteView.findViewById(R.id.img_item_icon)).setImageResource(R.drawable.ic_evernote_fab);
+        if (UserCenter.getInstance().isLoginEvernote()) {
+            ((TextView) evernoteView.findViewById(R.id.txt_item_column)).setText(UserCenter.getInstance().getEvernote().getUsername());
+            ((ImageView) qqView.findViewById(R.id.img_item_user)).setImageResource(R.drawable.ic_clear_white_24dp);
+        } else {
+            ((TextView) qqView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.not_login));
+            ((ImageView) qqView.findViewById(R.id.img_item_user)).setImageResource(R.drawable.ic_link_white_24dp);
+        }
+        linearLayout.addView(evernoteView);
+
+        View cloudView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail_text, null);
+        ((ImageView) cloudView.findViewById(R.id.img_item_icon)).setImageResource(R.drawable.ic_cloud_circle_white_24dp);
+        ((TextView) cloudView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.uc_cloud));
+        ((TextView) cloudView.findViewById(R.id.txt_item_user)).setText(getContext().getResources().getString(R.string.uc_unkown));
+        linearLayout.addView(cloudView);
 
     }
 
@@ -138,5 +171,15 @@ public class UserDetailFragment extends BaseFragment {
     @Override
     public void saveSettingWhenPausing() {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (((String) v.getTag())) {
+            case TAG_QQ:
+                break;
+            case TAG_EVERNOTE:
+                break;
+        }
     }
 }

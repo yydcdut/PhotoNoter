@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dip"
+    android:background="@android:color/transparent">
+
+    <ImageView
+        android:id="@+id/img_item_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/dimen_24dip"
+        android:src="@drawable/ic_backup_white_24dp"/>
+
+    <TextView
+        android:id="@+id/txt_item_column"
+        android:layout_width="wrap_content"
+        android:layout_height="60dip"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/dimen_12dip"
+        android:layout_toLeftOf="@+id/txt_item_user"
+        android:layout_toRightOf="@+id/img_item_icon"
+        android:gravity="center_vertical"
+        android:text="AD合家安康睡你的觉卡"
+        android:textColor="@color/txt_alpha_gray"
+        android:textSize="@dimen/txt_mid"
+        android:textStyle="bold"/>
+
+
+    <ImageView
+        android:id="@+id/img_item_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/dimen_24dip"
+        android:gravity="center"
+        android:src="@drawable/ic_contacts_gray_24dp"/>
+
+</RelativeLayout>

@@ -147,6 +147,7 @@
     <!-- User Center-->
     <string name="uc_city">City</string>
     <string name="uc_usage_age">Usage Age</string>
+    <string name="uc_usage_age_unit">Day</string>
     <string name="uc_phone">Phone</string>
     <string name="uc_android">Android</string>
     <string name="uc_storage">Storage</string>

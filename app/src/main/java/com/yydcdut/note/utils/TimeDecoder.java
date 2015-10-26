@@ -85,17 +85,10 @@ public class TimeDecoder {
         return s;
     }
 
-    /**
-     * 照片只支持屏幕高度的2倍，再大要oom
-     *
-     * @param width
-     * @return
-     */
-    public static boolean isCameraSizeSuitable(int width) {
-        if (width > Evi.sScreenHeight * 2) {
-            return false;
-        } else {
-            return true;
-        }
+
+    public static String calculateDeltaTime(long now, long before) {
+        long delta = (now - before) / 1000 / 60 / 60 / 24;
+        return (delta + 1) + "";
     }
+
 }

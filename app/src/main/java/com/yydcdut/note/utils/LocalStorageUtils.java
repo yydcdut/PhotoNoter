@@ -28,6 +28,9 @@ public class LocalStorageUtils {
     private static final String INTRODUCE_1_2_0 = "introduce 1.2.0";
     private static final boolean INTRODUCE_DEFAULT = false;
 
+    private static final String START_USAGE_TIME = "start_usage_time";
+    private static final long START_USAGE_TIME_DEFAULT = 0l;
+
     private static final String ALBUM_SORT_NAME = "album_sort";//相册排序方式
     private static final int ALBUM_SORT_DEFAULT = 1;//相册排序默认值
 
@@ -115,9 +118,19 @@ public class LocalStorageUtils {
      */
     public boolean isFirstTime() {
         boolean value = mSharedPreferences.getBoolean(FIRST_TIME, FIRST_TIME_DEFAULT);
+        long startTime = getStartUsageTime();
         if (value) {
             SharedPreferences.Editor editor = mSharedPreferences.edit();
             editor.putBoolean(FIRST_TIME, false);
+            if (startTime == START_USAGE_TIME_DEFAULT) {
+                editor.putLong(START_USAGE_TIME, System.currentTimeMillis());
+            }
+            editor.commit();
+        } else {
+            SharedPreferences.Editor editor = mSharedPreferences.edit();
+            if (startTime == START_USAGE_TIME_DEFAULT) {
+                editor.putLong(START_USAGE_TIME, System.currentTimeMillis());
+            }
             editor.commit();
         }
         return value;
@@ -129,14 +142,32 @@ public class LocalStorageUtils {
      * @return
      */
     public boolean notGotoIntroduce() {
-
         boolean value = mSharedPreferences.getBoolean(INTRODUCE_1_2_0, INTRODUCE_DEFAULT);
-        if (value == false) {
+        long startTime = getStartUsageTime();
+        if (!value) {
             SharedPreferences.Editor editor = mSharedPreferences.edit();
             editor.putBoolean(INTRODUCE_1_2_0, true);
+            if (startTime == START_USAGE_TIME_DEFAULT) {
+                editor.putLong(START_USAGE_TIME, System.currentTimeMillis());
+            }
+            editor.commit();
+        } else {
+            SharedPreferences.Editor editor = mSharedPreferences.edit();
+            if (startTime == START_USAGE_TIME_DEFAULT) {
+                editor.putLong(START_USAGE_TIME, System.currentTimeMillis());
+            }
             editor.commit();
         }
         return value;
+    }
+
+    /**
+     * 得到第一次使用的时间
+     *
+     * @return
+     */
+    public long getStartUsageTime() {
+        return mSharedPreferences.getLong(START_USAGE_TIME, START_USAGE_TIME_DEFAULT);
     }
 
     /**
@@ -556,7 +587,7 @@ public class LocalStorageUtils {
      * @return
      */
     public int getCameraFrontRotation() {
-        return mSharedPreferences.getInt(CAMERA_FRONT_ROTATION, CAMERA_BACK_ROTATION_DEFAULT);
+        return mSharedPreferences.getInt(CAMERA_FRONT_ROTATION, CAMERA_FRONT_ROTATION_DEFAULT);
     }
 
     /**

@@ -147,6 +147,7 @@
     <!-- User Center-->
     <string name="uc_city">城市</string>
     <string name="uc_usage_age">使用时间</string>
+    <string name="uc_usage_age_unit">天</string>
     <string name="uc_phone">手机</string>
     <string name="uc_android">安卓</string>
     <string name="uc_storage">存储</string>
