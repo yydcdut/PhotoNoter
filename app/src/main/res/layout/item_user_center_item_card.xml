@@ -6,8 +6,8 @@
     android:layout_height="150dip"
     android:layout_margin="@dimen/dimen_12dip"
     card_view:cardBackgroundColor="@color/white"
-    card_view:cardCornerRadius="5dip"
-    card_view:cardElevation="5dip">
+    card_view:cardCornerRadius="2dip"
+    card_view:cardElevation="3dip">
 
     <RelativeLayout
         android:layout_width="match_parent"

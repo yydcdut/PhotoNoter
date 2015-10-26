@@ -323,8 +323,7 @@ public class FilePathUtils {
         long[] storage = new long[]{-1, -1};
         String state = Environment.getExternalStorageState();
         if (Environment.MEDIA_MOUNTED.equals(state)) {
-            File sdcardDir = Environment.getExternalStorageDirectory();
-            StatFs sf = new StatFs(sdcardDir.getPath());
+            StatFs sf = new StatFs(Environment.getExternalStorageDirectory().getPath());
             long blockSize = 0;
             long availCount = 0;
             long totalCount = 0;
@@ -343,6 +342,32 @@ public class FilePathUtils {
             }
         }
         return storage;
+    }
+
+    private static long calculateDirSize(File dir) {
+        long size = 0l;
+        File[] filesOrDirs = dir.listFiles();
+        for (File file : filesOrDirs) {
+            if (file.isDirectory()) {
+                size += calculateDirSize(file);
+            } else {
+                size += file.length();
+            }
+        }
+        return size;
+    }
+
+
+    public static long getFolderStorage() {
+        long size = 0l;
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            File dir = new File(FULL_PATH);
+            size += calculateDirSize(dir);
+            return (size / 1024 / 1024);
+        } else {
+            return -1l;
+        }
     }
 
     /**

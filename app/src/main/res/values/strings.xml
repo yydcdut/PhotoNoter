@@ -154,4 +154,8 @@
     <string name="uc_cloud">Cloud</string>
     <string name="uc_unkown">Unkown</string>
     <string name="uc_no_sdcard">No SDCard</string>
+    <string name="uc_folder">Folder Size</string>
+    <string name="uc_images">Photos</string>
+    <string name="uc_notes">Notes</string>
+    <string name="uc_words">Words</string>
 </resources>

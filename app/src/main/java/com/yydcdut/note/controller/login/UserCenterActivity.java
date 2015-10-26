@@ -93,6 +93,9 @@ public class UserCenterActivity extends BaseActivity implements View.OnClickList
                 ImageLoaderManager.displayImage(qqUser.getNetImagePath(), imageView);
             }
             textView.setText(qqUser.getName());
+        } else {
+            imageView.setImageResource(R.drawable.ic_no_user);
+            textView.setText(getResources().getString(R.string.not_login));
         }
     }
 

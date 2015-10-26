@@ -105,7 +105,7 @@ public class UserDetailFragment extends BaseFragment implements View.OnClickList
             if (storages[0] > 1024) {
                 float avail = ((float) storages[0]) / 1024;
                 float total = ((float) storages[1]) / 1024;
-                DecimalFormat decimalFormat = new DecimalFormat(".0");//构造方法的字符格式这里如果小数不足2位,会以0补足
+                DecimalFormat decimalFormat = new DecimalFormat(".0");//构造方法的字符格式这里如果小数不足1位,会以0补足
                 ((TextView) storageView.findViewById(R.id.txt_item_user)).setText((decimalFormat.format(avail) + "G / ") + (decimalFormat.format(total) + "G"));
             } else {
                 ((TextView) storageView.findViewById(R.id.txt_item_user)).setText((storages[0] + "M / ") + (storages[1] + "M"));
@@ -143,19 +143,53 @@ public class UserDetailFragment extends BaseFragment implements View.OnClickList
         ((ImageView) evernoteView.findViewById(R.id.img_item_icon)).setImageResource(R.drawable.ic_evernote_fab);
         if (UserCenter.getInstance().isLoginEvernote()) {
             ((TextView) evernoteView.findViewById(R.id.txt_item_column)).setText(UserCenter.getInstance().getEvernote().getUsername());
-            ((ImageView) qqView.findViewById(R.id.img_item_user)).setImageResource(R.drawable.ic_clear_white_24dp);
+            ((ImageView) evernoteView.findViewById(R.id.img_item_user)).setImageResource(R.drawable.ic_clear_white_24dp);
         } else {
-            ((TextView) qqView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.not_login));
-            ((ImageView) qqView.findViewById(R.id.img_item_user)).setImageResource(R.drawable.ic_link_white_24dp);
+            ((TextView) evernoteView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.not_login));
+            ((ImageView) evernoteView.findViewById(R.id.img_item_user)).setImageResource(R.drawable.ic_link_white_24dp);
         }
         linearLayout.addView(evernoteView);
+
+        View folderView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail_text, null);
+        ((ImageView) folderView.findViewById(R.id.img_item_icon)).setImageResource(R.drawable.ic_folder_open_white_24dp);
+        ((TextView) folderView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.uc_folder));
+        long storage = FilePathUtils.getFolderStorage();
+        if (storage == -1) {
+            ((TextView) folderView.findViewById(R.id.txt_item_user)).setText(getContext().getResources().getString(R.string.uc_unkown));
+        } else {
+            if (storage > 1024) {
+                float storageF = storage / 1024.0f;
+                DecimalFormat decimalFormat = new DecimalFormat(".0");//构造方法的字符格式这里如果小数不足1位,会以0补足
+                ((TextView) folderView.findViewById(R.id.txt_item_user)).setText(decimalFormat.format(storageF) + "G");
+            } else {
+                ((TextView) folderView.findViewById(R.id.txt_item_user)).setText(storage + "M");
+            }
+        }
+        linearLayout.addView(folderView);
+
+        View imageView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail_text, null);
+        ((ImageView) imageView.findViewById(R.id.img_item_icon)).setImageResource(R.drawable.ic_crop_original_white_24dp);
+        ((TextView) imageView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.uc_images));
+        ((TextView) imageView.findViewById(R.id.txt_item_user)).setText(getContext().getResources().getString(R.string.uc_unkown));
+        linearLayout.addView(imageView);
+
+        View noteView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail_text, null);
+        ((ImageView) noteView.findViewById(R.id.img_item_icon)).setImageResource(R.drawable.ic_content_paste_white_24dp);
+        ((TextView) noteView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.uc_notes));
+        ((TextView) noteView.findViewById(R.id.txt_item_user)).setText(getContext().getResources().getString(R.string.uc_unkown));
+        linearLayout.addView(noteView);
+
+        View wordView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail_text, null);
+        ((ImageView) wordView.findViewById(R.id.img_item_icon)).setImageResource(R.drawable.ic_text_format_white_24dp);
+        ((TextView) wordView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.uc_words));
+        ((TextView) wordView.findViewById(R.id.txt_item_user)).setText(getContext().getResources().getString(R.string.uc_unkown));
+        linearLayout.addView(wordView);
 
         View cloudView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail_text, null);
         ((ImageView) cloudView.findViewById(R.id.img_item_icon)).setImageResource(R.drawable.ic_cloud_circle_white_24dp);
         ((TextView) cloudView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.uc_cloud));
         ((TextView) cloudView.findViewById(R.id.txt_item_user)).setText(getContext().getResources().getString(R.string.uc_unkown));
         linearLayout.addView(cloudView);
-
     }
 
     @Override
@@ -177,8 +211,18 @@ public class UserDetailFragment extends BaseFragment implements View.OnClickList
     public void onClick(View v) {
         switch (((String) v.getTag())) {
             case TAG_QQ:
+                if (UserCenter.getInstance().isLoginQQ()) {
+                    UserCenter.getInstance().logoutQQ();
+                    //todo 界面
+                } else {
+
+                }
                 break;
             case TAG_EVERNOTE:
+                if (UserCenter.getInstance().isLoginEvernote()) {
+                    UserCenter.getInstance().logoutEvernote();
+                    //todo 界面
+                }
                 break;
         }
     }
