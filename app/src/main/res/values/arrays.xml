@@ -7,4 +7,9 @@
         <item>@drawable/ic_delay_10</item>
         <item>@drawable/ic_delay_15</item>
     </array>
+
+    <array name="floating_edit_navigation">
+        <item>@string/album_ui</item>
+        <item>@string/edit_ui</item>
+    </array>
 </resources>

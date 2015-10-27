@@ -4,12 +4,16 @@
     <string name="app_name">PhotoNoter</string>
     <string name="app_setting">Settings</string>
     <string name="app_login">Login</string>
+    <string name="album_ui">Album UI</string>
+    <string name="edit_ui">Edit UI</string>
 
     <string name="introduce_start">Start!</string>
 
-    <string name="camera">Camera</string>
-    <string name="local">Local</string>
+    <string name="fab_camera">Camera</string>
+    <string name="fab_local">Local</string>
     <string name="no_space">There is not enough space to complete this operation!</string>
+    <string name="fab_evernote">Update Evernote</string>
+    <string name="fab_voice">Voice Input</string>
 
     <string name="finish_activity">Double Click to Quit</string>
 
@@ -87,6 +91,7 @@
 
     <string name="preference_setting">Preference</string>
     <string name="theme">Theme</string>
+    <string name="floationg_action_button_style">FloatingActionButton Style</string>
     <string name="status_bar">Status Bar Style</string>
     <string name="status_bar_immersive">Immersive Mode</string>
     <string name="status_bar_translation">Translucent Bars</string>

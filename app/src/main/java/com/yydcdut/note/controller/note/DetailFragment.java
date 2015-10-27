@@ -80,10 +80,6 @@ public class DetailFragment extends BaseFragment implements ObservableScrollView
     }
 
     @Override
-    public void initSetting() {
-    }
-
-    @Override
     public void getBundle(Bundle bundle) {
         mComparator = bundle.getInt(Const.COMPARATOR_FACTORY);
         mPosition = bundle.getInt(Const.PHOTO_POSITION);

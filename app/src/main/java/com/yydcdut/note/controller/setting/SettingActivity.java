@@ -50,6 +50,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
     private static final String TAG_THEME = "theme";
     private static final String TAG_STATUS_BAR = "status_bar";
+    private static final String TAG_FLOATING = "floating_action_button";
     private static final String TAG_FONT = "font";
     private static final String TAG_CATEGORY = "category";
     private static final String TAG_CAMERA2 = "camera2";
@@ -133,15 +134,20 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         linearLayout.addView(statusbarView);
         if (!LollipopCompat.AFTER_LOLLIPOP) {
             ((TextView) statusbarView.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
-            statusbarView.findViewById(R.id.layout_ripple_setting).setOnClickListener(this);
+            statusbarView.findViewById(R.id.layout_ripple_setting).setOnClickListener(null);
         }
+
+        View floatingView = getItemView();
+        setClick(floatingView);
+        setTag(floatingView, TAG_FLOATING);
+        setData(floatingView, R.drawable.ic_stars_gray_24dp, R.string.floationg_action_button_style);
+        linearLayout.addView(floatingView);
 
         View viewSort = getItemView();
         setClick(viewSort);
         setTag(viewSort, TAG_FONT);
         setData(viewSort, R.drawable.ic_format_color_text_grey_24dp, R.string.font);
         linearLayout.addView(viewSort);
-
 
         View viewFont = getItemView();
         setClick(viewFont);
@@ -181,13 +187,12 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         }
         linearLayout.addView(accountView);
 
-        boolean isLoginEvernote = UserCenter.getInstance().isLoginEvernote();
         View accountView2 = LayoutInflater.from(this).inflate(R.layout.item_setting_account, null);
         RoundedImageView imageView2 = (RoundedImageView) accountView2.findViewById(R.id.img_item_setting_logo);
         imageView2.setImageResource(R.drawable.ic_evernote_fab);
         TextView textName2 = (TextView) accountView2.findViewById(R.id.txt_item_setting_user_name);
         RoundedImageView imageUser2 = (RoundedImageView) accountView2.findViewById(R.id.img_item_setting_user);
-        if (isLoginEvernote) {
+        if (UserCenter.getInstance().isLoginEvernote() && UserCenter.getInstance().getEvernote() != null) {
             imageUser2.setImageResource(R.drawable.ic_evernote_color);
             User user = UserCenter.getInstance().getEvernote();
             textName2.setText(user.getUsername());
@@ -200,7 +205,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         View pgView = LayoutInflater.from(this).inflate(R.layout.item_setting_pb, null);
         ProgressBar pg = (ProgressBar) pgView.findViewById(R.id.pg_setting);
         pg.setProgress(0);
-        TextView useView = (TextView) pgView.findViewById(R.id.txt_setting_clound_use);
+        TextView usedView = (TextView) pgView.findViewById(R.id.txt_setting_clound_use);
         linearLayout.addView(pgView);
 
     }
@@ -421,6 +426,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 break;
             case TAG_STATUS_BAR:
                 showStatusBarStyleDialog();
+                break;
+            case TAG_FLOATING:
+                startActivity(new Intent(this, FloatingEditActivity.class));
                 break;
             case TAG_FONT:
                 showFontChooser();

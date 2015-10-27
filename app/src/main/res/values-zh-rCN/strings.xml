@@ -4,13 +4,17 @@
     <string name="app_name">照片笔记</string>
     <string name="app_setting">设置</string>
     <string name="app_login">登录</string>
+    <string name="album_ui">相册界面</string>
+    <string name="edit_ui">文字编辑界面</string>
+    <string name="finish_activity">双击退出</string>
 
     <string name="introduce_start">开始!</string>
 
-    <string name="camera">拍照</string>
-    <string name="local">本地</string>
+    <string name="fab_camera">拍照</string>
+    <string name="fab_local">本地</string>
     <string name="no_space">没有足够的空间完成此操作</string>
-    <string name="finish_activity">双击退出</string>
+    <string name="fab_evernote">上传印象笔记</string>
+    <string name="fab_voice">语音输入</string>
 
 
     <!-- menu -->
@@ -86,6 +90,7 @@
 
     <string name="preference_setting">偏好设置</string>
     <string name="theme">主题颜色</string>
+    <string name="floationg_action_button_style">悬浮按钮样式</string>
     <string name="status_bar">状态栏样式</string>
     <string name="status_bar_immersive">沉浸状态栏</string>
     <string name="status_bar_translation">透明状态栏</string>

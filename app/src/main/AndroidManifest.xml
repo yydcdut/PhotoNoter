@@ -32,17 +32,17 @@
             android:name=".controller.note.EditTextActivity"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".controller.note.ZoomActivity"
+            android:label=" "
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".controller.login.LoginActivity"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".controller.login.UserCenterActivity"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".controller.setting.SettingActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".camera.controller.CameraActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".controller.note.ZoomActivity"
-            android:label=" "
             android:screenOrientation="portrait"/>
         <activity
             android:name=".controller.setting.EditCategoryActivity"
@@ -51,10 +51,13 @@
             android:name=".controller.setting.AboutAppActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".controller.login.UserCenterActivity"
+            android:name=".camera.controller.AdjustCamera"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".camera.controller.AdjustCamera"
+            android:name=".camera.controller.CameraActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".controller.setting.FloatingEditActivity"
             android:screenOrientation="portrait"/>
 
         <service android:name=".service.InitService"/>

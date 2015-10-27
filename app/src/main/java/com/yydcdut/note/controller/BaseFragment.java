@@ -35,7 +35,8 @@ public abstract class BaseFragment extends Fragment {
     /**
      * 初始化一些设置
      */
-    public abstract void initSetting();
+    public void initSetting() {
+    }
 
     @Override
     public void onAttach(Activity activity) {
@@ -103,7 +104,8 @@ public abstract class BaseFragment extends Fragment {
     /**
      * 保存一些设置
      */
-    public abstract void saveSettingWhenPausing();
+    public void saveSettingWhenPausing() {
+    }
 
 
     public int getActionBarSize() {
