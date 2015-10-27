@@ -2,10 +2,10 @@ package com.yydcdut.note.controller.note;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
@@ -30,6 +30,7 @@ import com.evernote.edam.type.Resource;
 import com.evernote.edam.type.ResourceAttributes;
 import com.evernote.thrift.TException;
 import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.yydcdut.note.NoteApplication;
@@ -42,8 +43,7 @@ import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.Evi;
 import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.view.CircleProgressBarLayout;
-import com.yydcdut.note.view.RevealView;
-import com.yydcdut.note.view.fab.FloatingActionButton;
+import com.yydcdut.note.view.fab.FloatingActionsMenu;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -65,8 +65,7 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
     private View mLayoutTitle;
     private EditText mTitleEdit;
     private EditText mContentEdit;
-    private FloatingActionButton mFab;
-    private RevealView mRevealView;
+    private FloatingActionsMenu mFabMenu;
     private ImageView mMenuArrowImage;
     /* Progress Bar */
     private CircleProgressBarLayout mProgressLayout;
@@ -81,7 +80,6 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
     private static final int MSG_NOT_SUCCESS = 2;
 
     private static final String TAG_ARROW = "tag_arrow";
-    private static final String TAG_UPDATE = "tag_update";
 
     @Override
     public boolean setStatusBar() {
@@ -126,8 +124,7 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
         initToolBarUI();
         initToolBarItem();
         initEditText();
-        initFloatingButton();
-        initRevealView();
+        initFloating();
         initData();
         mProgressLayout = (CircleProgressBarLayout) findViewById(R.id.layout_progress);
     }
@@ -135,7 +132,7 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
     private void initToolBarUI() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar_edit);
         setSupportActionBar(mToolbar);
-        mToolbar.setNavigationIcon(R.drawable.ic_clear_white_24dp);
+        mToolbar.setNavigationIcon(R.drawable.ic_check_white_24dp);
     }
 
     private void initToolBarItem() {
@@ -143,17 +140,6 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
         float dimen24dip = getResources().getDimension(R.dimen.dimen_24dip);
         int margin = (int) ((actionbarHeight - dimen24dip) / 2);
         LinearLayout linearLayout = (LinearLayout) findViewById(R.id.layout_toolbar);
-
-        ViewGroup.MarginLayoutParams mp2 = new ViewGroup.MarginLayoutParams((int) dimen24dip, (int) dimen24dip);  //item的宽高
-        mp2.setMargins(margin, margin, 0, margin);//分别是margin_top那四个属性
-        LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(mp2);
-        ImageView imageView = new ImageView(mContext);
-        imageView.setImageResource(R.drawable.ic_backup_white_24dp);
-        imageView.setLayoutParams(lp2);
-        imageView.setTag(TAG_UPDATE);
-        imageView.setOnClickListener(this);
-
-        linearLayout.addView(imageView);
 
         ViewGroup.MarginLayoutParams mp = new ViewGroup.MarginLayoutParams((int) dimen24dip, (int) dimen24dip);  //item的宽高
         mp.setMargins(margin, margin, margin, margin);//分别是margin_top那四个属性
@@ -172,7 +158,8 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                closeActivityAnimation();
+                saveText();
+                closeActivityAnimation(true);
                 break;
         }
         return true;
@@ -184,13 +171,10 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
         mContentEdit = (EditText) findViewById(R.id.et_edit_content);
     }
 
-    private void initFloatingButton() {
-        mFab = (FloatingActionButton) findViewById(R.id.fab_finish);
-        mFab.setOnClickListener(this);
-    }
-
-    private void initRevealView() {
-        mRevealView = (RevealView) findViewById(R.id.reveal);
+    private void initFloating() {
+        mFabMenu = (FloatingActionsMenu) findViewById(R.id.fab_main);
+        findViewById(R.id.fab_evernote_update).setOnClickListener(this);
+        findViewById(R.id.fab_voice).setOnClickListener(this);
     }
 
     private void initData() {
@@ -214,12 +198,11 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
                 ObjectAnimator.ofFloat(mToolbar, "translationY", -actionBarHeight, 0),
                 ObjectAnimator.ofFloat(mLayoutTitle, "translationY", -actionBarHeight * 2, 0),
                 ObjectAnimator.ofFloat(mContentEdit, "translationY", contentEditHeight, 0),
-                ObjectAnimator.ofFloat(mFab, "scaleX", 0f, 1f),
-                ObjectAnimator.ofFloat(mFab, "scaleY", 0f, 1f)
+                ObjectAnimator.ofFloat(mFabMenu, "scaleX", 0f, 1f),
+                ObjectAnimator.ofFloat(mFabMenu, "scaleY", 0f, 1f)
         );
         animation.start();
     }
-
 
     private void openEditTextAnimation() {
         AnimatorSet animation = new AnimatorSet();
@@ -261,32 +244,39 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
                         mLayoutTitle.setVisibility(View.VISIBLE);
                     }
                     break;
-                case TAG_UPDATE:
-                    if (UserCenter.getInstance().isLoginEvernote()) {
-                        mProgressLayout.show();
-                        NoteApplication.getInstance().getExecutorPool().submit(new Runnable() {
-                            @Override
-                            public void run() {
-                                boolean isSuccess = update2Evernote();
-                                mHandler.sendEmptyMessage(isSuccess ? MSG_SUCCESS : MSG_NOT_SUCCESS);
-                            }
-                        });
-                    } else {
-                        //todo 没有登录
-                    }
-                    break;
             }
-
             return;
         }
         switch (v.getId()) {
-            case R.id.fab_finish:
-                saveText();
-                showRevealColorViewAndcloseActivity();
+            case R.id.fab_voice:
+                mFabMenu.collapse();
+                Snackbar.make(findViewById(R.id.layout_root), getResources().getString(R.string.not_support),
+                        Snackbar.LENGTH_SHORT).show();
+                break;
+            case R.id.fab_evernote_update:
+                mFabMenu.collapse();
+                if (UserCenter.getInstance().isLoginEvernote()) {
+                    mProgressLayout.show();
+                    NoteApplication.getInstance().getExecutorPool().submit(new Runnable() {
+                        @Override
+                        public void run() {
+                            boolean isSuccess = update2Evernote();
+                            mHandler.sendEmptyMessage(isSuccess ? MSG_SUCCESS : MSG_NOT_SUCCESS);
+                        }
+                    });
+                } else {
+                    Snackbar.make(findViewById(R.id.layout_root), getResources().getString(R.string.not_login),
+                            Snackbar.LENGTH_SHORT).show();
+                }
                 break;
         }
     }
 
+    /**
+     * 上传到Evernote
+     *
+     * @return
+     */
     private boolean update2Evernote() {
         boolean isSuccess = true;
         try {
@@ -400,17 +390,24 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && !mIsHiding) {
-            mIsHiding = true;
-            closeActivityAnimation();
+            mFabMenu.collapse();
+            Snackbar.make(findViewById(R.id.layout_root), getResources().getString(R.string.toast_exit), Snackbar.LENGTH_LONG)
+                    .setAction(getResources().getString(R.string.toast_sure), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mIsHiding = true;
+                            closeActivityAnimation(false);
+                        }
+                    }).show();
             return true;
         }
         return super.onKeyDown(keyCode, event);
     }
 
     /**
-     * 非保存关闭
+     * 关闭动画
      */
-    private void closeActivityAnimation() {
+    private void closeActivityAnimation(final boolean save) {
         int actionBarHeight = getActionBarSize();
         int screenHeight = Evi.sScreenHeight;
         int contentEditHeight = screenHeight - actionBarHeight * 2;
@@ -420,55 +417,30 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
                 ObjectAnimator.ofFloat(mToolbar, "translationY", 0, -actionBarHeight),
                 ObjectAnimator.ofFloat(mLayoutTitle, "translationY", 0, -actionBarHeight * 2),
                 ObjectAnimator.ofFloat(mContentEdit, "translationY", 0, contentEditHeight),
-                ObjectAnimator.ofFloat(mFab, "scaleX", 1f, 0f),
-                ObjectAnimator.ofFloat(mFab, "scaleY", 1f, 0f)
+                ObjectAnimator.ofFloat(mFabMenu, "scaleX", 1f, 0f),
+                ObjectAnimator.ofFloat(mFabMenu, "scaleY", 1f, 0f)
         );
-        animation.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-            }
-
+        animation.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 mIsHiding = false;
-                setResult(RESULT_NOTHING);
-                EditTextActivity.this.finish();
-                overridePendingTransition(R.anim.activity_no_animation, R.anim.activity_no_animation);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
+                if (!save) {
+                    setResult(RESULT_NOTHING);
+                    EditTextActivity.this.finish();
+                    overridePendingTransition(R.anim.activity_no_animation, R.anim.activity_no_animation);
+                } else {
+                    Intent intent = new Intent();
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(Const.PHOTO_POSITION, mPosition);
+                    bundle.putString(Const.CATEGORY_LABEL, mPhotoNote.getCategoryLabel());
+                    bundle.putInt(Const.COMPARATOR_FACTORY, mComparator);
+                    intent.putExtras(bundle);
+                    setResult(RESULT_DATA, intent);
+                    EditTextActivity.this.finish();
+                }
             }
         });
         animation.start();
-    }
-
-    /**
-     * 打开RevealColorView并且关闭activity
-     */
-    private void showRevealColorViewAndcloseActivity() {
-        final Point p = getLocationInView(mRevealView, mFab);
-        mRevealView.reveal(p.x, p.y, getThemeColor(), mFab.getHeight() / 2, Const.DURATION, new RevealView.RevealAnimationListener() {
-
-            @Override
-            public void finish() {
-                Intent intent = new Intent();
-                Bundle bundle = new Bundle();
-                bundle.putInt(Const.PHOTO_POSITION, mPosition);
-                bundle.putString(Const.CATEGORY_LABEL, mPhotoNote.getCategoryLabel());
-                bundle.putInt(Const.COMPARATOR_FACTORY, mComparator);
-                intent.putExtras(bundle);
-                setResult(RESULT_DATA, intent);
-                EditTextActivity.this.finish();
-                overridePendingTransition(R.anim.activity_no_animation, R.anim.activity_no_animation);
-            }
-        });
     }
 
     /**
@@ -483,11 +455,14 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public boolean handleMessage(Message msg) {
-        //todo snackBar
         switch (msg.what) {
             case MSG_NOT_SUCCESS:
+                Snackbar.make(findViewById(R.id.layout_root), getResources().getString(R.string.toast_fail),
+                        Snackbar.LENGTH_SHORT).show();
                 break;
             case MSG_SUCCESS:
+                Snackbar.make(findViewById(R.id.layout_root), getResources().getString(R.string.toast_success),
+                        Snackbar.LENGTH_SHORT).show();
                 break;
         }
         mProgressLayout.hide();

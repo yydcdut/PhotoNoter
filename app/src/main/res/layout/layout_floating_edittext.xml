@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<android.support.design.widget.CoordinatorLayout
     android:id="@+id/layout_fab_edittext"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
@@ -36,4 +36,4 @@
             fab:fab_icon="@drawable/ic_settings_voice_white_24dp"
             fab:fab_title="@string/fab_voice"/>
     </com.yydcdut.note.view.fab.FloatingActionsMenu>
-</FrameLayout>
+</android.support.design.widget.CoordinatorLayout>

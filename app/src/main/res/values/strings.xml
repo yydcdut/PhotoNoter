@@ -127,6 +127,8 @@
     <string name="toast_fail">Fail!</string>
     <string name="rename">Rename</string>
     <string name="toast_success">Success!</string>
+    <string name="toast_exit">Exit Without Saving?</string>
+    <string name="toast_sure">Sure</string>
     <string name="toast_not_support">Not Support Now!</string>
     <string name="toast_sandbox_fail">Some Photos may be lost!</string>
     <string name="toast_no_connection">No Internet connection!</string>
