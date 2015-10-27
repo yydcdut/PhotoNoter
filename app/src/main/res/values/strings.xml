@@ -122,6 +122,7 @@
     <string name="font_roboto">Roboto</string>
     <string name="general">General</string>
     <string name="splash">Close Launch Page</string>
+    <string name="user_failed">Get Infomation Failed!</string>
 
 
     <string name="toast_fail">Fail!</string>
@@ -129,6 +130,7 @@
     <string name="toast_success">Success!</string>
     <string name="toast_exit">Exit Without Saving?</string>
     <string name="toast_sure">Sure</string>
+    <string name="toast_retry">Retry</string>
     <string name="toast_not_support">Not Support Now!</string>
     <string name="toast_sandbox_fail">Some Photos may be lost!</string>
     <string name="toast_no_connection">No Internet connection!</string>

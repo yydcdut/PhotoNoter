@@ -1,10 +1,13 @@
 package com.yydcdut.note.controller.login;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -259,6 +262,7 @@ public class UserDetailFragment extends BaseFragment implements View.OnClickList
                 case TAG_EVERNOTE:
                     if (UserCenter.getInstance().isLoginEvernote()) {
                         UserCenter.getInstance().logoutEvernote();
+                        ((ImageView) getActivity().findViewById(R.id.img_user_two)).setImageResource(R.drawable.ic_evernote_gray);
                         LinearLayout linearLayout = (LinearLayout) getView().findViewById(R.id.layout_user_detail);
                         View evernoteView = linearLayout.getChildAt(1);
                         ((TextView) evernoteView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.not_login));
@@ -290,7 +294,6 @@ public class UserDetailFragment extends BaseFragment implements View.OnClickList
                 View qqView = linearLayout.getChildAt(0);
                 ((TextView) qqView.findViewById(R.id.txt_item_column)).setText(qqUser.getName());
                 ((ImageView) qqView.findViewById(R.id.img_item_user)).setImageResource(R.drawable.ic_clear_white_24dp);
-                ((CircleProgressBarLayout) getActivity().findViewById(R.id.layout_progress)).hide();
                 break;
             case MESSAGE_LOGIN_EVERNOTE_OK:
                 ((ImageView) getActivity().findViewById(R.id.img_user_two)).setImageResource(R.drawable.ic_evernote_color);
@@ -299,9 +302,10 @@ public class UserDetailFragment extends BaseFragment implements View.OnClickList
                 View evernoteView = linearLayout2.getChildAt(1);
                 ((TextView) evernoteView.findViewById(R.id.txt_item_column)).setText(UserCenter.getInstance().getEvernote().getUsername());
                 ((ImageView) evernoteView.findViewById(R.id.img_item_user)).setImageResource(R.drawable.ic_clear_white_24dp);
-                ((CircleProgressBarLayout) getActivity().findViewById(R.id.layout_progress)).hide();
                 break;
         }
+        ((CircleProgressBarLayout) getActivity().findViewById(R.id.layout_progress)).hide();
+        Snackbar.make(getView(), getResources().getString(R.string.toast_success), Snackbar.LENGTH_SHORT).show();
         return false;
     }
 
@@ -311,6 +315,38 @@ public class UserDetailFragment extends BaseFragment implements View.OnClickList
             ((CircleProgressBarLayout) getActivity().findViewById(R.id.layout_progress)).show();
             UserCenter.getInstance().LoginEvernote();
             mHandler.sendEmptyMessage(MESSAGE_LOGIN_EVERNOTE_OK);
+        } else {
+            Snackbar.make(getView(), getResources().getString(R.string.toast_fail), Snackbar.LENGTH_SHORT)
+                    .setAction(getResources().getString(R.string.toast_retry), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            EvernoteSession.getInstance().authenticate(getActivity());
+                        }
+                    }).show();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case EvernoteSession.REQUEST_CODE_LOGIN:
+                if (resultCode == Activity.RESULT_OK) {
+                    ((CircleProgressBarLayout) getActivity().findViewById(R.id.layout_progress)).show();
+                    UserCenter.getInstance().LoginEvernote();
+                    mHandler.sendEmptyMessage(MESSAGE_LOGIN_EVERNOTE_OK);
+                } else {
+                    Snackbar.make(getView(), getResources().getString(R.string.toast_fail), Snackbar.LENGTH_SHORT)
+                            .setAction(getResources().getString(R.string.toast_retry), new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    EvernoteSession.getInstance().authenticate(getActivity());
+                                }
+                            }).show();
+                }
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+                break;
         }
     }
 

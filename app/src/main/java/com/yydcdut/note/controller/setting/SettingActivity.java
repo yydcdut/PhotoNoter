@@ -137,11 +137,11 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             statusbarView.findViewById(R.id.layout_ripple_setting).setOnClickListener(null);
         }
 
-        View floatingView = getItemView();
-        setClick(floatingView);
-        setTag(floatingView, TAG_FLOATING);
-        setData(floatingView, R.drawable.ic_stars_gray_24dp, R.string.floationg_action_button_style);
-        linearLayout.addView(floatingView);
+//        View floatingView = getItemView();
+//        setClick(floatingView);
+//        setTag(floatingView, TAG_FLOATING);
+//        setData(floatingView, R.drawable.ic_stars_gray_24dp, R.string.floationg_action_button_style);
+//        linearLayout.addView(floatingView);
 
         View viewSort = getItemView();
         setClick(viewSort);
@@ -192,10 +192,14 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         imageView2.setImageResource(R.drawable.ic_evernote_fab);
         TextView textName2 = (TextView) accountView2.findViewById(R.id.txt_item_setting_user_name);
         RoundedImageView imageUser2 = (RoundedImageView) accountView2.findViewById(R.id.img_item_setting_user);
-        if (UserCenter.getInstance().isLoginEvernote() && UserCenter.getInstance().getEvernote() != null) {
+        if (UserCenter.getInstance().isLoginEvernote()) {
             imageUser2.setImageResource(R.drawable.ic_evernote_color);
-            User user = UserCenter.getInstance().getEvernote();
-            textName2.setText(user.getUsername());
+            if (UserCenter.getInstance().getEvernote() != null) {
+                User user = UserCenter.getInstance().getEvernote();
+                textName2.setText(user.getUsername());
+            } else {
+                textName2.setText(getResources().getString(R.string.user_failed));
+            }
         } else {
             imageUser2.setImageResource(R.drawable.ic_no_user);
             textName2.setText(getResources().getString(R.string.not_login));

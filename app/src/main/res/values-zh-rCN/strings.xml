@@ -118,13 +118,14 @@
     <string name="camera_picture_not_support"> (暂不支持)</string>
     <string name="version">版本号：</string>
     <string name="splash">关闭引导页</string>
-
+    <string name="user_failed">拉取信息失败！</string>
 
     <string name="toast_fail">失败!</string>
     <string name="rename">重命名</string>
     <string name="toast_success">成功!</string>
     <string name="toast_exit">不保存退出？</string>
     <string name="toast_sure">确定</string>
+    <string name="toast_retry">重试</string>
     <string name="toast_not_support">所选项暂不支持!</string>
     <string name="toast_sandbox_fail">某些刚拍摄完的照片可能丢失!</string>
     <string name="toast_no_connection">没有网络连接!</string>
