@@ -34,15 +34,15 @@ import org.json.JSONObject;
  */
 public class LoginActivity extends BaseActivity implements View.OnClickListener, Handler.Callback,
         EvernoteLoginFragment.ResultCallback {
-
     private static final String TAG = LoginActivity.class.getSimpleName();
 
     private static final int MESSAGE_LOGIN_QQ_OK = 1;
+    private static final int MESSAGE_LOGIN_QQ_FAILED = 3;
     private static final int MESSAGE_LOGIN_EVERNOTE_OK = 2;
+    private static final int MESSAGE_LOGIN_EVERNOTE_FAILED = 4;
+    private Handler mHandler;
 
     private Tencent mTencent;
-
-    private Handler mHandler;
 
     private CircleProgressBarLayout mCircleProgressBar;
 
@@ -134,6 +134,25 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 setResult(RESULT_DATA_EVERNOTE, null);
                 finish();
                 break;
+            case MESSAGE_LOGIN_EVERNOTE_FAILED:
+                Snackbar.make(findViewById(R.id.toolbar), getResources().getString(R.string.toast_fail), Snackbar.LENGTH_SHORT)
+                        .setAction(getResources().getString(R.string.toast_retry), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                EvernoteSession.getInstance().authenticate(LoginActivity.this);
+                            }
+                        }).show();
+                break;
+            case MESSAGE_LOGIN_QQ_FAILED:
+                Snackbar.make(findViewById(R.id.toolbar), getResources().getString(R.string.toast_fail), Snackbar.LENGTH_SHORT)
+                        .setAction(getResources().getString(R.string.toast_retry), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mTencent = Tencent.createInstance(BuildConfig.TENCENT_KEY, getApplicationContext());
+                                mTencent.login(LoginActivity.this, "all", new BaseUiListener());
+                            }
+                        }).show();
+                break;
         }
         return false;
     }
@@ -144,6 +163,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             mCircleProgressBar.show();
             UserCenter.getInstance().LoginEvernote();
             mHandler.sendEmptyMessage(MESSAGE_LOGIN_EVERNOTE_OK);
+        } else {
+            mHandler.sendEmptyMessage(MESSAGE_LOGIN_EVERNOTE_FAILED);
         }
     }
 
@@ -155,6 +176,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private class BaseUiListener implements IUiListener {
 
         public void onCancel() {
+            mHandler.sendEmptyMessage(MESSAGE_LOGIN_QQ_FAILED);
         }
 
         /*
@@ -242,9 +264,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 }
 
                 public void onCancel() {
+                    mHandler.sendEmptyMessage(MESSAGE_LOGIN_QQ_FAILED);
                 }
 
                 public void onError(UiError arg0) {
+                    mHandler.sendEmptyMessage(MESSAGE_LOGIN_QQ_FAILED);
                 }
 
             });

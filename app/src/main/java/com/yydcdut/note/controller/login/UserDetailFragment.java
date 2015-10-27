@@ -55,7 +55,9 @@ public class UserDetailFragment extends BaseFragment implements View.OnClickList
     private static final String TAG_EVERNOTE = "tag_evernote";
 
     private static final int MESSAGE_LOGIN_QQ_OK = 1;
+    private static final int MESSAGE_LOGIN_QQ_FAILED = 3;
     private static final int MESSAGE_LOGIN_EVERNOTE_OK = 2;
+    private static final int MESSAGE_LOGIN_EVERNOTE_FAILED = 4;
     private Handler mHandler;
 
     private Tencent mTencent;
@@ -69,11 +71,6 @@ public class UserDetailFragment extends BaseFragment implements View.OnClickList
     @Override
     public void getBundle(Bundle bundle) {
         mType = bundle.getInt(Const.USER_DETAIL_TYPE);
-    }
-
-    @Override
-    public void initSetting() {
-
     }
 
     @Override
@@ -236,11 +233,6 @@ public class UserDetailFragment extends BaseFragment implements View.OnClickList
     }
 
     @Override
-    public void saveSettingWhenPausing() {
-
-    }
-
-    @Override
     public void onClick(View v) {
         if (mType == 2) {
             switch (((String) v.getTag())) {
@@ -294,6 +286,8 @@ public class UserDetailFragment extends BaseFragment implements View.OnClickList
                 View qqView = linearLayout.getChildAt(0);
                 ((TextView) qqView.findViewById(R.id.txt_item_column)).setText(qqUser.getName());
                 ((ImageView) qqView.findViewById(R.id.img_item_user)).setImageResource(R.drawable.ic_clear_white_24dp);
+                ((CircleProgressBarLayout) getActivity().findViewById(R.id.layout_progress)).hide();
+                Snackbar.make(getView(), getResources().getString(R.string.toast_success), Snackbar.LENGTH_SHORT).show();
                 break;
             case MESSAGE_LOGIN_EVERNOTE_OK:
                 ((ImageView) getActivity().findViewById(R.id.img_user_two)).setImageResource(R.drawable.ic_evernote_color);
@@ -302,10 +296,20 @@ public class UserDetailFragment extends BaseFragment implements View.OnClickList
                 View evernoteView = linearLayout2.getChildAt(1);
                 ((TextView) evernoteView.findViewById(R.id.txt_item_column)).setText(UserCenter.getInstance().getEvernote().getUsername());
                 ((ImageView) evernoteView.findViewById(R.id.img_item_user)).setImageResource(R.drawable.ic_clear_white_24dp);
+                ((CircleProgressBarLayout) getActivity().findViewById(R.id.layout_progress)).hide();
+                Snackbar.make(getView(), getResources().getString(R.string.toast_success), Snackbar.LENGTH_SHORT).show();
                 break;
+            case MESSAGE_LOGIN_EVERNOTE_FAILED:
+                Snackbar.make(getView(), getResources().getString(R.string.toast_fail), Snackbar.LENGTH_SHORT)
+                        .setAction(getResources().getString(R.string.toast_retry), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                EvernoteSession.getInstance().authenticate(getActivity());
+                            }
+                        }).show();
+                break;
+
         }
-        ((CircleProgressBarLayout) getActivity().findViewById(R.id.layout_progress)).hide();
-        Snackbar.make(getView(), getResources().getString(R.string.toast_success), Snackbar.LENGTH_SHORT).show();
         return false;
     }
 
@@ -316,13 +320,7 @@ public class UserDetailFragment extends BaseFragment implements View.OnClickList
             UserCenter.getInstance().LoginEvernote();
             mHandler.sendEmptyMessage(MESSAGE_LOGIN_EVERNOTE_OK);
         } else {
-            Snackbar.make(getView(), getResources().getString(R.string.toast_fail), Snackbar.LENGTH_SHORT)
-                    .setAction(getResources().getString(R.string.toast_retry), new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            EvernoteSession.getInstance().authenticate(getActivity());
-                        }
-                    }).show();
+            mHandler.sendEmptyMessage(MESSAGE_LOGIN_EVERNOTE_FAILED);
         }
     }
 
@@ -335,13 +333,7 @@ public class UserDetailFragment extends BaseFragment implements View.OnClickList
                     UserCenter.getInstance().LoginEvernote();
                     mHandler.sendEmptyMessage(MESSAGE_LOGIN_EVERNOTE_OK);
                 } else {
-                    Snackbar.make(getView(), getResources().getString(R.string.toast_fail), Snackbar.LENGTH_SHORT)
-                            .setAction(getResources().getString(R.string.toast_retry), new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    EvernoteSession.getInstance().authenticate(getActivity());
-                                }
-                            }).show();
+                    mHandler.sendEmptyMessage(MESSAGE_LOGIN_EVERNOTE_FAILED);
                 }
                 break;
             default:
@@ -358,6 +350,7 @@ public class UserDetailFragment extends BaseFragment implements View.OnClickList
     private class BaseUiListener implements IUiListener {
 
         public void onCancel() {
+            mHandler.sendEmptyMessage(MESSAGE_LOGIN_QQ_FAILED);
         }
 
         /*
@@ -445,9 +438,11 @@ public class UserDetailFragment extends BaseFragment implements View.OnClickList
                 }
 
                 public void onCancel() {
+                    mHandler.sendEmptyMessage(MESSAGE_LOGIN_QQ_FAILED);
                 }
 
                 public void onError(UiError arg0) {
+                    mHandler.sendEmptyMessage(MESSAGE_LOGIN_QQ_FAILED);
                 }
 
             });
@@ -455,6 +450,7 @@ public class UserDetailFragment extends BaseFragment implements View.OnClickList
 
         @Override
         public void onError(UiError uiError) {
+            mHandler.sendEmptyMessage(MESSAGE_LOGIN_QQ_FAILED);
         }
     }
 
