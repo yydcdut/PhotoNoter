@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.evernote.client.android.EvernoteSession;
 import com.evernote.client.android.login.EvernoteLoginFragment;
+import com.evernote.edam.type.User;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.auth.QQToken;
 import com.tencent.tauth.IUiListener;
@@ -340,7 +341,12 @@ public class UserCenterActivity extends BaseActivity implements View.OnClickList
 
                 LinearLayout linearLayout2 = (LinearLayout) mPagerAdapter.getItem(3).getView().findViewById(R.id.layout_user_detail);
                 View evernoteView = linearLayout2.getChildAt(1);
-                ((TextView) evernoteView.findViewById(R.id.txt_item_column)).setText(UserCenter.getInstance().getEvernote().getUsername());
+                User evernoteUser = UserCenter.getInstance().getEvernote();
+                if (evernoteUser != null) {
+                    ((TextView) evernoteView.findViewById(R.id.txt_item_column)).setText(evernoteUser.getUsername());
+                } else {
+                    ((TextView) evernoteView.findViewById(R.id.txt_item_column)).setText(getResources().getString(R.string.user_failed));
+                }
                 ((ImageView) evernoteView.findViewById(R.id.img_item_user)).setImageResource(R.drawable.ic_clear_white_24dp);
                 mCircleProgressBarLayout.hide();
                 Snackbar.make(mViewPager, getResources().getString(R.string.toast_success), Snackbar.LENGTH_SHORT).show();
