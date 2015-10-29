@@ -1,51 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_login_cloud_guide">
 
-    <android.support.design.widget.CoordinatorLayout
-        android:id="@+id/cl_login"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
-        <RelativeLayout
+        <include
+            layout="@layout/layout_toolbar"/>
+
+        <android.support.design.widget.CoordinatorLayout
+            android:id="@+id/cl_login"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
 
-            <include
-                layout="@layout/layout_toolbar"/>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/btn_login_qq"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="@dimen/dimen_48dip"
-                android:gravity="center"
-                android:orientation="horizontal">
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/dimen_24dip"
+                android:layout_marginRight="100dip"
+                android:src="@drawable/ic_qq_fab"
+                app:borderWidth="0dp"
+                app:elevation="6dp"
+                app:pressedTranslationZ="12dp"/>
 
-                <com.yydcdut.note.view.fab.FloatingActionButton
-                    android:id="@+id/btn_login_qq"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/dimen_24dip"
-                    app:fab_colorNormal="?attr/colorPrimary"
-                    app:fab_colorPressed="?attr/colorPrimaryDark"
-                    app:fab_icon="@drawable/ic_qq_fab"/>
-
-                <com.yydcdut.note.view.fab.FloatingActionButton
-                    android:id="@+id/btn_login_evernote"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:fab_colorNormal="?attr/colorPrimary"
-                    app:fab_colorPressed="?attr/colorPrimaryDark"
-                    app:fab_icon="@drawable/ic_evernote_fab"/>
-            </LinearLayout>
-
-        </RelativeLayout>
-    </android.support.design.widget.CoordinatorLayout>
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/btn_login_evernote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/dimen_24dip"
+                android:layout_marginLeft="100dip"
+                android:src="@drawable/ic_evernote_fab"
+                app:borderWidth="0dp"
+                app:elevation="6dp"
+                app:pressedTranslationZ="12dp"/>
+        </android.support.design.widget.CoordinatorLayout>
+    </RelativeLayout>
 
     <com.yydcdut.note.view.CircleProgressBarLayout
         android:id="@+id/layout_progress"
@@ -54,5 +52,5 @@
         android:visibility="gone">
     </com.yydcdut.note.view.CircleProgressBarLayout>
 
-</RelativeLayout>
+</FrameLayout>
 
