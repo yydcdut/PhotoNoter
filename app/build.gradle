@@ -90,4 +90,5 @@ dependencies {
 //    compile 'com.facebook.fresco:fresco:0.7.0'
     compile project(':sdlv')
     compile 'com.evernote:android-sdk:2.0.0-RC3'
+    compile 'com.github.mmin18.layoutcast:library:1.+@aar'
 }

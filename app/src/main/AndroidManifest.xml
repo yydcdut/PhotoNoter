@@ -83,7 +83,6 @@
             android:value="${UMENG_CHANNEL_VALUE}"/>
         <!-- ************ 友盟 ************ -->
 
-
         <!-- ************ Camera360  Begin ************ -->
         <meta-data
             android:name="EDIT_SDK_KEY"
@@ -140,6 +139,10 @@
         <activity android:name="com.evernote.client.android.EvernoteOAuthActivity"/>
         <activity android:name="com.evernote.client.android.login.EvernoteLoginActivity"/>
         <!-- ************ Evernote End ************ -->
+
+        <!-- ************ layoutcast Begin ************ -->
+        <activity android:name="com.github.mmin18.layoutcast.ResetActivity"/>
+        <!-- ************ layoutcast End ************ -->
 
     </application>
 
