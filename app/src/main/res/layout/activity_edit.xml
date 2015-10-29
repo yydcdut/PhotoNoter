@@ -67,17 +67,14 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/txt_mid"/>
 
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:layout_margin="@dimen/activity_margin">
-
-                <include layout="@layout/layout_floating_edittext"/>
-
-            </FrameLayout>
         </RelativeLayout>
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <include layout="@layout/layout_floating_edittext"/>
     </FrameLayout>
 
     <com.yydcdut.note.view.CircleProgressBarLayout

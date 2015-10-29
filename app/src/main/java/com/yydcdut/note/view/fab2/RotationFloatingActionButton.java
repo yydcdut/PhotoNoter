@@ -17,9 +17,11 @@ import com.yydcdut.note.R;
  * Created by yuyidong on 15/10/27.
  */
 public class RotationFloatingActionButton extends FloatingActionButton {
-
+    /* 动画时间 */
     private static final int ANIMATION_DURATION = 300;
+    /* close的时候角度 */
     private static final float COLLAPSED_PLUS_ROTATION = 0f;
+    /* open的时候角度 */
     private static final float EXPANDED_PLUS_ROTATION = 90f + 45f + 360f;
 
     private RotatingDrawable mRotatingDrawable;
@@ -65,16 +67,19 @@ public class RotationFloatingActionButton extends FloatingActionButton {
         initDrawable(drawable);
     }
 
-    public void closeAnimation() {
+    protected void closeAnimation() {
         mClosedAnimation.start();
         mOpenedAnimation.cancel();
     }
 
-    public void openAnimation() {
+    protected void openAnimation() {
         mClosedAnimation.cancel();
         mOpenedAnimation.start();
     }
 
+    /**
+     * 旋转的Drawable
+     */
     private class RotatingDrawable extends LayerDrawable {
         public RotatingDrawable(Drawable drawable) {
             super(new Drawable[]{drawable});

@@ -78,6 +78,13 @@
         </attr>
     </declare-styleable>
 
+    <declare-styleable name="CustomFloationActionButton">
+        <attr name="fab_text" format="string"/>
+    </declare-styleable>
+    <declare-styleable name="CustomFloatingActionMenu">
+        <attr name="menu_label_style" format="reference"/>
+    </declare-styleable>
+
     <!--  ripple  -->
     <declare-styleable name="MaterialRippleLayout">
         <attr name="mrl_rippleColor" format="color" localization="suggested"/>

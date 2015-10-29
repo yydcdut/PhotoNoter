@@ -1,9 +1,15 @@
 package com.yydcdut.note.view.fab2;
 
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.Rect;
 import android.support.design.widget.CoordinatorLayout;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.TextView;
+
+import com.yydcdut.note.R;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +23,8 @@ public class FloatingMenuLayout extends CoordinatorLayout implements View.OnClic
     private int[] mMenuLocation;
     private boolean mIsOpened = false;
 
+    private int mLabelStyle;
+
     public FloatingMenuLayout(Context context) {
         this(context, null);
     }
@@ -27,6 +35,9 @@ public class FloatingMenuLayout extends CoordinatorLayout implements View.OnClic
 
     public FloatingMenuLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        TypedArray attr = context.obtainStyledAttributes(attrs, R.styleable.CustomFloatingActionMenu, 0, 0);
+        mLabelStyle = attr.getResourceId(R.styleable.CustomFloatingActionMenu_menu_label_style, 0);
+        attr.recycle();
     }
 
     @Override
@@ -44,7 +55,7 @@ public class FloatingMenuLayout extends CoordinatorLayout implements View.OnClic
         }
     }
 
-    private void getLocation() {
+    private void getInfo() {
         if (mLocationMap == null) {
             throw new NullPointerException("");
         }
@@ -70,6 +81,17 @@ public class FloatingMenuLayout extends CoordinatorLayout implements View.OnClic
             View view = getChildAt(i);
             if (view instanceof ScrollFloatingActionButton) {
                 ScrollFloatingActionButton btn = (ScrollFloatingActionButton) view;
+                if (!TextUtils.isEmpty(btn.getTitle())) {
+                    TextView textView = new TextView(getContext());
+                    if (mLabelStyle != 0) {
+                        textView.setTextAppearance(getContext(), mLabelStyle);
+                    }
+                    textView.setText(btn.getTitle());
+                    btn.setTag(textView);
+                    textView.setTag(new Rect(0, 0, 0, 0));
+                    textView.setVisibility(INVISIBLE);
+                    addView(textView);
+                }
                 btn.initLocation(mLocationMap.get(i), mMenuLocation);
             }
         }
@@ -78,7 +100,7 @@ public class FloatingMenuLayout extends CoordinatorLayout implements View.OnClic
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
-        getLocation();
+        getInfo();
     }
 
 
@@ -97,12 +119,33 @@ public class FloatingMenuLayout extends CoordinatorLayout implements View.OnClic
         }
     }
 
+    public void close() {
+        if (!mIsOpened) {
+            return;
+        }
+        mRotationFloatingActionButton.closeAnimation();
+        mIsOpened = false;
+        scrollClose();
+    }
+
+    public void open() {
+        if (mIsOpened) {
+            return;
+        }
+        mRotationFloatingActionButton.openAnimation();
+        mIsOpened = true;
+        scrollOpen();
+    }
+
     private void scrollOpen() {
         for (int i = 0; i < getChildCount(); i++) {
             if (getChildAt(i) instanceof ScrollFloatingActionButton) {
                 ScrollFloatingActionButton btn = (ScrollFloatingActionButton) getChildAt(i);
                 btn.setVisibility(VISIBLE);
-                btn.scroll2CloseSmooth();
+                if (btn.getTag() != null) {
+                    ((TextView) btn.getTag()).setVisibility(VISIBLE);
+                }
+                btn.scroll2OpenSmooth();
             }
         }
     }
@@ -112,10 +155,16 @@ public class FloatingMenuLayout extends CoordinatorLayout implements View.OnClic
             if (getChildAt(i) instanceof ScrollFloatingActionButton) {
                 ScrollFloatingActionButton btn = (ScrollFloatingActionButton) getChildAt(i);
                 btn.setVisibility(VISIBLE);
-                btn.scroll2OpenSmooth();
+                if (btn.getTag() != null) {
+                    ((TextView) btn.getTag()).setVisibility(VISIBLE);
+                }
+                btn.scroll2CloseSmooth();
             }
         }
     }
 
+    public RotationFloatingActionButton getRotationFloatingActionButton() {
+        return mRotationFloatingActionButton;
+    }
 
 }

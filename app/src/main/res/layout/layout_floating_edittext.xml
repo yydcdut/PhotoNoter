@@ -1,39 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<com.yydcdut.note.view.fab2.FloatingMenuLayout
     android:id="@+id/layout_fab_edittext"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:menu="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    menu:menu_label_style="@style/menu_labels_style">
 
-    <com.yydcdut.note.view.fab.FloatingActionsMenu
-        android:id="@+id/fab_main"
+    <com.yydcdut.note.view.fab2.ScrollFloatingActionButton
+        android:id="@+id/fab_evernote_update"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right|bottom"
-        fab:fab_addButtonColorNormal="?attr/colorPrimary"
-        fab:fab_addButtonColorPressed="?attr/colorPrimaryDark"
-        fab:fab_addButtonPlusIconColor="@color/fab_white"
-        fab:fab_colorNormal="?attr/colorPrimary"
-        fab:fab_colorPressed="?attr/colorPrimaryDark"
-        fab:fab_labelStyle="@style/menu_labels_style">
+        android:layout_marginBottom="@dimen/fab_3_bottom_margin"
+        android:layout_marginRight="@dimen/dimen_12dip"
+        android:src="@drawable/ic_fab_evernote_white_24dp"
+        android:visibility="invisible"
+        fab:fab_text="@string/fab_evernote"/>
 
-        <com.yydcdut.note.view.fab.FloatingActionButton
-            android:id="@+id/fab_evernote_update"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            fab:fab_colorNormal="?attr/colorPrimary"
-            fab:fab_colorPressed="?attr/colorPrimaryDark"
-            fab:fab_icon="@drawable/ic_fab_evernote_white_24dp"
-            fab:fab_title="@string/fab_evernote"/>
+    <com.yydcdut.note.view.fab2.ScrollFloatingActionButton
+        android:id="@+id/fab_voice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|bottom"
+        android:layout_marginBottom="@dimen/fab_2_bottom_margin"
+        android:layout_marginRight="@dimen/dimen_12dip"
+        android:src="@drawable/ic_settings_voice_white_24dp"
+        android:visibility="invisible"
+        fab:fab_text="@string/fab_voice"/>
 
-        <com.yydcdut.note.view.fab.FloatingActionButton
-            android:id="@+id/fab_voice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            fab:fab_colorNormal="?attr/colorPrimary"
-            fab:fab_colorPressed="?attr/colorPrimaryDark"
-            fab:fab_icon="@drawable/ic_settings_voice_white_24dp"
-            fab:fab_title="@string/fab_voice"/>
-    </com.yydcdut.note.view.fab.FloatingActionsMenu>
-</android.support.design.widget.CoordinatorLayout>
+    <com.yydcdut.note.view.fab2.RotationFloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|bottom"
+        android:layout_marginBottom="@dimen/dimen_12dip"
+        android:layout_marginRight="@dimen/dimen_12dip"
+        android:src="@drawable/ic_plus_white_24dp"/>
+</com.yydcdut.note.view.fab2.FloatingMenuLayout>

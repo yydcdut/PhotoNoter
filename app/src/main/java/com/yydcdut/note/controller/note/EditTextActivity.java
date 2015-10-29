@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
@@ -43,7 +42,8 @@ import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.Evi;
 import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.view.CircleProgressBarLayout;
-import com.yydcdut.note.view.fab.FloatingActionsMenu;
+import com.yydcdut.note.view.fab2.FloatingMenuLayout;
+import com.yydcdut.note.view.fab2.snack.SnackHelper;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -65,7 +65,7 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
     private View mLayoutTitle;
     private EditText mTitleEdit;
     private EditText mContentEdit;
-    private FloatingActionsMenu mFabMenu;
+    private FloatingMenuLayout mFabMenuLayout;
     private ImageView mMenuArrowImage;
     /* Progress Bar */
     private CircleProgressBarLayout mProgressLayout;
@@ -172,7 +172,7 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void initFloating() {
-        mFabMenu = (FloatingActionsMenu) findViewById(R.id.fab_main);
+        mFabMenuLayout = (FloatingMenuLayout) findViewById(R.id.layout_fab_edittext);
         findViewById(R.id.fab_evernote_update).setOnClickListener(this);
         findViewById(R.id.fab_voice).setOnClickListener(this);
     }
@@ -198,8 +198,8 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
                 ObjectAnimator.ofFloat(mToolbar, "translationY", -actionBarHeight, 0),
                 ObjectAnimator.ofFloat(mLayoutTitle, "translationY", -actionBarHeight * 2, 0),
                 ObjectAnimator.ofFloat(mContentEdit, "translationY", contentEditHeight, 0),
-                ObjectAnimator.ofFloat(mFabMenu, "scaleX", 0f, 1f),
-                ObjectAnimator.ofFloat(mFabMenu, "scaleY", 0f, 1f)
+                ObjectAnimator.ofFloat(mFabMenuLayout, "scaleX", 0f, 1f),
+                ObjectAnimator.ofFloat(mFabMenuLayout, "scaleY", 0f, 1f)
         );
         animation.start();
     }
@@ -212,7 +212,6 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
                 ObjectAnimator.ofFloat(mMenuArrowImage, "rotationY", 180f, 0f),
                 ObjectAnimator.ofFloat(mTitleEdit, "alpha", 0f, 1f),
                 ObjectAnimator.ofFloat(mLayoutTitle, "Y", 0f, getActionBarSize())
-
         );
         animation.start();
     }
@@ -249,12 +248,11 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
         }
         switch (v.getId()) {
             case R.id.fab_voice:
-                mFabMenu.collapse();
-                Snackbar.make(findViewById(R.id.layout_root), getResources().getString(R.string.not_support),
-                        Snackbar.LENGTH_SHORT).show();
+                SnackHelper.make(mFabMenuLayout, getResources().getString(R.string.not_support), SnackHelper.LENGTH_SHORT)
+                        .show(mFabMenuLayout);
                 break;
             case R.id.fab_evernote_update:
-                mFabMenu.collapse();
+                mFabMenuLayout.close();
                 if (UserCenter.getInstance().isLoginEvernote()) {
                     mProgressLayout.show();
                     NoteApplication.getInstance().getExecutorPool().submit(new Runnable() {
@@ -265,8 +263,8 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
                         }
                     });
                 } else {
-                    Snackbar.make(findViewById(R.id.layout_root), getResources().getString(R.string.not_login),
-                            Snackbar.LENGTH_SHORT).show();
+                    SnackHelper.make(mFabMenuLayout, getResources().getString(R.string.not_login), SnackHelper.LENGTH_SHORT)
+                            .show(mFabMenuLayout);
                 }
                 break;
         }
@@ -390,15 +388,14 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && !mIsHiding) {
-            mFabMenu.collapse();
-            Snackbar.make(findViewById(R.id.layout_root), getResources().getString(R.string.toast_exit), Snackbar.LENGTH_LONG)
+            SnackHelper.make(mFabMenuLayout, getResources().getString(R.string.toast_exit), SnackHelper.LENGTH_LONG)
                     .setAction(getResources().getString(R.string.toast_sure), new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             mIsHiding = true;
                             closeActivityAnimation(false);
                         }
-                    }).show();
+                    }).show(mFabMenuLayout);
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -417,8 +414,8 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
                 ObjectAnimator.ofFloat(mToolbar, "translationY", 0, -actionBarHeight),
                 ObjectAnimator.ofFloat(mLayoutTitle, "translationY", 0, -actionBarHeight * 2),
                 ObjectAnimator.ofFloat(mContentEdit, "translationY", 0, contentEditHeight),
-                ObjectAnimator.ofFloat(mFabMenu, "scaleX", 1f, 0f),
-                ObjectAnimator.ofFloat(mFabMenu, "scaleY", 1f, 0f)
+                ObjectAnimator.ofFloat(mFabMenuLayout, "scaleX", 1f, 0f),
+                ObjectAnimator.ofFloat(mFabMenuLayout, "scaleY", 1f, 0f)
         );
         animation.addListener(new AnimatorListenerAdapter() {
             @Override
@@ -457,12 +454,12 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
     public boolean handleMessage(Message msg) {
         switch (msg.what) {
             case MSG_NOT_SUCCESS:
-                Snackbar.make(findViewById(R.id.layout_root), getResources().getString(R.string.toast_fail),
-                        Snackbar.LENGTH_SHORT).show();
+                SnackHelper.make(mFabMenuLayout, getResources().getString(R.string.toast_fail), SnackHelper.LENGTH_SHORT)
+                        .show(mFabMenuLayout);
                 break;
             case MSG_SUCCESS:
-                Snackbar.make(findViewById(R.id.layout_root), getResources().getString(R.string.toast_success),
-                        Snackbar.LENGTH_SHORT).show();
+                SnackHelper.make(mFabMenuLayout, getResources().getString(R.string.toast_success), SnackHelper.LENGTH_SHORT)
+                        .show(mFabMenuLayout);
                 break;
         }
         mProgressLayout.hide();

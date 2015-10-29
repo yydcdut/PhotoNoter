@@ -51,6 +51,8 @@
     <dimen name="fab_actions_spacing">16dp</dimen>
     <dimen name="fab_labels_margin">8dp</dimen>
 
+    <dimen name="fab_2_bottom_margin">79dip</dimen>
+    <dimen name="fab_3_bottom_margin">146dip</dimen>
 
     <!-- detail activity -->
     <dimen name="flexible_space_height">72dp</dimen>
