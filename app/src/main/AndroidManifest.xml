@@ -30,7 +30,8 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".controller.note.EditTextActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity
             android:name=".controller.note.ZoomActivity"
             android:label=" "

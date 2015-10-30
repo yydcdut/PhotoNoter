@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<com.yydcdut.note.view.KeyBoardResizeFrameLayout
     android:id="@+id/layout_root"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -83,4 +83,4 @@
         android:layout_height="fill_parent"
         android:visibility="gone"/>
 
-</RelativeLayout>
+</com.yydcdut.note.view.KeyBoardResizeFrameLayout>
