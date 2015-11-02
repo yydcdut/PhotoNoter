@@ -84,8 +84,11 @@ public class FloatingMenuLayout extends CoordinatorLayout implements View.OnClic
                 if (!TextUtils.isEmpty(btn.getTitle())) {
                     TextView textView = new TextView(getContext());
                     if (mLabelStyle != 0) {
+                        //todo 这里没有作用！！
                         textView.setTextAppearance(getContext(), mLabelStyle);
                     }
+                    textView.setTextColor(getResources().getColor(R.color.fab_white));
+                    textView.setBackgroundResource(R.drawable.fab_label_background);
                     textView.setText(btn.getTitle());
                     btn.setTag(textView);
                     textView.setTag(new Rect(0, 0, 0, 0));
