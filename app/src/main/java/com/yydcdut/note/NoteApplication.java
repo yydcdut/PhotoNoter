@@ -34,7 +34,7 @@ public class NoteApplication extends Application {
     private ExecutorService mPool;
     private RefWatcher mRefWatcher;
 
-    private static final EvernoteSession.EvernoteService EVERNOTE_SERVICE = EvernoteSession.EvernoteService.SANDBOX;
+    private static final EvernoteSession.EvernoteService EVERNOTE_SERVICE = EvernoteSession.EvernoteService.PRODUCTION;
     private static final boolean SUPPORT_APP_LINKED_NOTEBOOKS = true;
 
     private static Context mContext;

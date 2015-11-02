@@ -42,6 +42,7 @@ import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.Evi;
 import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.view.CircleProgressBarLayout;
+import com.yydcdut.note.view.KeyBoardResizeFrameLayout;
 import com.yydcdut.note.view.fab2.FloatingMenuLayout;
 import com.yydcdut.note.view.fab2.snack.SnackHelper;
 
@@ -55,7 +56,8 @@ import java.util.List;
 /**
  * Created by yyd on 15-4-8.
  */
-public class EditTextActivity extends BaseActivity implements View.OnClickListener, Handler.Callback {
+public class EditTextActivity extends BaseActivity implements View.OnClickListener, Handler.Callback,
+        KeyBoardResizeFrameLayout.OnkeyboardShowListener {
     /* Context */
     private Context mContext = EditTextActivity.this;
     /* title是否显示出来? */
@@ -127,6 +129,7 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
         initFloating();
         initData();
         mProgressLayout = (CircleProgressBarLayout) findViewById(R.id.layout_progress);
+        ((KeyBoardResizeFrameLayout) findViewById(R.id.layout_root)).setOnKeyboardShowListener(this);
     }
 
     private void initToolBarUI() {
@@ -225,7 +228,17 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
                 ObjectAnimator.ofFloat(mTitleEdit, "alpha", 1f, 0f),
                 ObjectAnimator.ofFloat(mLayoutTitle, "Y", getActionBarSize(), 0f)
         );
-        animation.addListener(mAnimatorListenr);
+        animation.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mLayoutTitle.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                mLayoutTitle.setVisibility(View.GONE);
+            }
+        });
         animation.start();
     }
 
@@ -359,31 +372,6 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
         return isSuccess;
     }
 
-    /**
-     * title的隐藏动画
-     */
-    private Animator.AnimatorListener mAnimatorListenr = new Animator.AnimatorListener() {
-
-        @Override
-        public void onAnimationStart(Animator animation) {
-
-        }
-
-        @Override
-        public void onAnimationEnd(Animator animation) {
-            mLayoutTitle.setVisibility(View.GONE);
-        }
-
-        @Override
-        public void onAnimationCancel(Animator animation) {
-            mLayoutTitle.setVisibility(View.GONE);
-        }
-
-        @Override
-        public void onAnimationRepeat(Animator animation) {
-
-        }
-    };
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -464,5 +452,14 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
         }
         mProgressLayout.hide();
         return false;
+    }
+
+    @Override
+    public void onKeyboardShow() {
+    }
+
+    @Override
+    public void onKeyboardHide() {
+        mFabMenuLayout.close();
     }
 }

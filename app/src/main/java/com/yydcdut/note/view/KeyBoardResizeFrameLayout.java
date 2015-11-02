@@ -24,18 +24,22 @@ public class KeyBoardResizeFrameLayout extends FrameLayout {
         super(context, attrs, defStyleAttr);
     }
 
-    public interface OnkeyboardShowListener {
-        public void onKeyboardShow();
-
-        public void onKeyboardHide();
-
-        public void onKeyboardShowOver();
-    }
-
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         YLog.i("yuyidong", "w--->" + w + "   h--->" + h + "   oldw--->" + oldw + "   oldh--->" + oldh);
+        if (oldh == 0 && oldw == 0) {
+            return;
+        }
+        if (h - oldh > 0) {
+            if (mChangedListener != null) {
+                mChangedListener.onKeyboardShow();
+            }
+        } else if (h - oldh < 0) {
+            if (mChangedListener != null) {
+                mChangedListener.onKeyboardHide();
+            }
+        }
     }
 
     @Override
@@ -47,5 +51,11 @@ public class KeyBoardResizeFrameLayout extends FrameLayout {
 
     public void setOnKeyboardShowListener(OnkeyboardShowListener listener) {
         mChangedListener = listener;
+    }
+
+    public interface OnkeyboardShowListener {
+        void onKeyboardShow();
+
+        void onKeyboardHide();
     }
 }
