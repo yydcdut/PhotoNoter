@@ -1,6 +1,5 @@
 package com.yydcdut.note.controller.login;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
@@ -39,6 +38,7 @@ import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.TimeDecoder;
+import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.view.CircleProgressBarLayout;
 
 import org.json.JSONException;
@@ -311,6 +311,7 @@ public class UserDetailFragment extends BaseFragment implements View.OnClickList
                 Snackbar.make(getView(), getResources().getString(R.string.toast_success), Snackbar.LENGTH_SHORT).show();
                 break;
             case MESSAGE_LOGIN_EVERNOTE_FAILED:
+                ((CircleProgressBarLayout) getActivity().findViewById(R.id.layout_progress)).hide();
                 Snackbar.make(getView(), getResources().getString(R.string.toast_fail), Snackbar.LENGTH_SHORT)
                         .setAction(getResources().getString(R.string.toast_retry), new View.OnClickListener() {
                             @Override
@@ -326,6 +327,7 @@ public class UserDetailFragment extends BaseFragment implements View.OnClickList
 
     @Override
     public void onLoginFinished(boolean successful) {
+        //这里实际上没有被调用的
         if (successful) {
             ((CircleProgressBarLayout) getActivity().findViewById(R.id.layout_progress)).show();
             UserCenter.getInstance().LoginEvernote();
@@ -337,20 +339,8 @@ public class UserDetailFragment extends BaseFragment implements View.OnClickList
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case EvernoteSession.REQUEST_CODE_LOGIN:
-                if (resultCode == Activity.RESULT_OK) {
-                    ((CircleProgressBarLayout) getActivity().findViewById(R.id.layout_progress)).show();
-                    UserCenter.getInstance().LoginEvernote();
-                    mHandler.sendEmptyMessage(MESSAGE_LOGIN_EVERNOTE_OK);
-                } else {
-                    mHandler.sendEmptyMessage(MESSAGE_LOGIN_EVERNOTE_FAILED);
-                }
-                break;
-            default:
-                super.onActivityResult(requestCode, resultCode, data);
-                break;
-        }
+        YLog.i("yuyidong", "onActivityResult");
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     /**

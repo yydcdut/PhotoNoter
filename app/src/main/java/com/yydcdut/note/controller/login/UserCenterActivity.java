@@ -8,6 +8,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -95,6 +96,7 @@ public class UserCenterActivity extends BaseActivity implements View.OnClickList
         initQQ();
         initEvernote();
         initViewPager();
+        mHandler = new Handler(this);
     }
 
     private void initOtherViewAndData() {
@@ -227,18 +229,12 @@ public class UserCenterActivity extends BaseActivity implements View.OnClickList
                 break;
             case R.id.img_user:
                 if (!UserCenter.getInstance().isLoginQQ()) {
-                    if (mHandler == null) {
-                        mHandler = new Handler(this);
-                    }
                     mTencent = Tencent.createInstance(BuildConfig.TENCENT_KEY, getApplicationContext());
                     mTencent.login(this, "all", new BaseUiListener());
                 }
                 break;
             case R.id.img_user_two:
                 if (!UserCenter.getInstance().isLoginEvernote()) {
-                    if (mHandler == null) {
-                        mHandler = new Handler(this);
-                    }
                     EvernoteSession.getInstance().authenticate(this);
                 }
                 break;
@@ -305,8 +301,10 @@ public class UserCenterActivity extends BaseActivity implements View.OnClickList
         }
     }
 
+
     @Override
     public void onLoginFinished(boolean successful) {
+        Log.i("yuyidong", " onLoginFinished    successful--->" + successful);
         if (successful) {
             mCircleProgressBarLayout.show();
             UserCenter.getInstance().LoginEvernote();
@@ -329,7 +327,7 @@ public class UserCenterActivity extends BaseActivity implements View.OnClickList
                 mQQTextView.setVisibility(View.VISIBLE);
                 mQQTextView.setText(qqUser.getName());
 
-                LinearLayout linearLayout = (LinearLayout) mPagerAdapter.getItem(3).getView().findViewById(R.id.layout_user_detail);
+                LinearLayout linearLayout = (LinearLayout) mPagerAdapter.getItem(2).getView().findViewById(R.id.layout_user_detail);
                 View qqView = linearLayout.getChildAt(0);
                 ((TextView) qqView.findViewById(R.id.txt_item_column)).setText(qqUser.getName());
                 ((ImageView) qqView.findViewById(R.id.img_item_user)).setImageResource(R.drawable.ic_clear_white_24dp);
@@ -339,7 +337,7 @@ public class UserCenterActivity extends BaseActivity implements View.OnClickList
             case MESSAGE_LOGIN_EVERNOTE_OK:
                 mEvernoteImageView.setImageResource(R.drawable.ic_evernote_color);
 
-                LinearLayout linearLayout2 = (LinearLayout) mPagerAdapter.getItem(3).getView().findViewById(R.id.layout_user_detail);
+                LinearLayout linearLayout2 = (LinearLayout) mPagerAdapter.getItem(2).getView().findViewById(R.id.layout_user_detail);
                 View evernoteView = linearLayout2.getChildAt(1);
                 User evernoteUser = UserCenter.getInstance().getEvernote();
                 if (evernoteUser != null) {
@@ -352,6 +350,7 @@ public class UserCenterActivity extends BaseActivity implements View.OnClickList
                 Snackbar.make(mViewPager, getResources().getString(R.string.toast_success), Snackbar.LENGTH_SHORT).show();
                 break;
             case MESSAGE_LOGIN_EVERNOTE_FAILED:
+                mCircleProgressBarLayout.hide();
                 Snackbar.make(mViewPager, getResources().getString(R.string.toast_fail), Snackbar.LENGTH_SHORT)
                         .setAction(getResources().getString(R.string.toast_retry), new View.OnClickListener() {
                             @Override
