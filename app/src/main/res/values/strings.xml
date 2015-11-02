@@ -130,6 +130,7 @@
     <string name="toast_success">Success!</string>
     <string name="toast_exit">Exit Without Saving?</string>
     <string name="toast_sure">Sure</string>
+    <string name="toast_save">Save</string>
     <string name="toast_retry">Retry</string>
     <string name="toast_not_support">Not Support Now!</string>
     <string name="toast_sandbox_fail">Some Photos may be lost!</string>

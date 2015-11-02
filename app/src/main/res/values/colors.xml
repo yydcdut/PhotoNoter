@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="bg_revealcolorview">#88000000</color>
     <color name="bg_menu">#cc222222</color>
     <color name="bg_background">#e6e6e6</color>
     <color name="bg_shadow">#55000000</color>
@@ -29,6 +28,8 @@
     <color name="fab_blue">#039ae3</color>
     <color name="fab_blue_press">#1976D2</color>
     <color name="fab_blue_black">#801976D2</color>
+    <color name="fab_reveal_white">#aaffffff</color>
+    <color name="fab_reveal_black">#66222222</color>
 
     <color name="white">#ffffff</color>
     <color name="gray">#e0e0e0</color>

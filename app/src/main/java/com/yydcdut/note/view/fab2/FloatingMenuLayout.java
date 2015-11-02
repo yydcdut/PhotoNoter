@@ -25,6 +25,8 @@ public class FloatingMenuLayout extends CoordinatorLayout implements View.OnClic
 
     private int mLabelStyle;
 
+    private OnFloatingActionsMenuUpdateListener mListener;
+
     public FloatingMenuLayout(Context context) {
         this(context, null);
     }
@@ -140,7 +142,11 @@ public class FloatingMenuLayout extends CoordinatorLayout implements View.OnClic
         scrollOpen();
     }
 
+
     private void scrollOpen() {
+        if (mListener != null) {
+            mListener.onMenuExpanded();
+        }
         for (int i = 0; i < getChildCount(); i++) {
             if (getChildAt(i) instanceof ScrollFloatingActionButton) {
                 ScrollFloatingActionButton btn = (ScrollFloatingActionButton) getChildAt(i);
@@ -154,6 +160,9 @@ public class FloatingMenuLayout extends CoordinatorLayout implements View.OnClic
     }
 
     private void scrollClose() {
+        if (mListener != null) {
+            mListener.onMenuCollapsed();
+        }
         for (int i = 0; i < getChildCount(); i++) {
             if (getChildAt(i) instanceof ScrollFloatingActionButton) {
                 ScrollFloatingActionButton btn = (ScrollFloatingActionButton) getChildAt(i);
@@ -170,4 +179,17 @@ public class FloatingMenuLayout extends CoordinatorLayout implements View.OnClic
         return mRotationFloatingActionButton;
     }
 
+    public void setOnFloatingActionsMenuUpdateListener(OnFloatingActionsMenuUpdateListener listener) {
+        mListener = listener;
+    }
+
+    public interface OnFloatingActionsMenuUpdateListener {
+        void onMenuExpanded();
+
+        void onMenuCollapsed();
+    }
+
+    public void setMenuClickable(boolean clickable) {
+        mRotationFloatingActionButton.setClickable(clickable);
+    }
 }

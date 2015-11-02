@@ -4,8 +4,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
-import com.yydcdut.note.utils.YLog;
-
 /**
  * Created by yuyidong on 15/10/30.
  */
@@ -27,26 +25,18 @@ public class KeyBoardResizeFrameLayout extends FrameLayout {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        YLog.i("yuyidong", "w--->" + w + "   h--->" + h + "   oldw--->" + oldw + "   oldh--->" + oldh);
         if (oldh == 0 && oldw == 0) {
             return;
         }
         if (h - oldh > 0) {
             if (mChangedListener != null) {
-                mChangedListener.onKeyboardShow();
+                mChangedListener.onKeyboardHide();
             }
         } else if (h - oldh < 0) {
             if (mChangedListener != null) {
-                mChangedListener.onKeyboardHide();
+                mChangedListener.onKeyboardShow();
             }
         }
-    }
-
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right,
-                            int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-        YLog.i("yuyidong", "changed--->" + changed + "   left--->" + left + "   top--->" + top + "   right--->" + right + "   bottom--->" + bottom);
     }
 
     public void setOnKeyboardShowListener(OnkeyboardShowListener listener) {

@@ -2,6 +2,8 @@ package com.yydcdut.note.controller.note;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -43,6 +46,7 @@ import com.yydcdut.note.utils.Evi;
 import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.view.CircleProgressBarLayout;
 import com.yydcdut.note.view.KeyBoardResizeFrameLayout;
+import com.yydcdut.note.view.RevealView;
 import com.yydcdut.note.view.fab2.FloatingMenuLayout;
 import com.yydcdut.note.view.fab2.snack.SnackHelper;
 
@@ -57,7 +61,7 @@ import java.util.List;
  * Created by yyd on 15-4-8.
  */
 public class EditTextActivity extends BaseActivity implements View.OnClickListener, Handler.Callback,
-        KeyBoardResizeFrameLayout.OnkeyboardShowListener {
+        KeyBoardResizeFrameLayout.OnkeyboardShowListener, FloatingMenuLayout.OnFloatingActionsMenuUpdateListener {
     /* Context */
     private Context mContext = EditTextActivity.this;
     /* title是否显示出来? */
@@ -71,6 +75,9 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
     private ImageView mMenuArrowImage;
     /* Progress Bar */
     private CircleProgressBarLayout mProgressLayout;
+    /* RevealView */
+    private RevealView mAlbumRevealView;
+    private View mFabPositionView;
     /* 数据 */
     private PhotoNote mPhotoNote;
     private int mPosition;
@@ -80,6 +87,8 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
     private Handler mHandler;
     private static final int MSG_SUCCESS = 1;
     private static final int MSG_NOT_SUCCESS = 2;
+    /* 软键盘是否打开 */
+    private long mLastTime = 0l;
 
     private static final String TAG_ARROW = "tag_arrow";
 
@@ -128,8 +137,21 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
         initEditText();
         initFloating();
         initData();
+        initOtherUI();
+    }
+
+    void initOtherUI() {
         mProgressLayout = (CircleProgressBarLayout) findViewById(R.id.layout_progress);
         ((KeyBoardResizeFrameLayout) findViewById(R.id.layout_root)).setOnKeyboardShowListener(this);
+        mAlbumRevealView = (RevealView) findViewById(R.id.reveal_album);
+        mFabPositionView = findViewById(R.id.view_fab_location);
+        mAlbumRevealView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mFabMenuLayout.close();
+                return true;
+            }
+        });
     }
 
     private void initToolBarUI() {
@@ -176,6 +198,7 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
 
     private void initFloating() {
         mFabMenuLayout = (FloatingMenuLayout) findViewById(R.id.layout_fab_edittext);
+        mFabMenuLayout.setOnFloatingActionsMenuUpdateListener(this);
         findViewById(R.id.fab_evernote_update).setOnClickListener(this);
         findViewById(R.id.fab_voice).setOnClickListener(this);
     }
@@ -372,21 +395,29 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
         return isSuccess;
     }
 
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && !mIsHiding) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && !mIsHiding && System.currentTimeMillis() - mLastTime > 2000) {
+            mLastTime = System.currentTimeMillis();
+            mFabMenuLayout.setMenuClickable(false);
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mFabMenuLayout.setMenuClickable(true);
+                }
+            }, 2000);
             SnackHelper.make(mFabMenuLayout, getResources().getString(R.string.toast_exit), SnackHelper.LENGTH_LONG)
-                    .setAction(getResources().getString(R.string.toast_sure), new View.OnClickListener() {
+                    .setAction(getResources().getString(R.string.toast_save), new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             mIsHiding = true;
-                            closeActivityAnimation(false);
+                            closeActivityAnimation(true);
                         }
                     }).show(mFabMenuLayout);
             return true;
         }
-        return super.onKeyDown(keyCode, event);
+        closeActivityAnimation(false);
+        return true;
     }
 
     /**
@@ -456,10 +487,24 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public void onKeyboardShow() {
+        mFabMenuLayout.close();
+        mFabMenuLayout.setMenuClickable(false);
     }
 
     @Override
     public void onKeyboardHide() {
-        mFabMenuLayout.close();
+        mFabMenuLayout.setMenuClickable(true);
+    }
+
+    @Override
+    public void onMenuExpanded() {
+        Point p = getLocationInView(mAlbumRevealView, mFabPositionView);
+        mAlbumRevealView.reveal(p.x, p.y, getResources().getColor(R.color.fab_reveal_white), Const.RADIUS, Const.DURATION, null);
+    }
+
+    @Override
+    public void onMenuCollapsed() {
+        Point p = getLocationInView(mAlbumRevealView, mFabPositionView);
+        mAlbumRevealView.hide(p.x, p.y, Color.TRANSPARENT, 0, Const.DURATION, null);
     }
 }

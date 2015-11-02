@@ -2,6 +2,7 @@
 <com.yydcdut.note.view.KeyBoardResizeFrameLayout
     android:id="@+id/layout_root"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:reveal="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorPrimary">
@@ -31,7 +32,6 @@
                     android:layout_marginRight="@dimen/activity_horizontal_margin"
                     android:hint="@string/text_title"
                     android:textColor="@color/white"/>
-
             </RelativeLayout>
 
             <android.support.v7.widget.Toolbar
@@ -49,7 +49,6 @@
                     android:minHeight="?attr/actionBarSize"
                     android:orientation="horizontal">
                 </LinearLayout>
-
             </android.support.v7.widget.Toolbar>
 
             <EditText
@@ -66,9 +65,20 @@
                 android:padding="@dimen/activity_margin_small"
                 android:textColor="@color/black"
                 android:textSize="@dimen/txt_mid"/>
-
         </RelativeLayout>
     </FrameLayout>
+
+    <com.yydcdut.note.view.RevealView
+        android:id="@+id/reveal_album"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        reveal:own_touch="true">
+
+        <com.yydcdut.note.view.RevealColorView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+    </com.yydcdut.note.view.RevealView>
 
     <FrameLayout
         android:layout_width="fill_parent"
@@ -76,6 +86,15 @@
 
         <include layout="@layout/layout_floating_edittext"/>
     </FrameLayout>
+
+    <View
+        android:id="@+id/view_fab_location"
+        android:layout_width="64dip"
+        android:layout_height="64dip"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="@dimen/dimen_12dip"
+        android:layout_marginRight="@dimen/dimen_12dip"
+        android:background="@android:color/transparent"/>
 
     <com.yydcdut.note.view.CircleProgressBarLayout
         android:id="@+id/layout_progress"
