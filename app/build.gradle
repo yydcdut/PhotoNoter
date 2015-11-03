@@ -83,12 +83,13 @@ dependencies {
     compile files('src/libs/umeng-analytics-v5.5.3.jar')
     compile files('src/libs/com.umeng.message.lib_v2.4.1.jar')
     compile project(':PG_Edit_SDK')
-//    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3'
-//    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3'
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3'
     compile files('src/libs/mta-sdk-1.6.2.jar')
     compile files('src/libs/open_sdk_r5043.jar')
 //    compile 'com.facebook.fresco:fresco:0.7.0'
     compile project(':sdlv')
     compile 'com.evernote:android-sdk:2.0.0-RC3'
-//    compile 'com.github.mmin18.layoutcast:library:1.+@aar'
+    compile 'com.github.mmin18.layoutcast:library:1.+@aar'
+    compile 'com.umeng:fb:5.4.0'
 }

@@ -628,7 +628,7 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
      * @param p
      */
     private void showAlbumRevealColorView(Point p) {
-        mAlbumRevealView.reveal(p.x, p.y, getResources().getColor(R.color.fab_reveal_black), Const.RADIUS, Const.DURATION, null);
+        mAlbumRevealView.reveal(p.x, p.y, getResources().getColor(R.color.fab_reveal_white), Const.RADIUS, Const.DURATION, null);
         mIsAlbumRevealOpen = true;
     }
 

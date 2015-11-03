@@ -398,6 +398,10 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && !mIsHiding && System.currentTimeMillis() - mLastTime > 2000) {
+            if (mFabMenuLayout.isOpen()) {
+                mFabMenuLayout.close();
+                return true;
+            }
             mLastTime = System.currentTimeMillis();
             mFabMenuLayout.setMenuClickable(false);
             mHandler.postDelayed(new Runnable() {
@@ -499,7 +503,7 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
     @Override
     public void onMenuExpanded() {
         Point p = getLocationInView(mAlbumRevealView, mFabPositionView);
-        mAlbumRevealView.reveal(p.x, p.y, getResources().getColor(R.color.fab_reveal_white), Const.RADIUS, Const.DURATION, null);
+        mAlbumRevealView.reveal(p.x, p.y, getResources().getColor(R.color.fab_reveal_black), Const.RADIUS, Const.DURATION, null);
     }
 
     @Override

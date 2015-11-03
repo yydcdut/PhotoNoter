@@ -28,7 +28,7 @@
     <color name="fab_blue">#039ae3</color>
     <color name="fab_blue_press">#1976D2</color>
     <color name="fab_blue_black">#801976D2</color>
-    <color name="fab_reveal_white">#aaffffff</color>
+    <color name="fab_reveal_white">#ccffffff</color>
     <color name="fab_reveal_black">#66222222</color>
 
     <color name="white">#ffffff</color>

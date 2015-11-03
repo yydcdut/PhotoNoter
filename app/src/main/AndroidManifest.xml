@@ -76,8 +76,9 @@
             android:value="55361d44e0f55ae664003b4e"/>
         <meta-data
             android:name="UMENG_MESSAGE_SECRET"
-            android:value="318c30366d0e153a9bf71b712e7046e3">
-        </meta-data>
+            android:value="318c30366d0e153a9bf71b712e7046e3"/>
+
+        <activity android:name="com.umeng.fb.ConversationActivity"/>
         <!-- 渠道 -->
         <meta-data
             android:name="UMENG_CHANNEL"

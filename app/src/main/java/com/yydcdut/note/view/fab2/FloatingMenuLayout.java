@@ -124,6 +124,10 @@ public class FloatingMenuLayout extends CoordinatorLayout implements View.OnClic
         }
     }
 
+    public boolean isOpen() {
+        return mIsOpened;
+    }
+
     public void close() {
         if (!mIsOpened) {
             return;
