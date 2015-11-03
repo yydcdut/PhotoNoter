@@ -123,6 +123,7 @@
     <string name="general">General</string>
     <string name="splash">Close Launch Page</string>
     <string name="user_failed">Get Infomation Failed!</string>
+    <string name="feedback">Feedback</string>
 
 
     <string name="toast_fail">Fail!</string>

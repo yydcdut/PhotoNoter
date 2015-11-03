@@ -2,6 +2,7 @@ package com.yydcdut.note.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 
 import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.camera.model.ICameraParams;
@@ -13,6 +14,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by yuyidong on 15-4-1.
@@ -96,6 +98,12 @@ public class LocalStorageUtils {
 
     private static final String SETTING_STATUS_BAR_TRANSLATION = "setting_status_bar_translation";//状态栏是透明的还是沉浸的
     private static final boolean SETTING_STATUS_BAR_TRANSLATION_DEFAULT = false;//默认沉浸
+
+    private static final String DEVICE_UUID = "device_uuid";
+    private static final String DEVICE_UUID_DEFAULT = "";
+
+    private static final String UMENG_UID = "umeng_uid";
+    private static final String UMENG_UID_DEFAULT = "umeng_uid_default";
 
     private static SharedPreferences mSharedPreferences;
 
@@ -688,5 +696,22 @@ public class LocalStorageUtils {
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putBoolean(SETTING_STATUS_BAR_TRANSLATION, translation);
         editor.commit();
+    }
+
+    public String getDeviceUuid() {
+        String device_uuid = mSharedPreferences.getString(DEVICE_UUID, DEVICE_UUID_DEFAULT);
+        if (TextUtils.isEmpty(device_uuid)) {
+            device_uuid = UUID.randomUUID().toString();
+            mSharedPreferences.edit().putString(DEVICE_UUID, device_uuid).commit();
+        }
+        return device_uuid;
+    }
+
+    public String getUmengUid() {
+        return mSharedPreferences.getString(UMENG_UID, UMENG_UID_DEFAULT);
+    }
+
+    public void setUmengUid(String uid) {
+        mSharedPreferences.edit().putString(UMENG_UID, uid).commit();
     }
 }

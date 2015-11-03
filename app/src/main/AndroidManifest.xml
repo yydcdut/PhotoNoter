@@ -60,6 +60,9 @@
         <activity
             android:name=".controller.setting.FloatingEditActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".controller.setting.FeedbackActivity"
+            android:screenOrientation="portrait"/>
 
         <service android:name=".service.InitService"/>
         <service
@@ -78,7 +81,6 @@
             android:name="UMENG_MESSAGE_SECRET"
             android:value="318c30366d0e153a9bf71b712e7046e3"/>
 
-        <activity android:name="com.umeng.fb.ConversationActivity"/>
         <!-- 渠道 -->
         <meta-data
             android:name="UMENG_CHANNEL"
