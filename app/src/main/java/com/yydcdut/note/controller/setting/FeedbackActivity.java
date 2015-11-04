@@ -3,21 +3,26 @@ package com.yydcdut.note.controller.setting;
 import android.graphics.PointF;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.LinearInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.TypeEvaluator;
 import com.nineoldandroids.animation.ValueAnimator;
 import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.controller.BaseActivity;
+import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.LollipopCompat;
 import com.yydcdut.note.view.CircleProgressBarLayout;
+import com.yydcdut.note.view.RevealView;
 
 /**
  * Created by yuyidong on 15/11/3.
@@ -27,8 +32,8 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
     private EditText mEditText;
     private Handler mHandler;
     private CircleProgressBarLayout mProgressLayout;
-
-    private float mMarginSize = 0f;
+    private RevealView mRevealView;
+    private FloatingActionButton mFab;
 
     @Override
     public boolean setStatusBar() {
@@ -44,9 +49,7 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
     @Override
     public void initUiAndListener() {
         initToolBarUI();
-        initSendAndEditView();
-        initCircleProgressBar();
-        mMarginSize = getResources().getDimension(R.dimen.dimen_12dip);
+        initView();
     }
 
     private void initToolBarUI() {
@@ -57,15 +60,14 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
         LollipopCompat.setElevation(toolbar, getResources().getDimension(R.dimen.ui_elevation));
     }
 
-    private void initSendAndEditView() {
-        findViewById(R.id.fab_send).setOnClickListener(this);
+    private void initView() {
+
         mEditText = (EditText) findViewById(R.id.et_feedback);
-    }
-
-    private void initCircleProgressBar() {
+        mRevealView = (RevealView) findViewById(R.id.reveal_feedback);
         mProgressLayout = (CircleProgressBarLayout) findViewById(R.id.layout_progress);
+        mFab = (FloatingActionButton) findViewById(R.id.fab_send);
+        mFab.setOnClickListener(this);
     }
-
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
@@ -90,7 +92,7 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
                     mHandler = new Handler(this);
                 }
                 mProgressLayout.show();
-                parabolaAnimation(findViewById(R.id.fab_send));
+                parabolaAnimation(mFab);
                 NoteApplication.getInstance().getExecutorPool().submit(new Runnable() {
                     @Override
                     public void run() {
@@ -111,20 +113,20 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
         return false;
     }
 
-    public void parabolaAnimation(final View view) {
+    private void parabolaAnimation(final View view) {
         final int wdith = view.getLeft();
         final int height = view.getTop();
         ValueAnimator valueAnimator = new ValueAnimator();
-        valueAnimator.setDuration(3000);
+        valueAnimator.setDuration(Const.DURATION / 2);
         valueAnimator.setObjectValues(new PointF(0, 0));
-        valueAnimator.setInterpolator(new LinearInterpolator());
+        valueAnimator.setInterpolator(new DecelerateInterpolator());
         valueAnimator.setEvaluator(new TypeEvaluator<PointF>() {
             // fraction = t / duration
             @Override
             public PointF evaluate(float fraction, PointF startValue, PointF endValue) {
                 PointF point = new PointF();
                 float wdithf = (wdith) * (1 - fraction / 2);
-                float heightf = (height) - 0.5f * (height) * (fraction / 2) * (fraction / 2);
+                float heightf = (height) - 0.85f * (height) * (fraction / 2) * (fraction / 2);
                 point.x = wdithf;
                 point.y = heightf;
                 return point;
@@ -138,6 +140,14 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
                 PointF point = (PointF) animation.getAnimatedValue();
                 view.setX(point.x);
                 view.setY(point.y);
+            }
+        });
+        valueAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                mRevealView.reveal((int) mFab.getX() + mFab.getWidth() / 2, (int) mFab.getY() + mFab.getHeight() / 2,
+                        getThemeColor(), Const.RADIUS, Const.DURATION, null);
             }
         });
     }
