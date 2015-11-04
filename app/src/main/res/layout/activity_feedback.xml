@@ -6,24 +6,34 @@
                 android:background="#E5E5E5"
                 android:orientation="vertical">
 
-    <include layout="@layout/layout_toolbar"/>
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/cl_feedback"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentBottom="true">
 
-    <RelativeLayout
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|bottom"
+            android:layout_margin="@dimen/dimen_12dip"
+            android:src="@drawable/ic_send_white_24dp"
+            app:elevation="3dip">
+        </android.support.design.widget.FloatingActionButton>
+    </android.support.design.widget.CoordinatorLayout>
+
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#DEDEDE">
+        android:orientation="vertical">
 
-        <FrameLayout
-            android:layout_width="fill_parent"
+        <include layout="@layout/layout_toolbar"/>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginBottom="3dip"
-            android:layout_marginLeft="6dip"
-            android:layout_marginRight="6dip"
-            android:layout_marginTop="3dip"
-            android:layout_toLeftOf="@+id/fab_send"
-            android:background="@color/white">
+            android:layout_margin="6dip">
 
             <EditText
                 android:id="@+id/et_feedback"
@@ -31,20 +41,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="3dip"
                 android:layout_marginRight="3dip"
-                android:textColor="@color/txt_gray"/>
-        </FrameLayout>
+                android:hint="@string/feedback"
+                android:textColor="@color/txt_gray">
+            </EditText>
+        </android.support.design.widget.TextInputLayout>
+    </LinearLayout>
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_send"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="6dip"
-            android:src="@drawable/ic_send_white_24dp"
-            app:elevation="1dip"
-            app:fabSize="mini">
-        </android.support.design.widget.FloatingActionButton>
-    </RelativeLayout>
+    <com.yydcdut.note.view.CircleProgressBarLayout
+        android:id="@+id/layout_progress"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="gone">
+    </com.yydcdut.note.view.CircleProgressBarLayout>
 
 </RelativeLayout>

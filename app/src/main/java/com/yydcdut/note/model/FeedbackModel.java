@@ -68,6 +68,9 @@ public class FeedbackModel {
 
 
     public synchronized Map sendFeedback(String feedback_id, String content) {
+        if (TextUtils.isEmpty(LocalStorageUtils.getInstance().getUmengUid())) {
+            getUmengUID();
+        }
         JSONObject json = null;
         try {
             JSONObject totalInfoJson = getdeviceInfo(this.mContext);
@@ -155,34 +158,34 @@ public class FeedbackModel {
     }
 
     public JSONObject getdeviceInfo(Context var0) {
-        JSONObject var1 = new JSONObject();
+        JSONObject jsonObject = new JSONObject();
         try {
-            var1.put("device_id", ModelUtils.f(var0));
-            var1.put("device_model", Build.MODEL);
-            var1.put("appkey", ModelUtils.p(var0));
-            var1.put("channel", ModelUtils.t(var0));
-            var1.put("app_version", ModelUtils.d(var0));
-            var1.put("version_code", ModelUtils.c(var0));
-            var1.put("sdk_type", "Android");
-            var1.put("sdk_version", "5.4.0.20150727");
-            var1.put("os", "Android");
-            var1.put("os_version", Build.VERSION.RELEASE);
-            var1.put("country", ModelUtils.o(var0)[0]);
-            var1.put("language", ModelUtils.o(var0)[1]);
-            var1.put("timezone", ModelUtils.n(var0));
-            var1.put("resolution", ModelUtils.r(var0));
-            var1.put("access", ModelUtils.j(var0)[0]);
-            var1.put("access_subtype", ModelUtils.j(var0)[1]);
-            var1.put("carrier", ModelUtils.h(var0));
-            var1.put("cpu", ModelUtils.a());
-            var1.put("package", ModelUtils.u(var0));
-            var1.put("uid", LocalStorageUtils.getInstance().getUmengUid());
-            var1.put("mac", ModelUtils.q(var0));
-            var1.put("protocol_version", "2.0");
-            return var1;
+            jsonObject.put("device_id", ModelUtils.f(var0));
+            jsonObject.put("device_model", Build.MODEL);
+            jsonObject.put("appkey", ModelUtils.p(var0));
+            jsonObject.put("channel", ModelUtils.t(var0));
+            jsonObject.put("app_version", ModelUtils.d(var0));
+            jsonObject.put("version_code", ModelUtils.c(var0));
+            jsonObject.put("sdk_type", "Android");
+            jsonObject.put("sdk_version", "5.4.0.20150727");
+            jsonObject.put("os", "Android");
+            jsonObject.put("os_version", Build.VERSION.RELEASE);
+            jsonObject.put("country", ModelUtils.o(var0)[0]);
+            jsonObject.put("language", ModelUtils.o(var0)[1]);
+            jsonObject.put("timezone", ModelUtils.n(var0));
+            jsonObject.put("resolution", ModelUtils.r(var0));
+            jsonObject.put("access", ModelUtils.j(var0)[0]);
+            jsonObject.put("access_subtype", ModelUtils.j(var0)[1]);
+            jsonObject.put("carrier", ModelUtils.h(var0));
+            jsonObject.put("cpu", ModelUtils.a());
+            jsonObject.put("package", ModelUtils.u(var0));
+            jsonObject.put("uid", LocalStorageUtils.getInstance().getUmengUid());
+            jsonObject.put("mac", ModelUtils.q(var0));
+            jsonObject.put("protocol_version", "2.0");
+            return jsonObject;
         } catch (Exception var3) {
             var3.printStackTrace();
-            return var1;
+            return jsonObject;
         }
     }
 
@@ -209,16 +212,13 @@ public class FeedbackModel {
                 LocalStorageUtils.getInstance().setUmengUid(uid);
                 return uid;
             }
-        } catch (Exception var6) {
-            var6.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return "";
     }
 
     private JSONObject httpConnection(String url) throws IOException {
-        if (TextUtils.isEmpty(LocalStorageUtils.getInstance().getUmengUid())) {
-            getUmengUID();
-        }
         try {
             HttpURLConnection httpURLConnection = (HttpURLConnection) (new URL(url)).openConnection();
             httpURLConnection.setRequestMethod("GET");

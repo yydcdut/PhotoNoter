@@ -81,12 +81,6 @@ public class AboutAppActivity extends BaseActivity implements View.OnClickListen
                 startActivity(intent);
                 break;
             case R.id.layout_contact:
-//                Toast.makeText(this, "目前暂时不支持对话级别联系我们~", Toast.LENGTH_SHORT).show();
-//                Intent data = new Intent(Intent.ACTION_SENDTO);
-//                data.setData(Uri.parse("mailto:378040621@qq.com"));
-//                data.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.about_contact));
-//                data.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.about_contact));
-//                startActivity(data);
                 Intent data = new Intent(this, FeedbackActivity.class);
                 startActivity(data);
                 break;
