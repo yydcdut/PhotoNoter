@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.os.IBinder;
 import android.os.RemoteException;
 
 import com.yydcdut.note.ICameraData;
 import com.yydcdut.note.bean.PhotoNote;
+import com.yydcdut.note.bean.SandExif;
 import com.yydcdut.note.bean.SandPhoto;
 import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.model.SandBoxDBModel;
@@ -43,7 +45,6 @@ public class CameraService extends Service {
     public IBinder onBind(Intent intent) {
         new Thread(new MakePhotoRunnable()).start();
         return mStub;
-
     }
 
     /**
@@ -53,6 +54,7 @@ public class CameraService extends Service {
 
         @Override
         public void run() {
+            //todo 定位
             while (!mGotoStop) {
                 SandPhoto sandPhoto = mQueue.poll();
                 if (sandPhoto == null) {
@@ -132,7 +134,26 @@ public class CameraService extends Service {
         newBitmap.recycle();
         newBitmap = null;
         System.gc();
+        try {
+            setExif(photoNote, sandPhoto.getSandExif());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         deleteFromDB(sandPhoto);
+    }
+
+    private void setExif(PhotoNote photoNote, SandExif sandExif) throws IOException {
+        ExifInterface exif = new ExifInterface(photoNote.getBigPhotoPathWithoutFile());
+        exif.setAttribute(ExifInterface.TAG_ORIENTATION, String.valueOf(sandExif.getOrientation()));
+        exif.setAttribute(ExifInterface.TAG_GPS_LATITUDE, sandExif.getLatitude());
+        exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE, sandExif.getLontitude());
+        exif.setAttribute(ExifInterface.TAG_WHITE_BALANCE, String.valueOf(sandExif.getWhiteBalance()));
+        exif.setAttribute(ExifInterface.TAG_FLASH, String.valueOf(sandExif.getFlash()));
+        exif.setAttribute(ExifInterface.TAG_IMAGE_LENGTH, String.valueOf(sandExif.getImageLength()));
+        exif.setAttribute(ExifInterface.TAG_IMAGE_WIDTH, String.valueOf(sandExif.getImageWidth()));
+        exif.setAttribute(ExifInterface.TAG_MAKE, sandExif.getMake());
+        exif.setAttribute(ExifInterface.TAG_MODEL, sandExif.getModel());
+        exif.saveAttributes();
     }
 
     @Override
@@ -177,7 +198,7 @@ public class CameraService extends Service {
      */
     ICameraData.Stub mStub = new ICameraData.Stub() {
         @Override
-        public void add(String fileName, int size, String cameraId, long time, String category, boolean isMirror, int ratio) throws RemoteException {
+        public void add(String fileName, int size, String cameraId, long time, String category, boolean isMirror, int ratio, int orientation, String latitude, String lontitude, int whiteBalance, int flash, int imageLength, int imageWidth, String make, String model) throws RemoteException {
             boolean bool = true;
             File file = new File(FilePathUtils.getPath() + fileName);
             byte[] data;
@@ -210,7 +231,8 @@ public class CameraService extends Service {
             if (!bool) {
                 return;
             }
-            SandPhoto sandPhoto = new SandPhoto(SandPhoto.ID_NULL, data, time, cameraId, category, isMirror, ratio);
+            SandExif sandExif = new SandExif(orientation, latitude, lontitude, whiteBalance, flash, imageLength, imageWidth, make, model);
+            SandPhoto sandPhoto = new SandPhoto(SandPhoto.ID_NULL, data, time, cameraId, category, isMirror, ratio, sandExif);
             long id = add2DB(sandPhoto);
             sandPhoto.setId(id);
             mQueue.offer(sandPhoto);

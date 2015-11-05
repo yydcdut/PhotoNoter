@@ -148,6 +148,21 @@
         <activity android:name="com.github.mmin18.layoutcast.ResetActivity"/>
         <!-- ************ layoutcast End ************ -->
 
+        <!-- ************ Baidu Begin ************ -->
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="pjFyNkykpYu1bIqYkQFGRnbx"/>
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote">
+            <intent-filter>
+                <action android:name="com.baidu.location.service_v2.2">
+                </action>
+            </intent-filter>
+        </service>
+        <!-- ************ Baidu End ************ -->
+
     </application>
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -163,6 +178,7 @@
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.READ_LOGS"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
 
     <uses-feature android:name="android.hardware.camera.autofocus"/>
     <uses-feature android:name="android.hardware.camera"/>

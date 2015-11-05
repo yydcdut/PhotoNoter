@@ -31,6 +31,9 @@ android {
     signingConfigs {
         release {
         }
+        debug{
+            storeFile file("debug.keystore")
+        }
     }
 
     buildTypes {
@@ -91,4 +94,5 @@ dependencies {
     compile project(':sdlv')
     compile 'com.evernote:android-sdk:2.0.0-RC3'
     compile 'com.github.mmin18.layoutcast:library:1.+@aar'
+    compile files('src/libs/BaiduLBS_Android.jar')
 }

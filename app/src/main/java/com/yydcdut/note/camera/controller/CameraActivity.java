@@ -600,7 +600,7 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
                     mMenuLayout.setCaptureImage(getResources().getDrawable(R.drawable.btn_camera_capture));
                     mWindowTextView.interrupt();
                 } else if (mTimerNumber == 0) {//如果没有倒计时，直接拍照
-                    mCameraModel.capture(mSoundOpen);
+                    mCameraModel.capture(mSoundOpen, mSizeState);
                 }
                 break;
             case Const.LAYOUT_PERSONAL_TIMER_0:
@@ -698,7 +698,7 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
     @Override
     public void onTextDisappear() {
         mMenuLayout.setCaptureImage(getResources().getDrawable(R.drawable.btn_camera_capture));
-        mCameraModel.capture(mSoundOpen);
+        mCameraModel.capture(mSoundOpen, mSizeState);
     }
 
     //-------------------------  Zoom  -------------------------
@@ -775,5 +775,4 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
         }
     };
     //-------------------------  Sensor  -------------------------
-
 }

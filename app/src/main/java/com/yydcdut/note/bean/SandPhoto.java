@@ -9,14 +9,16 @@ public class SandPhoto implements IObject {
     public static final int ID_NULL = -1;
 
     private long id;
-    final private byte[] data;
-    final private long time;
-    final private String cameraId;
-    final private String category;
-    final private boolean isMirror;
-    final private int ratio;
+    private final byte[] data;
+    private final long time;
+    private final String cameraId;
+    private final String category;
+    private final boolean isMirror;
+    private final int ratio;
 
-    public SandPhoto(long id, byte[] data, long time, String cameraId, String category, boolean isMirror, int ratio) {
+    private final SandExif mSandExif;
+
+    public SandPhoto(long id, byte[] data, long time, String cameraId, String category, boolean isMirror, int ratio, SandExif sandExif) {
         this.id = id;
         this.data = data;
         this.time = time;
@@ -24,6 +26,7 @@ public class SandPhoto implements IObject {
         this.category = category;
         this.isMirror = isMirror;
         this.ratio = ratio;
+        this.mSandExif = sandExif;
     }
 
     public byte[] getData() {
@@ -58,6 +61,10 @@ public class SandPhoto implements IObject {
         return ratio;
     }
 
+    public SandExif getSandExif() {
+        return mSandExif;
+    }
+
     @Override
     public String toString() {
         return "SandPhoto{" +
@@ -68,6 +75,7 @@ public class SandPhoto implements IObject {
                 ", category='" + category + '\'' +
                 ", isMirror=" + isMirror +
                 ", ratio=" + ratio +
+                ", mSandExif=" + mSandExif +
                 '}';
     }
 }

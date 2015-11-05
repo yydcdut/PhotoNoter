@@ -4,12 +4,21 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.RemoteException;
 
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
 import com.yydcdut.note.ICameraData;
+import com.yydcdut.note.NoteApplication;
+import com.yydcdut.note.camera.param.Size;
 import com.yydcdut.note.service.CameraService;
+import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
+import com.yydcdut.note.utils.YLog;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -24,6 +33,8 @@ public class AbsCameraModel implements ICameraModel {
     private boolean mIsBind = false;
 
     private ICameraData mCameraService;
+
+    private LocationClient mLocationClient;
 
     @Override
     public ICameraSetting getSettingModel() {
@@ -71,17 +82,32 @@ public class AbsCameraModel implements ICameraModel {
     }
 
     @Override
-    public long capture(boolean sound) {
+    public long capture(boolean sound, int ratio) {
         return 0l;
     }
 
     @Override
     public void onCreate(Context context) {
+        mLocationClient = new LocationClient(NoteApplication.getContext());
+        mLocationClient.registerLocationListener(new MyLocationListener());
+        LocationClientOption option = new LocationClientOption();
+        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
+        option.setCoorType("gcj02");//可选，默认gcj02，设置返回的定位结果坐标系，
+        int span = 2000;
+        option.setScanSpan(span);//可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
+//        option.setIsNeedAddress(checkGeoLocation.isChecked());//可选，设置是否需要地址信息，默认不需要
+        option.setOpenGps(true);//可选，默认false,设置是否使用gps
+        option.setLocationNotify(true);//可选，默认false，设置是否当gps有效时按照1S1次频率输出GPS结果
+        option.setIgnoreKillProcess(false);//可选，默认true，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认不杀死
+        option.setEnableSimulateGps(false);//可选，默认false，设置是否需要过滤gps仿真结果，默认需要
+        mLocationClient.setLocOption(option);
+        mLocationClient.start();
         bindService(context);
     }
 
     @Override
     public void onDestroy(Context context) {
+        mLocationClient.stop();
         unBindService(context);
     }
 
@@ -113,7 +139,8 @@ public class AbsCameraModel implements ICameraModel {
         }
     }
 
-    public boolean addData2Service(byte[] data, String cameraId, long time, String category, boolean isMirror, int ratio) {
+    public boolean addData2Service(byte[] data, String cameraId, long time, String category,
+                                   boolean isMirror, int ratio) {
         boolean bool = true;
         int size = data.length;
         String fileName = time + ".data";
@@ -139,12 +166,99 @@ public class AbsCameraModel implements ICameraModel {
                 }
             }
         }
+
+        int orientation = 0;//todo 这个还没做，下个版本做
+        String latitude0 = String.valueOf((int) mLatitude) + "/1,";
+        String latitude1 = String.valueOf((int) ((mLatitude - (int) mLatitude) * 60) + "/1,");
+        String latitude2 = String.valueOf((int) ((((mLatitude - (int) mLatitude) * 60) - ((int) ((mLatitude - (int) mLatitude) * 60))) * 60 * 10000)) + "/10000";
+        String latitude = new StringBuilder(latitude0).append(latitude1).append(latitude2).toString();
+        String lontitude0 = String.valueOf((int) mLontitude) + "/1,";
+        String lontitude1 = String.valueOf((int) ((mLontitude - (int) mLontitude) * 60) + "/1,");
+        String lontitude2 = String.valueOf((int) ((((mLontitude - (int) mLontitude) * 60) - ((int) ((mLontitude - (int) mLontitude) * 60))) * 60 * 10000)) + "/10000";
+        String lontitude = new StringBuilder(lontitude0).append(lontitude1).append(lontitude2).toString();
+        int whiteBalance = 0;
+        if (getSettingModel().getWhiteBalance() != ICameraParams.WHITE_BALANCE_AUTO) {
+            whiteBalance = 1;
+        }
+        //todo 这里的flash是指拍照的那个时候闪光灯是否打开了,所以啊。。。这个。。。。
+        int flash = 0;
+        if (getSettingModel().getFlash() != ICameraParams.FLASH_OFF) {
+            flash = 1;
+        }
+        Size size1 = getSettingModel().getPictureSize();
+        int imageLength = size1.getHeight();
+        int imageWidth = size1.getWidth();
+        if (ratio == Const.CAMERA_SANDBOX_PHOTO_RATIO_1_1) {
+            imageLength = imageWidth;
+        }
+        String make = Build.BRAND;
+        String model = Build.MODEL;
         try {
-            mCameraService.add(fileName, size, cameraId, time, category, isMirror, ratio);
+            mCameraService.add(fileName, size, cameraId, time, category, isMirror, ratio,
+                    orientation, latitude, lontitude, whiteBalance, flash, imageLength, imageWidth, make, model);
         } catch (RemoteException e) {
             e.printStackTrace();
             bool = false;
         }
         return bool;
     }
+
+    private double mLatitude;
+    private double mLontitude;
+
+    public class MyLocationListener implements BDLocationListener {
+
+        @Override
+        public void onReceiveLocation(BDLocation location) {
+            //Receive Location
+            StringBuffer sb = new StringBuffer(256);
+            sb.append("\nlatitude : ");
+            sb.append(location.getLatitude());
+            sb.append("\nlontitude : ");
+            sb.append(location.getLongitude());
+            if (location.getLocType() == BDLocation.TypeGpsLocation) {// GPS定位结果
+                sb.append("\nspeed : ");
+                sb.append(location.getSpeed());// 单位：公里每小时
+                sb.append("\nsatellite : ");
+                sb.append(location.getSatelliteNumber());
+                sb.append("\nheight : ");
+                sb.append(location.getAltitude());// 单位：米
+                sb.append("\ndirection : ");
+                sb.append(location.getDirection());
+                sb.append("\naddr : ");
+                sb.append(location.getAddrStr());
+                sb.append("\ndescribe : ");
+                sb.append("gps定位成功");
+
+            } else if (location.getLocType() == BDLocation.TypeNetWorkLocation) {// 网络定位结果
+                sb.append("\naddr : ");
+                sb.append(location.getAddrStr());
+                //运营商信息
+                sb.append("\noperationers : ");
+                sb.append(location.getOperators());
+                sb.append("\ndescribe : ");
+                sb.append("网络定位成功");
+            } else if (location.getLocType() == BDLocation.TypeOffLineLocation) {// 离线定位结果
+                sb.append("\ndescribe : ");
+                sb.append("离线定位成功，离线定位结果也是有效的");
+            } else if (location.getLocType() == BDLocation.TypeServerError) {
+                sb.append("\ndescribe : ");
+                sb.append("服务端网络定位失败，可以反馈IMEI号和大体定位时间到loc-bugs@baidu.com，会有人追查原因");
+            } else if (location.getLocType() == BDLocation.TypeNetWorkException) {
+                sb.append("\ndescribe : ");
+                sb.append("网络不同导致定位失败，请检查网络是否通畅");
+            } else if (location.getLocType() == BDLocation.TypeCriteriaException) {
+                sb.append("\ndescribe : ");
+                sb.append("无法获取有效定位依据导致定位失败，一般是由于手机的原因，处于飞行模式下一般会造成这种结果，可以试着重启手机");
+            }
+            sb.append("\nlocationdescribe : ");// 位置语义化信息
+            sb.append(location.getLocationDescribe());
+            YLog.i("BaiduLocationApiDem", sb.toString());
+
+            mLatitude = location.getLatitude();
+            mLontitude = location.getLongitude();
+
+        }
+    }
+
 }

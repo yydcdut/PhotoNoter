@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.yydcdut.note.NoteApplication;
+import com.yydcdut.note.bean.SandExif;
 import com.yydcdut.note.bean.SandPhoto;
 import com.yydcdut.note.model.observer.IObserver;
 import com.yydcdut.note.model.sqlite.SandSQLite;
@@ -37,7 +38,7 @@ public class SandBoxDBModel implements IModel {
     /**
      * 查询
      *
-     * @return
+     * @returnHHH
      */
     public List<SandPhoto> findAll() {
         List<SandPhoto> sandPhotoList = new ArrayList<>();
@@ -52,7 +53,21 @@ public class SandBoxDBModel implements IModel {
             String isMirrorString = cursor.getString(cursor.getColumnIndex("mirror"));
             boolean isMirror = isMirrorString.equals("0") ? false : true;
             int ratio = cursor.getInt(cursor.getColumnIndex("ratio"));
-            SandPhoto sandPhoto = new SandPhoto(id, data, time, cameraId, category, isMirror, ratio);
+
+            int orientation = cursor.getInt(cursor.getColumnIndex("orientation"));
+            String latitude = cursor.getString(cursor.getColumnIndex("latitude"));
+            String lontitude = cursor.getString(cursor.getColumnIndex("lontitude"));
+            int whiteBalance = cursor.getInt(cursor.getColumnIndex("whiteBalance"));
+            int flash = cursor.getInt(cursor.getColumnIndex("flash"));
+            int imageLength = cursor.getInt(cursor.getColumnIndex("imageLength"));
+            int imageWidth = cursor.getInt(cursor.getColumnIndex("imageWidth"));
+            String make = cursor.getString(cursor.getColumnIndex("make"));
+            String model = cursor.getString(cursor.getColumnIndex("model"));
+
+            SandExif sandExif = new SandExif(orientation, latitude, lontitude, whiteBalance, flash,
+                    imageLength, imageWidth, make, model);
+            SandPhoto sandPhoto = new SandPhoto(id, data, time, cameraId, category, isMirror,
+                    ratio, sandExif);
             sandPhotoList.add(sandPhoto);
         }
         cursor.close();
@@ -75,6 +90,17 @@ public class SandBoxDBModel implements IModel {
         contentValues.put("category", sandPhoto.getCategory());
         contentValues.put("mirror", sandPhoto.isMirror());
         contentValues.put("ratio", sandPhoto.getRatio());
+
+        SandExif sandExif = sandPhoto.getSandExif();
+        contentValues.put("orientation", sandExif.getOrientation());
+        contentValues.put("latitude", sandExif.getLatitude());
+        contentValues.put("lontitude", sandExif.getLontitude());
+        contentValues.put("whiteBalance", sandExif.getWhiteBalance());
+        contentValues.put("flash", sandExif.getFlash());
+        contentValues.put("imageLength", sandExif.getImageLength());
+        contentValues.put("imageWidth", sandExif.getImageWidth());
+        contentValues.put("make", sandExif.getMake());
+        contentValues.put("model", sandExif.getModel());
         long id = db.insert(SandSQLite.TABLE, null, contentValues);
         db.close();
         return id;

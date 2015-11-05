@@ -31,7 +31,6 @@ public class CameraModel extends AbsCameraModel {
     private static final int STATE_CAMERA_NO_PREVIEW = 3;
     private int mCameraState = STATE_CAMERA_IDEL;
 
-
     private Camera mCamera = null;
     private MediaPlayer mShootSound;
     private SurfaceHolder mSurfaceHolder;
@@ -163,12 +162,12 @@ public class CameraModel extends AbsCameraModel {
     }
 
     @Override
-    public long capture(boolean sound) {
+    public long capture(boolean sound, int ratio) {
         long time = 0l;
         if (getFocusModel().getFocusState() != ICameraFocus.FOCUS_STATE_FOCUSING && mCameraState == STATE_CAMERA_PREVIEW_NORMAL) {
             time = System.currentTimeMillis();
             try {
-                mCamera.takePicture(sound ? new SoundCallBack() : null, null, new PictureCallBack(time, mCategory));
+                mCamera.takePicture(sound ? new SoundCallBack() : null, null, new PictureCallBack(time, mCategory, ratio));
             } catch (RuntimeException e) {
                 Toast.makeText(mContext, mContext.getResources().getString(R.string.toast_fail), Toast.LENGTH_SHORT).show();
             }
@@ -184,16 +183,17 @@ public class CameraModel extends AbsCameraModel {
     private class PictureCallBack implements Camera.PictureCallback {
         private long time;
         private String category;
+        private int ratio;
 
-        public PictureCallBack(long time, String category) {
+        public PictureCallBack(long time, String category, int ratio) {
             this.time = time;
             this.category = category;
+            this.ratio = ratio;
         }
 
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
-            //todo isMirror Ratio
-            addData2Service(data, mCurrentCameraId, time, category, false, 1);
+            addData2Service(data, mCurrentCameraId, time, category, false, ratio);
             //这里经常崩溃，做个延时处理
             new Handler().postDelayed(new Runnable() {
                 @Override

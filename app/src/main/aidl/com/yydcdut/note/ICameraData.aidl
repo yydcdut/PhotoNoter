@@ -5,5 +5,8 @@ package com.yydcdut.note;
 
 interface ICameraData {
 
-    void add(String fileName,int size, String cameraId, long time, String category, boolean isMirror, int ratio);
+    void add(String fileName,int size, String cameraId, long time,
+            String category, boolean isMirror, int ratio,
+            int orientation,String latitude,String lontitude,int whiteBalance,int flash,
+            int imageLength,int imageWidth,String make,String model);
 }

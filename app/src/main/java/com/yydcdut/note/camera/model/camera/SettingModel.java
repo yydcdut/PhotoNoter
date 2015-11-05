@@ -143,6 +143,22 @@ public class SettingModel implements ICameraSetting {
     }
 
     @Override
+    public int getFlash() {
+        Camera.Parameters parameters = getParameters();
+        switch (parameters.getFlashMode()) {
+            case Camera.Parameters.FLASH_MODE_OFF:
+                return FLASH_OFF;
+            case Camera.Parameters.FLASH_MODE_AUTO:
+                return FLASH_AUTO;
+            case Camera.Parameters.FLASH_MODE_ON:
+                return FLASH_ON;
+            case Camera.Parameters.FLASH_MODE_TORCH:
+                return FLASH_TORCH;
+        }
+        return 0;
+    }
+
+    @Override
     public void setPreviewSize(int width, int height) {
         Camera.Parameters parameters = getParameters();
         parameters.setPreviewSize(width, height);
@@ -154,6 +170,13 @@ public class SettingModel implements ICameraSetting {
         Camera.Parameters parameters = getParameters();
         parameters.setPictureSize(width, height);
         applyParameter(parameters);
+    }
+
+    @Override
+    public Size getPictureSize() {
+        Camera.Parameters parameters = getParameters();
+        Camera.Size size = parameters.getPictureSize();
+        return new Size(size.width, size.height);
     }
 
     @Override
@@ -212,6 +235,30 @@ public class SettingModel implements ICameraSetting {
                 break;
         }
         applyParameter(parameters);
+    }
+
+    @Override
+    public int getWhiteBalance() {
+        Camera.Parameters parameters = getParameters();
+        switch (parameters.getWhiteBalance()) {
+            case Camera.Parameters.WHITE_BALANCE_AUTO:
+                return ICameraParams.WHITE_BALANCE_AUTO;
+            case Camera.Parameters.WHITE_BALANCE_WARM_FLUORESCENT:
+                return ICameraParams.WHITE_BALANCE_WARM_FLUORESCENT;
+            case Camera.Parameters.WHITE_BALANCE_TWILIGHT:
+                return ICameraParams.WHITE_BALANCE_TWILIGHT;
+            case Camera.Parameters.WHITE_BALANCE_SHADE:
+                return ICameraParams.WHITE_BALANCE_SHADE;
+            case Camera.Parameters.WHITE_BALANCE_INCANDESCENT:
+                return ICameraParams.WHITE_BALANCE_INCANDESCENT;
+            case Camera.Parameters.WHITE_BALANCE_CLOUDY_DAYLIGHT:
+                return ICameraParams.WHITE_BALANCE_CLOUDY_DAYLIGHT;
+            case Camera.Parameters.WHITE_BALANCE_DAYLIGHT:
+                return ICameraParams.WHITE_BALANCE_DAYLIGHT;
+            case Camera.Parameters.WHITE_BALANCE_FLUORESCENT:
+                return ICameraParams.WHITE_BALANCE_FLUORESCENT;
+        }
+        return 0;
     }
 
 
