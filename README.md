@@ -16,6 +16,22 @@ Material Design风格的开源照片笔记。
 
 如果发现bug或者有什么建议，**欢迎在issue里面讨论**！
 
+# 编译
+
+如果编译不过，错误日志是：
+
+> Error:A problem was found with the configuration of task ':app:packagexxxxDebug'.
+> 
+> File ‘/xxxxxxxxxx/debug.keystore' specified for property 'signingConfig.storeFile' does not exist.
+
+将{$projectName}/app/build.gradle中的下面代码删除
+
+``` groovy
+debug{
+            storeFile file("debug.keystore")
+     }
+```
+
 # 应用截图
 
 ## 动画gif
