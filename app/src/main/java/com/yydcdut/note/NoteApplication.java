@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 
+import com.baidu.mapapi.SDKInitializer;
 import com.evernote.client.android.EvernoteSession;
 import com.github.mmin18.layoutcast.LayoutCast;
 import com.squareup.leakcanary.LeakCanary;
@@ -11,7 +12,6 @@ import com.squareup.leakcanary.RefWatcher;
 import com.umeng.analytics.MobclickAgent;
 import com.yydcdut.note.model.UserCenter;
 import com.yydcdut.note.service.CheckService;
-import com.yydcdut.note.utils.CrashHandler;
 import com.yydcdut.note.utils.Evi;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
@@ -70,6 +70,7 @@ public class NoteApplication extends Application {
         Evi.init();
         initService();
         initUser();
+        initBaiduSdk();
 
         /* Camera360 */
         PGEditImageLoader.initImageLoader(this);
@@ -81,13 +82,14 @@ public class NoteApplication extends Application {
         MobclickAgent.updateOnlineConfig(this);
         MobclickAgent.setCatchUncaughtExceptions(true);
 
-        CrashHandler.getInstance().init(getApplicationContext());
+//        CrashHandler.getInstance().init(getApplicationContext());
 
         YLog.setDEBUG(true);
 
         if (BuildConfig.DEBUG) {
             LayoutCast.init(this);
         }
+
     }
 
 
@@ -146,6 +148,10 @@ public class NoteApplication extends Application {
         if (UserCenter.getInstance().isLoginEvernote()) {
             UserCenter.getInstance().LoginEvernote();
         }
+    }
+
+    private void initBaiduSdk() {
+        SDKInitializer.initialize(getContext());
     }
 
 }

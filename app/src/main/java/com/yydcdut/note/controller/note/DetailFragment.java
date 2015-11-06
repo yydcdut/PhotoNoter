@@ -17,6 +17,13 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.search.core.SearchResult;
+import com.baidu.mapapi.search.geocode.GeoCodeResult;
+import com.baidu.mapapi.search.geocode.GeoCoder;
+import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.yydcdut.note.R;
@@ -160,18 +167,67 @@ public class DetailFragment extends BaseFragment implements ObservableScrollView
     }
 
     private void initExif(View v) throws IOException {
-        ExifInterface exifInterface = new ExifInterface(mPhotoNote.getBigPhotoPathWithoutFile());
-        String text1 = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
-        String text2 = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
-        TextView textView = (TextView) v.findViewById(R.id.txt_detail_location);
+        final TextView textView = (TextView) v.findViewById(R.id.txt_detail_location);
         ImageView imageView = (ImageView) v.findViewById(R.id.img_detail_location);
-        if (TextUtils.isEmpty(text1)) {
+
+        ExifInterface exifInterface = new ExifInterface(mPhotoNote.getBigPhotoPathWithoutFile());
+        String latitudeS = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
+        String longitudeS = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+        if (TextUtils.isEmpty(latitudeS) || TextUtils.isEmpty(longitudeS)) {
             imageView.setImageResource(R.drawable.ic_map_grey);
             textView.setText(getResources().getString(R.string.detail_location));
         } else {
             imageView.setImageResource(R.drawable.ic_map);
-            textView.setText(text1 + "   " + text2);
+
+            String[] latitudeSs = latitudeS.split(",");
+            if (latitudeSs.length != 3) {
+                imageView.setImageResource(R.drawable.ic_map_grey);
+                textView.setText(getResources().getString(R.string.detail_location));
+                return;
+            }
+            double latitudesD = 0;
+            latitudesD += Double.parseDouble(latitudeSs[0].split("/")[0]);
+            latitudesD += (((int) (Double.parseDouble(latitudeSs[1].split("/")[0]) * 100)) + Double.parseDouble(latitudeSs[2].split("/")[0]) / 60 / 10000) / 60 / 100;
+
+            String[] longitudeSs = longitudeS.split(",");
+            if (longitudeSs.length != 3) {
+                imageView.setImageResource(R.drawable.ic_map_grey);
+                textView.setText(getResources().getString(R.string.detail_location));
+                return;
+            }
+            double longitudesD = 0;
+            longitudesD += Double.parseDouble(longitudeSs[0].split("/")[0]);
+            longitudesD += (((int) (Double.parseDouble(longitudeSs[1].split("/")[0]) * 100)) + Double.parseDouble(longitudeSs[2].split("/")[0]) / 60 / 10000) / 60 / 100;
+
+            textView.setText(latitudesD + "   " + longitudesD);
+
+            GeoCoder geoCoder = GeoCoder.newInstance();
+            OnGetGeoCoderResultListener listener = new OnGetGeoCoderResultListener() {
+                // 反地理编码查询结果回调函数
+                @Override
+                public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
+                    if (result == null
+                            || result.error != SearchResult.ERRORNO.NO_ERROR) {
+                        // 没有检测到结果
+                        return;
+                    }
+                    textView.setText(result.getAddress());
+                }
+
+                // 地理编码查询结果回调函数
+                @Override
+                public void onGetGeoCodeResult(GeoCodeResult result) {
+                }
+            };
+            // 设置地理编码检索监听者
+            geoCoder.setOnGetGeoCodeResultListener(listener);
+            //
+            geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(new LatLng(latitudesD, longitudesD)));
+            // 释放地理编码检索实例
+            geoCoder.destroy();
         }
+
+
     }
 
     @Override
