@@ -138,6 +138,7 @@
     <string name="toast_input_email_error">请输入正确的联系方式!</string>
 
     <string name="make_photo_notification">正在后台作图，请不要退出程序！</string>
+    <string name="make_photo_notification_title">正在后台作图!</string>
     <string name="toast_storage">存储不足！</string>
     <string name="toast_sdcard">请插入SD卡！</string>
     <string name="dialog_crash">我们正在鞭打程序员改BUG!</string>

@@ -75,7 +75,6 @@ public class DetailFragment extends BaseFragment implements ObservableScrollView
     private TextView mCreateView;
     private TextView mEditView;
 
-
     public static DetailFragment newInstance() {
         return new DetailFragment();
     }
@@ -201,7 +200,7 @@ public class DetailFragment extends BaseFragment implements ObservableScrollView
 
             textView.setText(latitudesD + "   " + longitudesD);
 
-            GeoCoder geoCoder = GeoCoder.newInstance();
+            final GeoCoder geoCoder = GeoCoder.newInstance();
             OnGetGeoCoderResultListener listener = new OnGetGeoCoderResultListener() {
                 // 反地理编码查询结果回调函数
                 @Override
@@ -212,6 +211,8 @@ public class DetailFragment extends BaseFragment implements ObservableScrollView
                         return;
                     }
                     textView.setText(result.getAddress());
+                    // 释放地理编码检索实例
+                    geoCoder.destroy();
                 }
 
                 // 地理编码查询结果回调函数
@@ -223,8 +224,7 @@ public class DetailFragment extends BaseFragment implements ObservableScrollView
             geoCoder.setOnGetGeoCodeResultListener(listener);
             //
             geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(new LatLng(latitudesD, longitudesD)));
-            // 释放地理编码检索实例
-            geoCoder.destroy();
+
         }
 
 

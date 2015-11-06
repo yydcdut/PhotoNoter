@@ -47,6 +47,9 @@ public class SettingModel implements ICameraSetting {
     @Override
     public List<Integer> getSupportedFlash() {
         List<String> stringList = getParameters().getSupportedFlashModes();
+        if (stringList == null) {
+            return new ArrayList<>(0);
+        }
         List<Integer> cameraList = new ArrayList<>(stringList.size());
         for (String s : stringList) {
             int flash = ParamsConvert.convertFlash(s);
@@ -72,6 +75,9 @@ public class SettingModel implements ICameraSetting {
     @Override
     public List<Integer> getSupportedWhiteBalance() {
         List<String> stringList = getParameters().getSupportedWhiteBalance();
+        if (stringList == null) {
+            return new ArrayList<>(0);
+        }
         List<Integer> cameraList = new ArrayList<>(stringList.size());
         for (String s : stringList) {
             int wb = ParamsConvert.convertWhiteBalance(s);

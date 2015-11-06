@@ -2,16 +2,17 @@ package com.yydcdut.note.service;
 
 import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.support.v4.app.NotificationCompat;
 
 import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
@@ -36,7 +37,11 @@ public class SandBoxService extends Service implements Handler.Callback {
 
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return new SandBoxBinder();
+    }
+
+    public class SandBoxBinder extends Binder {
+
     }
 
     @Override
@@ -167,15 +172,19 @@ public class SandBoxService extends Service implements Handler.Callback {
     private void notification() {
         if (mNotificationManager == null) {
             mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                    .setContentTitle(getResources().getString(R.string.make_photo_notification_title))
+                    .setContentText(getResources().getString(R.string.make_photo_notification))
+                    .setTicker(getResources().getString(R.string.make_photo_notification_title))
+                    .setWhen(System.currentTimeMillis())
+                    .setAutoCancel(false)
+                    .setOngoing(true)
+                    .setDefaults(Notification.DEFAULT_LIGHTS)
+                    .setSmallIcon(R.drawable.ic_launcher);
+            Notification notification = builder.build();
+            notification.flags = Notification.FLAG_AUTO_CANCEL;
+            mNotificationManager.notify(0, notification);
         }
-        Notification notification = new Notification(R.drawable.ic_launcher,
-                getResources().getString(R.string.make_photo_notification), System.currentTimeMillis());
-        notification.flags = Notification.FLAG_NO_CLEAR;
-        Intent intent = new Intent();
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, 0);
-        notification.setLatestEventInfo(this, getResources().getString(R.string.app_name),
-                getResources().getString(R.string.make_photo_notification), contentIntent);
-        mNotificationManager.notify(0, notification);
     }
 
     /**

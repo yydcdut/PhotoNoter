@@ -21,7 +21,7 @@ import java.util.List;
 public class SandBoxDBModel implements IModel {
 
     private static final String NAME = "SandBox.db";
-    private static final int VERSION = 2;
+    private static final int VERSION = 3;
 
     private SandSQLite mSandSQLite;
 
@@ -54,7 +54,7 @@ public class SandBoxDBModel implements IModel {
             boolean isMirror = isMirrorString.equals("0") ? false : true;
             int ratio = cursor.getInt(cursor.getColumnIndex("ratio"));
 
-            int orientation = cursor.getInt(cursor.getColumnIndex("orientation"));
+            int orientation1 = cursor.getInt(cursor.getColumnIndex("orientation1"));
             String latitude = cursor.getString(cursor.getColumnIndex("latitude"));
             String lontitude = cursor.getString(cursor.getColumnIndex("lontitude"));
             int whiteBalance = cursor.getInt(cursor.getColumnIndex("whiteBalance"));
@@ -64,7 +64,7 @@ public class SandBoxDBModel implements IModel {
             String make = cursor.getString(cursor.getColumnIndex("make"));
             String model = cursor.getString(cursor.getColumnIndex("model"));
 
-            SandExif sandExif = new SandExif(orientation, latitude, lontitude, whiteBalance, flash,
+            SandExif sandExif = new SandExif(orientation1, latitude, lontitude, whiteBalance, flash,
                     imageLength, imageWidth, make, model);
             SandPhoto sandPhoto = new SandPhoto(id, data, time, cameraId, category, isMirror,
                     ratio, sandExif);
@@ -92,7 +92,7 @@ public class SandBoxDBModel implements IModel {
         contentValues.put("ratio", sandPhoto.getRatio());
 
         SandExif sandExif = sandPhoto.getSandExif();
-        contentValues.put("orientation", sandExif.getOrientation());
+        contentValues.put("orientation1", sandExif.getOrientation1());
         contentValues.put("latitude", sandExif.getLatitude());
         contentValues.put("lontitude", sandExif.getLontitude());
         contentValues.put("whiteBalance", sandExif.getWhiteBalance());

@@ -2,16 +2,19 @@ package com.yydcdut.note.controller.home;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
@@ -111,6 +114,7 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
     private CircleProgressBarLayout mProgressLayout;
     /* Handler */
     private Handler mMainHandler = new Handler(this);
+    private boolean mIsSandboxServiceConnecting = false;
 
     public static AlbumFragment newInstance() {
         return new AlbumFragment();
@@ -241,8 +245,9 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
             @Override
             public void run() {
                 try {
-                    if (SandBoxDBModel.getInstance().findAll().size() > 0) {
-                        getContext().startService(new Intent(getContext(), SandBoxService.class));
+                    if (SandBoxDBModel.getInstance().getAllNumber() > 0 && !mIsSandboxServiceConnecting) {
+                        Intent intent = new Intent(getContext(), SandBoxService.class);
+                        getActivity().bindService(intent, mSandBoxServiceConnection, Context.BIND_AUTO_CREATE);
                     }
                 } catch (Exception e) {
                     Toast.makeText(getContext(), getContext().getResources().getString(R.string.toast_sandbox_fail), Toast.LENGTH_SHORT).show();
@@ -250,6 +255,18 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
             }
         }, 5000);
     }
+
+    private ServiceConnection mSandBoxServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mIsSandboxServiceConnecting = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mIsSandboxServiceConnecting = false;
+        }
+    };
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -23,7 +23,7 @@ public class SandSQLite extends SQLiteOpenHelper {
                 "category VARCHAR(50) NOT NULL, " +//分类
                 "mirror CHAR(1) NOT NULL DEFAULT '0', " +//镜像
                 "ratio INTEGER NOT NULL DEFAULT 0, " +//比例，4：3？16：9？1：1
-                "orientation INTEGER DEFAULT 0, " +//方向
+                "orientation1 INTEGER DEFAULT 0, " +//方向
                 "latitude VARCHAR(50), " +//经度
                 "lontitude VARCHAR(50), " +//纬度
                 "whiteBalance INTEGER DEFAULT 0, " +//白平衡
@@ -57,14 +57,12 @@ public class SandSQLite extends SQLiteOpenHelper {
         //图片比例
         String sql2 = "ALTER TABLE " + TABLE + " ADD ratio INTEGER DEFAULT 0;";
         db.execSQL(sql2);
-        //建立索引 TODO category用
-//        String indexSql = "CREATE INDEX student_index on student_table(stu_no);";
     }
 
     private void updateFrom2To3(SQLiteDatabase db) {
         //方向
-        String orientation = "ALTER TABLE " + TABLE + " ADD orientation INTEGER;";
-        db.execSQL(orientation);
+        String orientation1 = "ALTER TABLE " + TABLE + " ADD orientation1 INTEGER;";
+        db.execSQL(orientation1);
         //经度
         String latitude = "ALTER TABLE " + TABLE + " ADD latitude VARCHAR(50);";
         db.execSQL(latitude);

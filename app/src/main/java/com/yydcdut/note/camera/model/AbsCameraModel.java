@@ -184,13 +184,17 @@ public class AbsCameraModel implements ICameraModel {
         String lontitude2 = String.valueOf((int) ((((mLontitude - (int) mLontitude) * 60) - ((int) ((mLontitude - (int) mLontitude) * 60))) * 60 * 10000)) + "/10000";
         String lontitude = new StringBuilder(lontitude0).append(lontitude1).append(lontitude2).toString();
         int whiteBalance = 0;
-        if (getSettingModel().getWhiteBalance() != ICameraParams.WHITE_BALANCE_AUTO) {
-            whiteBalance = 1;
+        if (getSettingModel().getSupportedWhiteBalance().size() > 0) {
+            if (getSettingModel().getWhiteBalance() != ICameraParams.WHITE_BALANCE_AUTO) {
+                whiteBalance = 1;
+            }
         }
         //todo 这里的flash是指拍照的那个时候闪光灯是否打开了,所以啊。。。这个。。。。
         int flash = 0;
-        if (getSettingModel().getFlash() != ICameraParams.FLASH_OFF) {
-            flash = 1;
+        if (getSettingModel().getSupportedFlash().size() > 0) {
+            if (getSettingModel().getFlash() != ICameraParams.FLASH_OFF) {
+                flash = 1;
+            }
         }
         Size size1 = getSettingModel().getPictureSize();
         int imageLength = size1.getHeight();

@@ -1,5 +1,6 @@
 package com.yydcdut.note;
 
+import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
@@ -69,12 +70,13 @@ public class NoteApplication extends Application {
         FilePathUtils.initEnvironment();
         Evi.init();
         initService();
-        initUser();
-        initBaiduSdk();
-
-        /* Camera360 */
-        PGEditImageLoader.initImageLoader(this);
-        PGEditSDK.instance().initSDK(this);
+        if (!isFromOtherProgress()) {
+            initUser();
+            initBaiduSdk();
+             /* Camera360 */
+            PGEditImageLoader.initImageLoader(this);
+            PGEditSDK.instance().initSDK(this);
+        }
 
         //打点
         MobclickAgent.setDebugMode(true);
@@ -89,7 +91,6 @@ public class NoteApplication extends Application {
         if (BuildConfig.DEBUG) {
             LayoutCast.init(this);
         }
-
     }
 
 
@@ -152,6 +153,21 @@ public class NoteApplication extends Application {
 
     private void initBaiduSdk() {
         SDKInitializer.initialize(getContext());
+    }
+
+    private boolean isFromOtherProgress() {
+        int pid = android.os.Process.myPid();
+        ActivityManager mActivityManager = (ActivityManager) getContext().getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningAppProcessInfo appProcess : mActivityManager.getRunningAppProcesses()) {
+            if (pid == appProcess.pid) {
+                if (appProcess.processName.equals("com.yydcdut.note:cameraphots") ||
+                        appProcess.processName.equals("com.yydcdut.note:remote") ||
+                        appProcess.processName.equals("com.yydcdut.note:makephotos")) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }

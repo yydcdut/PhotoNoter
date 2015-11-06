@@ -51,18 +51,18 @@ android {
 
     productFlavors {
         Store360 {}
-        QQ {}
-        WanDouJia {}
+//        QQ {}
+//        WanDouJia {}
 //        AnZhi {}
-        BaiDu {}
+//        BaiDu {}
 //        GFeng {}
 //        AppChina {}
 //        EoeMarket {}
 //        xiaomi {}
 //        PP {}
-        Flyme {}
-        Market91 {}
-        AnZhuo {}
+//        Flyme {}
+//        Market91 {}
+//        AnZhuo {}
     }
 
     productFlavors.all { flavor ->

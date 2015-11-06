@@ -144,7 +144,7 @@ public class CameraService extends Service {
 
     private void setExif(PhotoNote photoNote, SandExif sandExif) throws IOException {
         ExifInterface exif = new ExifInterface(photoNote.getBigPhotoPathWithoutFile());
-        exif.setAttribute(ExifInterface.TAG_ORIENTATION, String.valueOf(sandExif.getOrientation()));
+        exif.setAttribute(ExifInterface.TAG_ORIENTATION, String.valueOf(sandExif.getOrientation1()));
         exif.setAttribute(ExifInterface.TAG_GPS_LATITUDE, sandExif.getLatitude());
         exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE, sandExif.getLontitude());
         exif.setAttribute(ExifInterface.TAG_WHITE_BALANCE, String.valueOf(sandExif.getWhiteBalance()));

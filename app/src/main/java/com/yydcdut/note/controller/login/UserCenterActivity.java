@@ -250,6 +250,9 @@ public class UserCenterActivity extends BaseActivity implements View.OnClickList
                 mIntention = positionOffset - mLastTimePositionOffset >= 0 ? INTENTION_RIGHT : INTENTION_LEFT;
             }
         } else if (mIntention == INTENTION_RIGHT && positionOffset < 0.99) {//right
+            if (position >= 2) {
+                position = 1;
+            }
             int r2 = Color.red(mColorArray[position + 1]);
             int r1 = Color.red(mColorArray[position]);
             int g2 = Color.green(mColorArray[position + 1]);
@@ -266,6 +269,9 @@ public class UserCenterActivity extends BaseActivity implements View.OnClickList
             mBackgroundImage.setBackgroundColor(newColor);
             mUserCenterArrowView.setColorAndMarginWidth(newColor, (int) (mScrollWidth * positionOffset + position * mScrollWidth - mScrollWidth));
         } else if (mIntention == INTENTION_LEFT && positionOffset > 0.01) {//left
+            if (position <= 0) {
+                position = 1;
+            }
             int r0 = Color.red(mColorArray[position]);
             int r1 = Color.red(mColorArray[position + 1]);
             int g0 = Color.green(mColorArray[position]);

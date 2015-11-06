@@ -4,7 +4,7 @@ package com.yydcdut.note.bean;
  * Created by yuyidong on 15/11/5.
  */
 public class SandExif {
-    private final int orientation;
+    private final int orientation1;
     private final String latitude;
     private final String lontitude;
     private final int whiteBalance;
@@ -16,7 +16,7 @@ public class SandExif {
 
     public SandExif(int orientation, String latitude, String lontitude, int whiteBalance, int flash,
                     int imageLength, int imageWidth, String make, String model) {
-        this.orientation = orientation;
+        this.orientation1 = orientation;
         this.latitude = latitude;
         this.lontitude = lontitude;
         this.whiteBalance = whiteBalance;
@@ -27,8 +27,8 @@ public class SandExif {
         this.model = model;
     }
 
-    public int getOrientation() {
-        return orientation;
+    public int getOrientation1() {
+        return orientation1;
     }
 
     public String getLatitude() {
@@ -66,7 +66,7 @@ public class SandExif {
     @Override
     public String toString() {
         return "SandExif{" +
-                "orientation=" + orientation +
+                "orientation1=" + orientation1 +
                 ", latitude='" + latitude + '\'' +
                 ", lontitude='" + lontitude + '\'' +
                 ", whiteBalance=" + whiteBalance +
