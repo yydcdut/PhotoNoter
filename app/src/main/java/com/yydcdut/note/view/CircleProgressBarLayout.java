@@ -51,6 +51,10 @@ public class CircleProgressBarLayout extends FrameLayout implements View.OnTouch
         setVisibility(GONE);
     }
 
+    public boolean isShowing() {
+        return getVisibility() == VISIBLE;
+    }
+
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         // do nothing

@@ -1,5 +1,6 @@
 package com.yydcdut.note.controller.setting;
 
+import android.graphics.Color;
 import android.graphics.PointF;
 import android.os.Handler;
 import android.os.Message;
@@ -9,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 
@@ -19,21 +21,33 @@ import com.nineoldandroids.animation.ValueAnimator;
 import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.controller.BaseActivity;
+import com.yydcdut.note.model.FeedbackModel;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.LollipopCompat;
 import com.yydcdut.note.view.CircleProgressBarLayout;
 import com.yydcdut.note.view.RevealView;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by yuyidong on 15/11/3.
  */
 public class FeedbackActivity extends BaseActivity implements View.OnClickListener,
         Handler.Callback {
-    private EditText mEditText;
+    private EditText mContentText;
+    private EditText mEmailText;
     private Handler mHandler;
     private CircleProgressBarLayout mProgressLayout;
     private RevealView mRevealView;
+    private View mOkView;
     private FloatingActionButton mFab;
+    private int mType;
+    public static final String TYPE = "type";
+    public static final int TYPE_FEEDBACK = 0;
+    public static final int TYPE_CONTACT = 1;
+
+    private boolean mIsUpdate = false;
 
     @Override
     public boolean setStatusBar() {
@@ -45,26 +59,29 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
         return R.layout.activity_feedback;
     }
 
-
     @Override
     public void initUiAndListener() {
+        mType = getIntent().getIntExtra(TYPE, TYPE_FEEDBACK);
         initToolBarUI();
         initView();
     }
 
     private void initToolBarUI() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(getResources().getString(R.string.feedback));
+        toolbar.setTitle(getResources().getString(mType == TYPE_FEEDBACK ? R.string.feedback : R.string.about_contact));
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         LollipopCompat.setElevation(toolbar, getResources().getDimension(R.dimen.ui_elevation));
     }
 
     private void initView() {
-
-        mEditText = (EditText) findViewById(R.id.et_feedback);
+        mEmailText = (EditText) findViewById(R.id.et_feedback_email);
+        mContentText = (EditText) findViewById(R.id.et_feedback_content);
+        mOkView = findViewById(R.id.img_feedback_ok);
         mRevealView = (RevealView) findViewById(R.id.reveal_feedback);
         mProgressLayout = (CircleProgressBarLayout) findViewById(R.id.layout_progress);
+        mProgressLayout.getCircleProgressBar().setCircleBackgroundEnabled(false);
+        mProgressLayout.getCircleProgressBar().setColorSchemeColors(Color.WHITE);
         mFab = (FloatingActionButton) findViewById(R.id.fab_send);
         mFab.setOnClickListener(this);
     }
@@ -83,7 +100,17 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab_send:
-                if (TextUtils.isEmpty(mEditText.getText().toString())) {
+                if (TextUtils.isEmpty(mEmailText.getText().toString())) {
+                    Snackbar.make(findViewById(R.id.cl_feedback), getResources().getString(R.string.toast_input_email),
+                            Snackbar.LENGTH_SHORT).show();
+                    break;
+                }
+                if (!isEmail(mEmailText.getText().toString())) {
+                    Snackbar.make(findViewById(R.id.cl_feedback), getResources().getString(R.string.toast_input_email_error),
+                            Snackbar.LENGTH_SHORT).show();
+                    break;
+                }
+                if (TextUtils.isEmpty(mContentText.getText().toString())) {
                     Snackbar.make(findViewById(R.id.cl_feedback), getResources().getString(R.string.toast_input_error),
                             Snackbar.LENGTH_SHORT).show();
                     break;
@@ -91,13 +118,17 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
                 if (mHandler == null) {
                     mHandler = new Handler(this);
                 }
-                mProgressLayout.show();
                 parabolaAnimation(mFab);
                 NoteApplication.getInstance().getExecutorPool().submit(new Runnable() {
                     @Override
                     public void run() {
-//                        FeedbackModel.getInstance().sendFeedback(System.currentTimeMillis() + "",
-//                                mEditText.getText().toString());
+                        FeedbackModel.getInstance().sendFeedback(System.currentTimeMillis() + "",
+                                mEmailText.getText().toString() + "<---联系方式   " + (mType == TYPE_FEEDBACK ? "Feedback" : "Contact") + "   反馈内容--->" + mContentText.getText().toString());
+                        try {
+                            Thread.sleep(2000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                         mHandler.sendEmptyMessage(0);
                     }
                 });
@@ -107,9 +138,18 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public boolean handleMessage(Message msg) {
-        mProgressLayout.hide();
-//        Snackbar.make(findViewById(R.id.cl_feedback), getResources().getString(R.string.toast_success),
-//                Snackbar.LENGTH_SHORT).show();
+        mIsUpdate = true;
+        if (mProgressLayout.isShowing()) {
+            mProgressLayout.hide();
+            mOkView.setVisibility(View.VISIBLE);
+            mOkView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_scale_small_2_big));
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    finish();
+                }
+            }, 600);
+        }
         return false;
     }
 
@@ -147,8 +187,31 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
                 mRevealView.reveal((int) mFab.getX() + mFab.getWidth() / 2, (int) mFab.getY() + mFab.getHeight() / 2,
-                        getThemeColor(), Const.RADIUS, Const.DURATION, null);
+                        getThemeColor(), Const.RADIUS, Const.DURATION, new RevealView.RevealAnimationListener() {
+                            @Override
+                            public void finish() {
+                                if (mIsUpdate) {
+                                    mOkView.setVisibility(View.VISIBLE);
+                                    mOkView.startAnimation(AnimationUtils.loadAnimation(FeedbackActivity.this, R.anim.anim_scale_small_2_big));
+                                    mHandler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            finish();
+                                        }
+                                    }, 600);
+                                } else {
+                                    mProgressLayout.show();
+                                }
+                            }
+                        });
             }
         });
+    }
+
+    private boolean isEmail(String email) {
+        String str = "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$";
+        Pattern p = Pattern.compile(str);
+        Matcher m = p.matcher(email);
+        return m.matches();
     }
 }

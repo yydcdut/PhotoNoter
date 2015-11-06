@@ -34,10 +34,27 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="6dip"
+            android:layout_marginBottom="@dimen/dimen_12dip">
+
+            <EditText
+                android:id="@+id/et_feedback_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dip"
+                android:layout_marginRight="3dip"
+                android:hint="@string/feedback_email"
+                android:textColor="@color/txt_gray">
+            </EditText>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_margin="6dip">
 
             <EditText
-                android:id="@+id/et_feedback"
+                android:id="@+id/et_feedback_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="3dip"
@@ -60,17 +77,24 @@
 
             <com.yydcdut.note.view.RevealColorView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                />
+                android:layout_height="match_parent"/>
         </com.yydcdut.note.view.RevealView>
+
+        <com.yydcdut.note.view.CircleProgressBarLayout
+            android:id="@+id/layout_progress"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:visibility="gone">
+        </com.yydcdut.note.view.CircleProgressBarLayout>
+
+        <ImageView
+            android:id="@+id/img_feedback_ok"
+            android:layout_width="@dimen/dimen_48dip"
+            android:layout_height="@dimen/dimen_48dip"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_done_white_48dp"
+            android:visibility="invisible"/>
     </FrameLayout>
 
-
-    <com.yydcdut.note.view.CircleProgressBarLayout
-        android:id="@+id/layout_progress"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:visibility="gone">
-    </com.yydcdut.note.view.CircleProgressBarLayout>
 
 </RelativeLayout>

@@ -120,6 +120,7 @@
     <string name="splash">关闭引导页</string>
     <string name="user_failed">拉取信息失败！</string>
     <string name="feedback">意见反馈</string>
+    <string name="feedback_email">联系方式(邮箱)</string>
 
     <string name="toast_fail">失败!</string>
     <string name="rename">重命名</string>
@@ -133,6 +134,8 @@
     <string name="toast_no_connection">没有网络连接!</string>
     <string name="toast_already_login">已经登录</string>
     <string name="toast_input_error">请输入反馈!</string>
+    <string name="toast_input_email">请输入联系方式~</string>
+    <string name="toast_input_email_error">请输入正确的联系方式!</string>
 
     <string name="make_photo_notification">正在后台作图，请不要退出程序！</string>
     <string name="toast_storage">存储不足！</string>

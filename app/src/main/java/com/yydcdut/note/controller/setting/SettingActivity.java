@@ -62,6 +62,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     private static final String TAG_SYNC_AUTO = "sync_auto";
     private static final String TAG_SYNC_WIFI = "sync_wifi";
     private static final String TAG_ABOUT = "about";
+    private static final String TAG_FEEDBACK = "feedback";
     private static final String TAG_SPLASH = "splash";
 
 
@@ -385,6 +386,12 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         initLocalData(viewSplash, !LocalStorageUtils.getInstance().getSplashOpen());
         linearLayout.addView(viewSplash);
 
+        View viewFeedback = getItemView();
+        setClick(viewFeedback);
+        setTag(viewFeedback, TAG_FEEDBACK);
+        setData(viewFeedback, R.drawable.ic_inbox_gray_24dp, R.string.feedback);
+        linearLayout.addView(viewFeedback);
+
         View viewAboutApp = getItemView();
         setClick(viewAboutApp);
         setTag(viewAboutApp, TAG_ABOUT);
@@ -501,6 +508,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 }
                 LocalStorageUtils.getInstance().setSplashOpen(!splashOpen);
                 break;
+            case TAG_FEEDBACK:
+                Intent feedbackIntent = new Intent(this, FeedbackActivity.class);
+                feedbackIntent.putExtra(FeedbackActivity.TYPE, FeedbackActivity.TYPE_FEEDBACK);
+                startActivity(feedbackIntent);
             case TAG_ABOUT:
                 startActivity(new Intent(this, AboutAppActivity.class));
                 break;
