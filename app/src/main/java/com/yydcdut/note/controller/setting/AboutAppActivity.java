@@ -82,6 +82,7 @@ public class AboutAppActivity extends BaseActivity implements View.OnClickListen
                 break;
             case R.id.layout_contact:
                 Intent data = new Intent(this, FeedbackActivity.class);
+                data.putExtra(FeedbackActivity.TYPE, FeedbackActivity.TYPE_CONTACT);
                 startActivity(data);
                 break;
             case R.id.layout_share:
