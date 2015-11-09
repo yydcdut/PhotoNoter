@@ -181,6 +181,7 @@ public class HomeActivity extends NavigationActivity implements NavigationActivi
                 ImageLoaderManager.displayImage("file://" + FilePathUtils.getQQImagePath(), mUserPhoto);
             } else {
                 ImageLoaderManager.displayImage(qqUser.getNetImagePath(), mUserPhoto);
+                FilePathUtils.saveImage(FilePathUtils.getQQImagePath(), ImageLoaderManager.loadImageSync(qqUser.getNetImagePath()));
             }
             mUserName.setVisibility(View.VISIBLE);
             mUserName.setText(qqUser.getName());

@@ -255,7 +255,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                             if (UserCenter.getInstance().LoginQQ(finalOpenid,
                                     finalAccessToken, finalName, finalImage)) {
                                 Bitmap bitmap = ImageLoaderManager.loadImageSync(finalImage);
-                                FilePathUtils.saveOtherImage(FilePathUtils.getQQImagePath(), bitmap);
+                                FilePathUtils.saveImage(FilePathUtils.getQQImagePath(), bitmap);
                                 //登录成功
                                 mHandler.sendEmptyMessage(MESSAGE_LOGIN_QQ_OK);
                             }

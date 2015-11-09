@@ -284,6 +284,7 @@ public class UserDetailFragment extends BaseFragment implements View.OnClickList
                 } else {
                     ImageLoaderManager.displayImage(qqUser.getNetImagePath(),
                             ((ImageView) getActivity().findViewById(R.id.img_user)));
+                    FilePathUtils.saveImage(FilePathUtils.getQQImagePath(), ImageLoaderManager.loadImageSync(qqUser.getNetImagePath()));
                 }
                 getActivity().findViewById(R.id.txt_name).setVisibility(View.VISIBLE);
                 ((TextView) getActivity().findViewById(R.id.txt_name)).setText(qqUser.getName());
@@ -430,7 +431,7 @@ public class UserDetailFragment extends BaseFragment implements View.OnClickList
                             if (UserCenter.getInstance().LoginQQ(finalOpenid,
                                     finalAccessToken, finalName, finalImage)) {
                                 Bitmap bitmap = ImageLoaderManager.loadImageSync(finalImage);
-                                FilePathUtils.saveOtherImage(FilePathUtils.getQQImagePath(), bitmap);
+                                FilePathUtils.saveImage(FilePathUtils.getQQImagePath(), bitmap);
                                 //登录成功
                                 mHandler.sendEmptyMessage(MESSAGE_LOGIN_QQ_OK);
                             }

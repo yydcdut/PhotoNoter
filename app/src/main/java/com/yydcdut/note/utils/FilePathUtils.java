@@ -32,10 +32,10 @@ public class FilePathUtils {
     private static final String FULL_SMALL_PATH = FULL_PATH + SMALL_PICTURE_DIR_NAME + File.separator;
 
     private static final String OTHER_DIR_NAME = ".other";
-    private static final String BLUR_FILE = "blur.jpg";
 
     private static final String QQ_FILE = "qq.jpg";
-    private static final String SINA_FILE = "sina.jpg";
+
+    private static final String SANDBOX_DIR_NAME = ".database";
 
     public static void initEnvironment() {
         String state = Environment.getExternalStorageState();
@@ -47,6 +47,24 @@ public class FilePathUtils {
         createDirIfNotExist();
         createSmallDirIfNotExist();
         createOtherImageDirIfNotExist();
+        createSandBoxDirIfNotExist();
+    }
+
+    public static void createSandBoxDirIfNotExist() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            File file = new File(FULL_PATH + SANDBOX_DIR_NAME);
+            if (file.isDirectory()) {
+                return;
+            }
+            if (file.isFile()) {
+                file.delete();
+                file.mkdir();
+            }
+            if (!file.exists()) {
+                file.mkdir();
+            }
+        }
     }
 
     /**
@@ -455,20 +473,12 @@ public class FilePathUtils {
     }
 
     /**
-     * 高斯模糊图片地址
+     * QQ
      *
      * @return
      */
-    public static String getBlurImagePath() {
-        return FULL_PATH + OTHER_DIR_NAME + BLUR_FILE;
-    }
-
     public static String getQQImagePath() {
-        return FULL_PATH + OTHER_DIR_NAME + QQ_FILE;
-    }
-
-    public static String getSinaImagePath() {
-        return FULL_PATH + OTHER_DIR_NAME + SINA_FILE;
+        return FULL_PATH + OTHER_DIR_NAME + File.separator + QQ_FILE;
     }
 
     /**
@@ -477,7 +487,7 @@ public class FilePathUtils {
      * @param bitmap
      * @return
      */
-    public static boolean saveOtherImage(String path, Bitmap bitmap) {
+    public static boolean saveImage(String path, Bitmap bitmap) {
         if (bitmap == null) {
             return false;
         }
@@ -502,6 +512,10 @@ public class FilePathUtils {
             }
         }
         return bool;
+    }
+
+    public static String getSandBoxDir() {
+        return FULL_PATH + SANDBOX_DIR_NAME + File.separator;
     }
 
 

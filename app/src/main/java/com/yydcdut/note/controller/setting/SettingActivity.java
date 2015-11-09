@@ -184,6 +184,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 ImageLoaderManager.displayImage("file://" + FilePathUtils.getQQImagePath(), imageUser1);
             } else {
                 ImageLoaderManager.displayImage(iQQUser.getNetImagePath(), imageUser1);
+                FilePathUtils.saveImage(FilePathUtils.getQQImagePath(), ImageLoaderManager.loadImageSync(iQQUser.getNetImagePath()));
             }
         }
         linearLayout.addView(accountView);

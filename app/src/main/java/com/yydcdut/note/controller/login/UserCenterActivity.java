@@ -135,6 +135,7 @@ public class UserCenterActivity extends BaseActivity implements View.OnClickList
                 ImageLoaderManager.displayImage("file://" + FilePathUtils.getQQImagePath(), mQQImageView);
             } else {
                 ImageLoaderManager.displayImage(qqUser.getNetImagePath(), mQQImageView);
+                FilePathUtils.saveImage(FilePathUtils.getQQImagePath(), ImageLoaderManager.loadImageSync(qqUser.getNetImagePath()));
             }
             mQQTextView.setVisibility(View.VISIBLE);
             mQQTextView.setText(qqUser.getName());
@@ -329,6 +330,7 @@ public class UserCenterActivity extends BaseActivity implements View.OnClickList
                     ImageLoaderManager.displayImage("file://" + FilePathUtils.getQQImagePath(), mQQImageView);
                 } else {
                     ImageLoaderManager.displayImage(qqUser.getNetImagePath(), mQQImageView);
+                    FilePathUtils.saveImage(FilePathUtils.getQQImagePath(), ImageLoaderManager.loadImageSync(qqUser.getNetImagePath()));
                 }
                 mQQTextView.setVisibility(View.VISIBLE);
                 mQQTextView.setText(qqUser.getName());
@@ -465,7 +467,7 @@ public class UserCenterActivity extends BaseActivity implements View.OnClickList
                             if (UserCenter.getInstance().LoginQQ(finalOpenid,
                                     finalAccessToken, finalName, finalImage)) {
                                 Bitmap bitmap = ImageLoaderManager.loadImageSync(finalImage);
-                                FilePathUtils.saveOtherImage(FilePathUtils.getQQImagePath(), bitmap);
+                                FilePathUtils.saveImage(FilePathUtils.getQQImagePath(), bitmap);
                                 //登录成功
                                 mHandler.sendEmptyMessage(MESSAGE_LOGIN_QQ_OK);
                             }
