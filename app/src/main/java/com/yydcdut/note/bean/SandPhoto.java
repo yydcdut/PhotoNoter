@@ -1,7 +1,5 @@
 package com.yydcdut.note.bean;
 
-import java.util.Arrays;
-
 /**
  * Created by yuyidong on 15/8/10.
  */
@@ -9,28 +7,27 @@ public class SandPhoto implements IObject {
     public static final int ID_NULL = -1;
 
     private long id;
-    private final byte[] data;
     private final long time;
     private final String cameraId;
     private final String category;
     private final boolean isMirror;
     private final int ratio;
+    private final String fileName;
+    private final int size;
 
     private final SandExif mSandExif;
 
-    public SandPhoto(long id, byte[] data, long time, String cameraId, String category, boolean isMirror, int ratio, SandExif sandExif) {
+    public SandPhoto(long id, long time, String cameraId, String category,
+                     boolean isMirror, int ratio, String fileName, int size, SandExif sandExif) {
         this.id = id;
-        this.data = data;
         this.time = time;
         this.cameraId = cameraId;
         this.category = category;
         this.isMirror = isMirror;
         this.ratio = ratio;
+        this.fileName = fileName;
+        this.size = size;
         this.mSandExif = sandExif;
-    }
-
-    public byte[] getData() {
-        return data;
     }
 
     public long getTime() {
@@ -61,6 +58,14 @@ public class SandPhoto implements IObject {
         return ratio;
     }
 
+    public String getFileName() {
+        return fileName;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
     public SandExif getSandExif() {
         return mSandExif;
     }
@@ -69,12 +74,13 @@ public class SandPhoto implements IObject {
     public String toString() {
         return "SandPhoto{" +
                 "id=" + id +
-                ", data=" + Arrays.toString(data) +
                 ", time=" + time +
                 ", cameraId='" + cameraId + '\'' +
                 ", category='" + category + '\'' +
                 ", isMirror=" + isMirror +
                 ", ratio=" + ratio +
+                ", fileName='" + fileName + '\'' +
+                ", size=" + size +
                 ", mSandExif=" + mSandExif +
                 '}';
     }

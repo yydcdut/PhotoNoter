@@ -1,8 +1,15 @@
 package com.yydcdut.note.model.sqlite;
 
 import android.content.Context;
+import android.content.ContextWrapper;
+import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import com.yydcdut.note.utils.FilePathUtils;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by yuyidong on 15/8/10.
@@ -17,21 +24,23 @@ public class SandSQLite extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String sql = "create table " + TABLE + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "data BLOB NOT NULL, " +//数据byte[]
+                "data BLOB NOT NULL, " +//数据byte[],已经废弃
                 "time LONG NOT NULL, " +//时间
                 "cameraId CHAR(1) NOT NULL, " +//前置还是后置摄像头
                 "category VARCHAR(50) NOT NULL, " +//分类
                 "mirror CHAR(1) NOT NULL DEFAULT '0', " +//镜像
                 "ratio INTEGER NOT NULL DEFAULT 0, " +//比例，4：3？16：9？1：1
-                "orientation1 INTEGER DEFAULT 0, " +//方向
-                "latitude VARCHAR(50), " +//经度
-                "lontitude VARCHAR(50), " +//纬度
-                "whiteBalance INTEGER DEFAULT 0, " +//白平衡
-                "flash INTEGER DEFAULT 0, " +//闪光灯
-                "imageLength INTEGER, " +//照片长度
-                "imageWidth INTEGER, " +//照片宽度
-                "make VARCHAR(50), " +//手机牌子
-                "model VARCHAR(50));";//手机型号
+                "orientation_ INTEGER DEFAULT 0, " +//方向
+                "latitude_ VARCHAR(50), " +//经度
+                "lontitude_ VARCHAR(50), " +//纬度
+                "whiteBalance_ INTEGER DEFAULT 0, " +//白平衡
+                "flash_ INTEGER DEFAULT 0, " +//闪光灯
+                "imageLength_ INTEGER, " +//照片长度
+                "imageWidth_ INTEGER, " +//照片宽度
+                "make_ VARCHAR(50), " +//手机牌子
+                "model_ VARCHAR(50), " +//手机牌子
+                "size INTEGER NOT NULL DEFAULT -1, " +//byte[]大小
+                "fileName VARCHAR(100) NOT NULL DEFAULT 'X');";//文件名字
 
         db.execSQL(sql);
     }
@@ -61,33 +70,105 @@ public class SandSQLite extends SQLiteOpenHelper {
 
     private void updateFrom2To3(SQLiteDatabase db) {
         //方向
-        String orientation1 = "ALTER TABLE " + TABLE + " ADD orientation1 INTEGER;";
-        db.execSQL(orientation1);
+        String orientation_ = "ALTER TABLE " + TABLE + " ADD orientation_ INTEGER;";
+        db.execSQL(orientation_);
         //经度
-        String latitude = "ALTER TABLE " + TABLE + " ADD latitude VARCHAR(50);";
-        db.execSQL(latitude);
+        String latitude_ = "ALTER TABLE " + TABLE + " ADD latitude_ VARCHAR(50);";
+        db.execSQL(latitude_);
         //纬度
-        String lontitude = "ALTER TABLE " + TABLE + " ADD lontitude VARCHAR(50);";
-        db.execSQL(lontitude);
+        String lontitude_ = "ALTER TABLE " + TABLE + " ADD lontitude_ VARCHAR(50);";
+        db.execSQL(lontitude_);
         //白平衡
-        String whiteBalance = "ALTER TABLE " + TABLE + " ADD whiteBalance INTEGER;";
-        db.execSQL(whiteBalance);
+        String whiteBalance_ = "ALTER TABLE " + TABLE + " ADD whiteBalance_ INTEGER;";
+        db.execSQL(whiteBalance_);
         //闪光灯
-        String flash = "ALTER TABLE " + TABLE + " ADD flash INTEGER;";
-        db.execSQL(flash);
+        String flash_ = "ALTER TABLE " + TABLE + " ADD flash_ INTEGER;";
+        db.execSQL(flash_);
         //照片长度
-        String imageLength = "ALTER TABLE " + TABLE + " ADD imageLength INTEGER;";
-        db.execSQL(imageLength);
+        String imageLength_ = "ALTER TABLE " + TABLE + " ADD imageLength_ INTEGER;";
+        db.execSQL(imageLength_);
         //照片宽度
-        String imageWidth = "ALTER TABLE " + TABLE + " ADD imageWidth INTEGER;";
-        db.execSQL(imageWidth);
+        String imageWidth_ = "ALTER TABLE " + TABLE + " ADD imageWidth_ INTEGER;";
+        db.execSQL(imageWidth_);
         //手机牌子
-        String make = "ALTER TABLE " + TABLE + " ADD make VARCHAR(50);";
-        db.execSQL(make);
+        String make_ = "ALTER TABLE " + TABLE + " ADD make_ VARCHAR(50);";
+        db.execSQL(make_);
         //手机型号
-        String model = "ALTER TABLE " + TABLE + " ADD model VARCHAR(50);";
-        db.execSQL(model);
+        String model_ = "ALTER TABLE " + TABLE + " ADD model_ VARCHAR(50);";
+        db.execSQL(model_);
+        //增加Filename
+        String fileName = "ALTER TABLE " + TABLE + " ADD fileName VARCHAR(100) NOT NULL DEFAULT 'X';";
+        db.execSQL(fileName);
+        //大小
+        String size = "ALTER TABLE " + TABLE + " ADD size INTEGER NOT NULL DEFAULT -1;";
+        db.execSQL(size);
+    }
 
+    public static class DatabaseContext extends ContextWrapper {
+        public DatabaseContext(Context base) {
+            super(base);
+        }
 
+        /**
+         * 获得数据库路径，如果不存在，则创建对象对象
+         *
+         * @param name
+         */
+        @Override
+        public File getDatabasePath(String name) {
+            String dbPath = FilePathUtils.getSandBoxDir() + name;//数据库路径
+            //数据库文件是否创建成功
+            boolean isFileCreateSuccess = false;
+            //判断文件是否存在，不存在则创建该文件
+            File dbFile = new File(dbPath);
+            if (!dbFile.exists()) {
+                try {
+                    isFileCreateSuccess = dbFile.createNewFile();//创建文件
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                isFileCreateSuccess = true;
+            }
+
+            //返回数据库文件对象
+            if (isFileCreateSuccess) {
+                return dbFile;
+            } else {
+                return null;
+            }
+        }
+
+        /**
+         * 重载这个方法，是用来打开SD卡上的数据库的，android 2.3及以下会调用这个方法。
+         *
+         * @param name
+         * @param mode
+         * @param factory
+         */
+        @Override
+        public SQLiteDatabase openOrCreateDatabase(String name, int mode,
+                                                   SQLiteDatabase.CursorFactory factory) {
+            SQLiteDatabase result = SQLiteDatabase.openOrCreateDatabase(getDatabasePath(name), null);
+            return result;
+        }
+
+        /**
+         * Android 4.0会调用此方法获取数据库。
+         *
+         * @param name
+         * @param mode
+         * @param factory
+         * @param errorHandler
+         * @see android.content.ContextWrapper#openOrCreateDatabase(java.lang.String, int,
+         * android.database.sqlite.SQLiteDatabase.CursorFactory,
+         * android.database.DatabaseErrorHandler)
+         */
+        @Override
+        public SQLiteDatabase openOrCreateDatabase(String name, int mode, SQLiteDatabase.CursorFactory factory,
+                                                   DatabaseErrorHandler errorHandler) {
+            SQLiteDatabase result = SQLiteDatabase.openOrCreateDatabase(getDatabasePath(name), null);
+            return result;
+        }
     }
 }

@@ -54,7 +54,6 @@ public class CameraService extends Service {
 
         @Override
         public void run() {
-            //todo 定位
             while (!mGotoStop) {
                 SandPhoto sandPhoto = mQueue.poll();
                 if (sandPhoto == null) {
@@ -66,7 +65,12 @@ public class CameraService extends Service {
                         }
                     }
                 } else {
-                    makePhoto(sandPhoto);
+                    if (sandPhoto.getSize() == -1 || sandPhoto.getFileName().equals("X")) {
+                        deleteFromDBAndSDCard(sandPhoto);
+                        return;
+                    } else {
+                        makePhoto(sandPhoto);
+                    }
                 }
             }
         }
@@ -85,7 +89,11 @@ public class CameraService extends Service {
      * @param sandPhoto
      */
     private void makePhoto(SandPhoto sandPhoto) {
-        Bitmap bitmap = BitmapFactory.decodeByteArray(sandPhoto.getData(), 0, sandPhoto.getData().length);
+        byte[] data = getDataFromFile(sandPhoto.getFileName(), sandPhoto.getSize());
+        if (data == null) {
+            return;
+        }
+        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
         Bitmap newBitmap;
         Matrix matrix = new Matrix();
         if (sandPhoto.getCameraId().equals(Const.CAMERA_BACK)) {
@@ -113,6 +121,7 @@ public class CameraService extends Service {
             newBitmap = Bitmap.createBitmap(bitmap, beginWidth, beginHeight, width, height, matrix, true);
         } catch (Exception e) {
             YLog.e("yuyidong", "maybe oom--->" + e.getMessage());
+            //todo 打个log
             return;
         }
         bitmap.recycle();
@@ -139,12 +148,48 @@ public class CameraService extends Service {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        deleteFromDB(sandPhoto);
+        deleteFromDBAndSDCard(sandPhoto);
+    }
+
+    private byte[] getDataFromFile(String fileName, int size) {
+        boolean bool = true;
+        File file = new File(FilePathUtils.getSandBoxDir() + fileName);
+        byte[] data;
+        if (!file.exists()) {
+            return null;
+        }
+        data = new byte[size];
+        InputStream inputStream = null;
+        try {
+            inputStream = new FileInputStream(file);
+            inputStream.read(data);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            bool = false;
+        } catch (IOException e) {
+            e.printStackTrace();
+            bool = false;
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    bool = false;
+                }
+            }
+        }
+        if (!bool) {
+            return null;
+        } else {
+            file.delete();
+            return data;
+        }
     }
 
     private void setExif(PhotoNote photoNote, SandExif sandExif) throws IOException {
         ExifInterface exif = new ExifInterface(photoNote.getBigPhotoPathWithoutFile());
-        exif.setAttribute(ExifInterface.TAG_ORIENTATION, String.valueOf(sandExif.getOrientation1()));
+        exif.setAttribute(ExifInterface.TAG_ORIENTATION, String.valueOf(sandExif.getOrientation()));
         exif.setAttribute(ExifInterface.TAG_GPS_LATITUDE, sandExif.getLatitude());
         exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE, sandExif.getLontitude());
         exif.setAttribute(ExifInterface.TAG_WHITE_BALANCE, String.valueOf(sandExif.getWhiteBalance()));
@@ -189,8 +234,9 @@ public class CameraService extends Service {
      * @param sandPhoto
      * @return
      */
-    private int deleteFromDB(SandPhoto sandPhoto) {
-        return SandBoxDBModel.getInstance().delete(sandPhoto);
+    private void deleteFromDBAndSDCard(SandPhoto sandPhoto) {
+        SandBoxDBModel.getInstance().delete(sandPhoto);
+        new File(FilePathUtils.getSandBoxDir() + sandPhoto.getFileName()).delete();
     }
 
     /**
@@ -198,41 +244,12 @@ public class CameraService extends Service {
      */
     ICameraData.Stub mStub = new ICameraData.Stub() {
         @Override
-        public void add(String fileName, int size, String cameraId, long time, String category, boolean isMirror, int ratio, int orientation, String latitude, String lontitude, int whiteBalance, int flash, int imageLength, int imageWidth, String make, String model) throws RemoteException {
-            boolean bool = true;
-            File file = new File(FilePathUtils.getPath() + fileName);
-            byte[] data;
-            if (!file.exists()) {
-                return;
-            }
-            data = new byte[size];
-            InputStream inputStream = null;
-            try {
-                inputStream = new FileInputStream(file);
-                inputStream.read(data);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                bool = false;
-            } catch (IOException e) {
-                e.printStackTrace();
-                bool = false;
-            } finally {
-                if (inputStream != null) {
-                    try {
-                        inputStream.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        bool = false;
-                    }
-                }
-            }
-            file.delete();
-
-            if (!bool) {
-                return;
-            }
+        public void add(String fileName, int size, String cameraId, long time, String category,
+                        boolean isMirror, int ratio, int orientation,
+                        String latitude, String lontitude, int whiteBalance, int flash,
+                        int imageLength, int imageWidth, String make, String model) throws RemoteException {
             SandExif sandExif = new SandExif(orientation, latitude, lontitude, whiteBalance, flash, imageLength, imageWidth, make, model);
-            SandPhoto sandPhoto = new SandPhoto(SandPhoto.ID_NULL, data, time, cameraId, category, isMirror, ratio, sandExif);
+            SandPhoto sandPhoto = new SandPhoto(SandPhoto.ID_NULL, time, cameraId, category, isMirror, ratio, fileName, size, sandExif);
             long id = add2DB(sandPhoto);
             sandPhoto.setId(id);
             mQueue.offer(sandPhoto);

@@ -270,8 +270,8 @@ public class UserCenterActivity extends BaseActivity implements View.OnClickList
             mBackgroundImage.setBackgroundColor(newColor);
             mUserCenterArrowView.setColorAndMarginWidth(newColor, (int) (mScrollWidth * positionOffset + position * mScrollWidth - mScrollWidth));
         } else if (mIntention == INTENTION_LEFT && positionOffset > 0.01) {//left
-            if (position <= 0) {
-                position = 1;
+            if (position < 0) {
+                position = 0;
             }
             int r0 = Color.red(mColorArray[position]);
             int r1 = Color.red(mColorArray[position + 1]);

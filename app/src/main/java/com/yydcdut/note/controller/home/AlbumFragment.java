@@ -114,7 +114,6 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
     private CircleProgressBarLayout mProgressLayout;
     /* Handler */
     private Handler mMainHandler = new Handler(this);
-    private boolean mIsSandboxServiceConnecting = false;
 
     public static AlbumFragment newInstance() {
         return new AlbumFragment();
@@ -245,9 +244,19 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
             @Override
             public void run() {
                 try {
-                    if (SandBoxDBModel.getInstance().getAllNumber() > 0 && !mIsSandboxServiceConnecting) {
+                    if (SandBoxDBModel.getInstance().getAllNumber() > 0) {
                         Intent intent = new Intent(getContext(), SandBoxService.class);
-                        getActivity().bindService(intent, mSandBoxServiceConnection, Context.BIND_AUTO_CREATE);
+                        getActivity().bindService(intent, new ServiceConnection() {
+                            @Override
+                            public void onServiceConnected(ComponentName name, IBinder service) {
+
+                            }
+
+                            @Override
+                            public void onServiceDisconnected(ComponentName name) {
+
+                            }
+                        }, Context.BIND_AUTO_CREATE);
                     }
                 } catch (Exception e) {
                     Toast.makeText(getContext(), getContext().getResources().getString(R.string.toast_sandbox_fail), Toast.LENGTH_SHORT).show();
@@ -255,18 +264,6 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
             }
         }, 5000);
     }
-
-    private ServiceConnection mSandBoxServiceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mIsSandboxServiceConnecting = true;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mIsSandboxServiceConnecting = false;
-        }
-    };
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

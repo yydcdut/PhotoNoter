@@ -151,7 +151,7 @@ public class AbsCameraModel implements ICameraModel {
         boolean bool = true;
         int size = data.length;
         String fileName = time + ".data";
-        File file = new File(FilePathUtils.getPath() + fileName);
+        File file = new File(FilePathUtils.getSandBoxDir() + fileName);
         OutputStream outputStream = null;
         try {
             if (!file.exists()) {
@@ -175,6 +175,7 @@ public class AbsCameraModel implements ICameraModel {
         }
 
         int orientation = 0;//todo 这个还没做，下个版本做
+
         String latitude0 = String.valueOf((int) mLatitude) + "/1,";
         String latitude1 = String.valueOf((int) ((mLatitude - (int) mLatitude) * 60) + "/1,");
         String latitude2 = String.valueOf((int) ((((mLatitude - (int) mLatitude) * 60) - ((int) ((mLatitude - (int) mLatitude) * 60))) * 60 * 10000)) + "/10000";

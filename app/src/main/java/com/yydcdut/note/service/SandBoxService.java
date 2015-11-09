@@ -26,7 +26,11 @@ import com.yydcdut.note.utils.TimeDecoder;
 import com.yydcdut.note.utils.UiHelper;
 import com.yydcdut.note.utils.YLog;
 
-import java.util.List;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created by yuyidong on 15/8/10.
@@ -48,15 +52,19 @@ public class SandBoxService extends Service implements Handler.Callback {
     public void onCreate() {
         super.onCreate();
         final Handler handler = new Handler(this);
-        final List<SandPhoto> sandPhotoList = SandBoxDBModel.getInstance().findAll();
-        if (sandPhotoList.size() > 0) {
+        if (SandBoxDBModel.getInstance().getAllNumber() > 0) {
             notification();
             NoteApplication.getInstance().getExecutorPool().execute(new Runnable() {
                 @Override
                 public void run() {
-                    for (int i = 0; i < sandPhotoList.size(); i++) {
-                        SandPhoto sandPhoto = sandPhotoList.get(i);
-                        makePhoto(sandPhoto);
+                    int total = SandBoxDBModel.getInstance().getAllNumber();
+                    for (int i = 0; i < total; i++) {
+                        SandPhoto sandPhoto = SandBoxDBModel.getInstance().findFirstOne();
+                        if (sandPhoto.getSize() == -1 || sandPhoto.getFileName().equals("X")) {
+                            deleteFromDBAndSDCard(sandPhoto);
+                        } else {
+                            makePhoto(sandPhoto);
+                        }
                     }
                     handler.sendEmptyMessage(0);
                 }
@@ -93,7 +101,11 @@ public class SandBoxService extends Service implements Handler.Callback {
      * @param sandPhoto
      */
     private void makePhoto(SandPhoto sandPhoto) {
-        Bitmap bitmap = BitmapFactory.decodeByteArray(sandPhoto.getData(), 0, sandPhoto.getData().length);
+        byte[] data = getDataFromFile(sandPhoto.getFileName(), sandPhoto.getSize());
+        if (data == null) {
+            return;
+        }
+        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
         Bitmap newBitmap;
         Matrix matrix = new Matrix();
         if (sandPhoto.getCameraId().equals(Const.CAMERA_BACK)) {
@@ -142,7 +154,42 @@ public class SandBoxService extends Service implements Handler.Callback {
         newBitmap.recycle();
         newBitmap = null;
         System.gc();
-        deleteFromDB(sandPhoto);
+        deleteFromDBAndSDCard(sandPhoto);
+    }
+
+    private byte[] getDataFromFile(String fileName, int size) {
+        boolean bool = true;
+        File file = new File(FilePathUtils.getSandBoxDir() + fileName);
+        byte[] data;
+        if (!file.exists()) {
+            return null;
+        }
+        data = new byte[size];
+        InputStream inputStream = null;
+        try {
+            inputStream = new FileInputStream(file);
+            inputStream.read(data);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            bool = false;
+        } catch (IOException e) {
+            e.printStackTrace();
+            bool = false;
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    bool = false;
+                }
+            }
+        }
+        if (!bool) {
+            return null;
+        } else {
+            return data;
+        }
     }
 
     /**
@@ -162,8 +209,9 @@ public class SandBoxService extends Service implements Handler.Callback {
      * @param sandPhoto
      * @return
      */
-    private int deleteFromDB(SandPhoto sandPhoto) {
-        return SandBoxDBModel.getInstance().delete(sandPhoto);
+    private void deleteFromDBAndSDCard(SandPhoto sandPhoto) {
+        SandBoxDBModel.getInstance().delete(sandPhoto);
+        new File(FilePathUtils.getSandBoxDir() + sandPhoto.getFileName()).delete();
     }
 
     /**
@@ -182,7 +230,7 @@ public class SandBoxService extends Service implements Handler.Callback {
                     .setDefaults(Notification.DEFAULT_LIGHTS)
                     .setSmallIcon(R.drawable.ic_launcher);
             Notification notification = builder.build();
-            notification.flags = Notification.FLAG_AUTO_CANCEL;
+            notification.flags = Notification.FLAG_NO_CLEAR;
             mNotificationManager.notify(0, notification);
         }
     }
