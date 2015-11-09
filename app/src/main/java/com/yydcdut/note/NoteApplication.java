@@ -11,6 +11,7 @@ import com.github.mmin18.layoutcast.LayoutCast;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 import com.umeng.analytics.MobclickAgent;
+import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.model.UserCenter;
 import com.yydcdut.note.service.CheckService;
 import com.yydcdut.note.utils.Evi;
@@ -19,6 +20,7 @@ import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.YLog;
 
+import java.io.File;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -132,8 +134,24 @@ public class NoteApplication extends Application {
      */
     private void initService() {
         if (!LocalStorageUtils.getInstance().isFirstTime()) {
-            Intent checkIntent = new Intent(this, CheckService.class);
-            startService(checkIntent);
+            int dbNumber = PhotoNoteDBModel.getInstance().getAllNumber();
+            File file = new File(FilePathUtils.getPath());
+            int fileNumber = 0;
+            File[] fileArr = file.listFiles();
+            for (File file1 : fileArr) {
+                if (file1.isDirectory()) {
+                    continue;
+                }
+                if (file1.getName().toLowerCase().endsWith("jpg") ||
+                        file1.getName().toLowerCase().endsWith("png") ||
+                        file1.getName().toLowerCase().endsWith("jpeg")) {
+                    fileNumber++;
+                }
+            }
+            if (fileNumber == dbNumber) {
+                Intent checkIntent = new Intent(this, CheckService.class);
+                startService(checkIntent);
+            }
         }
     }
 
