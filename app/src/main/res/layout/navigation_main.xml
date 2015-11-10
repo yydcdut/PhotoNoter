@@ -26,7 +26,7 @@
                 android:orientation="vertical">
 
                 <include
-                    layout="@layout/navigation_toolbar"/>
+                    layout="@layout/layout_toolbar_light"/>
 
                 <include
                     layout="@layout/navigation_container"/>

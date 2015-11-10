@@ -6,7 +6,7 @@
                 android:orientation="vertical">
 
     <include
-        layout="@layout/layout_toolbar"/>
+        layout="@layout/layout_toolbar_light"/>
 
     <com.yydcdut.sdlv.SlideAndDragListView
         android:id="@+id/lv_edit_category"

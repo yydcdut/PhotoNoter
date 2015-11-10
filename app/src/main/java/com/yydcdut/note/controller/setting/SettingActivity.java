@@ -2,6 +2,7 @@ package com.yydcdut.note.controller.setting;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
@@ -14,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.evernote.edam.type.User;
 import com.nineoldandroids.animation.Animator;
@@ -70,8 +70,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     private static final boolean SUPPORT_WIFI_SYNC = false;
     private static final boolean SUPPORT_AUTO_SYNC = false;
 
-    private Toolbar mToolbar;
     private View mScrollView;
+    private View mToolbarLayout;
     private LinearLayout mScrollLinear;
     private boolean mIsHiding = false;
 
@@ -98,15 +98,16 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void toastNotSupport() {
-        Toast.makeText(SettingActivity.this, R.string.not_support, Toast.LENGTH_SHORT).show();
+        Snackbar.make(mScrollView, R.string.not_support, Snackbar.LENGTH_SHORT).show();
     }
 
     private void initToolBarUI() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mToolbar.setTitle(getResources().getString(R.string.app_setting));
-        setSupportActionBar(mToolbar);
-        mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        LollipopCompat.setElevation(mToolbar, getResources().getDimension(R.dimen.ui_elevation));
+        mToolbarLayout = findViewById(R.id.layout_toolbar_setting);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle(getResources().getString(R.string.app_setting));
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        LollipopCompat.setElevation(toolbar, getResources().getDimension(R.dimen.ui_elevation));
     }
 
     private void initPreferenceSetting() {
@@ -411,7 +412,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         AnimatorSet animation = new AnimatorSet();
         animation.setDuration(Const.DURATION_ACTIVITY);
         animation.playTogether(
-                ObjectAnimator.ofFloat(mToolbar, "translationY", -actionBarHeight, 0),
+                ObjectAnimator.ofFloat(mToolbarLayout, "translationY", -actionBarHeight, 0),
                 ObjectAnimator.ofFloat(mScrollView, "translationY", contentHeight, 0)
         );
         animation.start();
@@ -529,7 +530,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         AnimatorSet animation = new AnimatorSet();
         animation.setDuration(Const.DURATION_ACTIVITY);
         animation.playTogether(
-                ObjectAnimator.ofFloat(mToolbar, "translationY", 0, -actionBarHeight),
+                ObjectAnimator.ofFloat(mToolbarLayout, "translationY", 0, -actionBarHeight),
                 ObjectAnimator.ofFloat(mScrollView, "translationY", 0, contentHeight)
         );
         animation.addListener(new Animator.AnimatorListener() {

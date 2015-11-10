@@ -14,22 +14,22 @@ public class ThemeHelper {
 
     static {
         THEME = create(Arrays.asList(
-                R.style.noteBlue,
-                R.style.noteIndigo,
-                R.style.noteCyan,
-                R.style.noteTeal,
-                R.style.noteGreen,
-                R.style.noteLightGreen,
-                R.style.noteLime,
-                R.style.noteYellow,
-                R.style.noteAmber,
-                R.style.noteOrange,
-                R.style.noteDeepOrange,
-                R.style.noteRed,
-                R.style.notePurple,
-                R.style.noteBrown,
-                R.style.noteGray,
-                R.style.noteBlueGray
+                R.style.AppTheme_NoActionBar_Blue,
+                R.style.AppTheme_NoActionBar_Indigo,
+                R.style.AppTheme_NoActionBar_Cyan,
+                R.style.AppTheme_NoActionBar_Teal,
+                R.style.AppTheme_NoActionBar_Green,
+                R.style.AppTheme_NoActionBar_LightGreen,
+                R.style.AppTheme_NoActionBar_Lime,
+                R.style.AppTheme_NoActionBar_Yellow,
+                R.style.AppTheme_NoActionBar_Amber,
+                R.style.AppTheme_NoActionBar_Orange,
+                R.style.AppTheme_NoActionBar_DeepOrange,
+                R.style.AppTheme_NoActionBar_Red,
+                R.style.AppTheme_NoActionBar_Purple,
+                R.style.AppTheme_NoActionBar_Brown,
+                R.style.AppTheme_NoActionBar_Gray,
+                R.style.AppTheme_NoActionBar_BlueGray
         ), Arrays.asList(
                 R.color.blue_colorPrimaryDark,
                 R.color.indigo_colorPrimaryDark,

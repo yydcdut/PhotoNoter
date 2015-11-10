@@ -84,7 +84,7 @@ public class NoteApplication extends Application {
         MobclickAgent.setDebugMode(true);
         MobclickAgent.openActivityDurationTrack(true);
         MobclickAgent.updateOnlineConfig(this);
-        MobclickAgent.setCatchUncaughtExceptions(true);
+        MobclickAgent.setCatchUncaughtExceptions(false);
 
 //        CrashHandler.getInstance().init(getApplicationContext());
 

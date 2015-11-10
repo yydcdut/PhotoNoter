@@ -11,7 +11,7 @@
         android:layout_height="fill_parent">
 
         <include
-            layout="@layout/layout_toolbar"/>
+            layout="@layout/layout_toolbar_light"/>
 
         <android.support.design.widget.CoordinatorLayout
             android:id="@+id/cl_login"

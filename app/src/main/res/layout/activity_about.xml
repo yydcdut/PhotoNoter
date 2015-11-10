@@ -8,7 +8,7 @@
     android:background="@color/bg_album"
     android:orientation="vertical">
 
-    <include layout="@layout/layout_toolbar"/>
+    <include layout="@layout/layout_toolbar_light"/>
 
     <ScrollView
         android:layout_width="match_parent"

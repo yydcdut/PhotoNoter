@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <include layout="@layout/layout_toolbar"/>
+        <include layout="@layout/layout_toolbar_light"/>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
