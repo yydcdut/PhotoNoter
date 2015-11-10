@@ -31,7 +31,7 @@ android {
     signingConfigs {
         release {
         }
-        debug{
+        debug {
             storeFile file("debug.keystore")
         }
     }
@@ -91,8 +91,8 @@ dependencies {
     compile files('src/libs/mta-sdk-1.6.2.jar')
     compile files('src/libs/open_sdk_r5043.jar')
     //    compile 'com.facebook.fresco:fresco:0.7.0'
-    compile project(':sdlv')
     compile 'com.evernote:android-sdk:2.0.0-RC3'
     compile 'com.github.mmin18.layoutcast:library:1.+@aar'
     compile files('src/libs/BaiduLBS_Android.jar')
+    compile 'com.yydcdut.sdlv:sdlv:0.2@aar'
 }
