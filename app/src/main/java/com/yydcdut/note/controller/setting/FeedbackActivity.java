@@ -48,8 +48,6 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
     public static final int TYPE_FEEDBACK = 0;
     public static final int TYPE_CONTACT = 1;
 
-    private boolean mIsUpdate = false;
-
     @Override
     public boolean setStatusBar() {
         return true;
@@ -124,38 +122,27 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
                 if (mHandler == null) {
                     mHandler = new Handler(this);
                 }
-                parabolaAnimation(mFab);
-                NoteApplication.getInstance().getExecutorPool().submit(new Runnable() {
-                    @Override
-                    public void run() {
-                        FeedbackModel.getInstance().sendFeedback(System.currentTimeMillis() + "",
-                                mEmailText.getText().toString() + "<---联系方式   " + (mType == TYPE_FEEDBACK ? "Feedback" : "Contact") + "   反馈内容--->" + mContentText.getText().toString());
-                        mHandler.sendEmptyMessage(0);
-                    }
-                });
+                parabolaAnimationAndUpdateFeedback(mFab);
                 break;
         }
     }
 
     @Override
     public boolean handleMessage(Message msg) {
-        mIsUpdate = true;
-        if (mProgressLayout.isShowing()) {
-            mProgressLayout.hide();
-            mOkView.setVisibility(View.VISIBLE);
-            mOkView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_scale_small_2_big));
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    finish();
-                }
-            }, 600);
-        }
+        mProgressLayout.hide();
+        mOkView.setVisibility(View.VISIBLE);
+        mOkView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_scale_small_2_big));
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                finish();
+            }
+        }, 600);
         return false;
     }
 
-    private void parabolaAnimation(final View view) {
-        final int wdith = view.getLeft();
+    private void parabolaAnimationAndUpdateFeedback(final View view) {
+        final int width = view.getLeft();
         final int height = view.getTop();
         ValueAnimator valueAnimator = new ValueAnimator();
         valueAnimator.setDuration(Const.DURATION / 2);
@@ -166,7 +153,7 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
             @Override
             public PointF evaluate(float fraction, PointF startValue, PointF endValue) {
                 PointF point = new PointF();
-                float wdithf = (wdith) * (1 - fraction / 2);
+                float wdithf = (width) * (1 - fraction / 2);
                 float heightf = (height) - 0.85f * (height) * (fraction / 2) * (fraction / 2);
                 point.x = wdithf;
                 point.y = heightf;
@@ -191,18 +178,15 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
                         getThemeColor(), Const.RADIUS, Const.DURATION, new RevealView.RevealAnimationListener() {
                             @Override
                             public void finish() {
-                                if (mIsUpdate) {
-                                    mOkView.setVisibility(View.VISIBLE);
-                                    mOkView.startAnimation(AnimationUtils.loadAnimation(FeedbackActivity.this, R.anim.anim_scale_small_2_big));
-                                    mHandler.postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            finish();
-                                        }
-                                    }, 600);
-                                } else {
-                                    mProgressLayout.show();
-                                }
+                                mProgressLayout.show();
+                                NoteApplication.getInstance().getExecutorPool().submit(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        FeedbackModel.getInstance().sendFeedback(System.currentTimeMillis() + "",
+                                                mEmailText.getText().toString() + "<---联系方式   " + (mType == TYPE_FEEDBACK ? "Feedback" : "Contact") + "   反馈内容--->" + mContentText.getText().toString());
+                                        mHandler.sendEmptyMessage(0);
+                                    }
+                                });
                             }
                         });
             }
