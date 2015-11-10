@@ -38,6 +38,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     private void setTheme() {
         int index = LocalStorageUtils.getInstance().getThemeColor();
         setTheme(ThemeHelper.THEME.get(index).getStyle());
+        if (LollipopCompat.AFTER_LOLLIPOP) {
+            getWindow().setNavigationBarColor(getResources().getColor(ThemeHelper.THEME.get(index).getColorPrimary()));
+        }
     }
 
     /**

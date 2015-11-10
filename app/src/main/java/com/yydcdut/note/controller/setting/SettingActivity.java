@@ -102,7 +102,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void initToolBarUI() {
-        mToolbarLayout = findViewById(R.id.layout_toolbar_setting);
+        mToolbarLayout = findViewById(R.id.layout_toolbar);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getResources().getString(R.string.app_setting));

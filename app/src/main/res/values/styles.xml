@@ -19,10 +19,10 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <style name="note.dialog" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:textColor">@color/black</item>
-        <item name="android:textColorAlertDialogListItem">@color/black</item>
-        <item name="android:editTextColor">@color/black</item>
+        <!--<item name="android:windowNoTitle">true</item>-->
+        <!--<item name="android:textColor">@color/black</item>-->
+        <!--<item name="android:textColorAlertDialogListItem">@color/black</item>-->
+        <!--<item name="android:editTextColor">@color/black</item>-->
     </style>
 
     <style name="AppTheme.NoActionBar.Blue">

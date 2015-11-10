@@ -6,17 +6,19 @@
                 android:orientation="vertical">
 
     <include
+        android:id="@+id/layout_toolbar"
         layout="@layout/layout_toolbar_light"/>
 
     <com.yydcdut.sdlv.SlideAndDragListView
         android:id="@+id/lv_edit_category"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@+id/toolbar"
+        android:layout_below="@+id/layout_toolbar"
         android:divider="@color/gray_colorPrimary"
         android:dividerHeight="0.5dip"
         android:paddingLeft="@dimen/activity_horizontal_margin_small"
-        android:paddingRight="@dimen/activity_horizontal_margin_small"></com.yydcdut.sdlv.SlideAndDragListView>
+        android:paddingRight="@dimen/activity_horizontal_margin_small">
+    </com.yydcdut.sdlv.SlideAndDragListView>
 
     <com.yydcdut.note.view.CircleProgressBarLayout
         android:id="@+id/layout_progress"

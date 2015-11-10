@@ -6,14 +6,14 @@
                 android:baselineAligned="false">
 
     <include
-        android:id="@+id/layout_toolbar_setting"
+        android:id="@+id/layout_toolbar"
         layout="@layout/layout_toolbar_light"/>
 
     <ScrollView
         android:id="@+id/scroll_setting"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@+id/layout_toolbar_setting"
+        android:layout_below="@+id/layout_toolbar"
         android:background="@color/white_smoke"
         android:scrollbars="none">
 
