@@ -24,6 +24,7 @@ import com.yydcdut.note.controller.BaseActivity;
 import com.yydcdut.note.model.FeedbackModel;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.LollipopCompat;
+import com.yydcdut.note.utils.NetworkUtils;
 import com.yydcdut.note.view.CircleProgressBarLayout;
 import com.yydcdut.note.view.RevealView;
 
@@ -115,6 +116,11 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
                             Snackbar.LENGTH_SHORT).show();
                     break;
                 }
+                if (!NetworkUtils.isNetworkConnected(this)) {
+                    Snackbar.make(findViewById(R.id.cl_feedback), getResources().getString(R.string.toast_no_connection),
+                            Snackbar.LENGTH_SHORT).show();
+                    break;
+                }
                 if (mHandler == null) {
                     mHandler = new Handler(this);
                 }
@@ -124,11 +130,6 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
                     public void run() {
                         FeedbackModel.getInstance().sendFeedback(System.currentTimeMillis() + "",
                                 mEmailText.getText().toString() + "<---联系方式   " + (mType == TYPE_FEEDBACK ? "Feedback" : "Contact") + "   反馈内容--->" + mContentText.getText().toString());
-                        try {
-                            Thread.sleep(2000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
                         mHandler.sendEmptyMessage(0);
                     }
                 });

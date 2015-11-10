@@ -513,6 +513,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 Intent feedbackIntent = new Intent(this, FeedbackActivity.class);
                 feedbackIntent.putExtra(FeedbackActivity.TYPE, FeedbackActivity.TYPE_FEEDBACK);
                 startActivity(feedbackIntent);
+                break;
             case TAG_ABOUT:
                 startActivity(new Intent(this, AboutAppActivity.class));
                 break;
