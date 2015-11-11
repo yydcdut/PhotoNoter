@@ -11,7 +11,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -449,16 +448,16 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && !mIsHiding && System.currentTimeMillis() - mLastTime > 2000) {
+    public void onBackPressed() {
+        if (!mIsHiding && System.currentTimeMillis() - mLastTime > 2000) {
             if (mIsVoiceOpen) {
                 stopVoice();
                 hideVoice();
-                return true;
+                return;
             }
             if (mFabMenuLayout.isOpen()) {
                 mFabMenuLayout.close();
-                return true;
+                return;
             }
             mLastTime = System.currentTimeMillis();
             mFabMenuLayout.setMenuClickable(false);
@@ -473,16 +472,16 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
                         @Override
                         public void onClick(View v) {
                             mIsHiding = true;
+                            saveText();
                             closeActivityAnimation(true);
                         }
                     }).show(mFabMenuLayout);
-            return true;
+            return;
         }
         if (!mIsHiding) {
             mIsHiding = true;
             closeActivityAnimation(false);
         }
-        return true;
     }
 
     /**
@@ -794,6 +793,7 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mVoiceRippleView.stopAnimation();
         if (mIat != null) {
             // 退出时释放连接
             mIat.cancel();
