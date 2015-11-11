@@ -15,7 +15,7 @@
     <string name="no_space">没有足够的空间完成此操作</string>
     <string name="fab_evernote">上传印象笔记</string>
     <string name="fab_voice">语音输入</string>
-
+    <string name="fab_speak">请说话</string>
 
     <!-- menu -->
     <string name="search">查找</string>

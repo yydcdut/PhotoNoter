@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
@@ -17,6 +18,7 @@ import android.support.v4.app.NotificationCompat;
 import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.bean.PhotoNote;
+import com.yydcdut.note.bean.SandExif;
 import com.yydcdut.note.bean.SandPhoto;
 import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.model.SandBoxDBModel;
@@ -154,7 +156,26 @@ public class SandBoxService extends Service implements Handler.Callback {
         newBitmap.recycle();
         newBitmap = null;
         System.gc();
+        try {
+            setExif(photoNote, sandPhoto.getSandExif());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         deleteFromDBAndSDCard(sandPhoto);
+    }
+
+    private void setExif(PhotoNote photoNote, SandExif sandExif) throws IOException {
+        ExifInterface exif = new ExifInterface(photoNote.getBigPhotoPathWithoutFile());
+        exif.setAttribute(ExifInterface.TAG_ORIENTATION, String.valueOf(sandExif.getOrientation()));
+        exif.setAttribute(ExifInterface.TAG_GPS_LATITUDE, sandExif.getLatitude());
+        exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE, sandExif.getLontitude());
+        exif.setAttribute(ExifInterface.TAG_WHITE_BALANCE, String.valueOf(sandExif.getWhiteBalance()));
+        exif.setAttribute(ExifInterface.TAG_FLASH, String.valueOf(sandExif.getFlash()));
+        exif.setAttribute(ExifInterface.TAG_IMAGE_LENGTH, String.valueOf(sandExif.getImageLength()));
+        exif.setAttribute(ExifInterface.TAG_IMAGE_WIDTH, String.valueOf(sandExif.getImageWidth()));
+        exif.setAttribute(ExifInterface.TAG_MAKE, sandExif.getMake());
+        exif.setAttribute(ExifInterface.TAG_MODEL, sandExif.getModel());
+        exif.saveAttributes();
     }
 
     private byte[] getDataFromFile(String fileName, int size) {

@@ -2,11 +2,13 @@ package com.yydcdut.note.controller.note;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
@@ -15,6 +17,8 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -43,6 +47,8 @@ import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.model.UserCenter;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.Evi;
+import com.yydcdut.note.utils.LocalStorageUtils;
+import com.yydcdut.note.utils.ThemeHelper;
 import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.view.CircleProgressBarLayout;
 import com.yydcdut.note.view.KeyBoardResizeFrameLayout;
@@ -66,6 +72,8 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
     private Context mContext = EditTextActivity.this;
     /* title是否显示出来? */
     private boolean mIsEditTextShow = true;
+    /* Voice的是不是显示出来的 */
+    private boolean mIsVoiceOpen = false;
     /* Views */
     private Toolbar mToolbar;
     private View mLayoutTitle;
@@ -73,10 +81,14 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
     private EditText mContentEdit;
     private FloatingMenuLayout mFabMenuLayout;
     private ImageView mMenuArrowImage;
+    private FloatingActionButton mVoiceFab;
+    private View mVoiceTextView;
+    private View mVoiceLayout;
     /* Progress Bar */
     private CircleProgressBarLayout mProgressLayout;
     /* RevealView */
-    private RevealView mAlbumRevealView;
+    private RevealView mFabRevealView;
+    private RevealView mVoiceRevealView;
     private View mFabPositionView;
     /* 数据 */
     private PhotoNote mPhotoNote;
@@ -143,15 +155,20 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
     void initOtherUI() {
         mProgressLayout = (CircleProgressBarLayout) findViewById(R.id.layout_progress);
         ((KeyBoardResizeFrameLayout) findViewById(R.id.layout_root)).setOnKeyboardShowListener(this);
-        mAlbumRevealView = (RevealView) findViewById(R.id.reveal_album);
+        mFabRevealView = (RevealView) findViewById(R.id.reveal_fab);
+        mVoiceRevealView = (RevealView) findViewById(R.id.reveal_voice);
         mFabPositionView = findViewById(R.id.view_fab_location);
-        mAlbumRevealView.setOnTouchListener(new View.OnTouchListener() {
+        mFabRevealView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 mFabMenuLayout.close();
                 return true;
             }
         });
+        mVoiceTextView = findViewById(R.id.txt_voice);
+        mVoiceLayout = findViewById(R.id.layout_voice);
+        mVoiceLayout.setVisibility(View.INVISIBLE);
+        mVoiceLayout.setOnClickListener(null);
     }
 
     private void initToolBarUI() {
@@ -201,6 +218,8 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
         mFabMenuLayout.setOnFloatingActionsMenuUpdateListener(this);
         findViewById(R.id.fab_evernote_update).setOnClickListener(this);
         findViewById(R.id.fab_voice).setOnClickListener(this);
+        mVoiceFab = (FloatingActionButton) findViewById(R.id.fab_voice_start);
+        mVoiceFab.setOnClickListener(this);
     }
 
     private void initData() {
@@ -284,8 +303,8 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
         }
         switch (v.getId()) {
             case R.id.fab_voice:
-                SnackHelper.make(mFabMenuLayout, getResources().getString(R.string.not_support), SnackHelper.LENGTH_SHORT)
-                        .show(mFabMenuLayout);
+                mFabMenuLayout.close();
+                revealVoice();
                 break;
             case R.id.fab_evernote_update:
                 mFabMenuLayout.close();
@@ -302,6 +321,9 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
                     SnackHelper.make(mFabMenuLayout, getResources().getString(R.string.not_login), SnackHelper.LENGTH_SHORT)
                             .show(mFabMenuLayout);
                 }
+                break;
+            case R.id.fab_voice_start:
+                hideVoice();
                 break;
         }
     }
@@ -398,6 +420,10 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && !mIsHiding && System.currentTimeMillis() - mLastTime > 2000) {
+            if (mIsVoiceOpen) {
+                hideVoice();
+                return true;
+            }
             if (mFabMenuLayout.isOpen()) {
                 mFabMenuLayout.close();
                 return true;
@@ -420,7 +446,10 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
                     }).show(mFabMenuLayout);
             return true;
         }
-        closeActivityAnimation(false);
+        if (!mIsHiding) {
+            mIsHiding = true;
+            closeActivityAnimation(false);
+        }
         return true;
     }
 
@@ -502,13 +531,72 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public void onMenuExpanded() {
-        Point p = getLocationInView(mAlbumRevealView, mFabPositionView);
-        mAlbumRevealView.reveal(p.x, p.y, getResources().getColor(R.color.fab_reveal_black), Const.RADIUS, Const.DURATION, null);
+        Point p = getLocationInView(mFabRevealView, mFabPositionView);
+        mFabRevealView.reveal(p.x, p.y, getResources().getColor(R.color.fab_reveal_black), Const.RADIUS, Const.DURATION, null);
     }
 
     @Override
     public void onMenuCollapsed() {
-        Point p = getLocationInView(mAlbumRevealView, mFabPositionView);
-        mAlbumRevealView.hide(p.x, p.y, Color.TRANSPARENT, 0, Const.DURATION, null);
+        Point p = getLocationInView(mFabRevealView, mFabPositionView);
+        mFabRevealView.hide(p.x, p.y, Color.TRANSPARENT, 0, Const.DURATION, null);
     }
+
+    private void revealVoice() {
+        mVoiceLayout.setVisibility(View.VISIBLE);
+        mVoiceLayout.setOnClickListener(this);
+        Point p = getLocationInView(mVoiceRevealView, mFabPositionView);
+        int index = LocalStorageUtils.getInstance().getThemeColor();
+        int[] colors = new int[]{getResources().getColor(ThemeHelper.THEME.get((index + 7) % 15).getColorPrimary())};
+        int[][] states = new int[1][];
+        states[0] = new int[]{android.R.attr.state_enabled};
+        ColorStateList colorList = new ColorStateList(states, colors);
+        mVoiceFab.setBackgroundTintList(colorList);
+        mVoiceRevealView.reveal(p.x, p.y, getResources().getColor(ThemeHelper.THEME.get(index).getColorPrimary()),
+                1, Const.DURATION, new RevealView.RevealAnimationListener() {
+                    @Override
+                    public void finish() {
+                        mVoiceFab.setVisibility(View.VISIBLE);
+                        mVoiceTextView.setVisibility(View.VISIBLE);
+                        Animation animation = AnimationUtils.loadAnimation(EditTextActivity.this, R.anim.anim_scale_small_2_big);
+                        animation.setDuration(300l);
+                        mVoiceFab.startAnimation(animation);
+                        mVoiceTextView.setAnimation(AnimationUtils.loadAnimation(EditTextActivity.this, R.anim.anim_alpha_in));
+                        mIsVoiceOpen = true;
+                    }
+                });
+    }
+
+    private void hideVoice() {
+        mIsVoiceOpen = false;
+        Animation alphaAnimation = AnimationUtils.loadAnimation(EditTextActivity.this, R.anim.anim_alpha_out);
+        mVoiceTextView.startAnimation(alphaAnimation);
+        alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                mVoiceFab.startAnimation(AnimationUtils.loadAnimation(EditTextActivity.this, R.anim.anim_scale_big_2_small));
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mVoiceFab.setVisibility(View.GONE);
+                mVoiceTextView.setVisibility(View.GONE);
+                Point p = getLocationInView(mVoiceRevealView, mFabPositionView);
+                mVoiceRevealView.hide(p.x, p.y, Color.TRANSPARENT, 0, Const.DURATION, new RevealView.RevealAnimationListener() {
+                    @Override
+                    public void finish() {
+                        mVoiceLayout.setOnClickListener(null);
+                        mVoiceLayout.setVisibility(View.INVISIBLE);
+                    }
+                });
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+
+    }
+
 }

@@ -14,6 +14,7 @@
     <string name="no_space">There is not enough space to complete this operation!</string>
     <string name="fab_evernote">Update Evernote</string>
     <string name="fab_voice">Voice Input</string>
+    <string name="fab_speak">Speak now</string>
 
     <string name="finish_activity">Double Click to Quit</string>
 
