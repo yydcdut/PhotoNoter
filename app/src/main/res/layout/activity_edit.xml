@@ -118,12 +118,19 @@
         </com.yydcdut.note.view.RevealView>
 
         <RelativeLayout
+            android:id="@+id/layout_fab_voice_start"
             android:layout_width="100dip"
             android:layout_height="100dip"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:layout_margin="6dip">
+            android:layout_margin="3dip"
+            android:visibility="gone">
 
+            <ImageView
+                android:id="@+id/img_ripple_fab"
+                android:layout_width="100dip"
+                android:layout_height="100dip"
+                android:background="@drawable/bg_voice_ripple"/>
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fab_voice_start"
@@ -131,14 +138,11 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:src="@drawable/ic_mic_none_white_24dp"
-                android:visibility="gone"
-                app:borderWidth="1dp"
+                app:borderWidth="0dp"
                 app:elevation="6dp"
                 app:fabSize="normal"
                 app:pressedTranslationZ="12dp"/>
-
         </RelativeLayout>
-
 
         <TextView
             android:id="@+id/txt_voice"
@@ -149,7 +153,7 @@
             android:layout_centerHorizontal="true"
             android:layout_margin="@dimen/dimen_24dip"
             android:text="@string/fab_speak"
-            android:textColor="@color/txt_white_translate"
+            android:textColor="@color/txt_alpha_gray"
             android:textSize="@dimen/txt_big_large"
             android:visibility="gone"/>
     </RelativeLayout>

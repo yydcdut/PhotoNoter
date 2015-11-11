@@ -2,13 +2,11 @@ package com.yydcdut.note.controller.note;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
@@ -47,8 +45,6 @@ import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.model.UserCenter;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.Evi;
-import com.yydcdut.note.utils.LocalStorageUtils;
-import com.yydcdut.note.utils.ThemeHelper;
 import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.view.CircleProgressBarLayout;
 import com.yydcdut.note.view.KeyBoardResizeFrameLayout;
@@ -62,6 +58,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+
+import us.pinguo.edit.sdk.base.widget.AnimationAdapter;
 
 /**
  * Created by yyd on 15-4-8.
@@ -81,7 +79,9 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
     private EditText mContentEdit;
     private FloatingMenuLayout mFabMenuLayout;
     private ImageView mMenuArrowImage;
-    private FloatingActionButton mVoiceFab;
+    /* Fab */
+    private ImageView mVoiceRippleView;
+    private View mVoiceFabLayout;
     private View mVoiceTextView;
     private View mVoiceLayout;
     /* Progress Bar */
@@ -169,6 +169,9 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
         mVoiceLayout = findViewById(R.id.layout_voice);
         mVoiceLayout.setVisibility(View.INVISIBLE);
         mVoiceLayout.setOnClickListener(null);
+        mVoiceRippleView = (ImageView) findViewById(R.id.img_ripple_fab);
+
+        mVoiceFabLayout = findViewById(R.id.layout_fab_voice_start);
     }
 
     private void initToolBarUI() {
@@ -218,8 +221,7 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
         mFabMenuLayout.setOnFloatingActionsMenuUpdateListener(this);
         findViewById(R.id.fab_evernote_update).setOnClickListener(this);
         findViewById(R.id.fab_voice).setOnClickListener(this);
-        mVoiceFab = (FloatingActionButton) findViewById(R.id.fab_voice_start);
-        mVoiceFab.setOnClickListener(this);
+        findViewById(R.id.fab_voice_start).setOnClickListener(this);
     }
 
     private void initData() {
@@ -545,21 +547,22 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
         mVoiceLayout.setVisibility(View.VISIBLE);
         mVoiceLayout.setOnClickListener(this);
         Point p = getLocationInView(mVoiceRevealView, mFabPositionView);
-        int index = LocalStorageUtils.getInstance().getThemeColor();
-        int[] colors = new int[]{getResources().getColor(ThemeHelper.THEME.get((index + 7) % 15).getColorPrimary())};
-        int[][] states = new int[1][];
-        states[0] = new int[]{android.R.attr.state_enabled};
-        ColorStateList colorList = new ColorStateList(states, colors);
-        mVoiceFab.setBackgroundTintList(colorList);
-        mVoiceRevealView.reveal(p.x, p.y, getResources().getColor(ThemeHelper.THEME.get(index).getColorPrimary()),
+        mVoiceRevealView.reveal(p.x, p.y, getResources().getColor(R.color.bg_background),
                 1, Const.DURATION, new RevealView.RevealAnimationListener() {
                     @Override
                     public void finish() {
-                        mVoiceFab.setVisibility(View.VISIBLE);
+                        mVoiceFabLayout.setVisibility(View.VISIBLE);
                         mVoiceTextView.setVisibility(View.VISIBLE);
                         Animation animation = AnimationUtils.loadAnimation(EditTextActivity.this, R.anim.anim_scale_small_2_big);
                         animation.setDuration(300l);
-                        mVoiceFab.startAnimation(animation);
+                        animation.setAnimationListener(new AnimationAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+                                super.onAnimationEnd(animation);
+                                mVoiceRippleView.startAnimation(AnimationUtils.loadAnimation(EditTextActivity.this, R.anim.anim_scale_voice_fab));
+                            }
+                        });
+                        mVoiceFabLayout.startAnimation(animation);
                         mVoiceTextView.setAnimation(AnimationUtils.loadAnimation(EditTextActivity.this, R.anim.anim_alpha_in));
                         mIsVoiceOpen = true;
                     }
@@ -573,12 +576,12 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
         alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                mVoiceFab.startAnimation(AnimationUtils.loadAnimation(EditTextActivity.this, R.anim.anim_scale_big_2_small));
+                mVoiceFabLayout.startAnimation(AnimationUtils.loadAnimation(EditTextActivity.this, R.anim.anim_scale_big_2_small));
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                mVoiceFab.setVisibility(View.GONE);
+                mVoiceFabLayout.setVisibility(View.GONE);
                 mVoiceTextView.setVisibility(View.GONE);
                 Point p = getLocationInView(mVoiceRevealView, mFabPositionView);
                 mVoiceRevealView.hide(p.x, p.y, Color.TRANSPARENT, 0, Const.DURATION, new RevealView.RevealAnimationListener() {
@@ -595,8 +598,5 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
 
             }
         });
-
-
     }
-
 }

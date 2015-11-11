@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="bg_menu">#cc222222</color>
-    <color name="bg_background">#e6e6e6</color>
+    <color name="bg_background">#E5E5E5</color>
     <color name="bg_shadow">#55000000</color>
     <color name="bg_shadow_press">#99000000</color>
 
