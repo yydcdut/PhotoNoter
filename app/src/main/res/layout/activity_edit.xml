@@ -123,10 +123,10 @@
             android:layout_height="100dip"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:layout_margin="3dip"
+            android:layout_margin="-6dip"
             android:visibility="gone">
 
-            <ImageView
+            <com.yydcdut.note.view.VoiceRippleView
                 android:id="@+id/img_ripple_fab"
                 android:layout_width="100dip"
                 android:layout_height="100dip"

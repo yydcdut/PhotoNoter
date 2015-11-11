@@ -8,6 +8,7 @@ import android.content.Intent;
 import com.baidu.mapapi.SDKInitializer;
 import com.evernote.client.android.EvernoteSession;
 import com.github.mmin18.layoutcast.LayoutCast;
+import com.iflytek.cloud.SpeechUtility;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 import com.umeng.analytics.MobclickAgent;
@@ -78,6 +79,8 @@ public class NoteApplication extends Application {
              /* Camera360 */
             PGEditImageLoader.initImageLoader(this);
             PGEditSDK.instance().initSDK(this);
+            /* 语音 */
+            SpeechUtility.createUtility(this, "appid=" + "55cc5db3");
         }
 
         //打点

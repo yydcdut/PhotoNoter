@@ -30,54 +30,54 @@
             android:theme="@style/AppTheme.NoActionBar.Blue"/>
         <activity
             android:name=".controller.note.DetailActivity"
-            android:theme="@style/AppTheme.NoActionBar.Blue"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.Blue"/>
         <activity
             android:name=".controller.note.EditTextActivity"
-            android:theme="@style/AppTheme.NoActionBar.Blue"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.Blue"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity
             android:name=".controller.note.ZoomActivity"
-            android:theme="@style/AppTheme.NoActionBar.Blue"
             android:label=" "
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.Blue"/>
         <activity
             android:name=".controller.login.LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar.Blue"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.Blue"/>
         <activity
             android:name=".controller.login.UserCenterActivity"
-            android:theme="@style/AppTheme.NoActionBar.Blue"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.Blue"/>
         <activity
             android:name=".controller.setting.SettingActivity"
-            android:theme="@style/AppTheme.NoActionBar.Blue"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.Blue"/>
         <activity
             android:name=".controller.setting.EditCategoryActivity"
-            android:theme="@style/AppTheme.NoActionBar.Blue"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.Blue"/>
         <activity
             android:name=".controller.setting.AboutAppActivity"
-            android:theme="@style/AppTheme.NoActionBar.Blue"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.Blue"/>
         <activity
             android:name=".camera.controller.AdjustCamera"
-            android:theme="@style/AppTheme.NoActionBar.Blue"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.Blue"/>
         <activity
             android:name=".camera.controller.CameraActivity"
-            android:theme="@style/AppTheme.NoActionBar.Blue"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.Blue"/>
         <activity
             android:name=".controller.setting.FloatingEditActivity"
-            android:theme="@style/AppTheme.NoActionBar.Blue"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.Blue"/>
         <activity
             android:name=".controller.setting.FeedbackActivity"
-            android:theme="@style/AppTheme.NoActionBar.Blue"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.Blue"/>
 
         <service android:name=".service.InitService"/>
         <service
@@ -177,7 +177,6 @@
             </intent-filter>
         </service>
         <!-- ************ Baidu End ************ -->
-
     </application>
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
