@@ -65,6 +65,7 @@ public class VoiceRippleView extends ImageView implements Runnable, Handler.Call
         mWannaFinish = true;
         mRunnaleThread = null;
         mHandler = null;
+        mObject = null;
     }
 
     public void setVoice(float voice) {
