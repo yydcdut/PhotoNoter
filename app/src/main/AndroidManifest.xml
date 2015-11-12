@@ -159,14 +159,12 @@
         <activity android:name="com.evernote.client.android.login.EvernoteLoginActivity"/>
         <!-- ************ Evernote End ************ -->
 
-        <!-- ************ layoutcast Begin ************ -->
-        <activity android:name="com.github.mmin18.layoutcast.ResetActivity"/>
-        <!-- ************ layoutcast End ************ -->
-
         <!-- ************ Baidu Begin ************ -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="pjFyNkykpYu1bIqYkQFGRnbx"/>
+            android:value="Mx338srYEciirSHk6xKMrAlm"/>
+        <!-- release Mx338srYEciirSHk6xKMrAlm -->
+        <!-- debug pjFyNkykpYu1bIqYkQFGRnbx -->
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
