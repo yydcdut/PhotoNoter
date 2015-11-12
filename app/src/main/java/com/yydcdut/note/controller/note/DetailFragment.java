@@ -233,7 +233,7 @@ public class DetailFragment extends BaseFragment implements ObservableScrollView
      * RevealColor初始化
      */
     private void initRevealColorUI() {
-        mRevealView = (RevealView) getActivity().findViewById(R.id.reveal);
+//        mRevealView = (RevealView) getActivity().findViewById(R.id.reveal);
     }
 
     /**
@@ -426,7 +426,7 @@ public class DetailFragment extends BaseFragment implements ObservableScrollView
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.view_trans:
-                ZoomActivity.startActivityForResult(this, mPhotoNote.getCategoryLabel(), mPosition, mComparator);
+//                ZoomActivity.startActivityForResult(this, mPhotoNote.getCategoryLabel(), mPosition, mComparator);
                 break;
             case R.id.fab_detail:
                 showRevealColorViewAndStartActivity();

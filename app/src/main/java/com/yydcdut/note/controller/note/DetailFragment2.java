@@ -16,7 +16,7 @@ import com.yydcdut.note.view.AutoFitImageView;
 /**
  * Created by yuyidong on 15/11/12.
  */
-public class DetailFragment2 extends BaseFragment {
+public class DetailFragment2 extends BaseFragment implements View.OnClickListener {
     /* data */
     private PhotoNote mPhotoNote;
     private int mPosition;
@@ -44,6 +44,7 @@ public class DetailFragment2 extends BaseFragment {
     @Override
     public void initUI(View view) {
         mAutoFitImageView = (AutoFitImageView) view.findViewById(R.id.img_detail);
+        mAutoFitImageView.setOnClickListener(this);
     }
 
     @Override
@@ -57,4 +58,9 @@ public class DetailFragment2 extends BaseFragment {
     public void initListener(View view) {
     }
 
+
+    @Override
+    public void onClick(View v) {
+        ZoomActivity.startActivityForResult(this, mPhotoNote.getCategoryLabel(), mPosition, mComparator);
+    }
 }

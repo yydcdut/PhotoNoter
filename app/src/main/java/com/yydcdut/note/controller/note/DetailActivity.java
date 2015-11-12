@@ -3,6 +3,7 @@ package com.yydcdut.note.controller.note;
 import android.graphics.Color;
 import android.media.ExifInterface;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -34,7 +35,10 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
         ViewPager.PageTransformer, ObservableScrollView.OnScrollChangedListener, View.OnClickListener {
     private static final float MIN_SCALE = 0.75f;
 
+    private int mComparator;
+    private String mCategoryLabel;
     private List<PhotoNote> mPhotoNoteList;
+
     private static final int INTENTION_LEFT = -1;
     private static final int INTENTION_RIGHT = 1;
     private static final int INTENTION_STOP = 0;
@@ -55,6 +59,7 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
     private DetailPagerAdapter mDetailPagerAdapter;
 
     private ObservableScrollView mScrollView;
+    private FloatingActionButton mFab;
 
     /* Content TextView */
     private FontTextView mTitleView;
@@ -86,6 +91,17 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
+        calculateHeight();
+        int fabHeight = mFab.getHeight();
+        int translateViewHeight = findViewById(R.id.view_translate).getHeight();
+        int moveY = translateViewHeight - fabHeight / 2;
+        int moveX = findViewById(R.id.view_translate).getWidth() - mFab.getWidth() -
+                (int) getResources().getDimension(R.dimen.dimen_24dip);
+        mFab.setX(moveX);
+        mFab.setY(moveY);
+    }
+
+    private void calculateHeight() {
         View view1 = findViewById(R.id.txt_detail_content_title);
         View view2 = findViewById(R.id.txt_detail_content);
         mNoteBeginHeight = 0;
@@ -107,19 +123,25 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
         initViewPager(bundle);
         initTitleView();
         initContentView();
+        initListner();
+        setData(mViewPager.getCurrentItem());
+        mFab = (FloatingActionButton) findViewById(R.id.fab_edit);
+    }
+
+    private void initListner() {
         mScrollView.setOnScrollChangedListener(this);
         for (TextView textView : mTextViews) {
             textView.setOnClickListener(this);
         }
-        setData(mViewPager.getCurrentItem());
     }
 
     private void initViewPager(Bundle bundle) {
         mViewPager = (ViewPager) findViewById(R.id.vp_detail);
         mViewPager.addOnPageChangeListener(this);
         mViewPager.setPageTransformer(true, this);
-        mDetailPagerAdapter = new DetailPagerAdapter(getSupportFragmentManager(),
-                bundle.getString(Const.CATEGORY_LABEL), bundle.getInt(Const.COMPARATOR_FACTORY));
+        mComparator = bundle.getInt(Const.COMPARATOR_FACTORY);
+        mCategoryLabel = bundle.getString(Const.CATEGORY_LABEL);
+        mDetailPagerAdapter = new DetailPagerAdapter(getSupportFragmentManager(), mCategoryLabel, mComparator);
         mViewPager.setAdapter(mDetailPagerAdapter);
         mViewPager.setCurrentItem(bundle.getInt(Const.PHOTO_POSITION));
     }
@@ -295,6 +317,7 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
             if (position + 1 >= mPhotoNoteList.size()) {
                 return;
             }
+            calculateHeight();
             if (positionOffset > 0.5) {
                 float alpha = (positionOffset - 0.5f) / 0.5f;
                 setContentAlpha(alpha);
@@ -319,6 +342,7 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
             if (position < 0) {
                 return;
             }
+            calculateHeight();
             if (positionOffset > 0.5) {
                 float alpha = (positionOffset - 0.5f) / 0.5f;
                 setContentAlpha(alpha);
@@ -450,10 +474,8 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
             case R.id.txt_detail_4:
                 mScrollView.smoothScrollTo(0, (int) mExifBeginHeight + 2);
                 break;
-
         }
     }
-
 
     private String decodeTimeInTextDetail(long time) {
         StringBuilder sb = new StringBuilder();
