@@ -5,8 +5,6 @@ Material Design风格的开源照片笔记。
 下载：
 
 - <a href="http://www.wandoujia.com/apps/com.yydcdut.note">豌豆荚</a>
-
-
 - <a href="http://android.myapp.com/myapp/detail.htm?apkName=com.yydcdut.note">应用宝</a>
 - <a href="http://app.flyme.cn/apps/public/detail?package_name=com.yydcdut.note">Flyme</a>
 - <a href="http://shouji.baidu.com/software/item?docid=8071412&from=as">百度</a>
@@ -61,14 +59,19 @@ debug{
 
 # 更新版本说明
 
+## 1.1.4
+
+- 在输入笔记界面中语音功能（迅飞语音SDK）
+- 反馈 和 联系我们 友盟反馈接口
+- 百度定位SDK
+- 优化Check数据库
+- 修复沙盒Bug
+- 重构字体选择界面
+
 ## 1.1.3
 
 - 新增用户中心界面
-
-
 - 添加EverNote登录、上传笔记功能
-
-
 - FloatingActionButton部分重构
 
 ## 1.1.2
