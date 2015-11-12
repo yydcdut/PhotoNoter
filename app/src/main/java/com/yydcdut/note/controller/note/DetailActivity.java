@@ -1,44 +1,72 @@
 package com.yydcdut.note.controller.note;
 
 import android.graphics.Color;
+import android.media.ExifInterface;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.DetailPagerAdapter;
 import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.controller.BaseActivity;
 import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.utils.Const;
-import com.yydcdut.note.utils.Evi;
+import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.LollipopCompat;
+import com.yydcdut.note.view.FontTextView;
+import com.yydcdut.note.view.ObservableScrollView;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
  * Created by yyd on 15-3-29.
  */
-public class DetailActivity extends BaseActivity implements ViewPager.OnPageChangeListener {
+public class DetailActivity extends BaseActivity implements ViewPager.OnPageChangeListener,
+        ViewPager.PageTransformer, ObservableScrollView.OnScrollChangedListener, View.OnClickListener {
+    private static final float MIN_SCALE = 0.75f;
+
     private List<PhotoNote> mPhotoNoteList;
-    private int[] mColorArray = new int[]{Color.WHITE, Color.WHITE, Color.WHITE};
-    private ImageView mBackgroundImage;
     private static final int INTENTION_LEFT = -1;
     private static final int INTENTION_RIGHT = 1;
     private static final int INTENTION_STOP = 0;
     private int mIntention = INTENTION_STOP;
+    private static final int STATE_LEFT_IN = -2;
+    private static final int STATE_LEFT_OUT = -1;
+    private static final int STATE_NOTHING = 0;
+    private static final int STATE_RIGHT_OUT = 1;
+    private static final int STATE_RIGHT_IN = 2;
+    private int mIntentionState = STATE_NOTHING;
+    private float mLastTimePositionOffset = -1;
+
+    private float mNoteBeginHeight = 0;
+    private float mTimeBeginHeight = 0;
+    private float mExifBeginHeight = 0;
 
     private ViewPager mViewPager;
     private DetailPagerAdapter mDetailPagerAdapter;
-    private View mPositionView;
-    private float mDelta = 0.0f;
+
+    private ObservableScrollView mScrollView;
+
+    /* Content TextView */
+    private FontTextView mTitleView;
+    private FontTextView mContentView;
+    private TextView mCreateView;
+    private TextView mEditView;
+    private TextView mExifView;
+    private View mContentLayoutView;
+
+    /* Title TextView */
+    private TextView[] mTextViews;
+    private View[] mSeparateView;
 
     @Override
     public boolean setStatusBar() {
@@ -56,58 +84,203 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
     }
 
     @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        View view1 = findViewById(R.id.txt_detail_content_title);
+        View view2 = findViewById(R.id.txt_detail_content);
+        mNoteBeginHeight = 0;
+        int noteHeight = view1.getHeight() + view2.getHeight();
+        View view3 = findViewById(R.id.layout_detail_time);
+        mTimeBeginHeight = mNoteBeginHeight + noteHeight + getResources().getDimension(R.dimen.activity_horizontal_margin) / 2;
+        int timeHeight = view3.getHeight();
+        View view4 = findViewById(R.id.txt_detail_exif);
+        mExifBeginHeight = mTimeBeginHeight + timeHeight + getResources().getDimension(R.dimen.activity_horizontal_margin);
+        int exifHeight = view4.getHeight();
+    }
+
+    @Override
     public void initUiAndListener() {
         Bundle bundle = getIntent().getExtras();
         mPhotoNoteList = PhotoNoteDBModel.getInstance().findByCategoryLabel(bundle.getString(Const.CATEGORY_LABEL),
                 bundle.getInt(Const.COMPARATOR_FACTORY));
         initToolBar();
-        initBGView();
         initViewPager(bundle);
-        initPositionLocation(bundle);
-    }
-
-    @Override
-    public void startActivityAnimation() {
-
-    }
-
-    private void initPositionLocation(Bundle bundle) {
-        mPositionView = findViewById(R.id.img_position_line);
-        int total = mPhotoNoteList.size();
-        mDelta = (Evi.sScreenWidth - getResources().getDimension(R.dimen.dimen_24dip)) / total;
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mPositionView.getLayoutParams();
-        layoutParams.leftMargin = (int) (bundle.getInt(Const.PHOTO_POSITION) * mDelta);
-        mPositionView.requestLayout();
-        if (LollipopCompat.AFTER_LOLLIPOP) {
-            int height = getStatusBarSize();
-            View view = findViewById(R.id.layout_position_line);
-            RelativeLayout.LayoutParams layoutParams1 = (RelativeLayout.LayoutParams) view.getLayoutParams();
-            layoutParams1.topMargin = (int) (height + getResources().getDimension(R.dimen.dimen_24dip) / 2);
-            view.requestLayout();
+        initTitleView();
+        initContentView();
+        mScrollView.setOnScrollChangedListener(this);
+        for (TextView textView : mTextViews) {
+            textView.setOnClickListener(this);
         }
-    }
-
-    private void initToolBar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setData(mViewPager.getCurrentItem());
     }
 
     private void initViewPager(Bundle bundle) {
         mViewPager = (ViewPager) findViewById(R.id.vp_detail);
         mViewPager.addOnPageChangeListener(this);
-        mViewPager.setPageTransformer(true, new ZoomOutPageTransformer());
+        mViewPager.setPageTransformer(true, this);
         mDetailPagerAdapter = new DetailPagerAdapter(getSupportFragmentManager(),
                 bundle.getString(Const.CATEGORY_LABEL), bundle.getInt(Const.COMPARATOR_FACTORY));
         mViewPager.setAdapter(mDetailPagerAdapter);
         mViewPager.setCurrentItem(bundle.getInt(Const.PHOTO_POSITION));
-        mBackgroundImage.setBackgroundColor(mPhotoNoteList.get(bundle.getInt(Const.PHOTO_POSITION)).getPaletteColor());
     }
 
-    private void initBGView() {
-        mBackgroundImage = (ImageView) findViewById(R.id.img_detail_bg);
+    private void initToolBar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setBackgroundColor(Color.TRANSPARENT);
+        toolbar.setTitle(" ");
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
     }
 
-    private float mLastTimePositionOffset = -1;
+    private void initTitleView() {
+        mTextViews = new TextView[4];
+        TextView textView1 = (TextView) findViewById(R.id.txt_detail_1);
+        TextView textView2 = (TextView) findViewById(R.id.txt_detail_2);
+        TextView textView3 = (TextView) findViewById(R.id.txt_detail_3);
+        TextView textView4 = (TextView) findViewById(R.id.txt_detail_4);
+        mTextViews[0] = textView1;
+        mTextViews[1] = textView2;
+        mTextViews[2] = textView3;
+        mTextViews[3] = textView4;
+        mSeparateView = new View[4];
+        mSeparateView[0] = findViewById(R.id.view_detail_1);
+        mSeparateView[1] = findViewById(R.id.view_detail_2);
+        mSeparateView[2] = findViewById(R.id.view_detail_3);
+        mSeparateView[3] = findViewById(R.id.view_detail_4);
+    }
+
+    private void initContentView() {
+        mTitleView = (FontTextView) findViewById(R.id.txt_detail_content_title);
+        mContentView = (FontTextView) findViewById(R.id.txt_detail_content);
+        mCreateView = (TextView) findViewById(R.id.txt_detail_create_time);
+        mEditView = (TextView) findViewById(R.id.txt_detail_edit_time);
+        mExifView = (TextView) findViewById(R.id.txt_detail_exif);
+        mScrollView = (ObservableScrollView) findViewById(R.id.scroll_detail);
+        mContentLayoutView = findViewById(R.id.layout_detail_add);
+    }
+
+    private void setData(int index) {
+        PhotoNote photoNote = mPhotoNoteList.get(index);
+        /* 设置文字 */
+        mTitleView.setText(photoNote.getTitle());
+        mContentView.setText(photoNote.getContent());
+        mCreateView.setText(decodeTimeInTextDetail(photoNote.getCreatedNoteTime()));
+        mEditView.setText(decodeTimeInTextDetail(photoNote.getEditedNoteTime()));
+        try {
+            mExifView.setText(getExif(photoNote));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String getExif(PhotoNote photoNote) throws IOException {
+        String enter = "\n";
+        StringBuilder sb = new StringBuilder();
+        ExifInterface exifInterface = new ExifInterface(photoNote.getBigPhotoPathWithoutFile());
+        String fDateTime = exifInterface.getAttribute(ExifInterface.TAG_DATETIME);
+        sb.append(getResources().getString(R.string.detail_dateTime))
+                .append(getExifData(fDateTime))
+                .append(enter);
+        String fOrientation = exifInterface.getAttribute(ExifInterface.TAG_ORIENTATION);
+        sb.append(getResources().getString(R.string.detail_orientation))
+                .append(fOrientation)
+                .append(enter);
+        String fFlash = exifInterface.getAttribute(ExifInterface.TAG_FLASH);
+        sb.append(getResources().getString(R.string.detail_flash))
+                .append(fFlash.equals("0") ? getResources().getString(R.string.detail_flash_close) : getResources().getString(R.string.detail_flash_open))
+                .append(enter);
+        String fImageWidth = exifInterface.getAttribute(ExifInterface.TAG_IMAGE_WIDTH);
+        if (fImageWidth.equals("0")) {
+            int[] size = FilePathUtils.getPictureSize(photoNote.getBigPhotoPathWithoutFile());
+            sb.append(getResources().getString(R.string.detail_image_width))
+                    .append(size[0])
+                    .append(enter);
+            sb.append(getResources().getString(R.string.detail_image_length))
+                    .append(size[1])
+                    .append(enter);
+        } else {
+            sb.append(getResources().getString(R.string.detail_image_width))
+                    .append(fImageWidth)
+                    .append(enter);
+            String fImageLength = exifInterface.getAttribute(ExifInterface.TAG_IMAGE_LENGTH);
+            sb.append(getResources().getString(R.string.detail_image_length))
+                    .append(fImageLength)
+                    .append(enter);
+        }
+        String fWhiteBalance = exifInterface.getAttribute(ExifInterface.TAG_WHITE_BALANCE);
+        sb.append(getResources().getString(R.string.detail_white_balance))
+                .append(fWhiteBalance.equals("0") ? getResources().getString(R.string.detail_wb_auto) : getResources().getString(R.string.detail_wb_manual))
+                .append(enter);
+        String longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+        if (longitude == null || longitude.equals("null")) {
+            sb.append(getResources().getString(R.string.detail_longitude))
+                    .append(getResources().getString(R.string.detail_unknown))
+                    .append(enter);
+        } else {
+            String[] longitudeSs = longitude.split(",");
+            double longitudesD = 0;
+            longitudesD += Double.parseDouble(longitudeSs[0].split("/")[0]);
+            longitudesD += (((int) (Double.parseDouble(longitudeSs[1].split("/")[0]) * 100)) + Double.parseDouble(longitudeSs[2].split("/")[0]) / 60 / 10000) / 60 / 100;
+            sb.append(getResources().getString(R.string.detail_longitude))
+                    .append(longitudesD + "")
+                    .append(enter);
+        }
+        String latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
+        if (latitude == null || latitude.equals("null")) {
+            sb.append(getResources().getString(R.string.detail_latitude))
+                    .append(getResources().getString(R.string.detail_unknown))
+                    .append(enter);
+        } else {
+            String[] latitudeSs = latitude.split(",");
+            double latitudesD = 0;
+            latitudesD += Double.parseDouble(latitudeSs[0].split("/")[0]);
+            latitudesD += (((int) (Double.parseDouble(latitudeSs[1].split("/")[0]) * 100)) + Double.parseDouble(latitudeSs[2].split("/")[0]) / 60 / 10000) / 60 / 100;
+            sb.append(getResources().getString(R.string.detail_latitude))
+                    .append(latitudesD + "")
+                    .append(enter);
+        }
+        String fMake = exifInterface.getAttribute(ExifInterface.TAG_MAKE);
+        sb.append(getResources().getString(R.string.detail_make))
+                .append(getExifData(fMake))
+                .append(enter);
+        String fModel = exifInterface.getAttribute(ExifInterface.TAG_MODEL);
+        sb.append(getResources().getString(R.string.detail_model))
+                .append(getExifData(fModel))
+                .append(enter);
+        String fAperture = exifInterface.getAttribute(ExifInterface.TAG_APERTURE);
+        sb.append(getResources().getString(R.string.detail_aperture)).append(getExifData(fAperture)).append(enter);
+        String fExposureTime = exifInterface.getAttribute(ExifInterface.TAG_EXPOSURE_TIME);
+        sb.append(getResources().getString(R.string.detail_exposure_time))
+                .append(getExifData(fExposureTime))
+                .append(enter);
+        String fFocalLength = exifInterface.getAttribute(ExifInterface.TAG_FOCAL_LENGTH);
+        sb.append(getResources().getString(R.string.detail_focal_length))
+                .append(getExifData(fFocalLength))
+                .append(enter);
+        String fISOSpeedRatings = exifInterface.getAttribute(ExifInterface.TAG_ISO);
+        sb.append(getResources().getString(R.string.detail_iso))
+                .append(getExifData(fISOSpeedRatings))
+                .append(enter);
+        return sb.toString();
+    }
+
+    private String getExifData(String data) {
+        if (TextUtils.isEmpty(data) || data.equals("null")) {
+            return getResources().getString(R.string.detail_unknown);
+        } else {
+            return data;
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return true;
+    }
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -118,52 +291,99 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
                 mIntention = positionOffset - mLastTimePositionOffset >= 0 ? INTENTION_RIGHT : INTENTION_LEFT;
             }
         } else if (mIntention == INTENTION_RIGHT && positionOffset < 0.99) {//right
-            int r2 = Color.red(mColorArray[2]);
-            int r1 = Color.red(mColorArray[1]);
-            int g2 = Color.green(mColorArray[2]);
-            int g1 = Color.green(mColorArray[1]);
-            int b2 = Color.blue(mColorArray[2]);
-            int b1 = Color.blue(mColorArray[1]);
-            int deltaR = r1 - r2;
-            int deltaG = g1 - g2;
-            int deltaB = b1 - b2;
-            int newR = (int) (r1 - deltaR * positionOffset);
-            int newG = (int) (g1 - deltaG * positionOffset);
-            int newB = (int) (b1 - deltaB * positionOffset);
-            int newColor = Color.rgb(newR, newG, newB);
-            mBackgroundImage.setBackgroundColor(newColor);
-            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mPositionView.getLayoutParams();
-            layoutParams.leftMargin = (int) (position * mDelta + (mDelta * positionOffset));
-            mPositionView.requestLayout();
+            //positionOffset从0到1
+            if (position + 1 >= mPhotoNoteList.size()) {
+                return;
+            }
+            if (positionOffset > 0.5) {
+                float alpha = (positionOffset - 0.5f) / 0.5f;
+                setContentAlpha(alpha);
+                if (mIntentionState == STATE_RIGHT_OUT) {
+                    return;
+                }
+                setData(position + 1);
+                mIntentionState = STATE_RIGHT_OUT;
+                mScrollView.scrollTo(0, 0);
+                resetTitlePostion();
+            } else {
+                float alpha = (0.5f - positionOffset) / 0.5f;
+                setContentAlpha(alpha);
+                if (mIntentionState == STATE_RIGHT_IN) {
+                    return;
+                }
+                setData(position);
+                mIntentionState = STATE_RIGHT_IN;
+            }
         } else if (mIntention == INTENTION_LEFT && positionOffset > 0.01) {//left
-            int r0 = Color.red(mColorArray[0]);
-            int r1 = Color.red(mColorArray[1]);
-            int g0 = Color.green(mColorArray[0]);
-            int g1 = Color.green(mColorArray[1]);
-            int b0 = Color.blue(mColorArray[0]);
-            int b1 = Color.blue(mColorArray[1]);
-            int deltaR = r1 - r0;
-            int deltaG = g1 - g0;
-            int deltaB = b1 - b0;
-            int newR = (int) (r1 - deltaR * (1 - positionOffset));
-            int newG = (int) (g1 - deltaG * (1 - positionOffset));
-            int newB = (int) (b1 - deltaB * (1 - positionOffset));
-            int newColor = Color.rgb(newR, newG, newB);
-            mBackgroundImage.setBackgroundColor(newColor);
-            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mPositionView.getLayoutParams();
-            layoutParams.leftMargin = (int) ((position + 1) * mDelta - (mDelta * (1 - positionOffset)));
-            mPositionView.requestLayout();
+            //positionOffset从1到0
+            if (position < 0) {
+                return;
+            }
+            if (positionOffset > 0.5) {
+                float alpha = (positionOffset - 0.5f) / 0.5f;
+                setContentAlpha(alpha);
+                if (mIntentionState == STATE_LEFT_OUT) {
+                    return;
+                }
+                setData(position + 1);
+                mIntentionState = STATE_LEFT_OUT;
+            } else {
+                float alpha = (0.5f - positionOffset) / 0.5f;
+                setContentAlpha(alpha);
+                if (mIntentionState == STATE_LEFT_IN) {
+                    return;
+                }
+                setData(position);
+                mIntentionState = STATE_LEFT_IN;
+                mScrollView.scrollTo(0, 0);
+                resetTitlePostion();
+            }
         }
         if (positionOffset < 0.01 || positionOffset > 0.99) {
             //重新计算方向
             mIntention = INTENTION_STOP;
             mLastTimePositionOffset = -1;
+            mIntentionState = STATE_NOTHING;
+        }
+    }
+
+    private void setContentAlpha(float alpha) {
+        mContentLayoutView.setAlpha(alpha);
+    }
+
+    private void resetTitlePostion() {
+        setTitlePosition(R.id.txt_detail_1);
+    }
+
+    private void setTitlePosition(int viewId) {
+        for (TextView textView : mTextViews) {
+            textView.setTextColor(getResources().getColor(R.color.txt_LightSlateGray));
+        }
+        for (View view : mSeparateView) {
+            view.setBackgroundColor(Color.TRANSPARENT);
+        }
+        switch (viewId) {
+            case R.id.txt_detail_1:
+                mTextViews[0].setTextColor(getResources().getColor(R.color.gray));
+                mSeparateView[0].setBackgroundColor(getResources().getColor(R.color.white_smoke));
+                break;
+            case R.id.txt_detail_2:
+                mTextViews[1].setTextColor(getResources().getColor(R.color.gray));
+                mSeparateView[1].setBackgroundColor(getResources().getColor(R.color.white_smoke));
+                break;
+            case R.id.txt_detail_3:
+                mTextViews[2].setTextColor(getResources().getColor(R.color.gray));
+                mSeparateView[2].setBackgroundColor(getResources().getColor(R.color.white_smoke));
+                break;
+            case R.id.txt_detail_4:
+                mTextViews[3].setTextColor(getResources().getColor(R.color.gray));
+                mSeparateView[3].setBackgroundColor(getResources().getColor(R.color.white_smoke));
+                break;
         }
     }
 
     @Override
     public void onPageSelected(int position) {
-        getPaletteColor(position);
     }
 
     @Override
@@ -171,69 +391,117 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
         if (state == ViewPager.SCROLL_STATE_IDLE) {
             mIntention = INTENTION_STOP;
             mLastTimePositionOffset = -1;
-            View view = mDetailPagerAdapter.getItemView(mViewPager.getCurrentItem());
-            if (view == null) {
-                return;
-            }
-            CardView cardView = (CardView) view.findViewById(R.id.card_detail_layout);
-            cardView.setCardElevation(0);
-            cardView.setRadius(0);
+            mIntentionState = STATE_NOTHING;
         }
     }
 
-    private void getPaletteColor(int position) {
-        //这里代码为了兼容以前的
-        mColorArray[1] = mPhotoNoteList.get(position).getPaletteColor();
-        if (position != 0) {
-            mColorArray[0] = mPhotoNoteList.get(position - 1).getPaletteColor();
+    @Override
+    public void transformPage(View view, float position) {
+        int pageWidth = view.getWidth();
+        if (position < -1) { // [-Infinity,-1)
+            // This page is way off-screen to the left.
+            view.setAlpha(0);
+        } else if (position <= 0) { // [-1,0]
+            // Use the default slide transition when
+            // moving to the left page
+            view.setAlpha(1);
+            view.setTranslationX(0);
+            view.setScaleX(1);
+            view.setScaleY(1);
+        } else if (position <= 1) { // (0,1]
+            // Fade the page out.
+            view.setAlpha(1 - position);
+            // Counteract the default slide transition
+            view.setTranslationX(pageWidth * -position);
+            // Scale the page down (between MIN_SCALE and 1)
+            float scaleFactor = MIN_SCALE + (1 - MIN_SCALE)
+                    * (1 - Math.abs(position));
+            view.setScaleX(scaleFactor);
+            view.setScaleY(scaleFactor);
+        } else { // (1,+Infinity]
+            // This page is way off-screen to the right.
+            view.setAlpha(0);
         }
-        if (position != mPhotoNoteList.size() - 1) {
-            mColorArray[2] = mPhotoNoteList.get(position + 1).getPaletteColor();
+    }
+
+    @Override
+    public void onScrollChanged(int x, int y, int oldx, int oldy) {
+        if (y < (int) mTimeBeginHeight) {
+            setTitlePosition(R.id.txt_detail_1);
+        } else if (y <= (int) mExifBeginHeight) {
+            setTitlePosition(R.id.txt_detail_3);
+        } else {
+            setTitlePosition(R.id.txt_detail_4);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.txt_detail_1:
+                mScrollView.smoothScrollTo(0, 0);
+                break;
+            case R.id.txt_detail_2:
+                mScrollView.smoothScrollTo(0, 0);
+                break;
+            case R.id.txt_detail_3:
+                mScrollView.smoothScrollTo(0, (int) mTimeBeginHeight + 2);
+                break;
+            case R.id.txt_detail_4:
+                mScrollView.smoothScrollTo(0, (int) mExifBeginHeight + 2);
+                break;
+
         }
     }
 
 
-    class ZoomOutPageTransformer implements ViewPager.PageTransformer {
-        private static final float MIN_SCALE = 0.85f;
-
-        @Override
-        public void transformPage(View view, float position) {
-            CardView cardView = (CardView) view.findViewById(R.id.card_detail_layout);
-
-            int pageWidth = view.getWidth();
-            int pageHeight = view.getHeight();
-
-            if (position < -1) { // [-Infinity,-1)
-                cardView.setCardElevation(0);
-                cardView.setRadius(0);
-                cardView.setCardBackgroundColor(Color.TRANSPARENT);
-            } else if (position == -1 || position == 1) {
-                cardView.setCardElevation(0);
-                cardView.setRadius(0);
-                cardView.setCardBackgroundColor(Color.TRANSPARENT);
-            } else if (position < 1) { // (-1,1)
-                // Modify the default slide transition to
-                // shrink the page as well
-                cardView.setCardElevation(NoteApplication.getContext().getResources().getDimension(R.dimen.card_elevation) * 2);
-                cardView.setRadius(NoteApplication.getContext().getResources().getDimension(R.dimen.card_corner) * 3);
-                float scaleFactor = Math.max(MIN_SCALE, 1 - Math.abs(position));
-                float vertMargin = pageHeight * (1 - scaleFactor) / 2;
-                float horzMargin = pageWidth * (1 - scaleFactor) / 2;
-                if (position < 0) {
-                    view.setTranslationX(horzMargin - vertMargin / 2);
-                } else {
-                    view.setTranslationX(-horzMargin + vertMargin / 2);
-                }
-                // Scale the page down (between MIN_SCALE and 1)
-                view.setPivotX(Evi.sScreenWidth / 2);
-                view.setPivotY(Evi.sScreenHeight - 1);
-                view.setScaleX(scaleFactor);
-                view.setScaleY(scaleFactor);
-            } else { // (1,+Infinity]
-                cardView.setCardElevation(0);
-                cardView.setRadius(0);
-            }
-        }
+    private String decodeTimeInTextDetail(long time) {
+        StringBuilder sb = new StringBuilder();
+        SimpleDateFormat sdfMonth = new SimpleDateFormat("MM");
+        sb.append(getChineseMonth(Integer.parseInt(sdfMonth.format(time))));
+        SimpleDateFormat sdfDayAndYear = new SimpleDateFormat(" dd. yyyy ");
+        sb.append(sdfDayAndYear.format(time));
+        sb.append("at");
+        SimpleDateFormat sdfHour = new SimpleDateFormat(" hh:mm:ss a");
+        sb.append(sdfHour.format(time));
+        return sb.toString();
     }
 
+    /**
+     * 月份的转化
+     * todo  写到xml中
+     *
+     * @param month
+     * @return
+     */
+    private String getChineseMonth(int month) {
+        switch (month) {
+            case 1:
+                return "一月";
+            case 2:
+                return "二月";
+            case 3:
+                return "三月";
+            case 4:
+                return "四月";
+            case 5:
+                return "五月";
+            case 6:
+                return "六月";
+            case 7:
+                return "七月";
+            case 8:
+                return "八月";
+            case 9:
+                return "九月";
+            case 10:
+                return "十月";
+            case 11:
+                return "十一月";
+            case 12:
+                return "十二月";
+            default:
+                return "bug!";
+        }
+    }
 }

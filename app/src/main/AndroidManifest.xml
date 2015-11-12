@@ -30,6 +30,7 @@
             android:theme="@style/AppTheme.NoActionBar.Blue"/>
         <activity
             android:name=".controller.note.DetailActivity"
+            android:label=" "
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.Blue"/>
         <activity
@@ -162,7 +163,7 @@
         <!-- ************ Baidu Begin ************ -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="Mx338srYEciirSHk6xKMrAlm"/>
+            android:value="pjFyNkykpYu1bIqYkQFGRnbx"/>
         <!-- release Mx338srYEciirSHk6xKMrAlm -->
         <!-- debug pjFyNkykpYu1bIqYkQFGRnbx -->
         <service

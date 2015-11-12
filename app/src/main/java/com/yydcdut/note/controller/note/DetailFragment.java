@@ -34,7 +34,6 @@ import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.ImageManager.ImageLoadingListenerAdapter;
 import com.yydcdut.note.utils.ScrollUtils;
-import com.yydcdut.note.utils.TimeDecoder;
 import com.yydcdut.note.view.FontTextView;
 import com.yydcdut.note.view.RevealView;
 import com.yydcdut.note.view.scroll.ObservableScrollView;
@@ -143,8 +142,8 @@ public class DetailFragment extends BaseFragment implements ObservableScrollView
         } catch (IOException e) {
             e.printStackTrace();
         }
-        mCreateView.setText(TimeDecoder.decodeTimeInTextDetail(mPhotoNote.getCreatedNoteTime()));
-        mEditView.setText(TimeDecoder.decodeTimeInTextDetail(mPhotoNote.getEditedNoteTime()));
+//        mCreateView.setText(TimeDecoder.decodeTimeInTextDetail(mPhotoNote.getCreatedNoteTime()));
+//        mEditView.setText(TimeDecoder.decodeTimeInTextDetail(mPhotoNote.getEditedNoteTime()));
     }
 
     /**
@@ -227,11 +226,6 @@ public class DetailFragment extends BaseFragment implements ObservableScrollView
 
         }
 
-
-    }
-
-    @Override
-    public void saveSettingWhenPausing() {
 
     }
 
@@ -508,7 +502,7 @@ public class DetailFragment extends BaseFragment implements ObservableScrollView
      */
     private void updateText() {
         setDataOrSetVisibility();
-        mEditView.setText(TimeDecoder.decodeTimeInTextDetail(mPhotoNote.getEditedNoteTime()));
+//        mEditView.setText(TimeDecoder.decodeTimeInTextDetail(mPhotoNote.getEditedNoteTime()));
     }
 
 }

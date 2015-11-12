@@ -43,6 +43,29 @@
     <string name="file_name">文件名：</string>
     <string name="size">尺寸：</string>
     <string name="date">拍摄日期：</string>
+    <string name="detail_note">笔记</string>
+    <string name="detail_gps">Gps</string>
+    <string name="detail_date">时间</string>
+    <string name="detail_exif">Exif</string>
+    <string name="detail_dateTime">拍摄时间  :  </string>
+    <string name="detail_orientation">方向  :  </string>
+    <string name="detail_flash">闪光灯  :  </string>
+    <string name="detail_image_width">宽度  :  </string>
+    <string name="detail_image_length">长度  :  </string>
+    <string name="detail_white_balance">白平衡  :  </string>
+    <string name="detail_longitude">经度  :  </string>
+    <string name="detail_latitude">纬度  :  </string>
+    <string name="detail_make">设备  :  </string>
+    <string name="detail_model">型号  :  </string>
+    <string name="detail_aperture">光圈  :  </string>
+    <string name="detail_exposure_time">曝光时间 :  </string>
+    <string name="detail_focal_length">焦距  :  </string>
+    <string name="detail_iso">ISO速率  :  </string>
+    <string name="detail_unknown">未知</string>
+    <string name="detail_flash_close">关闭</string>
+    <string name="detail_flash_open">开启</string>
+    <string name="detail_wb_auto">自动</string>
+    <string name="detail_wb_manual">手动</string>
 
     <!-- dialog button text -->
     <string name="dialog_btn_ok">确定</string>

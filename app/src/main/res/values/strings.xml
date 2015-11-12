@@ -23,6 +23,29 @@
     <string name="size">Size:</string>
     <string name="date">Date:</string>
     <string name="detail_location">Location information is not available</string>
+    <string name="detail_note">Note</string>
+    <string name="detail_gps">Gps</string>
+    <string name="detail_date">Date</string>
+    <string name="detail_exif">Exif</string>
+    <string name="detail_dateTime">DateTime  :  </string>
+    <string name="detail_orientation">Orientation  :  </string>
+    <string name="detail_flash">Flash  :  </string>
+    <string name="detail_image_width">ImageWidth  :  </string>
+    <string name="detail_image_length">ImageLength  :  </string>
+    <string name="detail_white_balance">WhiteBalance  :  </string>
+    <string name="detail_latitude">Altitude  :  </string>
+    <string name="detail_longitude">Longitude  :  </string>
+    <string name="detail_make">Make  :  </string>
+    <string name="detail_model">Model  :  </string>
+    <string name="detail_aperture">Aperture  :  </string>
+    <string name="detail_exposure_time">Exposure Time  :  </string>
+    <string name="detail_focal_length">Focal Length  :  </string>
+    <string name="detail_iso">ISOSpeedRatings  :  </string>
+    <string name="detail_unknown">Unknown</string>
+    <string name="detail_flash_close">Close</string>
+    <string name="detail_flash_open">Open</string>
+    <string name="detail_wb_auto">Auto</string>
+    <string name="detail_wb_manual">Manual</string>
 
     <!-- dialog button text -->
     <string name="dialog_btn_ok">Ok</string>

@@ -76,15 +76,17 @@ public abstract class BaseFragment extends Fragment {
      */
     public abstract void initUI(View view);
 
-    /**
-     * 初始化监听器
-     */
-    public abstract void initListener(View view);
 
     /**
      * 在监听器之前把数据准备好
      */
     public abstract void initData();
+
+    /**
+     * 初始化监听器
+     */
+    public abstract void initListener(View view);
+
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {

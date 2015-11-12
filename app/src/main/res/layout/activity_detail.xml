@@ -6,52 +6,279 @@
 
     <FrameLayout
         android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@android:color/black">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vp_detail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </android.support.v4.view.ViewPager>
+
+        <include layout="@layout/layout_toolbar"/>
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="fill_parent"
         android:layout_height="fill_parent">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+            android:layout_height="fill_parent"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical"
+            android:weightSum="10">
 
-            <ImageView
-                android:id="@+id/img_detail_bg"
+            <View
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"/>
+                android:layout_height="0dip"
+                android:layout_weight="6"/>
 
-            <RelativeLayout
-                android:id="@+id/layout_position_line"
+            <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_marginTop="@dimen/dimen_24dip">
+                android:layout_height="0dip"
+                android:layout_weight="4"
+                android:background="#aa000000"
+                android:orientation="vertical">
 
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/dimen_24dip">
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dip"
+                    android:background="#33000000"
+                    android:orientation="horizontal"
+                    android:weightSum="6">
+
+                    <TextView
+                        android:id="@+id/txt_detail_1"
+                        android:layout_width="0dip"
+                        android:layout_height="50dip"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/detail_note"
+                        android:textColor="@color/txt_LightSlateGray"/>
+
+                    <TextView
+                        android:id="@+id/txt_detail_2"
+                        android:layout_width="0dip"
+                        android:layout_height="50dip"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/detail_gps"
+                        android:textColor="@color/txt_LightSlateGray"/>
+
+                    <TextView
+                        android:id="@+id/txt_detail_3"
+                        android:layout_width="0dip"
+                        android:layout_height="50dip"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/detail_date"
+                        android:textColor="@color/txt_LightSlateGray"/>
+
+                    <TextView
+                        android:id="@+id/txt_detail_4"
+                        android:layout_width="0dip"
+                        android:layout_height="50dip"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/detail_exif"
+                        android:textColor="@color/txt_LightSlateGray"/>
 
                     <View
+                        android:layout_width="0dip"
+                        android:layout_height="50dip"
+                        android:layout_weight="1"/>
+
+                    <View
+                        android:layout_width="0dip"
+                        android:layout_height="50dip"
+                        android:layout_weight="1"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dip"
+                    android:background="#33000000"
+                    android:orientation="horizontal"
+                    android:weightSum="6">
+
+                    <View
+                        android:id="@+id/view_detail_1"
+                        android:layout_width="0dip"
+                        android:layout_height="1dip"
+                        android:layout_marginLeft="5dip"
+                        android:layout_marginRight="5dip"
+                        android:layout_weight="1"
+                        android:background="@color/white_smoke"/>
+
+                    <View
+                        android:id="@+id/view_detail_2"
+                        android:layout_width="0dip"
+                        android:layout_height="1dip"
+                        android:layout_marginLeft="5dip"
+                        android:layout_marginRight="5dip"
+                        android:layout_weight="1"
+                        android:background="@color/transparent"/>
+
+                    <View
+                        android:id="@+id/view_detail_3"
+                        android:layout_width="0dip"
+                        android:layout_height="1dip"
+                        android:layout_marginLeft="5dip"
+                        android:layout_marginRight="5dip"
+                        android:layout_weight="1"
+                        android:background="@color/transparent"/>
+
+                    <View
+                        android:id="@+id/view_detail_4"
+                        android:layout_width="0dip"
+                        android:layout_height="1dip"
+                        android:layout_marginLeft="5dip"
+                        android:layout_marginRight="5dip"
+                        android:layout_weight="1"
+                        android:background="@color/transparent"/>
+
+                    <View
+                        android:layout_width="0dip"
+                        android:layout_height="1dip"
+                        android:layout_marginLeft="5dip"
+                        android:layout_marginRight="5dip"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"/>
+
+                    <View
+                        android:layout_width="0dip"
+                        android:layout_height="1dip"
+                        android:layout_marginLeft="5dip"
+                        android:layout_marginRight="5dip"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"/>
+                </LinearLayout>
+
+                <com.yydcdut.note.view.ObservableScrollView
+                    android:id="@+id/scroll_detail"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:fillViewport="true"
+                    android:overScrollMode="never"
+                    android:scrollbars="none">
+
+                    <LinearLayout
+                        android:id="@+id/layout_detail_add"
                         android:layout_width="fill_parent"
-                        android:layout_height="1.5dip"
-                        android:layout_centerVertical="true"
-                        android:background="#88ffffff"/>
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dip"
+                        android:layout_marginRight="5dip"
+                        android:orientation="vertical">
 
-                    <ImageView
-                        android:id="@+id/img_position_line"
-                        android:layout_width="@dimen/dimen_24dip"
-                        android:layout_height="@dimen/dimen_24dip"
-                        android:layout_alignParentLeft="true"
-                        android:src="@drawable/ic_location"/>
+                        <com.yydcdut.note.view.FontTextView
+                            android:id="@+id/txt_detail_content_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="@dimen/activity_margin_small"
+                            android:paddingRight="@dimen/activity_margin_small"
+                            android:paddingTop="@dimen/activity_margin_small"
+                            android:text="11"
+                            android:textColor="@color/txt_white_translate"
+                            android:textSize="20sp"/>
 
-                </RelativeLayout>
+                        <com.yydcdut.note.view.FontTextView
+                            android:id="@+id/txt_detail_content"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="@dimen/activity_margin_small"
+                            android:paddingRight="@dimen/activity_margin_small"
+                            android:paddingTop="3dip"
+                            android:text="222222"
+                            android:textColor="@color/txt_LightSlateGray"/>
 
-            </RelativeLayout>
+                        <View
+                            android:layout_width="fill_parent"
+                            android:layout_height="1dip"
+                            android:layout_margin="8dip"
+                            android:background="#22ffffff"/>
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/vp_detail"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-            </android.support.v4.view.ViewPager>
+                        <!--<ImageView-->
+                        <!--android:layout_width="fill_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:src="@drawable/bg_user_background"/>-->
 
-            <include layout="@layout/layout_toolbar"/>
-        </RelativeLayout>
+                        <LinearLayout
+                            android:id="@+id/layout_detail_time"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:paddingLeft="@dimen/activity_margin_small"
+                            android:paddingRight="@dimen/activity_margin_small">
+
+                            <LinearLayout
+                                android:id="@+id/layout_detail_create"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Created:"
+                                    android:textColor="@color/txt_LightSlateGray"
+                                    android:textSize="@dimen/txt_small"/>
+
+                                <TextView
+                                    android:id="@+id/txt_detail_create_time"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                                    android:text="三月 26. 2015 at 12:35 上午"
+                                    android:textColor="@color/txt_LightSlateGray"
+                                    android:textSize="@dimen/txt_small"/>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/layout_detail_edit"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Edited:"
+                                    android:textColor="@color/txt_LightSlateGray"
+                                    android:textSize="@dimen/txt_small"/>
+
+                                <TextView
+                                    android:id="@+id/txt_detail_edit_time"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                                    android:text="三月 26. 2015 at 12:35 上午"
+                                    android:textColor="@color/txt_LightSlateGray"
+                                    android:textSize="@dimen/txt_small"/>
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="fill_parent"
+                            android:layout_height="1dip"
+                            android:layout_margin="8dip"
+                            android:background="#22ffffff"/>
+
+                        <TextView
+                            android:id="@+id/txt_detail_exif"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="@dimen/activity_margin_small"
+                            android:paddingRight="@dimen/activity_margin_small"
+                            android:text="222222"
+                            android:textColor="@color/txt_LightSlateGray"
+                            android:textSize="@dimen/txt_small"/>
+
+                    </LinearLayout>
+                </com.yydcdut.note.view.ObservableScrollView>
+            </LinearLayout>
+        </LinearLayout>
+
     </FrameLayout>
 
     <com.yydcdut.note.view.RevealView
