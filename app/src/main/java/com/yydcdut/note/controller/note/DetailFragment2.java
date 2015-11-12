@@ -1,5 +1,6 @@
 package com.yydcdut.note.controller.note;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,4 +64,13 @@ public class DetailFragment2 extends BaseFragment implements View.OnClickListene
     public void onClick(View v) {
         ZoomActivity.startActivityForResult(this, mPhotoNote.getCategoryLabel(), mPosition, mComparator);
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_PICTURE) {
+            ImageLoaderManager.displayImage(mPhotoNote.getSmallPhotoPathWithFile(), mAutoFitImageView);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
 }

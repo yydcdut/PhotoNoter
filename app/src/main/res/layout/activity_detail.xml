@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:fab="http://schemas.android.com/apk/res-auto"
+                xmlns:reveal="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -280,21 +282,29 @@
         </LinearLayout>
     </FrameLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_edit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
-    <!--<com.yydcdut.note.view.RevealView-->
-    <!--android:id="@+id/reveal"-->
-    <!--android:layout_width="fill_parent"-->
-    <!--android:layout_height="fill_parent"-->
-    <!--reveal:own_touch="false">-->
+        <com.yydcdut.note.view.fab.FloatingActionButton
+            android:id="@+id/fab_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_colorNormal="?attr/colorPrimary"
+            fab:fab_colorPressed="?attr/colorPrimaryDark"
+            fab:fab_icon="@drawable/ic_text_format_black_24dp"/>
 
-    <!--<com.yydcdut.note.view.RevealColorView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--/>-->
-    <!--</com.yydcdut.note.view.RevealView>-->
+        <com.yydcdut.note.view.RevealView
+            android:id="@+id/reveal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            reveal:own_touch="false">
+
+            <com.yydcdut.note.view.RevealColorView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </com.yydcdut.note.view.RevealView>
+    </FrameLayout>
+
 
 </RelativeLayout>

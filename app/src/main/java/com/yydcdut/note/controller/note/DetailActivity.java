@@ -1,9 +1,10 @@
 package com.yydcdut.note.controller.note;
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.media.ExifInterface;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -11,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.yydcdut.note.R;
@@ -23,6 +25,7 @@ import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.LollipopCompat;
 import com.yydcdut.note.view.FontTextView;
 import com.yydcdut.note.view.ObservableScrollView;
+import com.yydcdut.note.view.RevealView;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -38,6 +41,8 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
     private int mComparator;
     private String mCategoryLabel;
     private List<PhotoNote> mPhotoNoteList;
+
+    private boolean mIsIgnoreBackPress = false;
 
     private static final int INTENTION_LEFT = -1;
     private static final int INTENTION_RIGHT = 1;
@@ -59,7 +64,8 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
     private DetailPagerAdapter mDetailPagerAdapter;
 
     private ObservableScrollView mScrollView;
-    private FloatingActionButton mFab;
+    private View mFab;
+    private RevealView mRevealView;
 
     /* Content TextView */
     private FontTextView mTitleView;
@@ -123,9 +129,14 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
         initViewPager(bundle);
         initTitleView();
         initContentView();
+        initOtherUI();
         initListner();
         setData(mViewPager.getCurrentItem());
-        mFab = (FloatingActionButton) findViewById(R.id.fab_edit);
+    }
+
+    private void initOtherUI() {
+        mFab = findViewById(R.id.fab_edit);
+        mRevealView = (RevealView) findViewById(R.id.reveal);
     }
 
     private void initListner() {
@@ -133,6 +144,7 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
         for (TextView textView : mTextViews) {
             textView.setOnClickListener(this);
         }
+        mFab.setOnClickListener(this);
     }
 
     private void initViewPager(Bundle bundle) {
@@ -152,6 +164,9 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
         toolbar.setBackgroundColor(Color.TRANSPARENT);
         toolbar.setTitle(" ");
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        int size = getStatusBarSize();
+        FrameLayout.LayoutParams relativeLayout = (FrameLayout.LayoutParams) toolbar.getLayoutParams();
+        relativeLayout.setMargins(0, size, 0, 0);
     }
 
     private void initTitleView() {
@@ -474,8 +489,71 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
             case R.id.txt_detail_4:
                 mScrollView.smoothScrollTo(0, (int) mExifBeginHeight + 2);
                 break;
+            case R.id.fab_edit:
+                showRevealColorViewAndStartActivity();
+                break;
         }
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_DATA) {
+            Bundle bundle = data.getExtras();
+            String category = bundle.getString(Const.CATEGORY_LABEL);
+            int position = bundle.getInt(Const.PHOTO_POSITION);
+            mComparator = bundle.getInt(Const.COMPARATOR_FACTORY);
+            PhotoNote photoNote = PhotoNoteDBModel.getInstance().findByCategoryLabel(category, mComparator).get(position);
+            updateText(photoNote);
+        }
+        closeRevealColorView();
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void updateText(PhotoNote photoNote) {
+        mTitleView.setText(photoNote.getTitle());
+        mContentView.setText(photoNote.getContent());
+        mEditView.setText(decodeTimeInTextDetail(photoNote.getEditedNoteTime()));
+    }
+
+
+    /**
+     * 打开RevealColorView并且开启activity
+     */
+    private void showRevealColorViewAndStartActivity() {
+        mIsIgnoreBackPress = true;
+        final Point p = getLocationInView(mRevealView, mFab);
+        mRevealView.reveal(p.x, p.y, getThemeColor(), mFab.getHeight() / 2, Const.DURATION, new RevealView.RevealAnimationListener() {
+
+            @Override
+            public void finish() {
+                EditTextActivity.startActivityForResult(DetailActivity.this, mCategoryLabel, mViewPager.getCurrentItem(), mComparator);
+                mIsIgnoreBackPress = false;
+            }
+        });
+    }
+
+    /**
+     * 关闭activity之后的动画或者onActivityResult
+     */
+    public void closeRevealColorView() {
+        mIsIgnoreBackPress = true;
+        final Point p = getLocationInView(mRevealView, mFab);
+        mRevealView.hide(p.x, p.y, Color.TRANSPARENT, Const.RADIUS, Const.DURATION, new RevealView.RevealAnimationListener() {
+            @Override
+            public void finish() {
+                mIsIgnoreBackPress = false;
+            }
+        });
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        if (!mIsIgnoreBackPress) {
+            super.onBackPressed();
+        }
+    }
+
 
     private String decodeTimeInTextDetail(long time) {
         StringBuilder sb = new StringBuilder();

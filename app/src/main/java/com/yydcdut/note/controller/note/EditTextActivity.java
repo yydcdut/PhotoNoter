@@ -1,5 +1,6 @@
 package com.yydcdut.note.controller.note;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -7,7 +8,6 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -141,20 +141,20 @@ public class EditTextActivity extends BaseActivity implements View.OnClickListen
     /**
      * 启动Activity
      *
-     * @param fragment
+     * @param activity
      * @param categoryLabel
      * @param photoNotePosition
      * @param comparator
      */
-    public static void startActivityForResult(Fragment fragment, String categoryLabel, int photoNotePosition, int comparator) {
-        Intent intent = new Intent(fragment.getContext(), EditTextActivity.class);
+    public static void startActivityForResult(Activity activity, String categoryLabel, int photoNotePosition, int comparator) {
+        Intent intent = new Intent(activity, EditTextActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString(Const.CATEGORY_LABEL, categoryLabel);
         bundle.putInt(Const.PHOTO_POSITION, photoNotePosition);
         bundle.putInt(Const.COMPARATOR_FACTORY, comparator);
         intent.putExtras(bundle);
-        fragment.startActivityForResult(intent, REQUEST_NOTHING);
-        fragment.getActivity().overridePendingTransition(R.anim.activity_no_animation, R.anim.activity_no_animation);
+        activity.startActivityForResult(intent, REQUEST_NOTHING);
+        activity.overridePendingTransition(R.anim.activity_no_animation, R.anim.activity_no_animation);
     }
 
     private void getBundle() {

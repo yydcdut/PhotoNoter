@@ -460,7 +460,7 @@ public class DetailFragment extends BaseFragment implements ObservableScrollView
 
             @Override
             public void finish() {
-                EditTextActivity.startActivityForResult(DetailFragment.this, mPhotoNote.getCategoryLabel(), mPosition, mComparator);
+//                EditTextActivity.startActivityForResult(DetailFragment.this, mPhotoNote.getCategoryLabel(), mPosition, mComparator);
                 donotIgnoreKeyListener();
             }
         });
