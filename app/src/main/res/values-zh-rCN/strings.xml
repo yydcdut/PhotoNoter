@@ -80,6 +80,7 @@
         <item>十一月</item>
         <item>十二月</item>
     </array>
+    <string name="detail_content_nothing">没有笔记</string>
 
     <!-- dialog button text -->
     <string name="dialog_btn_ok">确定</string>

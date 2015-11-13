@@ -255,8 +255,16 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
     private void setData(int index) {
         PhotoNote photoNote = mPhotoNoteList.get(index);
         /* 设置文字 */
-        mTitleView.setText(photoNote.getTitle());
-        mContentView.setText(photoNote.getContent());
+        if (TextUtils.isEmpty(photoNote.getTitle())) {
+            mTitleView.setText(getResources().getString(R.string.detail_content_nothing));
+        } else {
+            mTitleView.setText(photoNote.getTitle());
+        }
+        if (TextUtils.isEmpty(photoNote.getTitle())) {
+            mContentView.setText(getResources().getString(R.string.detail_content_nothing));
+        } else {
+            mContentView.setText(photoNote.getContent());
+        }
         mCreateView.setText(decodeTimeInDetail(photoNote.getCreatedNoteTime()));
         mEditView.setText(decodeTimeInDetail(photoNote.getEditedNoteTime()));
         try {
@@ -305,6 +313,7 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
                 .append(fWhiteBalance.equals("0") ? getResources().getString(R.string.detail_wb_auto) : getResources().getString(R.string.detail_wb_manual))
                 .append(enter);
 
+        mBaiduMap.clear();
         mBaiduMap.clear();
         String longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
         if (longitude == null || longitude.equals("null")) {

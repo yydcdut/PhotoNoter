@@ -60,6 +60,7 @@
         <item>Nov.</item>
         <item>Dec.</item>
     </array>
+    <string name="detail_content_nothing">Nothing</string>
 
     <!-- dialog button text -->
     <string name="dialog_btn_ok">Ok</string>
