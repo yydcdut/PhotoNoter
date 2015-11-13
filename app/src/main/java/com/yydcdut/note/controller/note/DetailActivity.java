@@ -15,6 +15,21 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.MapStatus;
+import com.baidu.mapapi.map.MapStatusUpdate;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
+import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.MarkerOptions;
+import com.baidu.mapapi.map.UiSettings;
+import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.search.core.SearchResult;
+import com.baidu.mapapi.search.geocode.GeoCodeResult;
+import com.baidu.mapapi.search.geocode.GeoCoder;
+import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.DetailPagerAdapter;
 import com.yydcdut.note.bean.PhotoNote;
@@ -35,7 +50,8 @@ import java.util.List;
  * Created by yyd on 15-3-29.
  */
 public class DetailActivity extends BaseActivity implements ViewPager.OnPageChangeListener,
-        ViewPager.PageTransformer, ObservableScrollView.OnScrollChangedListener, View.OnClickListener {
+        ViewPager.PageTransformer, ObservableScrollView.OnScrollChangedListener, View.OnClickListener,
+        OnGetGeoCoderResultListener {
     private static final float MIN_SCALE = 0.75f;
 
     private int mComparator;
@@ -57,6 +73,7 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
     private float mLastTimePositionOffset = -1;
 
     private float mNoteBeginHeight = 0;
+    private float mMapBeginHeight = 0;
     private float mTimeBeginHeight = 0;
     private float mExifBeginHeight = 0;
 
@@ -73,11 +90,18 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
     private TextView mCreateView;
     private TextView mEditView;
     private TextView mExifView;
-    private View mContentLayoutView;
+    private View mDetailTimeView;
+    private View[] mContentSeparateView;
 
-    /* Title TextView */
-    private TextView[] mTextViews;
+    /* Control View */
+    private TextView[] mControlTextViews;
     private View[] mSeparateView;
+
+    /* map */
+    private MapView mMapView;
+    private BaiduMap mBaiduMap;
+    private UiSettings mUiSettings;
+    private GeoCoder mSearch = null; // 搜索模块，也可去掉地图模块独立使用
 
     @Override
     public boolean setStatusBar() {
@@ -105,6 +129,8 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
                 (int) getResources().getDimension(R.dimen.dimen_24dip);
         mFab.setX(moveX);
         mFab.setY(moveY);
+        int containerHeight = findViewById(R.id.layout_detail_scroll_container).getHeight();
+        mMapView.getLayoutParams().height = (int) (containerHeight - getResources().getDimension(R.dimen.detail_control));
     }
 
     private void calculateHeight() {
@@ -112,12 +138,13 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
         View view2 = findViewById(R.id.txt_detail_content);
         mNoteBeginHeight = 0;
         int noteHeight = view1.getHeight() + view2.getHeight();
+        mMapBeginHeight = mNoteBeginHeight + noteHeight + getResources().getDimension(R.dimen.activity_horizontal_margin) / 2;
+        int containerHeight = findViewById(R.id.layout_detail_scroll_container).getHeight();
+        int mapHeight = (int) (containerHeight - getResources().getDimension(R.dimen.detail_control));
+        mTimeBeginHeight = mMapBeginHeight + mapHeight + getResources().getDimension(R.dimen.activity_horizontal_margin);
         View view3 = findViewById(R.id.layout_detail_time);
-        mTimeBeginHeight = mNoteBeginHeight + noteHeight + getResources().getDimension(R.dimen.activity_horizontal_margin) / 2;
         int timeHeight = view3.getHeight();
-        View view4 = findViewById(R.id.txt_detail_exif);
         mExifBeginHeight = mTimeBeginHeight + timeHeight + getResources().getDimension(R.dimen.activity_horizontal_margin);
-        int exifHeight = view4.getHeight();
     }
 
     @Override
@@ -127,11 +154,33 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
                 bundle.getInt(Const.COMPARATOR_FACTORY));
         initToolBar();
         initViewPager(bundle);
-        initTitleView();
+        initControlView();
         initContentView();
         initOtherUI();
+        initMap();
         initListner();
         setData(mViewPager.getCurrentItem());
+    }
+
+    private void initMap() {
+        mMapView = (MapView) findViewById(R.id.bmapView);
+        mBaiduMap = mMapView.getMap();
+        mMapView.showZoomControls(false);//隐藏缩放控件
+        //获取地图对象控制器
+        mBaiduMap.setBuildingsEnabled(true);//设置显示楼体
+        mBaiduMap.setMapStatus(MapStatusUpdateFactory.zoomTo(19f));//设置地图状态
+        mUiSettings = mBaiduMap.getUiSettings();
+        mUiSettings.setZoomGesturesEnabled(false);
+        mUiSettings.setScrollGesturesEnabled(false);
+        mUiSettings.setRotateGesturesEnabled(false);
+        mUiSettings.setOverlookingGesturesEnabled(false);
+        mUiSettings.setCompassEnabled(true);
+        mBaiduMap.showMapPoi(true);
+        MapStatus ms = new MapStatus.Builder().overlook(-30).build();
+        MapStatusUpdate u = MapStatusUpdateFactory.newMapStatus(ms);
+        mBaiduMap.animateMapStatus(u, 1000);
+        // 初始化搜索模块
+        mSearch = GeoCoder.newInstance();
     }
 
     private void initOtherUI() {
@@ -141,10 +190,11 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
 
     private void initListner() {
         mScrollView.setOnScrollChangedListener(this);
-        for (TextView textView : mTextViews) {
+        for (TextView textView : mControlTextViews) {
             textView.setOnClickListener(this);
         }
         mFab.setOnClickListener(this);
+        mSearch.setOnGetGeoCodeResultListener(this);
     }
 
     private void initViewPager(Bundle bundle) {
@@ -164,21 +214,23 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
         toolbar.setBackgroundColor(Color.TRANSPARENT);
         toolbar.setTitle(" ");
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        int size = getStatusBarSize();
-        FrameLayout.LayoutParams relativeLayout = (FrameLayout.LayoutParams) toolbar.getLayoutParams();
-        relativeLayout.setMargins(0, size, 0, 0);
+        if (LollipopCompat.AFTER_LOLLIPOP) {
+            int size = getStatusBarSize();
+            FrameLayout.LayoutParams relativeLayout = (FrameLayout.LayoutParams) toolbar.getLayoutParams();
+            relativeLayout.setMargins(0, size, 0, 0);
+        }
     }
 
-    private void initTitleView() {
-        mTextViews = new TextView[4];
+    private void initControlView() {
+        mControlTextViews = new TextView[4];
         TextView textView1 = (TextView) findViewById(R.id.txt_detail_1);
         TextView textView2 = (TextView) findViewById(R.id.txt_detail_2);
         TextView textView3 = (TextView) findViewById(R.id.txt_detail_3);
         TextView textView4 = (TextView) findViewById(R.id.txt_detail_4);
-        mTextViews[0] = textView1;
-        mTextViews[1] = textView2;
-        mTextViews[2] = textView3;
-        mTextViews[3] = textView4;
+        mControlTextViews[0] = textView1;
+        mControlTextViews[1] = textView2;
+        mControlTextViews[2] = textView3;
+        mControlTextViews[3] = textView4;
         mSeparateView = new View[4];
         mSeparateView[0] = findViewById(R.id.view_detail_1);
         mSeparateView[1] = findViewById(R.id.view_detail_2);
@@ -193,7 +245,11 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
         mEditView = (TextView) findViewById(R.id.txt_detail_edit_time);
         mExifView = (TextView) findViewById(R.id.txt_detail_exif);
         mScrollView = (ObservableScrollView) findViewById(R.id.scroll_detail);
-        mContentLayoutView = findViewById(R.id.layout_detail_add);
+        mDetailTimeView = findViewById(R.id.layout_detail_time);
+        mContentSeparateView = new View[3];
+        mContentSeparateView[0] = findViewById(R.id.view_seperate1);
+        mContentSeparateView[1] = findViewById(R.id.view_seperate2);
+        mContentSeparateView[2] = findViewById(R.id.view_seperate3);
     }
 
     private void setData(int index) {
@@ -201,8 +257,8 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
         /* 设置文字 */
         mTitleView.setText(photoNote.getTitle());
         mContentView.setText(photoNote.getContent());
-        mCreateView.setText(decodeTimeInTextDetail(photoNote.getCreatedNoteTime()));
-        mEditView.setText(decodeTimeInTextDetail(photoNote.getEditedNoteTime()));
+        mCreateView.setText(decodeTimeInDetail(photoNote.getCreatedNoteTime()));
+        mEditView.setText(decodeTimeInDetail(photoNote.getEditedNoteTime()));
         try {
             mExifView.setText(getExif(photoNote));
         } catch (IOException e) {
@@ -248,9 +304,14 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
         sb.append(getResources().getString(R.string.detail_white_balance))
                 .append(fWhiteBalance.equals("0") ? getResources().getString(R.string.detail_wb_auto) : getResources().getString(R.string.detail_wb_manual))
                 .append(enter);
+
+        mBaiduMap.clear();
         String longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
         if (longitude == null || longitude.equals("null")) {
             sb.append(getResources().getString(R.string.detail_longitude))
+                    .append(getResources().getString(R.string.detail_unknown))
+                    .append(enter);
+            sb.append(getResources().getString(R.string.detail_latitude))
                     .append(getResources().getString(R.string.detail_unknown))
                     .append(enter);
         } else {
@@ -261,13 +322,8 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
             sb.append(getResources().getString(R.string.detail_longitude))
                     .append(longitudesD + "")
                     .append(enter);
-        }
-        String latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
-        if (latitude == null || latitude.equals("null")) {
-            sb.append(getResources().getString(R.string.detail_latitude))
-                    .append(getResources().getString(R.string.detail_unknown))
-                    .append(enter);
-        } else {
+
+            String latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
             String[] latitudeSs = latitude.split(",");
             double latitudesD = 0;
             latitudesD += Double.parseDouble(latitudeSs[0].split("/")[0]);
@@ -275,7 +331,9 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
             sb.append(getResources().getString(R.string.detail_latitude))
                     .append(latitudesD + "")
                     .append(enter);
+            doGps(latitudesD, longitudesD);
         }
+
         String fMake = exifInterface.getAttribute(ExifInterface.TAG_MAKE);
         sb.append(getResources().getString(R.string.detail_make))
                 .append(getExifData(fMake))
@@ -386,8 +444,39 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
         }
     }
 
+    private void doGps(double lat, double lon) {
+        LatLng ptCenter = new LatLng(lat, lon);
+        // 反Geo搜索
+        mSearch.reverseGeoCode(new ReverseGeoCodeOption()
+                .location(ptCenter));
+    }
+
+    @Override
+    public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
+
+    }
+
+    @Override
+    public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
+        if (reverseGeoCodeResult == null || reverseGeoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
+            return;
+        }
+        mBaiduMap.clear();
+        mBaiduMap.addOverlay(new MarkerOptions().position(reverseGeoCodeResult.getLocation())
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_gcoding)));
+        mBaiduMap.setMapStatus(MapStatusUpdateFactory.newLatLng(reverseGeoCodeResult
+                .getLocation()));
+    }
+
+
     private void setContentAlpha(float alpha) {
-        mContentLayoutView.setAlpha(alpha);
+        mTitleView.setAlpha(alpha);
+        mContentView.setAlpha(alpha);
+        mDetailTimeView.setAlpha(alpha);
+        mExifView.setAlpha(alpha);
+        for (View view : mContentSeparateView) {
+            view.setAlpha(alpha);
+        }
     }
 
     private void resetTitlePostion() {
@@ -395,7 +484,7 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
     }
 
     private void setTitlePosition(int viewId) {
-        for (TextView textView : mTextViews) {
+        for (TextView textView : mControlTextViews) {
             textView.setTextColor(getResources().getColor(R.color.txt_LightSlateGray));
         }
         for (View view : mSeparateView) {
@@ -403,19 +492,19 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
         }
         switch (viewId) {
             case R.id.txt_detail_1:
-                mTextViews[0].setTextColor(getResources().getColor(R.color.gray));
+                mControlTextViews[0].setTextColor(getResources().getColor(R.color.gray));
                 mSeparateView[0].setBackgroundColor(getResources().getColor(R.color.white_smoke));
                 break;
             case R.id.txt_detail_2:
-                mTextViews[1].setTextColor(getResources().getColor(R.color.gray));
+                mControlTextViews[1].setTextColor(getResources().getColor(R.color.gray));
                 mSeparateView[1].setBackgroundColor(getResources().getColor(R.color.white_smoke));
                 break;
             case R.id.txt_detail_3:
-                mTextViews[2].setTextColor(getResources().getColor(R.color.gray));
+                mControlTextViews[2].setTextColor(getResources().getColor(R.color.gray));
                 mSeparateView[2].setBackgroundColor(getResources().getColor(R.color.white_smoke));
                 break;
             case R.id.txt_detail_4:
-                mTextViews[3].setTextColor(getResources().getColor(R.color.gray));
+                mControlTextViews[3].setTextColor(getResources().getColor(R.color.gray));
                 mSeparateView[3].setBackgroundColor(getResources().getColor(R.color.white_smoke));
                 break;
         }
@@ -431,6 +520,9 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
             mIntention = INTENTION_STOP;
             mLastTimePositionOffset = -1;
             mIntentionState = STATE_NOTHING;
+            mMapView.setVisibility(View.VISIBLE);
+        } else {
+            mMapView.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -465,8 +557,10 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
 
     @Override
     public void onScrollChanged(int x, int y, int oldx, int oldy) {
-        if (y < (int) mTimeBeginHeight) {
+        if (y < (int) mMapBeginHeight) {
             setTitlePosition(R.id.txt_detail_1);
+        } else if (y <= (int) mTimeBeginHeight) {
+            setTitlePosition(R.id.txt_detail_2);
         } else if (y <= (int) mExifBeginHeight) {
             setTitlePosition(R.id.txt_detail_3);
         } else {
@@ -481,7 +575,7 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
                 mScrollView.smoothScrollTo(0, 0);
                 break;
             case R.id.txt_detail_2:
-                mScrollView.smoothScrollTo(0, 0);
+                mScrollView.smoothScrollTo(0, (int) mMapBeginHeight + 2);
                 break;
             case R.id.txt_detail_3:
                 mScrollView.smoothScrollTo(0, (int) mTimeBeginHeight + 2);
@@ -512,7 +606,7 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
     private void updateText(PhotoNote photoNote) {
         mTitleView.setText(photoNote.getTitle());
         mContentView.setText(photoNote.getContent());
-        mEditView.setText(decodeTimeInTextDetail(photoNote.getEditedNoteTime()));
+        mEditView.setText(decodeTimeInDetail(photoNote.getEditedNoteTime()));
     }
 
 
@@ -554,11 +648,11 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
         }
     }
 
-
-    private String decodeTimeInTextDetail(long time) {
+    private String decodeTimeInDetail(long time) {
         StringBuilder sb = new StringBuilder();
         SimpleDateFormat sdfMonth = new SimpleDateFormat("MM");
-        sb.append(getChineseMonth(Integer.parseInt(sdfMonth.format(time))));
+        String[] months = getResources().getStringArray(R.array.detail_time_month);
+        sb.append(months[Integer.parseInt(sdfMonth.format(time)) - 1]);
         SimpleDateFormat sdfDayAndYear = new SimpleDateFormat(" dd. yyyy ");
         sb.append(sdfDayAndYear.format(time));
         sb.append("at");
@@ -567,41 +661,26 @@ public class DetailActivity extends BaseActivity implements ViewPager.OnPageChan
         return sb.toString();
     }
 
-    /**
-     * 月份的转化
-     * todo  写到xml中
-     *
-     * @param month
-     * @return
-     */
-    private String getChineseMonth(int month) {
-        switch (month) {
-            case 1:
-                return "一月";
-            case 2:
-                return "二月";
-            case 3:
-                return "三月";
-            case 4:
-                return "四月";
-            case 5:
-                return "五月";
-            case 6:
-                return "六月";
-            case 7:
-                return "七月";
-            case 8:
-                return "八月";
-            case 9:
-                return "九月";
-            case 10:
-                return "十月";
-            case 11:
-                return "十一月";
-            case 12:
-                return "十二月";
-            default:
-                return "bug!";
-        }
+    @Override
+    protected void onPause() {
+        // MapView的生命周期与Activity同步，当activity挂起时需调用MapView.onPause()
+        mMapView.onPause();
+        super.onPause();
     }
+
+    @Override
+    protected void onResume() {
+        // MapView的生命周期与Activity同步，当activity恢复时需调用MapView.onResume()
+        mMapView.onResume();
+        super.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        // MapView的生命周期与Activity同步，当activity销毁时需调用MapView.destroy()
+        mMapView.onDestroy();
+        mSearch.destroy();
+        super.onDestroy();
+    }
+
 }

@@ -26,6 +26,7 @@
     <dimen name="setting_check">22dip</dimen>
     <dimen name="toolbar_right">12dip</dimen>
     <dimen name="toolbar_top">16dip</dimen>
+    <dimen name="detail_control">50dip</dimen>
 
     <!-- swipe listview -->
     <dimen name="slv_item_height">72dip</dimen>

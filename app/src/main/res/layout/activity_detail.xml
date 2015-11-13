@@ -37,6 +37,7 @@
                 android:layout_weight="6"/>
 
             <LinearLayout
+                android:id="@+id/layout_detail_scroll_container"
                 android:layout_width="fill_parent"
                 android:layout_height="0dip"
                 android:layout_weight="4"
@@ -45,7 +46,7 @@
 
                 <LinearLayout
                     android:layout_width="fill_parent"
-                    android:layout_height="50dip"
+                    android:layout_height="@dimen/detail_control"
                     android:background="#33000000"
                     android:orientation="horizontal"
                     android:weightSum="6">
@@ -195,15 +196,24 @@
                             android:textColor="@color/txt_LightSlateGray"/>
 
                         <View
+                            android:id="@+id/view_seperate1"
                             android:layout_width="fill_parent"
                             android:layout_height="1dip"
                             android:layout_margin="8dip"
                             android:background="#22ffffff"/>
 
-                        <!--<ImageView-->
-                        <!--android:layout_width="fill_parent"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:src="@drawable/bg_user_background"/>-->
+                        <com.baidu.mapapi.map.MapView
+                            android:id="@+id/bmapView"
+                            android:layout_width="fill_parent"
+                            android:layout_height="300dip"
+                            android:clickable="false"/>
+
+                        <View
+                            android:id="@+id/view_seperate2"
+                            android:layout_width="fill_parent"
+                            android:layout_height="1dip"
+                            android:layout_margin="8dip"
+                            android:background="#22ffffff"/>
 
                         <LinearLayout
                             android:id="@+id/layout_detail_time"
@@ -261,6 +271,7 @@
                         </LinearLayout>
 
                         <View
+                            android:id="@+id/view_seperate3"
                             android:layout_width="fill_parent"
                             android:layout_height="1dip"
                             android:layout_margin="8dip"
@@ -292,7 +303,7 @@
             android:layout_height="wrap_content"
             fab:fab_colorNormal="?attr/colorPrimary"
             fab:fab_colorPressed="?attr/colorPrimaryDark"
-            fab:fab_icon="@drawable/ic_text_format_black_24dp"/>
+            fab:fab_icon="@drawable/ic_text_format_white_24dp"/>
 
         <com.yydcdut.note.view.RevealView
             android:id="@+id/reveal"

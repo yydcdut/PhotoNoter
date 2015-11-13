@@ -66,6 +66,20 @@
     <string name="detail_flash_open">开启</string>
     <string name="detail_wb_auto">自动</string>
     <string name="detail_wb_manual">手动</string>
+    <array name="detail_time_month">
+        <item>一月</item>
+        <item>二月</item>
+        <item>三月</item>
+        <item>四月</item>
+        <item>五月</item>
+        <item>六月</item>
+        <item>七月</item>
+        <item>八月</item>
+        <item>九月</item>
+        <item>十月</item>
+        <item>十一月</item>
+        <item>十二月</item>
+    </array>
 
     <!-- dialog button text -->
     <string name="dialog_btn_ok">确定</string>

@@ -46,6 +46,20 @@
     <string name="detail_flash_open">Open</string>
     <string name="detail_wb_auto">Auto</string>
     <string name="detail_wb_manual">Manual</string>
+    <array name="detail_time_month">
+        <item>Jan.</item>
+        <item>Feb.</item>
+        <item>Mar.</item>
+        <item>Apr.</item>
+        <item>May.</item>
+        <item>June.</item>
+        <item>July.</item>
+        <item>Aug.</item>
+        <item>Sept.</item>
+        <item>Oct.</item>
+        <item>Nov.</item>
+        <item>Dec.</item>
+    </array>
 
     <!-- dialog button text -->
     <string name="dialog_btn_ok">Ok</string>
