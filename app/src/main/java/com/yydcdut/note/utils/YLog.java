@@ -57,7 +57,25 @@ public class YLog {
                 break;
             }
         }
+
+
+        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+
+        int index = 4;
+        String className = stackTrace[index].getFileName();
+        String methodName = stackTrace[index].getMethodName();
+        int lineNumber = stackTrace[index].getLineNumber();
+
+        methodName = methodName.substring(0, 1).toUpperCase() + methodName.substring(1);
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("[ (").append(className).append(":").append(lineNumber).append(")#").append(methodName).append(" ] ");
+
+
+
+//        return String.format(Locale.US, "[%d] %s: %s",
+//                Thread.currentThread().getId(), caller, msg);
         return String.format(Locale.US, "[%d] %s: %s",
-                Thread.currentThread().getId(), caller, msg);
+                Thread.currentThread().getId(), stringBuilder.toString(), msg);
     }
 }
