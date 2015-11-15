@@ -1,8 +1,8 @@
-package com.yydcdut.note.mvp.p.impl;
+package com.yydcdut.note.mvp.p.setting.impl;
 
 import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.IAboutAppPresenter;
-import com.yydcdut.note.mvp.v.IAboutAppView;
+import com.yydcdut.note.mvp.v.setting.IAboutAppView;
 import com.yydcdut.note.utils.PhoneUtils;
 
 /**

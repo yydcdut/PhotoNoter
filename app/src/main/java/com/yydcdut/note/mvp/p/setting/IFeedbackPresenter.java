@@ -1,4 +1,4 @@
-package com.yydcdut.note.mvp.p;
+package com.yydcdut.note.mvp.p.setting;
 
 import com.yydcdut.note.mvp.IPresenter;
 

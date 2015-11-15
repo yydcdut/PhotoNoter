@@ -1,4 +1,4 @@
-package com.yydcdut.note.mvp.p.impl;
+package com.yydcdut.note.mvp.p.setting.impl;
 
 import android.content.Context;
 import android.os.Handler;
@@ -10,7 +10,7 @@ import com.yydcdut.note.R;
 import com.yydcdut.note.model.FeedbackModel;
 import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.IFeedbackPresenter;
-import com.yydcdut.note.mvp.v.IFeedbackView;
+import com.yydcdut.note.mvp.v.setting.IFeedbackView;
 import com.yydcdut.note.utils.NetworkUtils;
 
 import java.util.regex.Matcher;
@@ -35,7 +35,7 @@ public class FeedbackPresenterImpl implements IFeedbackPresenter, Handler.Callba
         mFeedbackView = (IFeedbackView) iView;
         mContext = NoteApplication.getContext();
         mHandler = new Handler(this);
-        if (mType == TYPE_FEEDBACK) {
+        if (mType == IFeedbackPresenter.TYPE_FEEDBACK) {
             mFeedbackView.showFeedbackTitle();
         } else {
             mFeedbackView.showContactTitle();
@@ -73,7 +73,7 @@ public class FeedbackPresenterImpl implements IFeedbackPresenter, Handler.Callba
             public void run() {
                 FeedbackModel.getInstance().sendFeedback(System.currentTimeMillis() + "",
                         email + "<---联系方式   " +
-                                (mType == TYPE_FEEDBACK ? "Feedback" : "Contact") +
+                                (mType == IFeedbackPresenter.TYPE_FEEDBACK ? "Feedback" : "Contact") +
                                 "   反馈内容--->" + content);
                 mHandler.sendEmptyMessage(0);
             }

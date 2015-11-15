@@ -52,15 +52,15 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.Blue"/>
         <activity
-            android:name=".mvp.v.impl.SettingActivity"
+            android:name=".mvp.v.setting.impl.SettingActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.Blue"/>
         <activity
-            android:name=".mvp.v.impl.EditCategoryActivity"
+            android:name=".mvp.v.setting.impl.EditCategoryActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.Blue"/>
         <activity
-            android:name=".mvp.v.impl.AboutAppActivity"
+            android:name=".mvp.v.setting.impl.AboutAppActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.Blue"/>
         <activity
@@ -72,7 +72,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.Blue"/>
         <activity
-            android:name=".mvp.v.impl.FeedbackActivity"
+            android:name=".mvp.v.setting.impl.FeedbackActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.Blue"/>
 

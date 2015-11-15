@@ -1,4 +1,4 @@
-package com.yydcdut.note.mvp.v.impl;
+package com.yydcdut.note.mvp.v.setting.impl;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,8 +26,8 @@ import com.yydcdut.note.controller.BaseActivity;
 import com.yydcdut.note.controller.home.HomeActivity;
 import com.yydcdut.note.mvp.p.IFeedbackPresenter;
 import com.yydcdut.note.mvp.p.ISettingPresenter;
-import com.yydcdut.note.mvp.p.impl.SettingPresenerImpl;
-import com.yydcdut.note.mvp.v.ISettingView;
+import com.yydcdut.note.mvp.p.setting.impl.SettingPresenerImpl;
+import com.yydcdut.note.mvp.v.setting.ISettingView;
 import com.yydcdut.note.utils.ActivityCollector;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;

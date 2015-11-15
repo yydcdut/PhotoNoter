@@ -45,7 +45,7 @@ import com.yydcdut.note.model.CategoryDBModel;
 import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.model.SandBoxDBModel;
 import com.yydcdut.note.model.compare.ComparatorFactory;
-import com.yydcdut.note.mvp.v.impl.SettingActivity;
+import com.yydcdut.note.mvp.v.setting.impl.SettingActivity;
 import com.yydcdut.note.service.SandBoxService;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.Evi;

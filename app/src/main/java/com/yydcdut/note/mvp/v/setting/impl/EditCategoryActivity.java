@@ -1,4 +1,4 @@
-package com.yydcdut.note.mvp.v.impl;
+package com.yydcdut.note.mvp.v.setting.impl;
 
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -15,8 +15,8 @@ import com.yydcdut.note.adapter.EditCategoryAdapter;
 import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.controller.BaseActivity;
 import com.yydcdut.note.mvp.p.IEditCategoryPresenter;
-import com.yydcdut.note.mvp.p.impl.EditCategoryPresenterImpl;
-import com.yydcdut.note.mvp.v.IEditCategoryView;
+import com.yydcdut.note.mvp.p.setting.impl.EditCategoryPresenterImpl;
+import com.yydcdut.note.mvp.v.setting.IEditCategoryView;
 import com.yydcdut.note.utils.LollipopCompat;
 import com.yydcdut.note.view.CircleProgressBarLayout;
 import com.yydcdut.sdlv.Menu;

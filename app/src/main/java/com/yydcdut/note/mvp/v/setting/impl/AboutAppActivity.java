@@ -1,4 +1,4 @@
-package com.yydcdut.note.mvp.v.impl;
+package com.yydcdut.note.mvp.v.setting.impl;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -11,8 +11,8 @@ import com.yydcdut.note.R;
 import com.yydcdut.note.controller.BaseActivity;
 import com.yydcdut.note.mvp.p.IAboutAppPresenter;
 import com.yydcdut.note.mvp.p.IFeedbackPresenter;
-import com.yydcdut.note.mvp.p.impl.AboutAppPresenterImpl;
-import com.yydcdut.note.mvp.v.IAboutAppView;
+import com.yydcdut.note.mvp.p.setting.impl.AboutAppPresenterImpl;
+import com.yydcdut.note.mvp.v.setting.IAboutAppView;
 import com.yydcdut.note.utils.LollipopCompat;
 
 /**

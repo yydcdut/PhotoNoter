@@ -1,4 +1,4 @@
-package com.yydcdut.note.mvp.v.impl;
+package com.yydcdut.note.mvp.v.setting.impl;
 
 import android.graphics.Color;
 import android.graphics.PointF;
@@ -19,8 +19,8 @@ import com.nineoldandroids.animation.ValueAnimator;
 import com.yydcdut.note.R;
 import com.yydcdut.note.controller.BaseActivity;
 import com.yydcdut.note.mvp.p.IFeedbackPresenter;
-import com.yydcdut.note.mvp.p.impl.FeedbackPresenterImpl;
-import com.yydcdut.note.mvp.v.IFeedbackView;
+import com.yydcdut.note.mvp.p.setting.impl.FeedbackPresenterImpl;
+import com.yydcdut.note.mvp.v.setting.IFeedbackView;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.LollipopCompat;
 import com.yydcdut.note.view.CircleProgressBarLayout;

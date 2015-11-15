@@ -1,4 +1,4 @@
-package com.yydcdut.note.mvp.v;
+package com.yydcdut.note.mvp.v.setting;
 
 import com.yydcdut.note.camera.param.Size;
 import com.yydcdut.note.mvp.IView;
