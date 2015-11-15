@@ -35,6 +35,7 @@ import com.yydcdut.note.adapter.DetailPagerAdapter;
 import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.controller.BaseActivity;
 import com.yydcdut.note.model.PhotoNoteDBModel;
+import com.yydcdut.note.mvp.v.note.impl.EditTextActivity;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.LollipopCompat;

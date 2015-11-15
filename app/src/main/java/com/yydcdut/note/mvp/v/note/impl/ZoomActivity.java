@@ -37,13 +37,13 @@ import us.pinguo.edit.sdk.base.PGEditSDK;
 public class ZoomActivity extends BaseActivity implements IZoomView, View.OnClickListener {
 
     @InjectView(R.id.toolbar)
-    private Toolbar mToolbar;
+    Toolbar mToolbar;
     @InjectView(R.id.img_zoom)
-    private ZoomImageView mImage;
+    ZoomImageView mImage;
     @InjectView(R.id.img_zoom_spread)
-    private View mSpreadView;
+    View mSpreadView;
     @InjectView(R.id.layout_progress)
-    private CircleProgressBarLayout mProgressLayout;
+    CircleProgressBarLayout mProgressLayout;
 
     private IZoomPresenter mZoomPresenter;
 

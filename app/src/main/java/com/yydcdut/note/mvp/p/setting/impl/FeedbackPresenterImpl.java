@@ -9,7 +9,7 @@ import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.model.FeedbackModel;
 import com.yydcdut.note.mvp.IView;
-import com.yydcdut.note.mvp.p.IFeedbackPresenter;
+import com.yydcdut.note.mvp.p.setting.IFeedbackPresenter;
 import com.yydcdut.note.mvp.v.setting.IFeedbackView;
 import com.yydcdut.note.utils.NetworkUtils;
 

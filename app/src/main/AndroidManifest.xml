@@ -34,7 +34,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.Blue"/>
         <activity
-            android:name=".controller.note.EditTextActivity"
+            android:name=".mvp.v.note.impl.EditTextActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.Blue"
             android:windowSoftInputMode="adjustResize|stateHidden"/>

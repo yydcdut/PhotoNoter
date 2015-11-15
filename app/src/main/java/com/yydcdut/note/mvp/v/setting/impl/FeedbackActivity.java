@@ -18,7 +18,7 @@ import com.nineoldandroids.animation.TypeEvaluator;
 import com.nineoldandroids.animation.ValueAnimator;
 import com.yydcdut.note.R;
 import com.yydcdut.note.controller.BaseActivity;
-import com.yydcdut.note.mvp.p.IFeedbackPresenter;
+import com.yydcdut.note.mvp.p.setting.IFeedbackPresenter;
 import com.yydcdut.note.mvp.p.setting.impl.FeedbackPresenterImpl;
 import com.yydcdut.note.mvp.v.setting.IFeedbackView;
 import com.yydcdut.note.utils.Const;

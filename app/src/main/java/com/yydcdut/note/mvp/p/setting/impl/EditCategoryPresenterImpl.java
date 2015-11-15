@@ -9,7 +9,7 @@ import com.yydcdut.note.R;
 import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.model.CategoryDBModel;
 import com.yydcdut.note.mvp.IView;
-import com.yydcdut.note.mvp.p.IEditCategoryPresenter;
+import com.yydcdut.note.mvp.p.setting.IEditCategoryPresenter;
 import com.yydcdut.note.mvp.v.setting.IEditCategoryView;
 
 import java.util.ArrayList;

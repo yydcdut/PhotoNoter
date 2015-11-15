@@ -7,7 +7,7 @@ import com.yydcdut.note.R;
 import com.yydcdut.note.camera.param.Size;
 import com.yydcdut.note.model.UserCenter;
 import com.yydcdut.note.mvp.IView;
-import com.yydcdut.note.mvp.p.ISettingPresenter;
+import com.yydcdut.note.mvp.p.setting.ISettingPresenter;
 import com.yydcdut.note.mvp.v.setting.ISettingView;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.LocalStorageUtils;
