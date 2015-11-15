@@ -9,7 +9,7 @@ public interface IUser extends IObject {
 
     String getNetImagePath();
 
-    String getLocalImagePath();
+    String getImagePath();
 
     String getOpenId();
 

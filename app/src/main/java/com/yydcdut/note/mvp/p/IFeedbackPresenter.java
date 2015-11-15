@@ -1,0 +1,28 @@
+package com.yydcdut.note.mvp.p;
+
+import com.yydcdut.note.mvp.IPresenter;
+
+/**
+ * Created by yuyidong on 15/11/13.
+ */
+public interface IFeedbackPresenter extends IPresenter {
+    String TYPE = "type";
+    int TYPE_FEEDBACK = 0;
+    int TYPE_CONTACT = 1;
+
+    /**
+     * 判断email的内容和content的内容的完整性
+     *
+     * @return
+     */
+    boolean checkFeendback();
+
+    /**
+     * 发送feedback
+     *
+     * @param email
+     * @param content
+     */
+    void sendFeedback(String email, String content);
+
+}

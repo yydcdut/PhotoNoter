@@ -83,14 +83,14 @@ public class NoteApplication extends Application {
         }
 
         //打点
-        MobclickAgent.setDebugMode(true);
+        MobclickAgent.setDebugMode(BuildConfig.LOG_DEBUG);
         MobclickAgent.openActivityDurationTrack(true);
         MobclickAgent.updateOnlineConfig(this);
         MobclickAgent.setCatchUncaughtExceptions(false);
 
 //        CrashHandler.getInstance().init(getApplicationContext());
 
-        YLog.setDEBUG(false);
+        YLog.setDEBUG(BuildConfig.LOG_DEBUG);
 
     }
 
@@ -166,6 +166,12 @@ public class NoteApplication extends Application {
         if (UserCenter.getInstance().isLoginEvernote()) {
             UserCenter.getInstance().LoginEvernote();
         }
+
+        if (UserCenter.getInstance().isLoginQQ() && !new File(FilePathUtils.getQQImagePath()).exists()) {
+            FilePathUtils.saveImage(FilePathUtils.getQQImagePath(),
+                    ImageLoaderManager.loadImageSync(UserCenter.getInstance().getQQ().getNetImagePath()));
+        }
+
     }
 
     private void initBaiduSdk() {

@@ -155,7 +155,7 @@
     <string name="camera_current_picture_size">  (当前)</string>
     <string name="camera_picture_not_support"> (暂不支持)</string>
     <string name="version">版本号：</string>
-    <string name="splash">关闭引导页</string>
+    <string name="splash">关闭启动页</string>
     <string name="user_failed">拉取信息失败！</string>
     <string name="feedback">意见反馈</string>
     <string name="feedback_email">联系方式(邮箱)</string>
