@@ -39,7 +39,7 @@
             android:theme="@style/AppTheme.NoActionBar.Blue"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity
-            android:name=".controller.note.ZoomActivity"
+            android:name=".mvp.v.note.impl.ZoomActivity"
             android:label=" "
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.Blue"/>
