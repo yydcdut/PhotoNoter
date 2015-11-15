@@ -1,9 +1,11 @@
 package com.yydcdut.note.mvp.v.note;
 
+import com.yydcdut.note.mvp.IView;
+
 /**
  * Created by yuyidong on 15/11/15.
  */
-public interface IEditTextView {
+public interface IEditTextView extends IView {
 
     String getNoteTitle();
 

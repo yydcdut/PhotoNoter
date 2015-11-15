@@ -178,13 +178,13 @@ public class EditTextPresenterImpl implements IEditTextPresenter, Handler.Callba
                             finishActivity(true);
                         }
                     });
+            return;
         }
 
         if (!mIsFinishing) {
             mIsFinishing = true;
             finishActivity(false);
         }
-
     }
 
     /**

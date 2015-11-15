@@ -60,7 +60,6 @@ public class EditTextActivity extends BaseActivity implements IEditTextView, Vie
     EditText mContentEdit;
     @InjectView(R.id.layout_fab_edittext)
     FloatingMenuLayout mFabMenuLayout;
-    ImageView mMenuArrowImage;
     @InjectView(R.id.img_ripple_fab)
     VoiceRippleView mVoiceRippleView;
     @InjectView(R.id.layout_fab_voice_start)
@@ -77,6 +76,8 @@ public class EditTextActivity extends BaseActivity implements IEditTextView, Vie
     RevealView mVoiceRevealView;
     @InjectView(R.id.view_fab_location)
     View mFabPositionView;
+    ImageView mMenuArrowImage;
+
 
     private IEditTextPresenter mEditTextPresenter;
 
@@ -117,6 +118,7 @@ public class EditTextActivity extends BaseActivity implements IEditTextView, Vie
         Bundle bundle = getIntent().getExtras();
         mEditTextPresenter = new EditTextPresenterImpl(bundle.getString(Const.CATEGORY_LABEL),
                 bundle.getInt(Const.PHOTO_POSITION), bundle.getInt(Const.COMPARATOR_FACTORY));
+        mEditTextPresenter.attachView(this);
         initToolBar();
         initFloating();
         initOtherUI();
@@ -309,6 +311,7 @@ public class EditTextActivity extends BaseActivity implements IEditTextView, Vie
                     intent.putExtras(bundle);
                     setResult(RESULT_DATA, intent);
                     EditTextActivity.this.finish();
+                    overridePendingTransition(R.anim.activity_no_animation, R.anim.activity_no_animation);
                 }
             }
         });

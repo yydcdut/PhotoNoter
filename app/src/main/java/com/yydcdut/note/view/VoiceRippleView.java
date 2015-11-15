@@ -23,7 +23,6 @@ public class VoiceRippleView extends ImageView implements Runnable, Handler.Call
     private float mRealVoice = 0.2f;
     private float mVoice = 0.2f;
 
-
     /**
      * 0.0 ~~ 1.0
      */
@@ -111,7 +110,7 @@ public class VoiceRippleView extends ImageView implements Runnable, Handler.Call
                     sleep(50);
                 }
                 float value = mVoice * 0.4f + 0.65f;
-                Message msg = mHandler.obtainMessage();
+                Message msg = new Message();
                 msg.obj = value;
                 mHandler.sendMessage(msg);
             }
