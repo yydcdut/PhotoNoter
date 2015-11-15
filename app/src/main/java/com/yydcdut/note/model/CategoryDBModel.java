@@ -178,7 +178,7 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
     public boolean updateLabel(String originalLabel, String newLabel) {
         boolean bool = true;
         bool &= checkLabelExist(newLabel);
-        if (bool) {
+        if (!bool) {
             //数据可能在EditCategoryActivity中改过了，
             Category category = findByCategoryLabel(originalLabel);
             category.setLabel(newLabel);

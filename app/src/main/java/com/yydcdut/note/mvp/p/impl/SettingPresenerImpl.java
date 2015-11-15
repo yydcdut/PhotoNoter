@@ -12,7 +12,6 @@ import com.yydcdut.note.mvp.v.ISettingView;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.LollipopCompat;
-import com.yydcdut.note.utils.YLog;
 
 import org.json.JSONException;
 
@@ -128,9 +127,8 @@ public class SettingPresenerImpl implements ISettingPresenter {
                 break;
             case ISettingPresenter.TAG_SPLASH:
                 boolean splashOpen = LocalStorageUtils.getInstance().getSplashOpen();
-                YLog.i("yuyidong", "splashOpen--->" + splashOpen);
                 LocalStorageUtils.getInstance().setSplashOpen(!splashOpen);
-                mSettingView.setCheckBoxState(ISettingPresenter.TAG_SPLASH, !splashOpen);
+                mSettingView.setCheckBoxState(ISettingPresenter.TAG_SPLASH, splashOpen);
                 break;
             case ISettingPresenter.TAG_FEEDBACK:
                 mSettingView.jump2FeedbackActivity();

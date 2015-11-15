@@ -24,7 +24,6 @@ import com.yydcdut.note.camera.controller.AdjustCamera;
 import com.yydcdut.note.camera.param.Size;
 import com.yydcdut.note.controller.BaseActivity;
 import com.yydcdut.note.controller.home.HomeActivity;
-import com.yydcdut.note.controller.setting.EditCategoryActivity;
 import com.yydcdut.note.mvp.p.IFeedbackPresenter;
 import com.yydcdut.note.mvp.p.ISettingPresenter;
 import com.yydcdut.note.mvp.p.impl.SettingPresenerImpl;
