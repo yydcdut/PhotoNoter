@@ -29,7 +29,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.Blue"/>
         <activity
-            android:name=".controller.note.DetailActivity"
+            android:name=".mvp.v.note.impl.DetailActivity"
             android:label=" "
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.Blue"/>

@@ -181,7 +181,6 @@
                             android:paddingLeft="@dimen/activity_margin_small"
                             android:paddingRight="@dimen/activity_margin_small"
                             android:paddingTop="@dimen/activity_margin_small"
-                            android:text="11"
                             android:textColor="@color/txt_white_translate"
                             android:textSize="20sp"/>
 
@@ -192,7 +191,6 @@
                             android:paddingLeft="@dimen/activity_margin_small"
                             android:paddingRight="@dimen/activity_margin_small"
                             android:paddingTop="3dip"
-                            android:text="222222"
                             android:textColor="@color/txt_LightSlateGray"/>
 
                         <View
@@ -283,7 +281,6 @@
                             android:layout_height="wrap_content"
                             android:paddingLeft="@dimen/activity_margin_small"
                             android:paddingRight="@dimen/activity_margin_small"
-                            android:text="222222"
                             android:textColor="@color/txt_LightSlateGray"
                             android:textSize="@dimen/txt_small"/>
 

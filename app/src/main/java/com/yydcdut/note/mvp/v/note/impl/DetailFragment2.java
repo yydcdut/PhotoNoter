@@ -1,4 +1,4 @@
-package com.yydcdut.note.controller.note;
+package com.yydcdut.note.mvp.v.note.impl;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,7 +9,6 @@ import com.yydcdut.note.R;
 import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.controller.BaseFragment;
 import com.yydcdut.note.model.PhotoNoteDBModel;
-import com.yydcdut.note.mvp.v.note.impl.ZoomActivity;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
