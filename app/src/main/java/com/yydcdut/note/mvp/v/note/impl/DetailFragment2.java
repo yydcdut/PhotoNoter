@@ -6,24 +6,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.yydcdut.note.R;
-import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.controller.BaseFragment;
-import com.yydcdut.note.model.PhotoNoteDBModel;
+import com.yydcdut.note.mvp.p.note.IDetailFragPresenter;
+import com.yydcdut.note.mvp.p.note.impl.DetailFragPresenterImpl;
+import com.yydcdut.note.mvp.v.note.IDetailFragView;
 import com.yydcdut.note.utils.Const;
-import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.view.AutoFitImageView;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 /**
  * Created by yuyidong on 15/11/12.
  */
-public class DetailFragment2 extends BaseFragment implements View.OnClickListener {
-    /* data */
-    private PhotoNote mPhotoNote;
-    private int mPosition;
-    private int mComparator;
-    /* ImageView */
-    private AutoFitImageView mAutoFitImageView;
+public class DetailFragment2 extends BaseFragment implements IDetailFragView, View.OnClickListener {
+    private IDetailFragPresenter mDetailFragPresenter;
+
+    @InjectView(R.id.img_detail)
+    AutoFitImageView mAutoFitImageView;
 
     public static DetailFragment2 newInstance() {
         return new DetailFragment2();
@@ -31,10 +32,8 @@ public class DetailFragment2 extends BaseFragment implements View.OnClickListene
 
     @Override
     public void getBundle(Bundle bundle) {
-        mComparator = bundle.getInt(Const.COMPARATOR_FACTORY);
-        mPosition = bundle.getInt(Const.PHOTO_POSITION);
-        String category = bundle.getString(Const.CATEGORY_LABEL);
-        mPhotoNote = PhotoNoteDBModel.getInstance().findByCategoryLabel(category, mComparator).get(mPosition);
+        mDetailFragPresenter = new DetailFragPresenterImpl(bundle.getString(Const.CATEGORY_LABEL),
+                bundle.getInt(Const.PHOTO_POSITION), bundle.getInt(Const.COMPARATOR_FACTORY));
     }
 
     @Override
@@ -44,15 +43,14 @@ public class DetailFragment2 extends BaseFragment implements View.OnClickListene
 
     @Override
     public void initUI(View view) {
-        mAutoFitImageView = (AutoFitImageView) view.findViewById(R.id.img_detail);
+        ButterKnife.inject(this, view);
+        mDetailFragPresenter.attachView(this);
         mAutoFitImageView.setOnClickListener(this);
     }
 
     @Override
     public void initData() {
-        int[] size = FilePathUtils.getPictureSize(mPhotoNote.getBigPhotoPathWithoutFile());
-        mAutoFitImageView.setAspectRatio(size[0], size[1]);
-        ImageLoaderManager.displayImage(mPhotoNote.getSmallPhotoPathWithFile(), mAutoFitImageView, null);
+
     }
 
     @Override
@@ -62,15 +60,25 @@ public class DetailFragment2 extends BaseFragment implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        ZoomActivity.startActivityForResult(this, mPhotoNote.getCategoryLabel(), mPosition, mComparator);
+        mDetailFragPresenter.jump2ZoomActivity();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_PICTURE) {
-            ImageLoaderManager.displayImage(mPhotoNote.getSmallPhotoPathWithFile(), mAutoFitImageView);
+            mDetailFragPresenter.showImage();
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    @Override
+    public void showImage(int width, int height, String path) {
+        mAutoFitImageView.setAspectRatio(width, height);
+        ImageLoaderManager.displayImage(path, mAutoFitImageView, null);
+    }
+
+    @Override
+    public void jump2ZoomActivity(String label, int position, int comparator) {
+        ZoomActivity.startActivityForResult(this, label, position, comparator);
+    }
 }
