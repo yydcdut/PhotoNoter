@@ -12,5 +12,5 @@ public interface ILoginPresenter extends IPresenter {
 
     void loginEvernote();
 
-    void onLoginFinished(boolean successful);
+    void onEvernoteLoginFinished(boolean successful);
 }

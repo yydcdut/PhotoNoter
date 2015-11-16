@@ -128,10 +128,10 @@ public class LoginActivity extends BaseActivity implements ILoginView, View.OnCl
             case EvernoteSession.REQUEST_CODE_LOGIN:
                 if (resultCode == RESULT_OK) {
                     // handle success
-                    mLoginPresenter.onLoginFinished(true);
+                    mLoginPresenter.onEvernoteLoginFinished(true);
                 } else {
                     // handle failure
-                    mLoginPresenter.onLoginFinished(false);
+                    mLoginPresenter.onEvernoteLoginFinished(false);
                 }
                 break;
 
