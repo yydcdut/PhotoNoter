@@ -24,6 +24,7 @@ import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.yydcdut.note.R;
 import com.yydcdut.note.controller.BaseActivity;
+import com.yydcdut.note.listener.OnSnackBarActionListener;
 import com.yydcdut.note.mvp.p.note.IEditTextPresenter;
 import com.yydcdut.note.mvp.p.note.impl.EditTextPresenterImpl;
 import com.yydcdut.note.mvp.v.note.IEditTextView;

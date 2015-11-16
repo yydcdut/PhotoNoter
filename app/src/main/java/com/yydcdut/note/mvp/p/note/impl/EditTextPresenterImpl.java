@@ -28,6 +28,7 @@ import com.iflytek.cloud.SpeechRecognizer;
 import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.bean.PhotoNote;
+import com.yydcdut.note.listener.OnSnackBarActionListener;
 import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.model.UserCenter;
 import com.yydcdut.note.mvp.IView;
@@ -170,7 +171,7 @@ public class EditTextPresenterImpl implements IEditTextPresenter, Handler.Callba
                 }
             }, 2000);
             mEditTextView.showSnakeBarWithAction(mContext.getResources().getString(R.string.toast_exit),
-                    mContext.getResources().getString(R.string.toast_save), new IEditTextView.OnSnackBarActionListener() {
+                    mContext.getResources().getString(R.string.toast_save), new OnSnackBarActionListener() {
                         @Override
                         public void onClick() {
                             mIsFinishing = true;

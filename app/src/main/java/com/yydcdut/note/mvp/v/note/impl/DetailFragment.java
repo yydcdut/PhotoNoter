@@ -20,14 +20,14 @@ import butterknife.InjectView;
 /**
  * Created by yuyidong on 15/11/12.
  */
-public class DetailFragment2 extends BaseFragment implements IDetailFragView, View.OnClickListener {
+public class DetailFragment extends BaseFragment implements IDetailFragView, View.OnClickListener {
     private IDetailFragPresenter mDetailFragPresenter;
 
     @InjectView(R.id.img_detail)
     AutoFitImageView mAutoFitImageView;
 
-    public static DetailFragment2 newInstance() {
-        return new DetailFragment2();
+    public static DetailFragment newInstance() {
+        return new DetailFragment();
     }
 
     @Override

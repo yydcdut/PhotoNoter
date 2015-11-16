@@ -16,14 +16,14 @@
         <android.support.design.widget.CoordinatorLayout
             android:id="@+id/cl_login"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="300dip"
             android:layout_alignParentBottom="true">
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/btn_login_qq"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
+                android:layout_gravity="bottom"
                 android:layout_marginBottom="@dimen/dimen_24dip"
                 android:layout_marginRight="100dip"
                 android:src="@drawable/ic_qq_fab"
@@ -35,7 +35,7 @@
                 android:id="@+id/btn_login_evernote"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
+                android:layout_gravity="bottom"
                 android:layout_marginBottom="@dimen/dimen_24dip"
                 android:layout_marginLeft="100dip"
                 android:src="@drawable/ic_evernote_fab"

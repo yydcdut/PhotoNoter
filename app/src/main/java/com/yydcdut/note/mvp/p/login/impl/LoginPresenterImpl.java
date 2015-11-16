@@ -1,15 +1,12 @@
-package com.yydcdut.note.controller.login;
+package com.yydcdut.note.mvp.p.login.impl;
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
-import android.support.design.widget.Snackbar;
-import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
-import android.view.View;
 
 import com.evernote.client.android.EvernoteSession;
-import com.evernote.client.android.login.EvernoteLoginFragment;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.auth.QQToken;
 import com.tencent.tauth.IUiListener;
@@ -18,23 +15,27 @@ import com.tencent.tauth.UiError;
 import com.yydcdut.note.BuildConfig;
 import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
-import com.yydcdut.note.controller.BaseActivity;
+import com.yydcdut.note.listener.OnSnackBarActionListener;
 import com.yydcdut.note.model.UserCenter;
+import com.yydcdut.note.mvp.IView;
+import com.yydcdut.note.mvp.p.login.ILoginPresenter;
+import com.yydcdut.note.mvp.v.login.ILoginView;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
-import com.yydcdut.note.utils.LollipopCompat;
 import com.yydcdut.note.utils.NetworkUtils;
-import com.yydcdut.note.view.CircleProgressBarLayout;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Created by yuyidong on 15-3-25.
+ * Created by yuyidong on 15/11/16.
  */
-public class LoginActivity extends BaseActivity implements View.OnClickListener, Handler.Callback,
-        EvernoteLoginFragment.ResultCallback {
-    private static final String TAG = LoginActivity.class.getSimpleName();
+public class LoginPresenterImpl implements ILoginPresenter, Handler.Callback {
+    private ILoginView mLoginView;
+
+    private Context mContext;
+
+    private Activity mActivity;
 
     private static final int MESSAGE_LOGIN_QQ_OK = 1;
     private static final int MESSAGE_LOGIN_QQ_FAILED = 3;
@@ -44,123 +45,61 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
     private Tencent mTencent;
 
-    private CircleProgressBarLayout mCircleProgressBar;
-
-    @Override
-    public boolean setStatusBar() {
-        return true;
+    public LoginPresenterImpl(Activity activity) {
+        mActivity = activity;
     }
 
     @Override
-    public int setContentView() {
-        return R.layout.activity_login;
-    }
-
-    @Override
-    public void initUiAndListener() {
-        initToolBarUI();
-        initLoginButtonListener();
-        initTencent();
+    public void attachView(IView iView) {
+        mContext = NoteApplication.getContext();
+        mLoginView = (ILoginView) iView;
         mHandler = new Handler(this);
-        mCircleProgressBar = (CircleProgressBarLayout) findViewById(R.id.layout_progress);
-    }
-
-    private void initToolBarUI() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(getResources().getString(R.string.app_login));
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        LollipopCompat.setElevation(toolbar, getResources().getDimension(R.dimen.ui_elevation));
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                break;
-        }
-        return true;
+        initTencent();
     }
 
     /**
      * 初始化腾讯的接口
      */
     private void initTencent() {
-        mTencent = Tencent.createInstance(BuildConfig.TENCENT_KEY, getApplicationContext());
-    }
-
-    private void initLoginButtonListener() {
-        findViewById(R.id.btn_login_qq).setOnClickListener(this);
-        findViewById(R.id.btn_login_evernote).setOnClickListener(this);
+        mTencent = Tencent.createInstance(BuildConfig.TENCENT_KEY, mContext);
     }
 
     @Override
-    public void onClick(View v) {
-        if (!NetworkUtils.isNetworkConnected(this)) {
+    public void detachView() {
+
+    }
+
+    @Override
+    public boolean checkInternet() {
+        if (!NetworkUtils.isNetworkConnected(mContext)) {
             //没有网络
-            Snackbar.make(findViewById(R.id.cl_login), getResources().getString(R.string.toast_no_connection), Snackbar.LENGTH_SHORT).show();
-            return;
+            mLoginView.showSnackBar(mContext.getResources().getString(R.string.toast_no_connection));
+            return false;
         }
-        switch (v.getId()) {
-            case R.id.btn_login_qq:
-                if (UserCenter.getInstance().isLoginQQ()) {
-                    Snackbar.make(findViewById(R.id.cl_login), getResources().getString(R.string.toast_already_login), Snackbar.LENGTH_SHORT).show();
-                } else {
-                    mTencent.login(LoginActivity.this, "all", new BaseUiListener());
-                }
-                break;
-            case R.id.btn_login_evernote:
-                if (UserCenter.getInstance().isLoginEvernote()) {
-                    Snackbar.make(findViewById(R.id.cl_login), getResources().getString(R.string.toast_already_login), Snackbar.LENGTH_SHORT).show();
-                } else {
-                    EvernoteSession.getInstance().authenticate(LoginActivity.this);
-                }
-                break;
+        return true;
+    }
+
+    @Override
+    public void loginQQ() {
+        if (UserCenter.getInstance().isLoginQQ()) {
+            mLoginView.showSnackBar(mContext.getResources().getString(R.string.toast_already_login));
+        } else {
+            mTencent.login(mActivity, "all", new BaseUiListener());
         }
     }
 
-
     @Override
-    public boolean handleMessage(Message msg) {
-        switch (msg.what) {
-            case MESSAGE_LOGIN_QQ_OK:
-                mCircleProgressBar.hide();
-                setResult(RESULT_DATA_QQ, null);
-                finish();
-                break;
-            case MESSAGE_LOGIN_EVERNOTE_OK:
-                mCircleProgressBar.hide();
-                setResult(RESULT_DATA_EVERNOTE, null);
-                finish();
-                break;
-            case MESSAGE_LOGIN_EVERNOTE_FAILED:
-                Snackbar.make(findViewById(R.id.toolbar), getResources().getString(R.string.toast_fail), Snackbar.LENGTH_SHORT)
-                        .setAction(getResources().getString(R.string.toast_retry), new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                EvernoteSession.getInstance().authenticate(LoginActivity.this);
-                            }
-                        }).show();
-                break;
-            case MESSAGE_LOGIN_QQ_FAILED:
-                Snackbar.make(findViewById(R.id.toolbar), getResources().getString(R.string.toast_fail), Snackbar.LENGTH_SHORT)
-                        .setAction(getResources().getString(R.string.toast_retry), new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mTencent = Tencent.createInstance(BuildConfig.TENCENT_KEY, getApplicationContext());
-                                mTencent.login(LoginActivity.this, "all", new BaseUiListener());
-                            }
-                        }).show();
-                break;
+    public void loginEvernote() {
+        if (UserCenter.getInstance().isLoginEvernote()) {
+            mLoginView.showSnackBar(mContext.getResources().getString(R.string.toast_already_login));
+        } else {
+            EvernoteSession.getInstance().authenticate(mActivity);
         }
-        return false;
     }
 
     @Override
     public void onLoginFinished(boolean successful) {
         if (successful) {
-            mCircleProgressBar.show();
             UserCenter.getInstance().LoginEvernote();
             mHandler.sendEmptyMessage(MESSAGE_LOGIN_EVERNOTE_OK);
         } else {
@@ -209,7 +148,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
               sdk给我们提供了一个类UserInfo，这个类中封装了QQ用户的一些信息，我么可以通过这个类拿到这些信息
              */
             QQToken qqToken = mTencent.getQQToken();
-            UserInfo info = new UserInfo(getApplicationContext(), qqToken);
+            UserInfo info = new UserInfo(mContext, qqToken);
             //这样我们就拿到这个类了，之后的操作就跟上面的一样了，同样是解析JSON
             final String finalOpenid = openid;
             final String finalAccessToken = accessToken;
@@ -246,7 +185,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    mCircleProgressBar.setVisibility(View.VISIBLE);
+                    mLoginView.showProgressBar();
                     final String finalImage = image;
                     final String finalName = name;
                     NoteApplication.getInstance().getExecutorPool().execute(new Runnable() {
@@ -279,4 +218,38 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         }
     }
 
+    @Override
+    public boolean handleMessage(Message msg) {
+        switch (msg.what) {
+            case MESSAGE_LOGIN_QQ_OK:
+                mLoginView.hidePregressBar();
+                mLoginView.finishActivityWithResult(RESULT_DATA_QQ);
+                break;
+            case MESSAGE_LOGIN_EVERNOTE_OK:
+                mLoginView.hidePregressBar();
+                mLoginView.finishActivityWithResult(RESULT_DATA_EVERNOTE);
+                break;
+            case MESSAGE_LOGIN_EVERNOTE_FAILED:
+                mLoginView.showSnackBarWithAction(mContext.getResources().getString(R.string.toast_fail),
+                        mContext.getResources().getString(R.string.toast_retry),
+                        new OnSnackBarActionListener() {
+                            @Override
+                            public void onClick() {
+                                EvernoteSession.getInstance().authenticate(mActivity);
+                            }
+                        });
+                break;
+            case MESSAGE_LOGIN_QQ_FAILED:
+                mLoginView.showSnackBarWithAction(mContext.getResources().getString(R.string.toast_fail),
+                        mContext.getResources().getString(R.string.toast_retry),
+                        new OnSnackBarActionListener() {
+                            @Override
+                            public void onClick() {
+                                mTencent.login(mActivity, "all", new BaseUiListener());
+                            }
+                        });
+                break;
+        }
+        return false;
+    }
 }

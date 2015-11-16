@@ -1,5 +1,6 @@
 package com.yydcdut.note.mvp.v.note;
 
+import com.yydcdut.note.listener.OnSnackBarActionListener;
 import com.yydcdut.note.mvp.IView;
 
 /**
@@ -37,7 +38,4 @@ public interface IEditTextView extends IView {
 
     void finishActivitywithAnimation(boolean saved, String category, int position, int comparator);
 
-    interface OnSnackBarActionListener {
-        void onClick();
-    }
 }
