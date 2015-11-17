@@ -11,7 +11,7 @@ public interface ILoginView extends IView {
 
     void showProgressBar();
 
-    void hidePregressBar();
+    void hideProgressBar();
 
     void finishActivityWithResult(int result);
 

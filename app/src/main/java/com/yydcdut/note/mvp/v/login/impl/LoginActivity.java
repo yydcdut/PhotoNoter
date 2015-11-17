@@ -99,7 +99,7 @@ public class LoginActivity extends BaseActivity implements ILoginView, View.OnCl
     }
 
     @Override
-    public void hidePregressBar() {
+    public void hideProgressBar() {
         mCircleProgressBar.hide();
     }
 
@@ -111,7 +111,7 @@ public class LoginActivity extends BaseActivity implements ILoginView, View.OnCl
 
     @Override
     public void showSnackBarWithAction(String message, String action, final OnSnackBarActionListener listener) {
-        Snackbar.make(findViewById(R.id.toolbar), message, Snackbar.LENGTH_SHORT)
+        Snackbar.make(findViewById(R.id.cl_login), message, Snackbar.LENGTH_SHORT)
                 .setAction(action, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

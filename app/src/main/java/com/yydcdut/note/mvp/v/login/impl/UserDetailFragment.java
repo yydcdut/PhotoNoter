@@ -1,4 +1,4 @@
-package com.yydcdut.note.controller.login;
+package com.yydcdut.note.mvp.v.login.impl;
 
 import android.content.Intent;
 import android.graphics.Bitmap;

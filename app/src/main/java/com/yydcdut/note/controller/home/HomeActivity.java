@@ -15,7 +15,7 @@ import android.widget.Toast;
 import com.yydcdut.note.R;
 import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.bean.IUser;
-import com.yydcdut.note.controller.login.UserCenterActivity;
+import com.yydcdut.note.mvp.v.login.impl.UserCenterActivity;
 import com.yydcdut.note.model.CategoryDBModel;
 import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.model.UserCenter;

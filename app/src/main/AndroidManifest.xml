@@ -48,7 +48,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.Blue"/>
         <activity
-            android:name=".controller.login.UserCenterActivity"
+            android:name=".mvp.v.login.impl.UserCenterActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.Blue"/>
         <activity
