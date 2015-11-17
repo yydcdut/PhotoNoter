@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.evernote.client.android.EvernoteSession;
@@ -63,9 +64,6 @@ public class UserCenterActivity extends BaseActivity implements IUserCenterView,
 
     private FragmentPagerAdapter mPagerAdapter;
 
-    private boolean mInitQQState = false;
-    private boolean minitEvernoteState = false;
-
     private float mScrollWidth = 0f;
 
     @Override
@@ -101,8 +99,6 @@ public class UserCenterActivity extends BaseActivity implements IUserCenterView,
         mScrollWidth = getResources().getDimension(R.dimen.dimen_36dip) + getResources().getDimension(R.dimen.dimen_24dip);
         mUserCenterArrowView.setColorAndMarginWidth(mColorArray[0], (int) -mScrollWidth);
         mUserCenterArrowView.setColorAndMarginWidth(getResources().getColor(R.color.green_colorPrimary), (int) -mScrollWidth);
-        mInitQQState = UserCenter.getInstance().isLoginQQ();
-        minitEvernoteState = UserCenter.getInstance().isLoginEvernote();
     }
 
     private void initToolBarUI() {
@@ -181,9 +177,17 @@ public class UserCenterActivity extends BaseActivity implements IUserCenterView,
                 mViewPager.setCurrentItem(2, true);
                 break;
             case R.id.img_user:
+                boolean hasNet1 = mUserCenterPresenter.checkInternet();
+                if (!hasNet1) {
+                    break;
+                }
                 mUserCenterPresenter.loginQQ();
                 break;
             case R.id.img_user_two:
+                boolean hasNet = mUserCenterPresenter.checkInternet();
+                if (!hasNet) {
+                    break;
+                }
                 if (!UserCenter.getInstance().isLoginEvernote()) {
                     EvernoteSession.getInstance().authenticate(this);
                 }
@@ -298,6 +302,27 @@ public class UserCenterActivity extends BaseActivity implements IUserCenterView,
             mEvernoteImageView.setImageResource(R.drawable.ic_evernote_gray);
         }
         mEvernoteImageView.setOnClickListener(this);
+    }
+
+    @Override
+    public void showQQInfoInFrag(String name) {
+        LinearLayout linearLayout = (LinearLayout) mPagerAdapter.getItem(2).getView().findViewById(R.id.layout_user_detail);
+        View qqView = linearLayout.getChildAt(0);
+        ((TextView) qqView.findViewById(R.id.txt_item_column)).setText(name);
+        ((ImageView) qqView.findViewById(R.id.img_item_user)).setImageResource(R.drawable.ic_clear_white_24dp);
+        mCircleProgressBarLayout.hide();
+    }
+
+    @Override
+    public void showEvernoteInFrag(boolean login, String userName) {
+        LinearLayout linearLayout2 = (LinearLayout) mPagerAdapter.getItem(2).getView().findViewById(R.id.layout_user_detail);
+        View evernoteView = linearLayout2.getChildAt(1);
+        if (login) {
+            ((TextView) evernoteView.findViewById(R.id.txt_item_column)).setText(userName);
+        } else {
+            ((TextView) evernoteView.findViewById(R.id.txt_item_column)).setText(getResources().getString(R.string.user_failed));
+        }
+        ((ImageView) evernoteView.findViewById(R.id.img_item_user)).setImageResource(R.drawable.ic_clear_white_24dp);
     }
 
     @Override

@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 
+import com.evernote.edam.type.User;
 import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.bean.IUser;
@@ -16,6 +17,7 @@ import com.yydcdut.note.mvp.p.login.IUserCenterPresenter;
 import com.yydcdut.note.mvp.v.login.IUserCenterView;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
+import com.yydcdut.note.utils.NetworkUtils;
 
 /**
  * Created by yuyidong on 15/11/16.
@@ -57,7 +59,12 @@ public class UserCenterPresenterImpl implements IUserCenterPresenter, Handler.Ca
 
     @Override
     public boolean checkInternet() {
-        return false;
+        if (!NetworkUtils.isNetworkConnected(mContext)) {
+            //没有网络
+            mUserCenterView.showSnackBar(mContext.getResources().getString(R.string.toast_no_connection));
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -116,26 +123,19 @@ public class UserCenterPresenterImpl implements IUserCenterPresenter, Handler.Ca
     public boolean handleMessage(Message msg) {
         switch (msg.what) {
             case MESSAGE_LOGIN_QQ_OK:
-//                LinearLayout linearLayout = (LinearLayout) mPagerAdapter.getItem(2).getView().findViewById(R.id.layout_user_detail);
-//                View qqView = linearLayout.getChildAt(0);
-//                ((TextView) qqView.findViewById(R.id.txt_item_column)).setText(qqUser.getName());
-//                ((ImageView) qqView.findViewById(R.id.img_item_user)).setImageResource(R.drawable.ic_clear_white_24dp);
-//                mCircleProgressBarLayout.hide();
                 initQQ();
+                mUserCenterView.showQQInfoInFrag(UserCenter.getInstance().getQQ().getName());
                 mUserCenterView.hideProgressBar();
                 mUserCenterView.showSnackBar(mContext.getResources().getString(R.string.toast_success));
                 break;
             case MESSAGE_LOGIN_EVERNOTE_OK:
-//                LinearLayout linearLayout2 = (LinearLayout) mPagerAdapter.getItem(2).getView().findViewById(R.id.layout_user_detail);
-//                View evernoteView = linearLayout2.getChildAt(1);
-//                User evernoteUser = UserCenter.getInstance().getEvernote();
-//                if (evernoteUser != null) {
-//                    ((TextView) evernoteView.findViewById(R.id.txt_item_column)).setText(evernoteUser.getUsername());
-//                } else {
-//                    ((TextView) evernoteView.findViewById(R.id.txt_item_column)).setText(getResources().getString(R.string.user_failed));
-//                }
-//                ((ImageView) evernoteView.findViewById(R.id.img_item_user)).setImageResource(R.drawable.ic_clear_white_24dp);
                 initEvernote();
+                User evernoteUser = UserCenter.getInstance().getEvernote();
+                if (evernoteUser == null) {
+                    mUserCenterView.showEvernoteInFrag(true, mContext.getResources().getString(R.string.user_failed));
+                } else {
+                    mUserCenterView.showEvernoteInFrag(true, evernoteUser.getName());
+                }
                 mUserCenterView.showSnackBar(mContext.getResources().getString(R.string.toast_success));
                 break;
             case MESSAGE_LOGIN_EVERNOTE_FAILED:

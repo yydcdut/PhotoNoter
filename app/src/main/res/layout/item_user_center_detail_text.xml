@@ -23,7 +23,7 @@
         android:layout_toLeftOf="@+id/txt_item_user"
         android:layout_toRightOf="@+id/img_item_icon"
         android:gravity="center_vertical"
-        android:text="AD合家安康睡你的觉卡"
+        android:text=" "
         android:textColor="@color/txt_alpha_gray"
         android:textSize="@dimen/txt_mid"
         android:textStyle="bold"/>
@@ -36,8 +36,11 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="@dimen/dimen_24dip"
+        android:ellipsize="end"
         android:gravity="center"
-        android:text="啊范德萨舒服点"
+        android:maxLength="12"
+        android:singleLine="true"
+        android:text=" "
         android:textColor="@color/txt_white"
         android:textSize="@dimen/txt_mid"/>
 

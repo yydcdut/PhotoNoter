@@ -9,4 +9,8 @@ public interface IUserCenterView extends ILoginView {
 
     void showEvernote(boolean login);
 
+    void showQQInfoInFrag(String name);
+
+    void showEvernoteInFrag(boolean login,String userName);
+
 }

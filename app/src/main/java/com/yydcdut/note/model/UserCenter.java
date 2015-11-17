@@ -59,6 +59,8 @@ public class UserCenter {
     private WeakReference<Activity> mQQActivity;
     private WeakReference<Activity> mEvernoteActivity;
 
+    private Tencent mTencent;
+
     private UserCenter() {
         mSharedPreferences = NoteApplication.getContext().getSharedPreferences(NAME, Context.MODE_PRIVATE);
     }
@@ -96,8 +98,6 @@ public class UserCenter {
         editor.commit();
         return true;
     }
-
-    private Tencent mTencent;
 
     public void doLoginQQ(Activity activity, OnLoginQQListener listener) {
         if (mTencent == null) {
