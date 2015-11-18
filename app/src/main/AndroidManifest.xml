@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".controller.home.IntroduceActivity"
+            android:name=".mvp.v.home.impl.IntroduceActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.Blue"/>
         <activity

@@ -9,7 +9,6 @@ import android.view.View;
 import com.yydcdut.note.R;
 import com.yydcdut.note.controller.BaseActivity;
 import com.yydcdut.note.controller.home.HomeActivity;
-import com.yydcdut.note.controller.home.IntroduceActivity;
 import com.yydcdut.note.mvp.p.home.ISplashPresenter;
 import com.yydcdut.note.mvp.p.home.impl.SplashPresenterImpl;
 import com.yydcdut.note.mvp.v.home.ISplashView;
