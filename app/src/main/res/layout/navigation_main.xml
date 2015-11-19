@@ -47,7 +47,7 @@
         </com.yydcdut.note.view.RevealView>
     </RelativeLayout>
 
-    <com.yydcdut.note.view.ScrimInsetsFrameLayout
+    <android.support.design.internal.ScrimInsetsFrameLayout
         android:id="@+id/relativeDrawer"
         android:layout_width="@dimen/drawer_layout_width"
         android:layout_height="match_parent"
@@ -56,14 +56,7 @@
         app:insetForeground="#4000">
 
         <include
-            layout="@layout/navigation_list_drawer"
-            android:fitsSystemWindows="true"/>
-    </com.yydcdut.note.view.ScrimInsetsFrameLayout>
+            layout="@layout/navigation_list_drawer"/>
+    </android.support.design.internal.ScrimInsetsFrameLayout>
 
-    <com.yydcdut.note.view.AutoFrameLayout
-        android:id="@+id/layout_auto"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
-
-    </com.yydcdut.note.view.AutoFrameLayout>
 </android.support.v4.widget.DrawerLayout>
