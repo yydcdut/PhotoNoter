@@ -31,7 +31,7 @@ public class SplashPresenterImpl implements ISplashPresenter, Handler.Callback {
     @Override
     public void onActivityStart() {
         if (mHandler != null && !mHandler.hasMessages(MESSAGE_WHAT)) {
-            mHandler.sendEmptyMessageDelayed(MESSAGE_WHAT, 2800);
+            mHandler.sendEmptyMessageDelayed(MESSAGE_WHAT, 500);
         }
     }
 
