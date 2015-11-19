@@ -8,4 +8,6 @@ import com.yydcdut.note.model.observer.IObserver;
 public interface IModel {
 
     boolean addObserver(IObserver iObserver);
+
+    boolean removeObserver(IObserver iObserver);
 }

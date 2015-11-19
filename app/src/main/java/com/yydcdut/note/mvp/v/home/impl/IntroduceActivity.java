@@ -14,7 +14,6 @@ import com.nineoldandroids.animation.ObjectAnimator;
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.IntroducePagerAdapter;
 import com.yydcdut.note.controller.BaseActivity;
-import com.yydcdut.note.controller.home.HomeActivity;
 import com.yydcdut.note.mvp.p.home.IIntroducePresenter;
 import com.yydcdut.note.mvp.p.home.impl.IntroducePresenterImpl;
 import com.yydcdut.note.mvp.v.home.IIntroduceView;
@@ -174,7 +173,7 @@ public class IntroduceActivity extends BaseActivity implements IIntroduceView, O
 
     @Override
     public void jump2Album() {
-        Intent intent = new Intent(this, HomeActivity.class);
+        Intent intent = new Intent(this, NavigationActivity.class);
         startActivity(intent);
         finish();
     }

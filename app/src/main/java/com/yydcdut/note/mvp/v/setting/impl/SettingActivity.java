@@ -23,10 +23,10 @@ import com.yydcdut.note.R;
 import com.yydcdut.note.camera.controller.AdjustCamera;
 import com.yydcdut.note.camera.param.Size;
 import com.yydcdut.note.controller.BaseActivity;
-import com.yydcdut.note.controller.home.HomeActivity;
 import com.yydcdut.note.mvp.p.setting.IFeedbackPresenter;
 import com.yydcdut.note.mvp.p.setting.ISettingPresenter;
 import com.yydcdut.note.mvp.p.setting.impl.SettingPresenerImpl;
+import com.yydcdut.note.mvp.v.home.impl.NavigationActivity;
 import com.yydcdut.note.mvp.v.setting.ISettingView;
 import com.yydcdut.note.utils.ActivityCollector;
 import com.yydcdut.note.utils.Const;
@@ -403,7 +403,7 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
 
     @Override
     public void restartActivity() {
-        ActivityCollector.reStart(SettingActivity.this, HomeActivity.class, SettingActivity.class);
+        ActivityCollector.reStart(SettingActivity.this, NavigationActivity.class, SettingActivity.class);
     }
 
     @Override

@@ -44,6 +44,7 @@ import com.yydcdut.note.model.CategoryDBModel;
 import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.model.SandBoxDBModel;
 import com.yydcdut.note.model.compare.ComparatorFactory;
+import com.yydcdut.note.mvp.v.home.impl.NavigationActivity;
 import com.yydcdut.note.mvp.v.note.impl.DetailActivity;
 import com.yydcdut.note.mvp.v.setting.impl.SettingActivity;
 import com.yydcdut.note.service.SandBoxService;
@@ -513,7 +514,7 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
                             Category category = new Category(name, 0, totalNumber, true);
                             boolean bool = CategoryDBModel.getInstance().saveCategory(category);
                             if (bool) {
-                                HomeActivity homeActivity = (HomeActivity) getActivity();
+                                NavigationActivity homeActivity = (NavigationActivity) getActivity();
                                 homeActivity.changeCategoryAfterSaving(category);
                             } else {
                                 Toast.makeText(getActivity(), getResources().getString(R.string.toast_fail), Toast.LENGTH_LONG).show();

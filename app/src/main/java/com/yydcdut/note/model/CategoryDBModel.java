@@ -43,6 +43,15 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
         return false;
     }
 
+    @Override
+    public boolean removeObserver(IObserver iObserver) {
+        if (iObserver instanceof CategoryChangedObserver) {
+            mCategoryChangedObservers.remove((CategoryChangedObserver) iObserver);
+            return true;
+        }
+        return false;
+    }
+
     public List<Category> findAll() {
         if (mCache == null) {
             mCache = new ArrayList<>();

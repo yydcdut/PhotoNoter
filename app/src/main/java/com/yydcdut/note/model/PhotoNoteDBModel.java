@@ -45,6 +45,15 @@ public class PhotoNoteDBModel extends AbsNotesDBModel implements IModel {
         return false;
     }
 
+    @Override
+    public boolean removeObserver(IObserver iObserver) {
+        if (iObserver instanceof PhotoNoteChangedObserver) {
+            mPhotoNoteChangedObservers.remove((PhotoNoteChangedObserver) iObserver);
+            return true;
+        }
+        return false;
+    }
+
     public List<PhotoNote> findByCategoryLabel(String categoryLabel, int comparatorFactory) {
         List<PhotoNote> list = mCache.get(categoryLabel);
         if (null == list) {

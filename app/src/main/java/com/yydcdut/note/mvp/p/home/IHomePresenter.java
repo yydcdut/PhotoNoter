@@ -1,0 +1,32 @@
+package com.yydcdut.note.mvp.p.home;
+
+import com.yydcdut.note.mvp.IPresenter;
+
+/**
+ * Created by yuyidong on 15/11/19.
+ */
+public interface IHomePresenter extends IPresenter {
+    int USER_ONE = 1;
+    int USER_TWO = 2;
+
+    void setCategory(String categoryLabel);
+
+    String getCategory();
+
+    int getCheckCategoryPosition();
+
+    void setCheckedCategoryPosition(int position);
+
+    void setAdapter();
+
+    void drawerUserClick(int which);
+
+    void drawerCloudClick();
+
+    void updateQQInfo();
+
+    void updateEvernoteInfo();
+
+    void updateFromBroadcast(boolean broadcast_process, boolean broadcats_service);
+
+}

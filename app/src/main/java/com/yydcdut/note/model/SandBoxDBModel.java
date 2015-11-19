@@ -131,4 +131,9 @@ public class SandBoxDBModel implements IModel {
         return false;
     }
 
+    @Override
+    public boolean removeObserver(IObserver iObserver) {
+        return false;
+    }
+
 }

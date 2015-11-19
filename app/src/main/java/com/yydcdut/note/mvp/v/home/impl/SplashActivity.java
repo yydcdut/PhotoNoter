@@ -8,7 +8,6 @@ import android.view.View;
 
 import com.yydcdut.note.R;
 import com.yydcdut.note.controller.BaseActivity;
-import com.yydcdut.note.controller.home.HomeActivity;
 import com.yydcdut.note.mvp.p.home.ISplashPresenter;
 import com.yydcdut.note.mvp.p.home.impl.SplashPresenterImpl;
 import com.yydcdut.note.mvp.v.home.ISplashView;
@@ -66,7 +65,7 @@ public class SplashActivity extends BaseActivity implements ISplashView {
 
     @Override
     public void jump2Album() {
-        Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
+        Intent intent = new Intent(SplashActivity.this, NavigationActivity.class);
         startActivity(intent);
         SplashActivity.this.finish();
     }
