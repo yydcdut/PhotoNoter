@@ -47,7 +47,7 @@
                     android:layout_height="223dip"
                     android:orientation="vertical">
 
-                    <com.yydcdut.note.view.ripple.MaterialRippleLayout
+                    <com.yydcdut.note.view.MaterialRippleLayout
                         android:id="@+id/layout_ripple_update"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/setting_height"
@@ -86,14 +86,14 @@
                                 android:src="@drawable/ic_chevron_right_black_24dp"/>
 
                         </RelativeLayout>
-                    </com.yydcdut.note.view.ripple.MaterialRippleLayout>
+                    </com.yydcdut.note.view.MaterialRippleLayout>
 
                     <View
                         android:layout_width="fill_parent"
                         android:layout_height="1dip"
                         android:background="@color/gray"/>
 
-                    <com.yydcdut.note.view.ripple.MaterialRippleLayout
+                    <com.yydcdut.note.view.MaterialRippleLayout
                         android:id="@+id/layout_ripple_contact"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/setting_height"
@@ -132,14 +132,14 @@
                                 android:src="@drawable/ic_chevron_right_black_24dp"/>
 
                         </RelativeLayout>
-                    </com.yydcdut.note.view.ripple.MaterialRippleLayout>
+                    </com.yydcdut.note.view.MaterialRippleLayout>
 
                     <View
                         android:layout_width="fill_parent"
                         android:layout_height="1dip"
                         android:background="@color/gray"/>
 
-                    <com.yydcdut.note.view.ripple.MaterialRippleLayout
+                    <com.yydcdut.note.view.MaterialRippleLayout
                         android:id="@+id/layout_ripple_share"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/setting_height"
@@ -179,14 +179,14 @@
                                 android:src="@drawable/ic_chevron_right_black_24dp"/>
 
                         </RelativeLayout>
-                    </com.yydcdut.note.view.ripple.MaterialRippleLayout>
+                    </com.yydcdut.note.view.MaterialRippleLayout>
 
                     <View
                         android:layout_width="fill_parent"
                         android:layout_height="1dip"
                         android:background="@color/gray"/>
 
-                    <com.yydcdut.note.view.ripple.MaterialRippleLayout
+                    <com.yydcdut.note.view.MaterialRippleLayout
                         android:id="@+id/layout_ripple_github"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/setting_height"
@@ -225,7 +225,7 @@
                                 android:src="@drawable/ic_chevron_right_black_24dp"/>
 
                         </RelativeLayout>
-                    </com.yydcdut.note.view.ripple.MaterialRippleLayout>
+                    </com.yydcdut.note.view.MaterialRippleLayout>
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>

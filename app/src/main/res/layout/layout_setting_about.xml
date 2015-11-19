@@ -19,7 +19,7 @@
         android:textColor="?attr/colorPrimary"
         android:textSize="@dimen/txt_mid"/>
 
-    <com.yydcdut.note.view.ripple.MaterialRippleLayout
+    <com.yydcdut.note.view.MaterialRippleLayout
         android:id="@+id/layout_ripple_about"
         android:layout_width="match_parent"
         android:layout_height="@dimen/setting_height"
@@ -31,6 +31,6 @@
         <include
             android:id="@+id/layout_setting_about"
             layout="@layout/item_setting"/>
-    </com.yydcdut.note.view.ripple.MaterialRippleLayout>
+    </com.yydcdut.note.view.MaterialRippleLayout>
 
 </LinearLayout>

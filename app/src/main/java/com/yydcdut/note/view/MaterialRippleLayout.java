@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.yydcdut.note.view.ripple;
+package com.yydcdut.note.view;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

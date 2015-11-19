@@ -19,7 +19,7 @@
         android:textColor="?attr/colorPrimary"
         android:textSize="@dimen/txt_mid"/>
 
-    <com.yydcdut.note.view.ripple.MaterialRippleLayout
+    <com.yydcdut.note.view.MaterialRippleLayout
         android:id="@+id/layout_ripple_sync_auto"
         android:layout_width="match_parent"
         android:layout_height="@dimen/setting_height"
@@ -31,9 +31,9 @@
         <include
             android:id="@+id/layout_setting_sync_auto"
             layout="@layout/item_setting_check"/>
-    </com.yydcdut.note.view.ripple.MaterialRippleLayout>
+    </com.yydcdut.note.view.MaterialRippleLayout>
 
-    <com.yydcdut.note.view.ripple.MaterialRippleLayout
+    <com.yydcdut.note.view.MaterialRippleLayout
         android:id="@+id/layout_ripple_sync_wifi"
         android:layout_width="match_parent"
         android:layout_height="@dimen/setting_height"
@@ -45,6 +45,6 @@
         <include
             android:id="@+id/layout_setting_sync_wifi"
             layout="@layout/item_setting_check"/>
-    </com.yydcdut.note.view.ripple.MaterialRippleLayout>
+    </com.yydcdut.note.view.MaterialRippleLayout>
 
 </LinearLayout>
