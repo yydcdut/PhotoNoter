@@ -2,7 +2,7 @@ package com.yydcdut.note.camera.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +18,13 @@ import com.yydcdut.note.utils.Const;
  * Created by yuyidong on 15/8/19.
  */
 class PersonalLayout extends FrameLayout implements View.OnClickListener {
+    private static final int DIRECTION_LEFT = -1;
+    private static final int DIRECTION_RIGHT = 1;
+    private static final int DIRECTION_NOTHING = 0;
+    private int mDirection = DIRECTION_NOTHING;
 
-    private int mBeforeDegree = -1;
+    private int mCurrentSensorDegree = 0;
+    private int mCurrentViewDegree = 0;
 
     private OnLayoutItemClickListener mOnLayoutItemClickListener;
 
@@ -32,6 +37,9 @@ class PersonalLayout extends FrameLayout implements View.OnClickListener {
     private ImageView mFullRatioView;
     private ImageView mTimerView;
 
+    private Handler mMainHandler;
+
+    private boolean mWannaFinishThread = false;
 
     public PersonalLayout(Context context) {
         this(context, null);
@@ -47,6 +55,8 @@ class PersonalLayout extends FrameLayout implements View.OnClickListener {
         mTimerIcons = context.getResources().obtainTypedArray(R.array.camera_timer);
         mTimerArray = new int[]{Const.LAYOUT_PERSONAL_TIMER_0, Const.LAYOUT_PERSONAL_TIMER_3,
                 Const.LAYOUT_PERSONAL_TIMER_5, Const.LAYOUT_PERSONAL_TIMER_10, Const.LAYOUT_PERSONAL_TIMER_15};
+        mMainHandler = new Handler();
+        new Thread(mThreadRunnable).start();
     }
 
     @Override
@@ -135,58 +145,67 @@ class PersonalLayout extends FrameLayout implements View.OnClickListener {
     }
 
     public void onSensorRotationEvent(int degree) {
-        if (mBeforeDegree == -1) {
-            mBeforeDegree = degree;
-        }
-        new RotationAsyncTask(m11RatioView, m43RatioView, mFullRatioView, mTimerView).execute(mBeforeDegree, degree);
-        mBeforeDegree = degree;
+        mCurrentSensorDegree = degree;
     }
 
-    class RotationAsyncTask extends AsyncTask<Integer, Integer, Void> {
-        private View[] mViews;
-
-        public RotationAsyncTask(View... views) {
-            mViews = views;
-        }
-
+    private Runnable mMainRunnable = new Runnable() {
         @Override
-        protected void onProgressUpdate(Integer... values) {
-            super.onProgressUpdate(values);
-            for (View view : mViews) {
-                view.setRotation(values[0] % 360);
-            }
+        public void run() {
+            m11RatioView.setRotation(mCurrentViewDegree % 360);
+            m43RatioView.setRotation(mCurrentViewDegree % 360);
+            mFullRatioView.setRotation(mCurrentViewDegree % 360);
+            mTimerView.setRotation(mCurrentViewDegree % 360);
         }
+    };
 
+    private Runnable mThreadRunnable = new Runnable() {
         @Override
-        protected Void doInBackground(Integer... params) {
-            if (params[0] == 0 && params[1] == 270) {
-                params[0] = 360;
-            }
-            if (params[0] == 270 && params[1] == 0) {
-                params[1] = 360;
-            }
-            if (params[0] == params[1]) {
-                publishProgress(params);
-            }
-            while (params[0] < params[1]) {
-                params[0]++;
-                publishProgress(params);
+        public void run() {
+            while (!mWannaFinishThread) {
+                if (mDirection == DIRECTION_NOTHING) {
+                    if ((mCurrentViewDegree < 5 || mCurrentViewDegree > 355) && mCurrentSensorDegree == 270) {
+                        mDirection = DIRECTION_RIGHT;
+                    } else if ((mCurrentViewDegree > 265 && mCurrentViewDegree < 275) && mCurrentSensorDegree == 0) {
+                        mDirection = DIRECTION_LEFT;
+                    } else if (mCurrentViewDegree < mCurrentSensorDegree) {
+                        mDirection = DIRECTION_LEFT;
+                    } else if (mCurrentViewDegree > mCurrentSensorDegree) {
+                        mDirection = DIRECTION_RIGHT;
+                    }
+                }
+                switch (mDirection) {
+                    case DIRECTION_LEFT:
+                        mCurrentViewDegree++;
+                        break;
+                    case DIRECTION_RIGHT:
+                        mCurrentViewDegree--;
+                        break;
+                    case DIRECTION_NOTHING:
+                    default:
+                        break;
+                }
+                if (mCurrentViewDegree < 0) {
+                    mCurrentViewDegree = 359;
+                } else if (mCurrentViewDegree > 360) {
+                    mCurrentViewDegree = 0;
+                }
+                if (mCurrentSensorDegree == mCurrentViewDegree) {
+                    mDirection = DIRECTION_NOTHING;
+                }
                 try {
                     Thread.sleep(3);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                mMainHandler.post(mMainRunnable);
             }
-            while (params[0] > params[1]) {
-                params[0]--;
-                publishProgress(params);
-                try {
-                    Thread.sleep(3);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            return null;
+
         }
+    };
+
+    @Override
+    protected void onDetachedFromWindow() {
+        mWannaFinishThread = true;
+        super.onDetachedFromWindow();
     }
 }
