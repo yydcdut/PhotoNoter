@@ -173,7 +173,7 @@ public class IntroduceActivity extends BaseActivity implements IIntroduceView, O
 
     @Override
     public void jump2Album() {
-        Intent intent = new Intent(this, NavigationActivity.class);
+        Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
         finish();
     }

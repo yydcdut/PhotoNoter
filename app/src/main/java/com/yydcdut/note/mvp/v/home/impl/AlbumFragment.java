@@ -625,7 +625,7 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
 
     @Override
     public void changeActivityListMenuCategoryChecked(Category category) {
-        NavigationActivity homeActivity = (NavigationActivity) getActivity();
+        HomeActivity homeActivity = (HomeActivity) getActivity();
         homeActivity.changeCategoryAfterSaving(category);
     }
 

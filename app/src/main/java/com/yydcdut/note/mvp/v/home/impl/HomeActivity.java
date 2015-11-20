@@ -48,7 +48,7 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class NavigationActivity extends BaseActivity implements IHomeView,
+public class HomeActivity extends BaseActivity implements IHomeView,
         View.OnClickListener {
     private static final int LAYOUT_FRAGMENT_ID = R.id.container;
 

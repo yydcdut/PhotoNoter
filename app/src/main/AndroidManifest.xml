@@ -25,7 +25,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.Blue"/>
         <activity
-            android:name=".mvp.v.home.impl.NavigationActivity"
+            android:name=".mvp.v.home.impl.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.Blue"/>
         <activity

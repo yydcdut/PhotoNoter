@@ -65,7 +65,7 @@ public class SplashActivity extends BaseActivity implements ISplashView {
 
     @Override
     public void jump2Album() {
-        Intent intent = new Intent(SplashActivity.this, NavigationActivity.class);
+        Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
         startActivity(intent);
         SplashActivity.this.finish();
     }
