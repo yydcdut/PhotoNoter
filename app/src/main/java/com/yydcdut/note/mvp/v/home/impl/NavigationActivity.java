@@ -303,10 +303,6 @@ public class NavigationActivity extends BaseActivity implements IHomeView,
         mMenuListView.addFooterView(footer);
     }
 
-    private void onUserInformation() {
-
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -458,11 +454,6 @@ public class NavigationActivity extends BaseActivity implements IHomeView,
     }
 
     public void changeCategoryAfterSaving(Category category) {
-//        //更新位置信息
-//        CategoryDBModel.getInstance().setCategoryMenuPosition(category);
-//        mListData = CategoryDBModel.getInstance().refresh();
-//        getCategoryAdapter().notifyDataSetChanged();
-//        mCategoryLabel = category.getLabel();
-//        mFragment.changePhotos4Category(mCategoryLabel);
+        mHomePresenter.changeCategoryAfterSaving(category);
     }
 }

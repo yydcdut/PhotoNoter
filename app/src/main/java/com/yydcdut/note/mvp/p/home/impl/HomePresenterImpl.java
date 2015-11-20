@@ -19,8 +19,7 @@ import java.util.List;
 /**
  * Created by yuyidong on 15/11/19.
  */
-public class HomePresenterImpl implements IHomePresenter,
-        PhotoNoteChangedObserver, CategoryChangedObserver {
+public class HomePresenterImpl implements IHomePresenter, PhotoNoteChangedObserver, CategoryChangedObserver {
     private IHomeView mHomeView;
     private List<Category> mListData;
     /**
@@ -72,6 +71,15 @@ public class HomePresenterImpl implements IHomePresenter,
         mHomeView.notifyCategoryDataChanged();
         mCategoryLabel = mListData.get(position).getLabel();
         mHomeView.changeFragment(mCategoryLabel);
+    }
+
+    @Override
+    public void changeCategoryAfterSaving(Category category) {
+        CategoryDBModel.getInstance().setCategoryMenuPosition(category);
+        mListData = CategoryDBModel.getInstance().refresh();
+        mHomeView.notifyCategoryDataChanged();
+        mCategoryLabel = category.getLabel();
+        mHomeView.changePhotos4Category(mCategoryLabel);
     }
 
     @Override

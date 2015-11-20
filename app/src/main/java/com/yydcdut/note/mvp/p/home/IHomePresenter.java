@@ -1,5 +1,6 @@
 package com.yydcdut.note.mvp.p.home;
 
+import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.mvp.IPresenter;
 
 /**
@@ -16,6 +17,8 @@ public interface IHomePresenter extends IPresenter {
     int getCheckCategoryPosition();
 
     void setCheckedCategoryPosition(int position);
+
+    void changeCategoryAfterSaving(Category category);
 
     void setAdapter();
 
