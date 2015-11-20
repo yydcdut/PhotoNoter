@@ -775,4 +775,14 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
         }
     };
     //-------------------------  Sensor  -------------------------
+
+
+    @Override
+    public void onBackPressed() {
+        if (mMenuLayout.isOtherLayoutShowing()) {
+            mMenuLayout.closeOtherLayout();
+        } else {
+            super.onBackPressed();
+        }
+    }
 }

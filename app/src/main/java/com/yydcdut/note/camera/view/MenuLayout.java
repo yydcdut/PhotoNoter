@@ -18,6 +18,7 @@ import com.yydcdut.note.utils.Const;
 public class MenuLayout extends RelativeLayout implements OnLayoutItemClickListener {
     private static final int LAYOUT_PARAMS = 4399;
     private static final int LAYOUT_PERSONAL = 4400;
+    private static final int LAYOUT_NOTHING = -101;
 
     private int mWhich;
 
@@ -97,6 +98,7 @@ public class MenuLayout extends RelativeLayout implements OnLayoutItemClickListe
                         mPersonalLayout.setVisibility(GONE);
                         break;
                 }
+                mWhich = LAYOUT_NOTHING;
                 mMainLayout.setVisibility(VISIBLE);
                 break;
             case Const.LAYOUT_PERSONAL_RATIO_1_1:
@@ -210,6 +212,27 @@ public class MenuLayout extends RelativeLayout implements OnLayoutItemClickListe
 
     public void resetFlashAndTorch(int flashIcon, int torchIcon) {
         mParamsLayout.resetFlashAndTorch(flashIcon, torchIcon);
+    }
+
+    public boolean isOtherLayoutShowing() {
+        return mWhich != LAYOUT_NOTHING;
+    }
+
+    public void closeOtherLayout() {
+        switch (mWhich) {
+            case LAYOUT_PARAMS:
+                mParamsLayout.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.anim_out));
+                mMainLayout.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.anim_alpha_in));
+                mParamsLayout.setVisibility(GONE);
+                break;
+            case LAYOUT_PERSONAL:
+                mPersonalLayout.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.anim_out));
+                mMainLayout.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.anim_alpha_in));
+                mPersonalLayout.setVisibility(GONE);
+                break;
+        }
+        mWhich = LAYOUT_NOTHING;
+        mMainLayout.setVisibility(VISIBLE);
     }
 
 }
