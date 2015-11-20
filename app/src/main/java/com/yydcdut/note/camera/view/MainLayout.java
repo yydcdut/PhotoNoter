@@ -1,7 +1,7 @@
 package com.yydcdut.note.camera.view;
 
 import android.content.Context;
-import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,12 +20,21 @@ class MainLayout extends FrameLayout implements View.OnClickListener {
     public static final int LAYOUT_MAIN_PERSONAL = 100;
     public static final int LAYOUT_MAIN_PARAMS = 102;
 
+    private static final int DIRECTION_LEFT = -1;
+    private static final int DIRECTION_RIGHT = 1;
+    private static final int DIRECTION_NOTHING = 0;
+    private int mDirection = DIRECTION_NOTHING;
+
+    private int mCurrentSensorDegree = 0;
+    private int mCurrentViewDegree = 0;
+
     private ImageView mCaptureImage;
     private ImageView mPersonalImage;
     private ImageView mParamImage;
 
-    private int mBeforeDegree = -1;
+    private Handler mMainHandler;
 
+    private boolean mWannaFinishThread = false;
 
     private OnLayoutItemClickListener mOnLayoutItemClickListener;
 
@@ -40,6 +49,8 @@ class MainLayout extends FrameLayout implements View.OnClickListener {
     public MainLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         LayoutInflater.from(context).inflate(R.layout.layout_main, this, true);
+        mMainHandler = new Handler();
+        new Thread(mThreadRunnable).start();
     }
 
     @Override
@@ -75,60 +86,66 @@ class MainLayout extends FrameLayout implements View.OnClickListener {
     }
 
     public void onSensorRotationEvent(int degree) {
-        if (mBeforeDegree == -1) {
-            mBeforeDegree = degree;
-        }
-        new RotationAsyncTask(mCaptureImage, mParamImage, mPersonalImage).execute(mBeforeDegree, degree);
-        mBeforeDegree = degree;
+        mCurrentSensorDegree = degree;
     }
 
-    class RotationAsyncTask extends AsyncTask<Integer, Integer, Void> {
-        private View[] mViews;
-
-        public RotationAsyncTask(View... views) {
-            mViews = views;
-        }
-
+    private Runnable mMainRunnable = new Runnable() {
         @Override
-        protected void onProgressUpdate(Integer... values) {
-            super.onProgressUpdate(values);
-            for (View view : mViews) {
-                view.setRotation(values[0] % 360);
-            }
+        public void run() {
+            mCaptureImage.setRotation(mCurrentViewDegree % 360);
+            mParamImage.setRotation(mCurrentViewDegree % 360);
+            mPersonalImage.setRotation(mCurrentViewDegree % 360);
         }
+    };
 
+    private Runnable mThreadRunnable = new Runnable() {
         @Override
-        protected Void doInBackground(Integer... params) {
-            if (params[0] == 0 && params[1] == 270) {
-                params[0] = 360;
-            }
-            if (params[0] == 270 && params[1] == 0) {
-                params[1] = 360;
-            }
-            if (params[0] == params[1]) {
-                publishProgress(params);
-            }
-            while (params[0] < params[1]) {
-                params[0]++;
-                publishProgress(params);
+        public void run() {
+            while (!mWannaFinishThread) {
+                if (mDirection == DIRECTION_NOTHING) {
+                    if ((mCurrentViewDegree < 5 || mCurrentViewDegree > 355) && mCurrentSensorDegree == 270) {
+                        mDirection = DIRECTION_RIGHT;
+                    } else if ((mCurrentViewDegree > 265 && mCurrentViewDegree < 275) && mCurrentSensorDegree == 0) {
+                        mDirection = DIRECTION_LEFT;
+                    } else if (mCurrentViewDegree < mCurrentSensorDegree) {
+                        mDirection = DIRECTION_LEFT;
+                    } else if (mCurrentViewDegree > mCurrentSensorDegree) {
+                        mDirection = DIRECTION_RIGHT;
+                    }
+                }
+                switch (mDirection) {
+                    case DIRECTION_LEFT:
+                        mCurrentViewDegree++;
+                        break;
+                    case DIRECTION_RIGHT:
+                        mCurrentViewDegree--;
+                        break;
+                    case DIRECTION_NOTHING:
+                    default:
+                        break;
+                }
+                if (mCurrentViewDegree < 0) {
+                    mCurrentViewDegree = 359;
+                } else if (mCurrentViewDegree > 360) {
+                    mCurrentViewDegree = 0;
+                }
+                if (mCurrentSensorDegree == mCurrentViewDegree) {
+                    mDirection = DIRECTION_NOTHING;
+                }
                 try {
                     Thread.sleep(3);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                mMainHandler.post(mMainRunnable);
             }
-            while (params[0] > params[1]) {
-                params[0]--;
-                publishProgress(params);
-                try {
-                    Thread.sleep(3);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            return null;
+
         }
+    };
+
+    @Override
+    protected void onDetachedFromWindow() {
+        mWannaFinishThread = true;
+        super.onDetachedFromWindow();
     }
-
-
 }
