@@ -20,7 +20,7 @@ public class MenuLayout extends RelativeLayout implements OnLayoutItemClickListe
     private static final int LAYOUT_PERSONAL = 4400;
     private static final int LAYOUT_NOTHING = -101;
 
-    private int mWhich;
+    private int mWhich = LAYOUT_NOTHING;
 
     private OnLayoutItemClickListener mOnLayoutItemClickListener;
 
