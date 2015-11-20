@@ -128,40 +128,6 @@ public class AlbumAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
     }
 
     /**
-     * 改变PhotoNote的分类
-     *
-     * @param newCategoryLabel
-     */
-    public void changeCategory(String newCategoryLabel) {
-        TreeMap<Integer, PhotoNote> map = new TreeMap<>(new Comparator<Integer>() {
-            @Override
-            public int compare(Integer lhs, Integer rhs) {
-                return lhs - rhs;
-            }
-        });
-        for (int i = 0; i < mPhotoNoteList.size(); i++) {
-            PhotoNote photoNote = mPhotoNoteList.get(i);
-            if (photoNote.isSelected()) {
-                photoNote.setSelected(false);
-                photoNote.setCategoryLabel(newCategoryLabel);
-                map.put(i, photoNote);
-            }
-        }
-        int times = 0;
-        int total = map.size();
-        for (Map.Entry<Integer, PhotoNote> entry : map.entrySet()) {
-            mPhotoNoteList.remove(entry.getValue());
-            notifyItemRemoved(entry.getKey() - times);
-            if (times + 1 != total) {
-                PhotoNoteDBModel.getInstance().update(entry.getValue(), false);
-            } else {
-                PhotoNoteDBModel.getInstance().update(entry.getValue(), true);
-            }
-            times++;
-        }
-    }
-
-    /**
      * 更新数据
      *
      * @param photoNotes

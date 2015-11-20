@@ -32,7 +32,6 @@ import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.NavigationCategoryAdapter;
 import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.controller.BaseActivity;
-import com.yydcdut.note.controller.home.AlbumFragment;
 import com.yydcdut.note.mvp.p.home.IHomePresenter;
 import com.yydcdut.note.mvp.p.home.impl.HomePresenterImpl;
 import com.yydcdut.note.mvp.v.home.IHomeView;

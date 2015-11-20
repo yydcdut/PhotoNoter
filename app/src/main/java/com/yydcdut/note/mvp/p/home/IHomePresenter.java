@@ -30,6 +30,6 @@ public interface IHomePresenter extends IPresenter {
 
     void updateEvernoteInfo();
 
-    void updateFromBroadcast(boolean broadcast_process, boolean broadcats_service);
+    void updateFromBroadcast(boolean broadcast_process, boolean broadcast_service);
 
 }

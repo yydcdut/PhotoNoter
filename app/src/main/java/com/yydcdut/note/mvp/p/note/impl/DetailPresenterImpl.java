@@ -146,7 +146,7 @@ public class DetailPresenterImpl implements IDetailPresenter, OnGetGeoCoderResul
     private void gps(String path) throws IOException {
         ExifInterface exifInterface = new ExifInterface(path);
         String longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
-        if (longitude != null && !longitude.equals("null")) {
+        if (longitude != null && !"null".equals(longitude.toLowerCase())) {
             String[] longitudeSs = longitude.split(",");
             double longitudesD = 0;
             longitudesD += Double.parseDouble(longitudeSs[0].split("/")[0]);
@@ -182,11 +182,11 @@ public class DetailPresenterImpl implements IDetailPresenter, OnGetGeoCoderResul
                 .append(enter);
         String fFlash = exifInterface.getAttribute(ExifInterface.TAG_FLASH);
         sb.append(mContext.getResources().getString(R.string.detail_flash))
-                .append(fFlash.equals("0") ? mContext.getResources().getString(R.string.detail_flash_close) :
+                .append((TextUtils.isEmpty(fFlash) || "0".equals(fFlash) || "null".equals(fFlash)) ? mContext.getResources().getString(R.string.detail_flash_close) :
                         mContext.getResources().getString(R.string.detail_flash_open))
                 .append(enter);
         String fImageWidth = exifInterface.getAttribute(ExifInterface.TAG_IMAGE_WIDTH);
-        if (fImageWidth.equals("0")) {
+        if (TextUtils.isEmpty(fImageWidth) || "0".equals(fImageWidth) || "null".equals(fImageWidth)) {
             int[] size = FilePathUtils.getPictureSize(path);
             sb.append(mContext.getResources().getString(R.string.detail_image_width))
                     .append(size[0])
@@ -205,11 +205,11 @@ public class DetailPresenterImpl implements IDetailPresenter, OnGetGeoCoderResul
         }
         String fWhiteBalance = exifInterface.getAttribute(ExifInterface.TAG_WHITE_BALANCE);
         sb.append(mContext.getResources().getString(R.string.detail_white_balance))
-                .append(fWhiteBalance.equals("0") ? mContext.getResources().getString(R.string.detail_wb_auto) :
+                .append((TextUtils.isEmpty(fImageWidth) || "0".equals(fWhiteBalance) || "null".equals(fImageWidth.toLowerCase())) ? mContext.getResources().getString(R.string.detail_wb_auto) :
                         mContext.getResources().getString(R.string.detail_wb_manual))
                 .append(enter);
         String longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
-        if (longitude == null || longitude.equals("null")) {
+        if (TextUtils.isEmpty(longitude) || "null".equals(longitude.toLowerCase())) {
             sb.append(mContext.getResources().getString(R.string.detail_longitude))
                     .append(mContext.getResources().getString(R.string.detail_unknown))
                     .append(enter);
@@ -260,7 +260,7 @@ public class DetailPresenterImpl implements IDetailPresenter, OnGetGeoCoderResul
     }
 
     private String checkExifData(String data) {
-        if (TextUtils.isEmpty(data) || data.equals("null")) {
+        if (TextUtils.isEmpty(data) || data.toLowerCase().equals("null")) {
             return mContext.getResources().getString(R.string.detail_unknown);
         } else {
             return data;

@@ -1,9 +1,8 @@
-package com.yydcdut.note.controller.home;
+package com.yydcdut.note.mvp.v.home.impl;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,13 +14,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,7 +28,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.AlbumAdapter;
 import com.yydcdut.note.adapter.vh.PhotoViewHolder;
@@ -40,68 +36,65 @@ import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.camera.controller.CameraActivity;
 import com.yydcdut.note.controller.BaseFragment;
 import com.yydcdut.note.listener.FloatingScrollHideListener;
-import com.yydcdut.note.model.CategoryDBModel;
-import com.yydcdut.note.model.PhotoNoteDBModel;
-import com.yydcdut.note.model.SandBoxDBModel;
-import com.yydcdut.note.model.compare.ComparatorFactory;
-import com.yydcdut.note.mvp.v.home.impl.NavigationActivity;
+import com.yydcdut.note.mvp.p.home.IAlbumPresenter;
+import com.yydcdut.note.mvp.p.home.impl.AlbumPresenterImpl;
+import com.yydcdut.note.mvp.v.home.IAlbumView;
 import com.yydcdut.note.mvp.v.note.impl.DetailActivity;
 import com.yydcdut.note.mvp.v.setting.impl.SettingActivity;
 import com.yydcdut.note.service.SandBoxService;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.Evi;
 import com.yydcdut.note.utils.FilePathUtils;
-import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
-import com.yydcdut.note.utils.LocalStorageUtils;
-import com.yydcdut.note.utils.UiHelper;
 import com.yydcdut.note.view.CircleProgressBarLayout;
 import com.yydcdut.note.view.RevealView;
 import com.yydcdut.note.view.fab.FloatingActionsMenu;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 /**
  * Created by yuyidong on 15-3-23.
  */
-public class AlbumFragment extends BaseFragment implements View.OnClickListener, PhotoViewHolder.OnItemClickListener,
-        PhotoViewHolder.OnItemLongClickListener, FloatingActionsMenu.OnFloatingActionsMenuUpdateListener, Handler.Callback {
+public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnClickListener, PhotoViewHolder.OnItemClickListener,
+        PhotoViewHolder.OnItemLongClickListener, FloatingActionsMenu.OnFloatingActionsMenuUpdateListener {
     private static final String TAG = AlbumFragment.class.getSimpleName();
+
+    private IAlbumPresenter mAlbumPresenter;
 
     private static final int INTENT_REQUEST_LOCAL = 101;
     private static final int INTENT_REQUEST_CAMERA = 201;
     private static final int INTENT_REQUEST_CROP = 301;
 
-    private static final int MSG_UPDATE_DATA = 100;
-
     /* RecyclerView */
-    private RecyclerView mRecyclerView;
-    /* RecyclerView布局 */
-    private GridLayoutManager mGridLayoutManager;
-    /* RecyclerView的数据 */
-    private List<PhotoNote> mPhotoNoteList;
-    /* RecyclerView的适配器 */
-    private AlbumAdapter mAdapter;
+    @InjectView(R.id.rv_album)
+    RecyclerView mRecyclerView;
+    /* FloatingActionButton */
+    @InjectView(R.id.fab_main)
+    FloatingActionsMenu mFloatingActionsMenu;
+    @InjectView(R.id.view_menu_floating_position)
+    View mFloatingView;//当点击FloatingActionsMenu的时候RevealColor可以找到起始坐标
+    /* Progress */
+    @InjectView(R.id.layout_progress)
+    CircleProgressBarLayout mProgressLayout;
+    @InjectView(R.id.reveal_album)
+    RevealView mAlbumRevealView;
     /* RevealColor */
     private RevealView mLayoutRevealView;
-    private RevealView mAlbumRevealView;
+    /* RecyclerView布局 */
+    private GridLayoutManager mGridLayoutManager;
+    /* RecyclerView的适配器 */
+    private AlbumAdapter mAdapter;
+
     private boolean mIsAlbumRevealOpen = false;//判断相册现在的RevealView是不是打开状态
     private boolean mIsLayoutRevealOpen = false;//判断activity现在的RevealView是不是打开状态
-    /* FloatingActionButton */
-    private FloatingActionsMenu mFloatingActionsMenu;
-    private View mFloatingView;//当点击FloatingActionsMenu的时候RevealColor可以找到起始坐标
+
     /* 是不是选择模式 */
     private boolean mIsMenuSelectMode = false;
-    /* 来自sharedPreference */
-    private int mAlbumSortKind;
     /* ScrollView滑动监听器 */
     private FloatingScrollHideListener mFloatingScrollHideListener;
-    /* Category的Label */
-    private String mCategoryLabel;
     /* menu的item */
     private MenuItem mSortMenuItem;
     private MenuItem mTrashMenuItem;
@@ -111,10 +104,9 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
     private MenuItem mSettingMenuItem;
     private MenuItem mMoveMenuItem;
     private Menu mMainMenu;
-    /* Progress */
-    private CircleProgressBarLayout mProgressLayout;
+
     /* Handler */
-    private Handler mMainHandler = new Handler(this);
+    private Handler mMainHandler;
 
     public static AlbumFragment newInstance() {
         return new AlbumFragment();
@@ -127,15 +119,10 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
     }
 
     @Override
-    public void initSetting() {
-        mAlbumSortKind = LocalStorageUtils.getInstance().getSortKind();
-    }
-
-    @Override
     public void getBundle(Bundle bundle) {
-        mCategoryLabel = bundle.getString(Const.CATEGORY_LABEL);
+        mAlbumPresenter = new AlbumPresenterImpl(bundle.getString(Const.CATEGORY_LABEL));
+        mMainHandler = new Handler();
     }
-
 
     @Override
     public View inflateView(LayoutInflater inflater) {
@@ -144,41 +131,9 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
 
     @Override
     public void initUI(View view) {
-        initRevealColorUI(view);
-        initListView(view);
-        initFloatingActionsMenuUI(view);
-        initCircleProgressBar();
-    }
-
-    /**
-     * ListView初始化
-     *
-     * @param view
-     */
-    private void initListView(View view) {
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.rv_album);
-    }
-
-    /**
-     * RevealColor初始化
-     */
-    private void initRevealColorUI(View view) {
-        mAlbumRevealView = (RevealView) view.findViewById(R.id.reveal_album);
-        mAlbumRevealView.setOnTouchListener(mEmptyTouch);
+        ButterKnife.inject(this, view);
+        mAlbumPresenter.attachView(this);
         mLayoutRevealView = (RevealView) getActivity().findViewById(R.id.reveal_layout);
-        mLayoutRevealView.setOnTouchListener(mEmptyTouch);
-    }
-
-    /**
-     * FloatingActionButton初始化
-     */
-    private void initFloatingActionsMenuUI(View view) {
-        mFloatingActionsMenu = (FloatingActionsMenu) view.findViewById(R.id.fab_main);
-        mFloatingView = view.findViewById(R.id.view_menu_floating_position);
-    }
-
-    private void initCircleProgressBar() {
-        mProgressLayout = (CircleProgressBarLayout) getView().findViewById(R.id.layout_progress);
     }
 
     @Override
@@ -188,26 +143,13 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
         mFloatingActionsMenu.setOnFloatingActionsMenuUpdateListener(this);
         mFloatingScrollHideListener = new FloatingScrollHideListener(mFloatingActionsMenu, mGridLayoutManager);
         mRecyclerView.addOnScrollListener(mFloatingScrollHideListener);
+        mAlbumRevealView.setOnTouchListener(mEmptyTouch);
+        mLayoutRevealView.setOnTouchListener(mEmptyTouch);
     }
-
 
     @Override
     public void initData() {
         initReceiver();
-        mAlbumSortKind = LocalStorageUtils.getInstance().getSortKind();
-        mPhotoNoteList = PhotoNoteDBModel.getInstance().findByCategoryLabel(mCategoryLabel, mAlbumSortKind);
-
-        mAdapter = new AlbumAdapter(getContext(), mPhotoNoteList, this, this);
-        mRecyclerView.setAdapter(mAdapter);
-        mGridLayoutManager = new GridLayoutManager(getContext(), 3);
-        mRecyclerView.setLayoutManager(mGridLayoutManager);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-    }
-
-
-    @Override
-    public void saveSettingWhenPausing() {
-        LocalStorageUtils.getInstance().setSortKind(mAlbumSortKind);
     }
 
     @Override
@@ -218,136 +160,29 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
             } else {
                 mAdapter.setSelectedPosition(false, adapterPosition);
             }
-            return;
+        } else {
+            mAlbumPresenter.jump2DetailActivity(adapterPosition);
         }
-        Intent intent = new Intent(getContext(), DetailActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putString(Const.CATEGORY_LABEL, mCategoryLabel);
-        bundle.putInt(Const.PHOTO_POSITION, adapterPosition);
-        bundle.putInt(Const.COMPARATOR_FACTORY, mAlbumSortKind);
-        intent.putExtras(bundle);
-        getContext().startActivity(intent);
     }
 
 
     @Override
     public void onStart() {
         super.onStart();
-        checkSandBox();
-    }
-
-    /**
-     * 主要针对于拍完照回到这个界面之后判断沙盒里面还要数据没
-     * 这里有延迟的原因是因为怕卡
-     */
-    private void checkSandBox() {
-        mMainHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    if (SandBoxDBModel.getInstance().getAllNumber() > 0) {
-                        Intent intent = new Intent(getContext(), SandBoxService.class);
-                        getActivity().bindService(intent, new ServiceConnection() {
-                            @Override
-                            public void onServiceConnected(ComponentName name, IBinder service) {
-
-                            }
-
-                            @Override
-                            public void onServiceDisconnected(ComponentName name) {
-
-                            }
-                        }, Context.BIND_AUTO_CREATE);
-                    }
-                } catch (Exception e) {
-                    Toast.makeText(getContext(), getContext().getResources().getString(R.string.toast_sandbox_fail), Toast.LENGTH_SHORT).show();
-                }
-            }
-        }, 5000);
+        mAlbumPresenter.checkSandBox();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK && requestCode == INTENT_REQUEST_LOCAL) {
-            final Uri uri = data.getData();
-            final ContentResolver cr = getActivity().getContentResolver();
-            mProgressLayout.show();
-            NoteApplication.getInstance().getExecutorPool().execute(new Runnable() {
-                @Override
-                public void run() {
-                    PhotoNote photoNote = new PhotoNote(System.currentTimeMillis() + ".jpg", System.currentTimeMillis(),
-                            System.currentTimeMillis(), "", "", System.currentTimeMillis(),
-                            System.currentTimeMillis(), mCategoryLabel);
-                    //复制大图
-                    try {
-                        FilePathUtils.copyFile(cr.openInputStream(uri), photoNote.getBigPhotoPathWithoutFile());
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    //保存小图
-                    FilePathUtils.saveSmallPhotoFromBigPhoto(photoNote);
-                    photoNote.setPaletteColor(UiHelper.getPaletteColor(ImageLoaderManager.loadImageSync(photoNote.getBigPhotoPathWithFile())));
-                    PhotoNoteDBModel.getInstance().save(photoNote);
-                    mMainHandler.sendEmptyMessage(MSG_UPDATE_DATA);
-                }
-            });
+            mAlbumPresenter.savePhotoFromLocal(data.getData());
         } else if (resultCode == Activity.RESULT_OK && requestCode == INTENT_REQUEST_CAMERA) {
-            mProgressLayout.show();
-            NoteApplication.getInstance().getExecutorPool().execute(new Runnable() {
-                @Override
-                public void run() {
-                    PhotoNote photoNote = new PhotoNote(System.currentTimeMillis() + ".jpg", System.currentTimeMillis(),
-                            System.currentTimeMillis(), "", "", System.currentTimeMillis(),
-                            System.currentTimeMillis(), mCategoryLabel);
-                    //复制大图
-                    try {
-                        FilePathUtils.copyFile(FilePathUtils.getTempFilePath(), photoNote.getBigPhotoPathWithoutFile());
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    //保存小图
-                    FilePathUtils.saveSmallPhotoFromBigPhoto(photoNote);
-                    photoNote.setPaletteColor(UiHelper.getPaletteColor(ImageLoaderManager.loadImageSync(photoNote.getBigPhotoPathWithFile())));
-                    PhotoNoteDBModel.getInstance().save(photoNote);
-                    mMainHandler.sendEmptyMessage(MSG_UPDATE_DATA);
-                }
-            });
+            mAlbumPresenter.savePhotoFromSystemCamera();
         } else {
             closeLayoutRevealColorView();
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-
-    @Override
-    public boolean handleMessage(Message msg) {
-        switch (msg.what) {
-            case MSG_UPDATE_DATA:
-                //因为是最新时间，即“图片创建事件”、“图片修改时间”、“笔记创建时间”、“笔记修改时间”，所以要么在最前面，要么在最后面
-                mPhotoNoteList = PhotoNoteDBModel.getInstance().findByCategoryLabel(mCategoryLabel, mAlbumSortKind);
-                mAdapter.updateDataWithoutChanged(mPhotoNoteList);
-                //todo 上面那句注释可能有bug
-                switch (mAlbumSortKind) {
-                    case ComparatorFactory.FACTORY_CREATE_CLOSE:
-                    case ComparatorFactory.FACTORY_EDITED_CLOSE:
-                        mAdapter.notifyItemInserted(mPhotoNoteList.size() - 1);
-                        break;
-                    case ComparatorFactory.FACTORY_CREATE_FAR:
-                    case ComparatorFactory.FACTORY_EDITED_FAR:
-                        mAdapter.notifyItemInserted(0);
-                        break;
-                }
-                mProgressLayout.hide();
-                break;
-            default:
-                break;
-        }
-        return true;
-    }
-
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -362,19 +197,19 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
         mNewCategoryMenuItem = menu.findItem(R.id.menu_new_file);
         mSettingMenuItem = menu.findItem(R.id.menu_setting);
         mMoveMenuItem = menu.findItem(R.id.menu_move);
-        setAlbumSortKind(mAlbumSortKind, menu);
+        setAlbumSortKind(menu);
         if (isNotMenuExist) {
-            sortData(ComparatorFactory.get(mAlbumSortKind));
+            mAlbumPresenter.sortData();
         }
     }
 
     /**
      * 在menu中设置排序方式
      *
-     * @param sort
      * @param menu
      */
-    private void setAlbumSortKind(int sort, Menu menu) {
+    private void setAlbumSortKind(Menu menu) {
+        int sort = mAlbumPresenter.getAlbumSort();
         switch (sort) {
             case 1:
                 menu.findItem(R.id.menu_sort_create_far).setChecked(true);
@@ -389,28 +224,6 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
                 menu.findItem(R.id.menu_sort_edit_close).setChecked(true);
                 break;
         }
-        mAlbumSortKind = sort;
-    }
-
-    /**
-     * 在menu中设置排序方式
-     *
-     * @param sort
-     * @param menuItem
-     */
-    private void setAlbumSortKind(int sort, MenuItem menuItem) {
-        menuItem.setChecked(true);
-        mAlbumSortKind = sort;
-    }
-
-    /**
-     * 排序
-     *
-     * @param comparator
-     */
-    private void sortData(Comparator<PhotoNote> comparator) {
-        Collections.sort(mPhotoNoteList, comparator);
-        mAdapter.updateData(mPhotoNoteList);
     }
 
     /**
@@ -445,31 +258,35 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_sort_create_far:
-                setAlbumSortKind(1, item);
-                sortData(ComparatorFactory.get(mAlbumSortKind));
+                mAlbumPresenter.setAlbumSort(1);
+                mAlbumPresenter.sortData();
+                item.setChecked(true);
                 break;
             case R.id.menu_sort_create_close:
-                setAlbumSortKind(2, item);
-                sortData(ComparatorFactory.get(mAlbumSortKind));
+                mAlbumPresenter.setAlbumSort(2);
+                mAlbumPresenter.sortData();
+                item.setChecked(true);
                 break;
             case R.id.menu_sort_edit_far:
-                setAlbumSortKind(3, item);
-                sortData(ComparatorFactory.get(mAlbumSortKind));
+                mAlbumPresenter.setAlbumSort(3);
+                mAlbumPresenter.sortData();
+                item.setChecked(true);
                 break;
             case R.id.menu_sort_edit_close:
-                setAlbumSortKind(4, item);
-                sortData(ComparatorFactory.get(mAlbumSortKind));
+                mAlbumPresenter.setAlbumSort(4);
+                mAlbumPresenter.sortData();
+                item.setChecked(true);
                 break;
             case R.id.menu_trash:
                 mAdapter.deleteSelectedPhotos();
-                mPhotoNoteList = PhotoNoteDBModel.getInstance().findByCategoryLabel(mCategoryLabel, mAlbumSortKind);
+                mAlbumPresenter.refreshData();
                 menuPreviewMode();
                 break;
             case R.id.menu_all_select:
                 mAdapter.selectAllPhotos();
                 break;
             case R.id.menu_move:
-                changeCategoryFromDialog();
+                mAlbumPresenter.changePhotos2AnotherCategory();
                 break;
             case R.id.menu_setting:
                 showLayoutRevealColorView(new RevealView.RevealAnimationListener() {
@@ -489,7 +306,7 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
                 }
                 break;
             case R.id.menu_new_file:
-                addCategoryDialog();
+                showAddCategoryDialog();
                 break;
         }
         return true;
@@ -498,7 +315,7 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
     /**
      * 添加category的dialog
      */
-    private void addCategoryDialog() {
+    private void showAddCategoryDialog() {
         View v = LayoutInflater.from(getContext()).inflate(R.layout.dialog_edittext, null);
         final EditText editText = (EditText) v.findViewById(R.id.edit_dialog);
         new AlertDialog.Builder(getContext(), R.style.note_dialog)
@@ -508,20 +325,7 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
                 .setPositiveButton(R.string.dialog_btn_ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String name = editText.getText().toString();
-                        int totalNumber = CategoryDBModel.getInstance().findAll().size();
-                        if (!TextUtils.isEmpty(name)) {
-                            Category category = new Category(name, 0, totalNumber, true);
-                            boolean bool = CategoryDBModel.getInstance().saveCategory(category);
-                            if (bool) {
-                                NavigationActivity homeActivity = (NavigationActivity) getActivity();
-                                homeActivity.changeCategoryAfterSaving(category);
-                            } else {
-                                Toast.makeText(getActivity(), getResources().getString(R.string.toast_fail), Toast.LENGTH_LONG).show();
-                            }
-                        } else {
-                            Toast.makeText(getActivity(), getResources().getString(R.string.toast_fail), Toast.LENGTH_LONG).show();
-                        }
+                        mAlbumPresenter.createCategory(editText.getText().toString());
                     }
                 })
                 .setNegativeButton(R.string.dialog_btn_cancel, new DialogInterface.OnClickListener() {
@@ -533,66 +337,19 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
                 .show();
     }
 
-    /**
-     * 把选中图片变到另外一个Category的dialog
-     *
-     * @return
-     */
-    private String changeCategoryFromDialog() {
-        List<Category> categoryList = CategoryDBModel.getInstance().findAll();
-        final String[] categoryLabelArray = new String[categoryList.size()];
-        for (int i = 0; i < categoryLabelArray.length; i++) {
-            categoryLabelArray[i] = categoryList.get(i).getLabel();
-        }
-
-        new AlertDialog.Builder(getContext(), R.style.note_dialog)
-                .setTitle(R.string.dialog_title_move)
-                .setItems(categoryLabelArray, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        if (!mCategoryLabel.equals(categoryLabelArray[which])) {
-                            mAdapter.changeCategory(categoryLabelArray[which]);
-                            mPhotoNoteList = PhotoNoteDBModel.getInstance().findByCategoryLabelByForce(mCategoryLabel, mAlbumSortKind);
-                            CategoryDBModel.getInstance().updateChangeCategory(mCategoryLabel, categoryLabelArray[which]);
-                        }
-                    }
-                })
-                .show();
-        return null;
-    }
-
     @Override
     public void onClick(final View v) {
-        Intent intent = null;
-        if (!FilePathUtils.isSDCardStoredEnough()) {
-            Toast.makeText(getContext(), getResources().getString(R.string.no_space), Toast.LENGTH_LONG).show();
-            mMainHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mFloatingActionsMenu.collapse(false);
-                    hideAlbumRevealColorView(getLocationInView(mAlbumRevealView, v));
-                }
-            }, 0);
+        if (!mAlbumPresenter.checkStorageEnough()) {
+            mFloatingActionsMenu.collapse(false);
+            hideAlbumRevealColorView(getLocationInView(mAlbumRevealView, v));
             return;
         }
         switch (v.getId()) {
             case R.id.fab_camera:
-                if (LocalStorageUtils.getInstance().getCameraSystem()) {
-                    intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    Uri imageUri = Uri.fromFile(new File(FilePathUtils.getTempFilePath()));
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                    startActivityForResult(intent, INTENT_REQUEST_CAMERA);
-                } else {
-                    intent = new Intent(getContext(), CameraActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString(Const.CATEGORY_LABEL, mCategoryLabel);
-                    intent.putExtras(bundle);
-                    getContext().startActivity(intent);
-                }
+                mAlbumPresenter.jump2Camera();
                 break;
             case R.id.fab_local:
-                intent = new Intent();
+                Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(intent, INTENT_REQUEST_LOCAL);
@@ -736,9 +493,7 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
     public void changePhotos4Category(String categoryLabel) {
         mAdapter.cancelSelectPhotos();
         menuPreviewMode();
-        mCategoryLabel = categoryLabel;
-        mPhotoNoteList = PhotoNoteDBModel.getInstance().findByCategoryLabel(mCategoryLabel, mAlbumSortKind);
-        mAdapter.updateData(mPhotoNoteList);
+        mAlbumPresenter.changeCategoryWithPhotos(categoryLabel);
     }
 
     /**
@@ -758,13 +513,9 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
         public void onReceive(Context context, Intent intent) {
             //当图片数据改变的时候，比如滤镜，Service作图
             //另外个进程发来广播的时候
-            if (intent.getBooleanExtra(Const.TARGET_BROADCAST_PROCESS, false) ||
-                    intent.getBooleanExtra(Const.TARGET_BROADCAST_SERVICE, false)) {
-                mPhotoNoteList = PhotoNoteDBModel.getInstance().findByCategoryLabel(mCategoryLabel, mAlbumSortKind);
-                mAdapter.updateData(mPhotoNoteList);
-            } else if (intent.getBooleanExtra(Const.TARGET_BROADCAST_PHOTO, false)) {
-                mAdapter.notifyDataSetChanged();
-            }
+            mAlbumPresenter.updateFromBroadcast(intent.getBooleanExtra(Const.TARGET_BROADCAST_PROCESS, false),
+                    intent.getBooleanExtra(Const.TARGET_BROADCAST_SERVICE, false),
+                    intent.getBooleanExtra(Const.TARGET_BROADCAST_PHOTO, false));
         }
     };
 
@@ -776,9 +527,124 @@ public class AlbumFragment extends BaseFragment implements View.OnClickListener,
     }
 
     @Override
+    public void onPause() {
+        mAlbumPresenter.saveAlbumSort();
+        super.onPause();
+    }
+
+    @Override
     public void onDestroy() {
         unregisterReceiver();
         super.onDestroy();
     }
+
+    @Override
+    public void setAdapter(List<PhotoNote> photoNoteList) {
+        mAdapter = new AlbumAdapter(getContext(), photoNoteList, this, this);
+        mRecyclerView.setAdapter(mAdapter);
+        mGridLayoutManager = new GridLayoutManager(getContext(), 3);
+        mRecyclerView.setLayoutManager(mGridLayoutManager);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+    }
+
+    @Override
+    public void startSandBoxService() {
+        Intent intent = new Intent(getContext(), SandBoxService.class);
+        getActivity().bindService(intent, new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+
+            }
+        }, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    public void jump2DetailActivity(String categoryLabel, int position, int comparator) {
+        Intent intent = new Intent(getContext(), DetailActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString(Const.CATEGORY_LABEL, categoryLabel);
+        bundle.putInt(Const.PHOTO_POSITION, position);
+        bundle.putInt(Const.COMPARATOR_FACTORY, comparator);
+        intent.putExtras(bundle);
+        getContext().startActivity(intent);
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void updateData(List<PhotoNote> photoNoteList) {
+        mAdapter.updateData(photoNoteList);
+    }
+
+    @Override
+    public void showChangePhotos2AnotherCategoryDialog(final String[] categoryLabelArray) {
+        new AlertDialog.Builder(getContext(), R.style.note_dialog)
+                .setTitle(R.string.dialog_title_move)
+                .setItems(categoryLabelArray, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mAlbumPresenter.changePhotosCategory(categoryLabelArray[which]);
+                        menuPreviewMode();
+                    }
+                })
+                .show();
+    }
+
+    @Override
+    public void notifyItemRemoved(int position) {
+        mAdapter.notifyItemRemoved(position);
+    }
+
+    @Override
+    public void notifyItemInserted(int position) {
+        mAdapter.notifyItemInserted(position);
+    }
+
+    @Override
+    public void showToast(String message) {
+        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showProgressBar() {
+        mProgressLayout.show();
+    }
+
+    @Override
+    public void hideProgressBar() {
+        mProgressLayout.hide();
+    }
+
+    @Override
+    public void changeActivityListMenuCategoryChecked(Category category) {
+        NavigationActivity homeActivity = (NavigationActivity) getActivity();
+        homeActivity.changeCategoryAfterSaving(category);
+    }
+
+    @Override
+    public void jump2CameraActivity(String categoryLabel) {
+        Intent intent = new Intent(getContext(), CameraActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString(Const.CATEGORY_LABEL, categoryLabel);
+        intent.putExtras(bundle);
+        getContext().startActivity(intent);
+    }
+
+    @Override
+    public void jump2CameraSystemActivity() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Uri imageUri = Uri.fromFile(new File(FilePathUtils.getTempFilePath()));
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        startActivityForResult(intent, INTENT_REQUEST_CAMERA);
+    }
+
 
 }
