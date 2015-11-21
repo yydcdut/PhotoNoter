@@ -8,8 +8,6 @@ import android.content.Intent;
 import com.baidu.mapapi.SDKInitializer;
 import com.evernote.client.android.EvernoteSession;
 import com.iflytek.cloud.SpeechUtility;
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
 import com.umeng.analytics.MobclickAgent;
 import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.model.UserCenter;
@@ -36,7 +34,7 @@ public class NoteApplication extends Application {
     private static NoteApplication mInstance;
     private static final int MAX_THREAD_POOL_NUMBER = 5;
     private ExecutorService mPool;
-    private RefWatcher mRefWatcher;
+//    private RefWatcher mRefWatcher;
 
     private static final EvernoteSession.EvernoteService EVERNOTE_SERVICE = EvernoteSession.EvernoteService.PRODUCTION;
     private static final boolean SUPPORT_APP_LINKED_NOTEBOOKS = true;
@@ -65,7 +63,7 @@ public class NoteApplication extends Application {
         mInstance = NoteApplication.this;
         super.onCreate();
 
-        mRefWatcher = LeakCanary.install(this);
+//        mRefWatcher = LeakCanary.install(this);
 
         initImageLoader();
         initExecutor();
@@ -86,11 +84,13 @@ public class NoteApplication extends Application {
         MobclickAgent.setDebugMode(BuildConfig.LOG_DEBUG);
         MobclickAgent.openActivityDurationTrack(true);
         MobclickAgent.updateOnlineConfig(this);
-        MobclickAgent.setCatchUncaughtExceptions(false);
+        MobclickAgent.setCatchUncaughtExceptions(!BuildConfig.LOG_DEBUG);
 
 //        CrashHandler.getInstance().init(getApplicationContext());
 
         YLog.setDEBUG(BuildConfig.LOG_DEBUG);
+
+        YLog.i("yuyidong", "1111111111");
 
     }
 
