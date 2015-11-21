@@ -11,5 +11,4 @@ public interface IUserDetailFragPresenter extends IPresenter {
     void loginOrOutQQ();
 
     void loginOrOutEvernote();
-
 }

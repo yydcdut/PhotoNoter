@@ -14,16 +14,17 @@ import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.view.AutoFitImageView;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.OnClick;
 
 /**
  * Created by yuyidong on 15/11/12.
  */
-public class DetailFragment extends BaseFragment implements IDetailFragView, View.OnClickListener {
+public class DetailFragment extends BaseFragment implements IDetailFragView {
     private IDetailFragPresenter mDetailFragPresenter;
 
-    @InjectView(R.id.img_detail)
+    @Bind(R.id.img_detail)
     AutoFitImageView mAutoFitImageView;
 
     public static DetailFragment newInstance() {
@@ -43,23 +44,26 @@ public class DetailFragment extends BaseFragment implements IDetailFragView, Vie
 
     @Override
     public void initUI(View view) {
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         mDetailFragPresenter.attachView(this);
-        mAutoFitImageView.setOnClickListener(this);
     }
 
     @Override
     public void initData() {
-
     }
 
     @Override
     public void initListener(View view) {
     }
 
-
     @Override
-    public void onClick(View v) {
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
+
+    @OnClick(R.id.img_detail)
+    public void clickImageView(View v) {
         mDetailFragPresenter.jump2ZoomActivity();
     }
 

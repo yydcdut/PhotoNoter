@@ -12,8 +12,7 @@ import android.widget.TextView;
 
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.FrequentImageAdapter;
-import com.yydcdut.note.model.CategoryDBModel;
-import com.yydcdut.note.model.PhotoNoteDBModel;
+import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.mvp.p.login.IUserDetailFragPresenter;
 import com.yydcdut.note.mvp.p.login.impl.UserDetailFragPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseFragment;
@@ -22,8 +21,10 @@ import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.view.CircleProgressBarLayout;
 
+import java.util.List;
+
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 /**
  * Created by yuyidong on 15/10/22.
@@ -33,7 +34,7 @@ public class UserDetailFragment extends BaseFragment implements IUserDetailFragV
     private static final String TAG_QQ = "tag_qq";
     private static final String TAG_EVERNOTE = "tag_evernote";
 
-    @InjectView(R.id.layout_user_detail)
+    @Bind(R.id.layout_user_detail)
     LinearLayout mLinearLayout;
 
     private TextView mLocationView;
@@ -58,8 +59,14 @@ public class UserDetailFragment extends BaseFragment implements IUserDetailFragV
 
     @Override
     public void initUI(View view) {
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         mUserDetailFragPresenter.attachView(this);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 
     @Override
@@ -102,11 +109,10 @@ public class UserDetailFragment extends BaseFragment implements IUserDetailFragV
     }
 
     @Override
-    public void initUserImage() {
+    public void initUserImages(List<PhotoNote> list) {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_image, null);
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.rv_item_user_center);
-        recyclerView.setAdapter(new FrequentImageAdapter(getContext(),
-                PhotoNoteDBModel.getInstance().findByCategoryLabel(CategoryDBModel.getInstance().findAll().get(0).getLabel(), -1)));
+        recyclerView.setAdapter(new FrequentImageAdapter(getContext(), list));
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(gridLayoutManager);
         mLinearLayout.addView(view);

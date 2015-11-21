@@ -20,20 +20,20 @@ import java.util.List;
 /**
  * Created by yuyidong on 15/11/13.
  */
-public class SettingPresenerImpl implements ISettingPresenter {
+public class SettingPresenterImpl implements ISettingPresenter {
     private ISettingView mSettingView;
 
     private Context mContext;
 
     private static final boolean SUPPORT_CAMERA_5_0 = false;
 
-    public SettingPresenerImpl() {
+    public SettingPresenterImpl() {
+        mContext = NoteApplication.getContext();
     }
 
     @Override
     public void attachView(IView iView) {
         mSettingView = (ISettingView) iView;
-        mContext = NoteApplication.getContext();
         mSettingView.initPreferenceSetting();
         mSettingView.initAccountSetting();
         mSettingView.initCameraSetting(LocalStorageUtils.getInstance().getCameraSystem(),

@@ -16,18 +16,19 @@ import com.yydcdut.note.mvp.v.login.ILoginView;
 import com.yydcdut.note.utils.LollipopCompat;
 import com.yydcdut.note.view.CircleProgressBarLayout;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.OnClick;
 
 /**
  * Created by yuyidong on 15-3-25.
  */
-public class LoginActivity extends BaseActivity implements ILoginView, View.OnClickListener {
+public class LoginActivity extends BaseActivity implements ILoginView {
     private ILoginPresenter mLoginPresenter;
 
     private static final String TAG = LoginActivity.class.getSimpleName();
 
-    @InjectView(R.id.layout_progress)
+    @Bind(R.id.layout_progress)
     CircleProgressBarLayout mCircleProgressBar;
 
     @Override
@@ -42,11 +43,10 @@ public class LoginActivity extends BaseActivity implements ILoginView, View.OnCl
 
     @Override
     public void initUiAndListener() {
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         mLoginPresenter = new LoginPresenterImpl(this);
         mLoginPresenter.attachView(this);
         initToolBarUI();
-        initLoginButtonListener();
     }
 
     private void initToolBarUI() {
@@ -67,24 +67,17 @@ public class LoginActivity extends BaseActivity implements ILoginView, View.OnCl
         return true;
     }
 
-    private void initLoginButtonListener() {
-        findViewById(R.id.btn_login_qq).setOnClickListener(this);
-        findViewById(R.id.btn_login_evernote).setOnClickListener(this);
+    @OnClick(R.id.btn_login_qq)
+    public void clickQQ(View v) {
+        if (mLoginPresenter.checkInternet()) {
+            mLoginPresenter.loginQQ();
+        }
     }
 
-    @Override
-    public void onClick(View v) {
-        boolean hasNet = mLoginPresenter.checkInternet();
-        if (!hasNet) {
-            return;
-        }
-        switch (v.getId()) {
-            case R.id.btn_login_qq:
-                mLoginPresenter.loginQQ();
-                break;
-            case R.id.btn_login_evernote:
-                mLoginPresenter.loginEvernote();
-                break;
+    @OnClick(R.id.btn_login_evernote)
+    public void clickEvernote(View v) {
+        if (mLoginPresenter.checkInternet()) {
+            mLoginPresenter.loginEvernote();
         }
     }
 

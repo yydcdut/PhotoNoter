@@ -24,7 +24,7 @@ import com.yydcdut.note.camera.controller.AdjustCamera;
 import com.yydcdut.note.camera.param.Size;
 import com.yydcdut.note.mvp.p.setting.IFeedbackPresenter;
 import com.yydcdut.note.mvp.p.setting.ISettingPresenter;
-import com.yydcdut.note.mvp.p.setting.impl.SettingPresenerImpl;
+import com.yydcdut.note.mvp.p.setting.impl.SettingPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.home.impl.HomeActivity;
 import com.yydcdut.note.mvp.v.setting.ISettingView;
@@ -42,8 +42,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 /**
  * Created by yuyidong on 15-4-1.
@@ -53,14 +53,14 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
 
     private Map<String, View> mViewMap;
 
-    @InjectView(R.id.scroll_setting)
+    @Bind(R.id.scroll_setting)
     View mScrollView;
-    @InjectView(R.id.layout_scroll_linear)
+    @Bind(R.id.layout_scroll_linear)
     LinearLayout mScrollLinear;
-    @InjectView(R.id.layout_toolbar)
+    @Bind(R.id.layout_toolbar)
     View mToolbarLayout;
 
-    private ISettingPresenter mSettingPresener;
+    private ISettingPresenter mSettingPresenter;
 
     private boolean mIsHiding = false;
 
@@ -78,11 +78,11 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
 
     @Override
     public void initUiAndListener() {
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         mViewMap = new HashMap<>();
         initToolBarUI();
-        mSettingPresener = new SettingPresenerImpl();
-        mSettingPresener.attachView(this);
+        mSettingPresenter = new SettingPresenterImpl();
+        mSettingPresenter.attachView(this);
     }
 
     private void initToolBarUI() {
@@ -465,7 +465,7 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
 
     @Override
     public void onClick(final View v) {
-        mSettingPresener.onClickSettingItem((String) v.getTag());
+        mSettingPresenter.onClickSettingItem((String) v.getTag());
     }
 
     private void closeActivityAnimation() {
@@ -512,7 +512,7 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
         new ColorChooserDialog().show(this, index, new ColorChooserDialog.Callback() {
             @Override
             public void onColorSelection(int index, int color, int darker) {
-                mSettingPresener.onThemeSelected(index);
+                mSettingPresenter.onThemeSelected(index);
             }
         });
     }
@@ -538,7 +538,7 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
         @Override
         public void onClick(View v) {
             boolean use = v.getId() == R.id.txt_dialog_font_personal ? false : true;
-            mSettingPresener.onUseSystemFontSelected(use);
+            mSettingPresenter.onUseSystemFontSelected(use);
             mFontDialog.dismiss();
         }
     };
@@ -555,7 +555,7 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 boolean translate = which == 0 ? false : true;
-                                mSettingPresener.onStatusBarStyleSelected(translate);
+                                mSettingPresenter.onStatusBarStyleSelected(translate);
                             }
                         }).show();
     }
@@ -568,7 +568,7 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        mSettingPresener.onCameraIdsSelected(which);
+                        mSettingPresenter.onCameraIdsSelected(which);
                     }
                 })
                 .show();
@@ -588,7 +588,7 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
                 .setItems(sizeArray, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mSettingPresener.onPictureSizeSelected(cameraId, which);
+                        mSettingPresenter.onPictureSizeSelected(cameraId, which);
                     }
                 })
                 .show();

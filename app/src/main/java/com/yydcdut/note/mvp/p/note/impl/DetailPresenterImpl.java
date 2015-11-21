@@ -63,7 +63,7 @@ public class DetailPresenterImpl implements IDetailPresenter, OnGetGeoCoderResul
         initBaiduMap();
         mDetailView.setViewPagerAdapter(mCategoryLabel, mDetailView.getCurrentPosition(), mComparator);
         showNote(mInitPostion);
-        mDetailView.showCurrentPisition(mInitPostion);
+        mDetailView.showCurrentPosition(mInitPostion);
     }
 
     private String decodeTimeInDetail(long time) {

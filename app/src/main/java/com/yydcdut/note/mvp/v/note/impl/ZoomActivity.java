@@ -25,8 +25,9 @@ import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.view.CircleProgressBarLayout;
 import com.yydcdut.note.view.ZoomImageView;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.OnClick;
 import us.pinguo.edit.sdk.PGEditActivity;
 import us.pinguo.edit.sdk.base.PGEditResult;
 import us.pinguo.edit.sdk.base.PGEditSDK;
@@ -35,15 +36,15 @@ import us.pinguo.edit.sdk.base.PGEditSDK;
 /**
  * Created by yyd on 15-4-19.
  */
-public class ZoomActivity extends BaseActivity implements IZoomView, View.OnClickListener {
+public class ZoomActivity extends BaseActivity implements IZoomView {
 
-    @InjectView(R.id.toolbar)
+    @Bind(R.id.toolbar)
     Toolbar mToolbar;
-    @InjectView(R.id.img_zoom)
+    @Bind(R.id.img_zoom)
     ZoomImageView mImage;
-    @InjectView(R.id.img_zoom_spread)
+    @Bind(R.id.img_zoom_spread)
     View mSpreadView;
-    @InjectView(R.id.layout_progress)
+    @Bind(R.id.layout_progress)
     CircleProgressBarLayout mProgressLayout;
 
     private IZoomPresenter mZoomPresenter;
@@ -80,11 +81,10 @@ public class ZoomActivity extends BaseActivity implements IZoomView, View.OnClic
     @Override
     public void initUiAndListener() {
         Bundle bundle = getIntent().getExtras();
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         mZoomPresenter = new ZoomPresenterImpl(bundle.getString(Const.CATEGORY_LABEL),
                 bundle.getInt(Const.PHOTO_POSITION), bundle.getInt(Const.COMPARATOR_FACTORY));
         mZoomPresenter.attachView(this);
-        mSpreadView.setOnClickListener(this);
         initToolBarUI();
     }
 
@@ -184,8 +184,8 @@ public class ZoomActivity extends BaseActivity implements IZoomView, View.OnClic
         }
     }
 
-    @Override
-    public void onClick(View v) {
+    @OnClick(R.id.img_zoom_spread)
+    public void click2ShowToolBar(View v) {
         showToolBar();
     }
 

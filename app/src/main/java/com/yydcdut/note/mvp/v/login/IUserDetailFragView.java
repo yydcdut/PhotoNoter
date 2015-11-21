@@ -1,6 +1,9 @@
 package com.yydcdut.note.mvp.v.login;
 
+import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.mvp.IView;
+
+import java.util.List;
 
 /**
  * Created by yuyidong on 15/11/16.
@@ -10,7 +13,7 @@ public interface IUserDetailFragView extends IView {
 
     void updateLocation(String location);
 
-    void initUserImage();
+    void initUserImages(List<PhotoNote> list);
 
     void initUserInfo(boolean isQQLogin, String QQName, boolean isEvernoteLogin,
                       String evernoteName, String useStorage, String noteNumber,

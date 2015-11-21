@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -21,26 +20,28 @@ import com.yydcdut.note.service.InitService;
 import com.yydcdut.note.utils.LollipopCompat;
 import com.yydcdut.note.view.CircleProgressBarLayout;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
-import butterknife.InjectViews;
+import butterknife.OnClick;
+import butterknife.OnPageChange;
 
 /**
  * Created by yuyidong on 15/8/9.
  */
-public class IntroduceActivity extends BaseActivity implements IIntroduceView, OnPageChangeListener, View.OnClickListener {
+public class IntroduceActivity extends BaseActivity implements IIntroduceView {
+    /**
+     * Presenter
+     */
     private IIntroducePresenter mIntroducePresenter;
 
-    private ServiceConnection mServiceConnection;
-
-    @InjectViews({R.id.img_introduce_1, R.id.img_introduce_2, R.id.img_introduce_3, R.id.img_introduce_4,
+    @Bind({R.id.img_introduce_1, R.id.img_introduce_2, R.id.img_introduce_3, R.id.img_introduce_4,
             R.id.img_introduce_5, R.id.img_introduce_6})
     ImageView[] mImageViewArray;
 
-    @InjectView(R.id.btn_introduce_start)
+    @Bind(R.id.btn_introduce_start)
     View mBtnStart;
 
-    @InjectView(R.id.layout_progress)
+    @Bind(R.id.layout_progress)
     CircleProgressBarLayout mCircleProgressBar;
 
 
@@ -57,26 +58,23 @@ public class IntroduceActivity extends BaseActivity implements IIntroduceView, O
 
     @Override
     public void initUiAndListener() {
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         mIntroducePresenter = new IntroducePresenterImpl();
         mIntroducePresenter.attachView(this);
         initViewPager();
-        mBtnStart.setOnClickListener(this);
         mCircleProgressBar = (CircleProgressBarLayout) findViewById(R.id.layout_progress);
     }
 
     private void initViewPager() {
         ViewPager viewPager = (ViewPager) findViewById(R.id.vp_introduce);
         viewPager.setAdapter(new IntroducePagerAdapter(IntroduceActivity.this));
-        viewPager.addOnPageChangeListener(this);
     }
 
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-    }
-
-    @Override
-    public void onPageSelected(int position) {
+    @OnPageChange(
+            value = R.id.vp_introduce,
+            callback = OnPageChange.Callback.PAGE_SELECTED
+    )
+    public void viewPagerSelected(int position) {
         switch (position) {
             case 0:
                 resetDots(mImageViewArray[0]);
@@ -139,26 +137,20 @@ public class IntroduceActivity extends BaseActivity implements IIntroduceView, O
         imageView.setImageDrawable(getResources().getDrawable(R.drawable.img_introduce_dot_foucs));
     }
 
-    @Override
-    public void onPageScrollStateChanged(int state) {
-
-    }
-
-    @Override
-    public void onClick(View v) {
+    @OnClick(R.id.btn_introduce_start)
+    public void clickfinishActivity(View v) {
         mIntroducePresenter.wannaFinish();
     }
 
     @Override
     public void bindServiceConnection(ServiceConnection serviceConnect) {
         Intent initIntent = new Intent(this, InitService.class);
-        mServiceConnection = serviceConnect;
-        bindService(initIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
+        bindService(initIntent, serviceConnect, Context.BIND_AUTO_CREATE);
     }
 
     @Override
-    public void unbindServiceConnection() {
-        unbindService(mServiceConnection);
+    public void unbindServiceConnection(ServiceConnection serviceConnect) {
+        unbindService(serviceConnect);
     }
 
     @Override
@@ -177,4 +169,5 @@ public class IntroduceActivity extends BaseActivity implements IIntroduceView, O
         startActivity(intent);
         finish();
     }
+
 }

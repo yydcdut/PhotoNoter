@@ -35,5 +35,5 @@ public interface IFeedbackView extends IView {
      *
      * @param message
      */
-    void showSnackbar(String message);
+    void showSnackBar(String message);
 }

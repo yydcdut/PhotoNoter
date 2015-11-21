@@ -14,6 +14,9 @@ import com.yydcdut.note.view.TextDrawable;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 
 /**
  * Created by yuyidong on 15-3-23.
@@ -30,13 +33,10 @@ public class CategoryAdapter extends BaseListAdapter<Category> {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
-            holder = new ViewHolder();
             int layout = R.layout.navigation_list_item;
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(layout, parent, false);
-            holder.imgLogo = (ImageView) convertView.findViewById(R.id.icon);
-            holder.txtName = (TextView) convertView.findViewById(R.id.title);
-            holder.txtPicturesNum = (TextView) convertView.findViewById(R.id.counter);
+            holder = new ViewHolder(convertView);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -64,10 +64,16 @@ public class CategoryAdapter extends BaseListAdapter<Category> {
         return convertView;
     }
 
-
     class ViewHolder {
-        public ImageView imgLogo;
-        public TextView txtName;
-        public TextView txtPicturesNum;
+        @Bind(R.id.icon)
+        ImageView imgLogo;
+        @Bind(R.id.title)
+        TextView txtName;
+        @Bind(R.id.counter)
+        TextView txtPicturesNum;
+
+        public ViewHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
     }
 }

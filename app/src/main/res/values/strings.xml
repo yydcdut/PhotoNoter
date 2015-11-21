@@ -199,7 +199,7 @@
     <string name="about_contact">Contact Us</string>
     <string name="about_github">Github</string>
     <string name="about_share">Share to Friends</string>
-    <string name="about_share_content">I am using App called Photos Noter, very easy to use. Download:http://a.app.qq.com/o/simple.jsp?pkgname=com.yydcdut.note</string>
+    <string name="about_share_content">I am using App called PhotoNoter, very easy to use. Download:http://a.app.qq.com/o/simple.jsp?pkgname=com.yydcdut.note</string>
 
     <!-- User Center-->
     <string name="uc_city">City</string>

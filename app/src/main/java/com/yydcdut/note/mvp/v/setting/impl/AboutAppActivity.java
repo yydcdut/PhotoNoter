@@ -15,10 +15,13 @@ import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.setting.IAboutAppView;
 import com.yydcdut.note.utils.LollipopCompat;
 
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 /**
  * Created by yuyidong on 15/9/2.
  */
-public class AboutAppActivity extends BaseActivity implements IAboutAppView, View.OnClickListener {
+public class AboutAppActivity extends BaseActivity implements IAboutAppView {
     private IAboutAppPresenter mAboutAppPresenter;
 
     @Override
@@ -33,10 +36,10 @@ public class AboutAppActivity extends BaseActivity implements IAboutAppView, Vie
 
     @Override
     public void initUiAndListener() {
+        ButterKnife.bind(this);
         mAboutAppPresenter = new AboutAppPresenterImpl();
         mAboutAppPresenter.attachView(this);
         initToolBarUI();
-        initListener();
     }
 
     private void initToolBarUI() {
@@ -45,13 +48,6 @@ public class AboutAppActivity extends BaseActivity implements IAboutAppView, Vie
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         LollipopCompat.setElevation(toolbar, getResources().getDimension(R.dimen.ui_elevation));
-    }
-
-    private void initListener() {
-        findViewById(R.id.layout_ripple_update).setOnClickListener(this);
-        findViewById(R.id.layout_ripple_contact).setOnClickListener(this);
-        findViewById(R.id.layout_ripple_share).setOnClickListener(this);
-        findViewById(R.id.layout_ripple_github).setOnClickListener(this);
     }
 
     @Override
@@ -64,22 +60,24 @@ public class AboutAppActivity extends BaseActivity implements IAboutAppView, Vie
         return true;
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.layout_update:
-                mAboutAppPresenter.doUpdateVersion();
-                break;
-            case R.id.layout_contact:
-                mAboutAppPresenter.doFeedback();
-                break;
-            case R.id.layout_share:
-                mAboutAppPresenter.doShare();
-                break;
-            case R.id.layout_github:
-                mAboutAppPresenter.gotoGithub();
-                break;
-        }
+    @OnClick(R.id.layout_update)
+    public void clickUpdate(View v) {
+        mAboutAppPresenter.doUpdateVersion();
+    }
+
+    @OnClick(R.id.layout_contact)
+    public void clickContact(View v) {
+        mAboutAppPresenter.doFeedback();
+    }
+
+    @OnClick(R.id.layout_share)
+    public void clickShare(View v) {
+        mAboutAppPresenter.doShare();
+    }
+
+    @OnClick(R.id.layout_github)
+    public void clickGitHub(View v) {
+        mAboutAppPresenter.gotoGithub();
     }
 
     @Override
@@ -108,13 +106,13 @@ public class AboutAppActivity extends BaseActivity implements IAboutAppView, Vie
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, getResources().getText(R.string.about_share_content));
         sendIntent.setType("text/plain");
-        startActivity(Intent.createChooser(sendIntent, "Share"));
+        startActivity(Intent.createChooser(sendIntent, getResources().getString(R.string.share)));
     }
 
     @Override
-    public void github() {
-        Uri githubUrl = Uri.parse("https://github.com/yydcdut/PhotoNoter");
-        Intent githubIntent = new Intent(Intent.ACTION_VIEW, githubUrl);
-        startActivity(githubIntent);
+    public void viewGitHub() {
+        Uri url = Uri.parse("https://github.com/yydcdut/PhotoNoter");
+        Intent intent = new Intent(Intent.ACTION_VIEW, url);
+        startActivity(intent);
     }
 }

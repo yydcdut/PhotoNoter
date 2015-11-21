@@ -15,9 +15,11 @@ import com.evernote.edam.type.User;
 import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.bean.IUser;
+import com.yydcdut.note.model.CategoryDBModel;
 import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.model.SandBoxDBModel;
 import com.yydcdut.note.model.UserCenter;
+import com.yydcdut.note.model.compare.ComparatorFactory;
 import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.login.IUserDetailFragPresenter;
 import com.yydcdut.note.mvp.v.login.IUserDetailFragView;
@@ -62,7 +64,8 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter, Ha
                 mUserDetailFragView.initUserDetail(getLocation(), getUseAge(), getPhone(), getAndroid(), calculateStorage());
                 break;
             case 1:
-                mUserDetailFragView.initUserImage();
+                mUserDetailFragView.initUserImages(PhotoNoteDBModel.getInstance().findByCategoryLabel(
+                        CategoryDBModel.getInstance().findAll().get(0).getLabel(), ComparatorFactory.FACTORY_NOT_SORT));
                 break;
             case 2:
                 mUserDetailFragView.initUserInfo(UserCenter.getInstance().isLoginQQ(), getQQName(),

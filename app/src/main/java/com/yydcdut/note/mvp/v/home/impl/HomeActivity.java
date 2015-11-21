@@ -45,12 +45,11 @@ import com.yydcdut.note.view.RoundedImageView;
 
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class HomeActivity extends BaseActivity implements IHomeView, View.OnClickListener {
     private static final int LAYOUT_FRAGMENT_ID = R.id.container;
-
     /**
      * 相册的fragment
      */
@@ -75,11 +74,11 @@ public class HomeActivity extends BaseActivity implements IHomeView, View.OnClic
     public TextView mCloudUseText;
     public ProgressBar mCloudUseProgress;
     /* Drawer */
-    @InjectView(R.id.lv_navigation)
+    @Bind(R.id.lv_navigation)
     public ListView mMenuListView;
-    @InjectView(R.id.drawerLayout)
+    @Bind(R.id.drawerLayout)
     public DrawerLayout mDrawerLayout;
-    @InjectView(R.id.relativeDrawer)
+    @Bind(R.id.relativeDrawer)
     public FrameLayout mRelativeDrawer;//Fragment
 
     private ActionBarDrawerToggleCompat mDrawerToggle;
@@ -109,7 +108,7 @@ public class HomeActivity extends BaseActivity implements IHomeView, View.OnClic
 
     @Override
     public void initUiAndListener() {
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         mHomePresenter = new HomePresenterImpl();
         mHomePresenter.attachView(this);
         mMenuListView.setOnItemClickListener(new DrawerItemClickListener());

@@ -36,6 +36,6 @@ public interface IEditTextView extends IView {
 
     void setFabMenuLayoutClickable(boolean clickable);
 
-    void finishActivitywithAnimation(boolean saved, String category, int position, int comparator);
+    void finishActivityWithAnimation(boolean saved, String category, int position, int comparator);
 
 }

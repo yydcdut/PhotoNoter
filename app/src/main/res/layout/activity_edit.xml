@@ -133,7 +133,7 @@
                 android:background="@drawable/bg_voice_ripple"/>
 
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fab_voice_start"
+                android:id="@+id/fab_voice_stop"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"

@@ -11,7 +11,7 @@ public interface IIntroduceView extends IView {
 
     void bindServiceConnection(ServiceConnection serviceConnect);
 
-    void unbindServiceConnection();
+    void unbindServiceConnection(ServiceConnection serviceConnect);
 
     void showProgressBar();
 

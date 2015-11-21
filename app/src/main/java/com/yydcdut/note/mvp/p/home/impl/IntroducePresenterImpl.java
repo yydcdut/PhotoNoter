@@ -17,13 +17,18 @@ import com.yydcdut.note.service.InitService;
 public class IntroducePresenterImpl implements IIntroducePresenter, Handler.Callback {
     private IIntroduceView mIntroduceView;
     private InitService.InitBinder mInitBinder;
+    /**
+     * 与InitService的连接
+     * 主要是判断当点击“start”之后，Service有没有初始化完，初始化完才跳转
+     */
+    private ServiceConnection mServiceConnection;
 
     private Handler mHandler;
 
     @Override
     public void attachView(IView iView) {
         mIntroduceView = (IIntroduceView) iView;
-        mIntroduceView.bindServiceConnection(new ServiceConnection() {
+        mServiceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 mInitBinder = (InitService.InitBinder) service;
@@ -33,7 +38,8 @@ public class IntroducePresenterImpl implements IIntroducePresenter, Handler.Call
             public void onServiceDisconnected(ComponentName name) {
                 mInitBinder = null;
             }
-        });
+        };
+        mIntroduceView.bindServiceConnection(mServiceConnection);
         mHandler = new Handler(this);
     }
 
@@ -45,7 +51,7 @@ public class IntroducePresenterImpl implements IIntroducePresenter, Handler.Call
     @Override
     public void wannaFinish() {
         if (mInitBinder.isFinished()) {
-            mIntroduceView.unbindServiceConnection();
+            mIntroduceView.unbindServiceConnection(mServiceConnection);
             mIntroduceView.jump2Album();
         } else {
             mIntroduceView.showProgressBar();
@@ -60,7 +66,7 @@ public class IntroducePresenterImpl implements IIntroducePresenter, Handler.Call
     @Override
     public boolean handleMessage(Message msg) {
         if (mInitBinder.isFinished()) {
-            mIntroduceView.unbindServiceConnection();
+            mIntroduceView.unbindServiceConnection(mServiceConnection);
             mIntroduceView.jump2Album();
         } else {
             mIntroduceView.showProgressBar();

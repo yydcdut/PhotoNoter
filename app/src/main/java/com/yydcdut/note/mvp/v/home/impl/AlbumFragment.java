@@ -52,8 +52,9 @@ import com.yydcdut.note.view.fab.FloatingActionsMenu;
 import java.io.File;
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.OnClick;
 
 /**
  * Created by yuyidong on 15-3-23.
@@ -69,17 +70,16 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
     private static final int INTENT_REQUEST_CROP = 301;
 
     /* RecyclerView */
-    @InjectView(R.id.rv_album)
+    @Bind(R.id.rv_album)
     RecyclerView mRecyclerView;
     /* FloatingActionButton */
-    @InjectView(R.id.fab_main)
+    @Bind(R.id.fab_main)
     FloatingActionsMenu mFloatingActionsMenu;
-    @InjectView(R.id.view_menu_floating_position)
+    @Bind(R.id.view_menu_floating_position)
     View mFloatingView;//当点击FloatingActionsMenu的时候RevealColor可以找到起始坐标
-    /* Progress */
-    @InjectView(R.id.layout_progress)
+    @Bind(R.id.layout_progress)
     CircleProgressBarLayout mProgressLayout;
-    @InjectView(R.id.reveal_album)
+    @Bind(R.id.reveal_album)
     RevealView mAlbumRevealView;
     /* RevealColor */
     private RevealView mLayoutRevealView;
@@ -131,15 +131,13 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
 
     @Override
     public void initUI(View view) {
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         mAlbumPresenter.attachView(this);
         mLayoutRevealView = (RevealView) getActivity().findViewById(R.id.reveal_layout);
     }
 
     @Override
     public void initListener(View view) {
-        view.findViewById(R.id.fab_camera).setOnClickListener(this);
-        view.findViewById(R.id.fab_local).setOnClickListener(this);
         mFloatingActionsMenu.setOnFloatingActionsMenuUpdateListener(this);
         mFloatingScrollHideListener = new FloatingScrollHideListener(mFloatingActionsMenu, mGridLayoutManager);
         mRecyclerView.addOnScrollListener(mFloatingScrollHideListener);
@@ -336,6 +334,35 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
                 .show();
     }
 
+    @OnClick(R.id.fab_camera)
+    public void clickFabCamera(View v) {
+        mAlbumPresenter.jump2Camera();
+        //过1s自动关闭
+        mMainHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mFloatingActionsMenu.collapse(false);
+                hideAlbumRevealColorView(getLocationInView(mAlbumRevealView, mFloatingView));
+            }
+        }, 1000);
+    }
+
+    @OnClick(R.id.fab_local)
+    public void clickFabLocal(View v) {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, INTENT_REQUEST_LOCAL);
+        //过1s自动关闭
+        mMainHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mFloatingActionsMenu.collapse(false);
+                hideAlbumRevealColorView(getLocationInView(mAlbumRevealView, mFloatingView));
+            }
+        }, 1000);
+    }
+
     @Override
     public void onClick(final View v) {
         if (!mAlbumPresenter.checkStorageEnough()) {
@@ -343,25 +370,6 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
             hideAlbumRevealColorView(getLocationInView(mAlbumRevealView, v));
             return;
         }
-        switch (v.getId()) {
-            case R.id.fab_camera:
-                mAlbumPresenter.jump2Camera();
-                break;
-            case R.id.fab_local:
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(intent, INTENT_REQUEST_LOCAL);
-                break;
-        }
-        //过1s自动关闭
-        mMainHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mFloatingActionsMenu.collapse(false);
-                hideAlbumRevealColorView(getLocationInView(mAlbumRevealView, v));
-            }
-        }, 1000);
     }
 
     @Override
@@ -535,6 +543,12 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
     public void onDestroy() {
         unregisterReceiver();
         super.onDestroy();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 
     @Override

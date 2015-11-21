@@ -123,7 +123,7 @@ public class EditTextPresenterImpl implements IEditTextPresenter, Handler.Callba
     @Override
     public void finishActivity(boolean saved) {
         mIsFinishing = true;
-        mEditTextView.finishActivitywithAnimation(saved, mPhotoNote.getCategoryLabel(), mPosition, mComparator);
+        mEditTextView.finishActivityWithAnimation(saved, mPhotoNote.getCategoryLabel(), mPosition, mComparator);
     }
 
     @Override

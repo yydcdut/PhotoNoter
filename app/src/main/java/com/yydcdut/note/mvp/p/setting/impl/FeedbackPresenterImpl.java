@@ -46,20 +46,20 @@ public class FeedbackPresenterImpl implements IFeedbackPresenter, Handler.Callba
     public boolean checkFeendback() {
         String email = mFeedbackView.getEmail();
         if (TextUtils.isEmpty(email)) {
-            mFeedbackView.showSnackbar(mContext.getResources().getString(R.string.toast_input_email));
+            mFeedbackView.showSnackBar(mContext.getResources().getString(R.string.toast_input_email));
             return false;
         }
         if (!isEmail(email)) {
-            mFeedbackView.showSnackbar(mContext.getResources().getString(R.string.toast_input_email_error));
+            mFeedbackView.showSnackBar(mContext.getResources().getString(R.string.toast_input_email_error));
             return false;
         }
         String content = mFeedbackView.getContent();
         if (TextUtils.isEmpty(content)) {
-            mFeedbackView.showSnackbar(mContext.getResources().getString(R.string.toast_input_error));
+            mFeedbackView.showSnackBar(mContext.getResources().getString(R.string.toast_input_error));
             return false;
         }
         if (!NetworkUtils.isNetworkConnected(mContext)) {
-            mFeedbackView.showSnackbar(mContext.getResources().getString(R.string.toast_no_connection));
+            mFeedbackView.showSnackBar(mContext.getResources().getString(R.string.toast_no_connection));
             return false;
         }
         return true;

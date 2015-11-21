@@ -39,7 +39,7 @@ public class AboutAppPresenterImpl implements IAboutAppPresenter {
 
     @Override
     public void gotoGithub() {
-        mAboutAppView.github();
+        mAboutAppView.viewGitHub();
     }
 
 }

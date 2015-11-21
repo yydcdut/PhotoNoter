@@ -26,26 +26,27 @@ import com.yydcdut.note.utils.LollipopCompat;
 import com.yydcdut.note.view.CircleProgressBarLayout;
 import com.yydcdut.note.view.RevealView;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.OnClick;
 
 /**
  * Created by yuyidong on 15/11/3.
  */
-public class FeedbackActivity extends BaseActivity implements IFeedbackView, View.OnClickListener {
-    @InjectView(R.id.et_feedback_content)
+public class FeedbackActivity extends BaseActivity implements IFeedbackView {
+    @Bind(R.id.et_feedback_content)
     EditText mContentText;
-    @InjectView(R.id.et_feedback_email)
+    @Bind(R.id.et_feedback_email)
     EditText mEmailText;
-    @InjectView(R.id.layout_progress)
+    @Bind(R.id.layout_progress)
     CircleProgressBarLayout mProgressLayout;
-    @InjectView(R.id.reveal_feedback)
+    @Bind(R.id.reveal_feedback)
     RevealView mRevealView;
-    @InjectView(R.id.img_feedback_ok)
+    @Bind(R.id.img_feedback_ok)
     View mOkView;
-    @InjectView(R.id.fab_send)
+    @Bind(R.id.fab_send)
     FloatingActionButton mFab;
-    @InjectView(R.id.toolbar)
+    @Bind(R.id.toolbar)
     Toolbar mToolbar;
 
     private IFeedbackPresenter mFeedbackPresenter;
@@ -62,13 +63,12 @@ public class FeedbackActivity extends BaseActivity implements IFeedbackView, Vie
 
     @Override
     public void initUiAndListener() {
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         mFeedbackPresenter = new FeedbackPresenterImpl(getIntent().getIntExtra(
                 mFeedbackPresenter.TYPE, mFeedbackPresenter.TYPE_FEEDBACK));
         initToolBarUI();
         mFeedbackPresenter.attachView(this);
         initProgressBar();
-        initListener();
     }
 
     private void initToolBarUI() {
@@ -80,10 +80,6 @@ public class FeedbackActivity extends BaseActivity implements IFeedbackView, Vie
     private void initProgressBar() {
         mProgressLayout.getCircleProgressBar().setCircleBackgroundEnabled(false);
         mProgressLayout.getCircleProgressBar().setColorSchemeColors(Color.WHITE);
-    }
-
-    private void initListener() {
-        mFab.setOnClickListener(this);
     }
 
     @Override
@@ -126,7 +122,7 @@ public class FeedbackActivity extends BaseActivity implements IFeedbackView, Vie
     }
 
     @Override
-    public void showSnackbar(String message) {
+    public void showSnackBar(String message) {
         Snackbar.make(findViewById(R.id.cl_feedback), message, Snackbar.LENGTH_SHORT).show();
     }
 
@@ -141,10 +137,8 @@ public class FeedbackActivity extends BaseActivity implements IFeedbackView, Vie
             @Override
             public PointF evaluate(float fraction, PointF startValue, PointF endValue) {
                 PointF point = new PointF();
-                float widthf = (width) * (1 - fraction / 2);
-                float heightf = (height) - 0.85f * (height) * (fraction / 2) * (fraction / 2);
-                point.x = widthf;
-                point.y = heightf;
+                point.x = (width) * (1 - fraction / 2);
+                point.y = (height) - 0.85f * (height) * (fraction / 2) * (fraction / 2);
                 return point;
             }
         });
@@ -177,20 +171,16 @@ public class FeedbackActivity extends BaseActivity implements IFeedbackView, Vie
         return true;
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.fab_send:
-                boolean wannaSatrtAnimation = mFeedbackPresenter.checkFeendback();
-                if (wannaSatrtAnimation) {
-                    startSendingAnimation(new RevealView.RevealAnimationListener() {
-                        @Override
-                        public void finish() {
-                            mFeedbackPresenter.sendFeedback(mEmailText.getText().toString(), mContentText.getText().toString());
-                        }
-                    });
+    @OnClick(R.id.fab_send)
+    public void clickSendFeedback(View v) {
+        boolean wannaStartAnimation = mFeedbackPresenter.checkFeendback();
+        if (wannaStartAnimation) {
+            startSendingAnimation(new RevealView.RevealAnimationListener() {
+                @Override
+                public void finish() {
+                    mFeedbackPresenter.sendFeedback(mEmailText.getText().toString(), mContentText.getText().toString());
                 }
-                break;
+            });
         }
     }
 

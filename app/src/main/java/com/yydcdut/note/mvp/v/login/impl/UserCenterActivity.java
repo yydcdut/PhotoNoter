@@ -18,7 +18,6 @@ import com.evernote.client.android.EvernoteSession;
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.UserCenterFragmentAdapter;
 import com.yydcdut.note.listener.OnSnackBarActionListener;
-import com.yydcdut.note.model.UserCenter;
 import com.yydcdut.note.mvp.p.login.IUserCenterPresenter;
 import com.yydcdut.note.mvp.p.login.impl.UserCenterPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseActivity;
@@ -29,30 +28,31 @@ import com.yydcdut.note.view.CircleProgressBarLayout;
 import com.yydcdut.note.view.RoundedImageView;
 import com.yydcdut.note.view.UserCenterArrowView;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.OnClick;
+import butterknife.OnPageChange;
 
 /**
  * Created by yuyidong on 15/8/26.
  */
-public class UserCenterActivity extends BaseActivity implements IUserCenterView,
-        View.OnClickListener, ViewPager.OnPageChangeListener {
+public class UserCenterActivity extends BaseActivity implements IUserCenterView {
 
     private IUserCenterPresenter mUserCenterPresenter;
 
-    @InjectView(R.id.layout_user_vp_bg)
+    @Bind(R.id.layout_user_vp_bg)
     View mBackgroundImage;
-    @InjectView(R.id.view_arrow)
+    @Bind(R.id.view_arrow)
     UserCenterArrowView mUserCenterArrowView;
-    @InjectView(R.id.layout_progress)
+    @Bind(R.id.layout_progress)
     CircleProgressBarLayout mCircleProgressBarLayout;
-    @InjectView(R.id.img_user)
+    @Bind(R.id.img_user)
     RoundedImageView mQQImageView;
-    @InjectView(R.id.txt_name)
+    @Bind(R.id.txt_name)
     TextView mQQTextView;
-    @InjectView(R.id.img_user_two)
+    @Bind(R.id.img_user_two)
     ImageView mEvernoteImageView;
-    @InjectView(R.id.vp_user)
+    @Bind(R.id.vp_user)
     ViewPager mViewPager;
 
     private int[] mColorArray;
@@ -78,7 +78,7 @@ public class UserCenterActivity extends BaseActivity implements IUserCenterView,
 
     @Override
     public void initUiAndListener() {
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         mUserCenterPresenter = new UserCenterPresenterImpl(this);
         mUserCenterPresenter.attachView(this);
         if (LollipopCompat.AFTER_LOLLIPOP) {
@@ -90,9 +90,6 @@ public class UserCenterActivity extends BaseActivity implements IUserCenterView,
     }
 
     private void initOtherViewAndData() {
-        findViewById(R.id.img_user_detail).setOnClickListener(this);
-        findViewById(R.id.img_user_image).setOnClickListener(this);
-        findViewById(R.id.img_user_person).setOnClickListener(this);
         mColorArray = new int[]{getResources().getColor(R.color.green_colorPrimary),
                 getResources().getColor(R.color.blue_colorPrimary),
                 getResources().getColor(R.color.amber_colorPrimary)};
@@ -114,7 +111,6 @@ public class UserCenterActivity extends BaseActivity implements IUserCenterView,
     private void initViewPager() {
         mPagerAdapter = new UserCenterFragmentAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mPagerAdapter);
-        mViewPager.addOnPageChangeListener(this);
     }
 
 
@@ -154,49 +150,46 @@ public class UserCenterActivity extends BaseActivity implements IUserCenterView,
         super.onBackPressed();
     }
 
-    @Override
-    public void onClick(View v) {
-        int index = mViewPager.getCurrentItem();
-        switch (v.getId()) {
-            case R.id.img_user_detail:
-                if (index == 0) {
-                    break;
-                }
-                mViewPager.setCurrentItem(0, true);
-                break;
-            case R.id.img_user_image:
-                if (index == 1) {
-                    break;
-                }
-                mViewPager.setCurrentItem(1, true);
-                break;
-            case R.id.img_user_person:
-                if (index == 2) {
-                    break;
-                }
-                mViewPager.setCurrentItem(2, true);
-                break;
-            case R.id.img_user:
-                boolean hasNet1 = mUserCenterPresenter.checkInternet();
-                if (!hasNet1) {
-                    break;
-                }
-                mUserCenterPresenter.loginQQ();
-                break;
-            case R.id.img_user_two:
-                boolean hasNet = mUserCenterPresenter.checkInternet();
-                if (!hasNet) {
-                    break;
-                }
-                if (!UserCenter.getInstance().isLoginEvernote()) {
-                    EvernoteSession.getInstance().authenticate(this);
-                }
-                break;
+    @OnClick(R.id.img_user_detail)
+    public void clickImageDetail(View v) {
+        if (mViewPager.getCurrentItem() != 0) {
+            mViewPager.setCurrentItem(0, true);
         }
     }
 
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+    @OnClick(R.id.img_user_image)
+    public void clickUserImage(View v) {
+        if (mViewPager.getCurrentItem() != 1) {
+            mViewPager.setCurrentItem(1, true);
+        }
+    }
+
+    @OnClick(R.id.img_user_person)
+    public void clickUserPerson(View v) {
+        if (mViewPager.getCurrentItem() != 2) {
+            mViewPager.setCurrentItem(2, true);
+        }
+    }
+
+    @OnClick(R.id.img_user)
+    public void clickUserQQ() {
+        if (mUserCenterPresenter.checkInternet()) {
+            mUserCenterPresenter.loginQQ();
+        }
+    }
+
+    @OnClick(R.id.img_user_two)
+    public void clickUserEvernote(View v) {
+        if (mUserCenterPresenter.checkInternet()) {
+            mUserCenterPresenter.loginEvernote();
+        }
+    }
+
+    @OnPageChange(
+            value = R.id.vp_user,
+            callback = OnPageChange.Callback.PAGE_SCROLLED
+    )
+    public void viewPagerScrolled(int position, float positionOffset, int positionOffsetPixels) {
         if (mIntention == INTENTION_STOP) {
             if (mLastTimePositionOffset == -1) {
                 mLastTimePositionOffset = positionOffset;
@@ -249,18 +242,15 @@ public class UserCenterActivity extends BaseActivity implements IUserCenterView,
         }
     }
 
-    @Override
-    public void onPageSelected(int position) {
-
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
+    @OnPageChange(
+            value = R.id.vp_user,
+            callback = OnPageChange.Callback.PAGE_SCROLL_STATE_CHANGED
+    )
+    public void viewPagerScrollStateChanged(int state) {
         if (state == ViewPager.SCROLL_STATE_IDLE) {
             mIntention = INTENTION_STOP;
         }
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -291,7 +281,6 @@ public class UserCenterActivity extends BaseActivity implements IUserCenterView,
             mQQTextView.setText(name);
             ImageLoaderManager.displayImage(imagePath, mQQImageView);
         }
-        mQQImageView.setOnClickListener(this);
     }
 
     @Override
@@ -301,7 +290,6 @@ public class UserCenterActivity extends BaseActivity implements IUserCenterView,
         } else {
             mEvernoteImageView.setImageResource(R.drawable.ic_evernote_gray);
         }
-        mEvernoteImageView.setOnClickListener(this);
     }
 
     @Override

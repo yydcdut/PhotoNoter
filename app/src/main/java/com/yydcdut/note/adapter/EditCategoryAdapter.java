@@ -14,12 +14,14 @@ import com.yydcdut.note.view.TextDrawable;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Created by yuyidong on 15/11/15.
  */
 public class EditCategoryAdapter extends BaseListAdapter<Category> {
     private int mCurrentPosition = -1;
-
     private RandomColor mColor;
 
     public EditCategoryAdapter(Context context, List group) {
@@ -31,10 +33,8 @@ public class EditCategoryAdapter extends BaseListAdapter<Category> {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
-            holder = new ViewHolder();
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_setting_edit_category, null);
-            holder.imgLogo = (ImageView) convertView.findViewById(R.id.img_item_edit_category);
-            holder.txtName = (TextView) convertView.findViewById(R.id.txt_item_edit_categoty);
+            holder = new ViewHolder(convertView);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -58,8 +58,14 @@ public class EditCategoryAdapter extends BaseListAdapter<Category> {
     }
 
     class ViewHolder {
-        public ImageView imgLogo;
-        public TextView txtName;
+        @Bind(R.id.img_item_edit_category)
+        ImageView imgLogo;
+        @Bind(R.id.txt_item_edit_categoty)
+        TextView txtName;
+
+        public ViewHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
     }
 
     public void setCurrentPosition(int currentPosition) {

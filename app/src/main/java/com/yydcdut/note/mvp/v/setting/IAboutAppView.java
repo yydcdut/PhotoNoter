@@ -29,7 +29,7 @@ public interface IAboutAppView extends IView {
     void share();
 
     /**
-     * github
+     * viewGitHub
      */
-    void github();
+    void viewGitHub();
 }

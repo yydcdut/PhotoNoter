@@ -29,15 +29,16 @@ import com.yydcdut.note.view.RevealView;
 
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
-import butterknife.InjectViews;
+import butterknife.OnClick;
+import butterknife.OnPageChange;
 
 /**
  * Created by yyd on 15-3-29.
  */
-public class DetailActivity extends BaseActivity implements IDetailView, ViewPager.OnPageChangeListener,
-        ViewPager.PageTransformer, ObservableScrollView.OnScrollChangedListener, View.OnClickListener {
+public class DetailActivity extends BaseActivity implements IDetailView,
+        ViewPager.PageTransformer, ObservableScrollView.OnScrollChangedListener {
     private static final float MIN_SCALE = 0.75f;
 
     private IDetailPresenter mDetailPresenter;
@@ -61,39 +62,35 @@ public class DetailActivity extends BaseActivity implements IDetailView, ViewPag
     private float mTimeBeginHeight = 0;
     private float mExifBeginHeight = 0;
 
-    @InjectView(R.id.vp_detail)
-    ViewPager mViewPager;
     private DetailPagerAdapter mDetailPagerAdapter;
-
-    @InjectView(R.id.scroll_detail)
+    @Bind(R.id.vp_detail)
+    ViewPager mViewPager;
+    @Bind(R.id.scroll_detail)
     ObservableScrollView mScrollView;
-    @InjectView(R.id.fab_edit)
+    @Bind(R.id.fab_edit)
     View mFab;
-    @InjectView(R.id.reveal)
+    @Bind(R.id.reveal)
     RevealView mRevealView;
-    /* Content TextView */
-    @InjectView(R.id.txt_detail_content_title)
-    FontTextView mTitleView;
-    @InjectView(R.id.txt_detail_content)
+    @Bind(R.id.txt_detail_content_title)
+    FontTextView mTitleView;/* Content TextView */
+    @Bind(R.id.txt_detail_content)
     FontTextView mContentView;
-    @InjectView(R.id.txt_detail_create_time)
+    @Bind(R.id.txt_detail_create_time)
     TextView mCreateView;
-    @InjectView(R.id.txt_detail_edit_time)
+    @Bind(R.id.txt_detail_edit_time)
     TextView mEditView;
-    @InjectView(R.id.txt_detail_exif)
+    @Bind(R.id.txt_detail_exif)
     TextView mExifView;
-    @InjectView(R.id.layout_detail_time)
+    @Bind(R.id.layout_detail_time)
     View mDetailTimeView;
-    @InjectViews({R.id.view_seperate1, R.id.view_seperate2, R.id.view_seperate3})
+    @Bind({R.id.view_seperate1, R.id.view_seperate2, R.id.view_seperate3})
     List<View> mContentSeparateViews;
-    /* Control View */
-    @InjectViews({R.id.txt_detail_1, R.id.txt_detail_2, R.id.txt_detail_3, R.id.txt_detail_4})
-    List<TextView> mControlTextViews;
-    @InjectViews({R.id.view_detail_1, R.id.view_detail_2, R.id.view_detail_3, R.id.view_detail_4})
+    @Bind({R.id.txt_detail_1, R.id.txt_detail_2, R.id.txt_detail_3, R.id.txt_detail_4})
+    List<TextView> mControlTextViews;/* Control View */
+    @Bind({R.id.view_detail_1, R.id.view_detail_2, R.id.view_detail_3, R.id.view_detail_4})
     List<View> mSeparateView;
-    /* map */
-    @InjectView(R.id.bmapView)
-    MapView mMapView;
+    @Bind(R.id.bmapView)
+    MapView mMapView;/* map */
 
     @Override
     public boolean setStatusBar() {
@@ -141,7 +138,7 @@ public class DetailActivity extends BaseActivity implements IDetailView, ViewPag
 
     @Override
     public void initUiAndListener() {
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         Bundle bundle = getIntent().getExtras();
         mDetailPresenter = new DetailPresenterImpl(bundle.getString(Const.CATEGORY_LABEL),
                 bundle.getInt(Const.PHOTO_POSITION),
@@ -157,13 +154,8 @@ public class DetailActivity extends BaseActivity implements IDetailView, ViewPag
     }
 
     private void initListner() {
-        mViewPager.addOnPageChangeListener(this);
         mViewPager.setPageTransformer(true, this);
         mScrollView.setOnScrollChangedListener(this);
-        for (TextView textView : mControlTextViews) {
-            textView.setOnClickListener(this);
-        }
-        mFab.setOnClickListener(this);
     }
 
     private void initToolBar() {
@@ -189,8 +181,11 @@ public class DetailActivity extends BaseActivity implements IDetailView, ViewPag
         return true;
     }
 
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+    @OnPageChange(
+            value = R.id.vp_detail,
+            callback = OnPageChange.Callback.PAGE_SCROLLED
+    )
+    public void viewPagerScrolled(int position, float positionOffset, int positionOffsetPixels) {
         if (mIntention == INTENTION_STOP) {
             if (mLastTimePositionOffset == -1) {
                 mLastTimePositionOffset = positionOffset;
@@ -212,7 +207,7 @@ public class DetailActivity extends BaseActivity implements IDetailView, ViewPag
                 mDetailPresenter.showNote(position + 1);
                 mIntentionState = STATE_RIGHT_OUT;
                 mScrollView.scrollTo(0, 0);
-                resetTitlePostion();
+                resetTitlePosition();
             } else {
                 float alpha = (0.5f - positionOffset) / 0.5f;
                 setContentAlpha(alpha);
@@ -245,7 +240,7 @@ public class DetailActivity extends BaseActivity implements IDetailView, ViewPag
                 mDetailPresenter.showNote(position);
                 mIntentionState = STATE_LEFT_IN;
                 mScrollView.scrollTo(0, 0);
-                resetTitlePostion();
+                resetTitlePosition();
             }
         }
         if (positionOffset < 0.01 || positionOffset > 0.99) {
@@ -266,7 +261,7 @@ public class DetailActivity extends BaseActivity implements IDetailView, ViewPag
         }
     }
 
-    private void resetTitlePostion() {
+    private void resetTitlePosition() {
         setTitlePosition(R.id.txt_detail_1);
     }
 
@@ -297,12 +292,11 @@ public class DetailActivity extends BaseActivity implements IDetailView, ViewPag
         }
     }
 
-    @Override
-    public void onPageSelected(int position) {
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
+    @OnPageChange(
+            value = R.id.vp_detail,
+            callback = OnPageChange.Callback.PAGE_SCROLL_STATE_CHANGED
+    )
+    public void viewPagerScrollStateChanged(int state) {
         if (state == ViewPager.SCROLL_STATE_IDLE) {
             mIntention = INTENTION_STOP;
             mLastTimePositionOffset = -1;
@@ -355,26 +349,31 @@ public class DetailActivity extends BaseActivity implements IDetailView, ViewPag
         }
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.txt_detail_1:
-                mScrollView.smoothScrollTo(0, 0);
-                break;
-            case R.id.txt_detail_2:
-                mScrollView.smoothScrollTo(0, (int) mMapBeginHeight + 2);
-                break;
-            case R.id.txt_detail_3:
-                mScrollView.smoothScrollTo(0, (int) mTimeBeginHeight + 2);
-                break;
-            case R.id.txt_detail_4:
-                mScrollView.smoothScrollTo(0, (int) mExifBeginHeight + 2);
-                break;
-            case R.id.fab_edit:
-                showRevealColorViewAndStartActivity();
-                break;
-        }
+    @OnClick(R.id.txt_detail_1)
+    public void clickTextDetail1(View v) {
+        mScrollView.smoothScrollTo(0, 0);
     }
+
+    @OnClick(R.id.txt_detail_2)
+    public void clickTextDetail2(View v) {
+        mScrollView.smoothScrollTo(0, (int) mMapBeginHeight + 2);
+    }
+
+    @OnClick(R.id.txt_detail_3)
+    public void clickTextDetail3(View v) {
+        mScrollView.smoothScrollTo(0, (int) mTimeBeginHeight + 2);
+    }
+
+    @OnClick(R.id.txt_detail_4)
+    public void clickTextDetail4(View v) {
+        mScrollView.smoothScrollTo(0, (int) mExifBeginHeight + 2);
+    }
+
+    @OnClick(R.id.fab_edit)
+    public void clickFabEdit(View v) {
+        showRevealColorViewAndStartActivity();
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -432,7 +431,7 @@ public class DetailActivity extends BaseActivity implements IDetailView, ViewPag
     }
 
     @Override
-    public void showCurrentPisition(int position) {
+    public void showCurrentPosition(int position) {
         mViewPager.setCurrentItem(position);
     }
 
@@ -483,9 +482,6 @@ public class DetailActivity extends BaseActivity implements IDetailView, ViewPag
         // MapView的生命周期与Activity同步，当activity销毁时需调用MapView.destroy()
         mMapView.onDestroy();
         mDetailPresenter.detachView();
-//        mContentSeparateViews.clear();
-//        mControlTextViews.clear();
-//        mSeparateView.clear();
         super.onDestroy();
     }
 

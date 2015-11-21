@@ -25,8 +25,8 @@ import com.yydcdut.sdlv.SlideAndDragListView;
 
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 /**
  * Created by yuyidong on 15/10/13.
@@ -34,9 +34,9 @@ import butterknife.InjectView;
 public class EditCategoryActivity extends BaseActivity implements IEditCategoryView, SlideAndDragListView.OnDragListener,
         SlideAndDragListView.OnSlideListener, SlideAndDragListView.OnMenuItemClickListener {
 
-    @InjectView(R.id.lv_edit_category)
+    @Bind(R.id.lv_edit_category)
     SlideAndDragListView mListView;
-    @InjectView(R.id.layout_progress)
+    @Bind(R.id.layout_progress)
     CircleProgressBarLayout mProgressLayout;
 
     private EditCategoryAdapter mCategoryAdapter;
@@ -55,7 +55,7 @@ public class EditCategoryActivity extends BaseActivity implements IEditCategoryV
 
     @Override
     public void initUiAndListener() {
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         mEditCategoryPresenter = new EditCategoryPresenterImpl();
         mEditCategoryPresenter.attachView(this);
         initToolBarUI();

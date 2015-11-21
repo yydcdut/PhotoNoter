@@ -37,8 +37,9 @@ import com.yydcdut.note.view.VoiceRippleView;
 import com.yydcdut.note.view.fab2.FloatingMenuLayout;
 import com.yydcdut.note.view.fab2.snack.SnackHelper;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.OnClick;
 import us.pinguo.edit.sdk.base.widget.AnimationAdapter;
 
 /**
@@ -51,31 +52,31 @@ public class EditTextActivity extends BaseActivity implements IEditTextView, Vie
     private boolean mIsEditTextShow = true;
 
     /* Views */
-    @InjectView(R.id.toolbar_edit)
+    @Bind(R.id.toolbar_edit)
     Toolbar mToolbar;
-    @InjectView(R.id.layout_edit_title)
+    @Bind(R.id.layout_edit_title)
     View mLayoutTitle;
-    @InjectView(R.id.et_edit_title)
+    @Bind(R.id.et_edit_title)
     EditText mTitleEdit;
-    @InjectView(R.id.et_edit_content)
+    @Bind(R.id.et_edit_content)
     EditText mContentEdit;
-    @InjectView(R.id.layout_fab_edittext)
+    @Bind(R.id.layout_fab_edittext)
     FloatingMenuLayout mFabMenuLayout;
-    @InjectView(R.id.img_ripple_fab)
+    @Bind(R.id.img_ripple_fab)
     VoiceRippleView mVoiceRippleView;
-    @InjectView(R.id.layout_fab_voice_start)
+    @Bind(R.id.layout_fab_voice_start)
     View mVoiceFabLayout;
-    @InjectView(R.id.txt_voice)
+    @Bind(R.id.txt_voice)
     View mVoiceTextView;
-    @InjectView(R.id.layout_voice)
+    @Bind(R.id.layout_voice)
     View mVoiceLayout;
-    @InjectView(R.id.layout_progress)
+    @Bind(R.id.layout_progress)
     CircleProgressBarLayout mProgressLayout;
-    @InjectView(R.id.reveal_fab)
+    @Bind(R.id.reveal_fab)
     RevealView mFabRevealView;
-    @InjectView(R.id.reveal_voice)
+    @Bind(R.id.reveal_voice)
     RevealView mVoiceRevealView;
-    @InjectView(R.id.view_fab_location)
+    @Bind(R.id.view_fab_location)
     View mFabPositionView;
     ImageView mMenuArrowImage;
 
@@ -115,7 +116,7 @@ public class EditTextActivity extends BaseActivity implements IEditTextView, Vie
 
     @Override
     public void initUiAndListener() {
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         Bundle bundle = getIntent().getExtras();
         mEditTextPresenter = new EditTextPresenterImpl(bundle.getString(Const.CATEGORY_LABEL),
                 bundle.getInt(Const.PHOTO_POSITION), bundle.getInt(Const.COMPARATOR_FACTORY));
@@ -135,7 +136,6 @@ public class EditTextActivity extends BaseActivity implements IEditTextView, Vie
             }
         });
         mVoiceLayout.setVisibility(View.INVISIBLE);
-        mVoiceLayout.setOnClickListener(null);
     }
 
     private void initToolBar() {
@@ -162,9 +162,6 @@ public class EditTextActivity extends BaseActivity implements IEditTextView, Vie
 
     private void initFloating() {
         mFabMenuLayout.setOnFloatingActionsMenuUpdateListener(this);
-        findViewById(R.id.fab_evernote_update).setOnClickListener(this);
-        findViewById(R.id.fab_voice).setOnClickListener(this);
-        findViewById(R.id.fab_voice_start).setOnClickListener(this);
     }
 
     @Override
@@ -248,19 +245,23 @@ public class EditTextActivity extends BaseActivity implements IEditTextView, Vie
             }
             return;
         }
-        switch (v.getId()) {
-            case R.id.fab_voice:
-                mFabMenuLayout.close();
-                revealVoiceAndStart();
-                break;
-            case R.id.fab_evernote_update:
-                mFabMenuLayout.close();
-                mEditTextPresenter.update2Evernote();
-                break;
-            case R.id.fab_voice_start:
-                mEditTextPresenter.stopVoice();
-                break;
-        }
+    }
+
+    @OnClick(R.id.fab_voice)
+    public void clickFabVoice(View v) {
+        mFabMenuLayout.close();
+        revealVoiceAndStart();
+    }
+
+    @OnClick(R.id.fab_evernote_update)
+    public void clickEvernoteUpdate(View v) {
+        mFabMenuLayout.close();
+        mEditTextPresenter.update2Evernote();
+    }
+
+    @OnClick(R.id.fab_voice_stop)
+    public void clickVoiceStart(View v) {
+        mEditTextPresenter.stopVoice();
     }
 
     @Override
@@ -284,7 +285,7 @@ public class EditTextActivity extends BaseActivity implements IEditTextView, Vie
     }
 
     @Override
-    public void finishActivitywithAnimation(final boolean saved, final String category, final int position, final int comparator) {
+    public void finishActivityWithAnimation(final boolean saved, final String category, final int position, final int comparator) {
         int actionBarHeight = getActionBarSize();
         int screenHeight = Evi.sScreenHeight;
         int contentEditHeight = screenHeight - actionBarHeight * 2;
