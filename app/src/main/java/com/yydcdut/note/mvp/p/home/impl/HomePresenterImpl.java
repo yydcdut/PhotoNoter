@@ -45,12 +45,12 @@ public class HomePresenterImpl implements IHomePresenter, PhotoNoteChangedObserv
     }
 
     @Override
-    public void setCategory(String categoryLabel) {
+    public void setCategoryLabel(String categoryLabel) {
         mCategoryLabel = categoryLabel;
     }
 
     @Override
-    public String getCategory() {
+    public String getCategoryLabel() {
         return mCategoryLabel;
     }
 

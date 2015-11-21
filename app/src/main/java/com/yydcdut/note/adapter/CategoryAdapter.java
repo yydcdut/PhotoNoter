@@ -18,10 +18,10 @@ import java.util.List;
 /**
  * Created by yuyidong on 15-3-23.
  */
-public class NavigationCategoryAdapter extends BaseListAdapter<Category> {
+public class CategoryAdapter extends BaseListAdapter<Category> {
     RandomColor mColor;
 
-    public NavigationCategoryAdapter(Context mContext, List<Category> group) {
+    public CategoryAdapter(Context mContext, List<Category> group) {
         super(mContext, group);
         mColor = RandomColor.MATERIAL;
     }

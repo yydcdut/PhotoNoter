@@ -29,7 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yydcdut.note.R;
-import com.yydcdut.note.adapter.NavigationCategoryAdapter;
+import com.yydcdut.note.adapter.CategoryAdapter;
 import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.controller.BaseActivity;
 import com.yydcdut.note.mvp.p.home.IHomePresenter;
@@ -61,7 +61,7 @@ public class HomeActivity extends BaseActivity implements IHomeView, View.OnClic
      */
     private long mLastBackTime = 0;
 
-    private NavigationCategoryAdapter mCategoryAdapter;
+    private CategoryAdapter mCategoryAdapter;
 
     protected IHomePresenter mHomePresenter;
 
@@ -102,7 +102,7 @@ public class HomeActivity extends BaseActivity implements IHomeView, View.OnClic
         if (savedInstanceState != null) {
             String category = savedInstanceState.getString(Const.CATEGORY_LABEL, "NULL");
             if (!category.equals("NULL")) {
-                mHomePresenter.setCategory(category);
+                mHomePresenter.setCategoryLabel(category);
             }
         }
     }
@@ -388,7 +388,7 @@ public class HomeActivity extends BaseActivity implements IHomeView, View.OnClic
 
     @Override
     public void setCategoryList(List<Category> list) {
-        mCategoryAdapter = new NavigationCategoryAdapter(this, list);
+        mCategoryAdapter = new CategoryAdapter(this, list);
         mMenuListView.setAdapter(mCategoryAdapter);
     }
 
@@ -434,13 +434,13 @@ public class HomeActivity extends BaseActivity implements IHomeView, View.OnClic
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putString(Const.CATEGORY_LABEL, mHomePresenter.getCategory());
+        outState.putString(Const.CATEGORY_LABEL, mHomePresenter.getCategoryLabel());
         super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        mHomePresenter.setCategory(savedInstanceState.getString(Const.CATEGORY_LABEL));
+        mHomePresenter.setCategoryLabel(savedInstanceState.getString(Const.CATEGORY_LABEL));
         super.onRestoreInstanceState(savedInstanceState);
     }
 

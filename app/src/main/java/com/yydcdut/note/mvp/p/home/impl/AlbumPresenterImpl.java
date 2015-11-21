@@ -119,8 +119,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
     @Override
     public void sortData() {
         Collections.sort(mPhotoNoteList, ComparatorFactory.get(mAlbumSortKind));
-        //todo 可以排序等操作放到adapter里面进行
-        mAlbumView.updateData(mPhotoNoteList);
+//        mAlbumView.updateData(mPhotoNoteList);
         mAlbumView.notifyDataSetChanged();
     }
 
@@ -294,7 +293,6 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
                 //因为是最新时间，即“图片创建事件”、“图片修改时间”、“笔记创建时间”、“笔记修改时间”，所以要么在最前面，要么在最后面//// TODO: 15/11/20 还是因时间来判断插入到哪里，所以要计算
                 mPhotoNoteList = PhotoNoteDBModel.getInstance().findByCategoryLabel(mCategoryLabel, mAlbumSortKind);
                 mAlbumView.updateData(mPhotoNoteList);
-//                mAdapter.updateDataWithoutChanged(mPhotoNoteList);
                 switch (mAlbumSortKind) {
                     case ComparatorFactory.FACTORY_CREATE_CLOSE:
                     case ComparatorFactory.FACTORY_EDITED_CLOSE:

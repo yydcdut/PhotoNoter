@@ -10,9 +10,9 @@ public interface IHomePresenter extends IPresenter {
     int USER_ONE = 1;
     int USER_TWO = 2;
 
-    void setCategory(String categoryLabel);
+    void setCategoryLabel(String categoryLabel);
 
-    String getCategory();
+    String getCategoryLabel();
 
     int getCheckCategoryPosition();
 
