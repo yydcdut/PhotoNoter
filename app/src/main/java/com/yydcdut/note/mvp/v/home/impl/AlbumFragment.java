@@ -278,15 +278,14 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
                 item.setChecked(true);
                 break;
             case R.id.menu_trash:
-                mAdapter.deleteSelectedPhotos();
-                mAlbumPresenter.refreshData();
+                mAlbumPresenter.deletePhotos();
                 menuPreviewMode();
                 break;
             case R.id.menu_all_select:
                 mAdapter.selectAllPhotos();
                 break;
             case R.id.menu_move:
-                mAlbumPresenter.changePhotos2AnotherCategory();
+                mAlbumPresenter.movePhotos2AnotherCategory();
                 break;
             case R.id.menu_setting:
                 showLayoutRevealColorView(new RevealView.RevealAnimationListener() {
@@ -585,7 +584,7 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
     }
 
     @Override
-    public void showChangePhotos2AnotherCategoryDialog(final String[] categoryLabelArray) {
+    public void showMovePhotos2AnotherCategoryDialog(final String[] categoryLabelArray) {
         new AlertDialog.Builder(getContext(), R.style.note_dialog)
                 .setTitle(R.string.dialog_title_move)
                 .setItems(categoryLabelArray, new DialogInterface.OnClickListener() {
