@@ -144,6 +144,7 @@ public class DetailActivity extends BaseActivity implements IDetailView, ViewPag
         ButterKnife.inject(this);
         Bundle bundle = getIntent().getExtras();
         mDetailPresenter = new DetailPresenterImpl(bundle.getString(Const.CATEGORY_LABEL),
+                bundle.getInt(Const.PHOTO_POSITION),
                 bundle.getInt(Const.COMPARATOR_FACTORY));
         mDetailPresenter.attachView(this);
         initToolBar();
@@ -427,6 +428,11 @@ public class DetailActivity extends BaseActivity implements IDetailView, ViewPag
     public void setViewPagerAdapter(String label, int position, int comparator) {
         mDetailPagerAdapter = new DetailPagerAdapter(getSupportFragmentManager(), label, comparator);
         mViewPager.setAdapter(mDetailPagerAdapter);
+        mViewPager.setCurrentItem(position);
+    }
+
+    @Override
+    public void showCurrentPisition(int position) {
         mViewPager.setCurrentItem(position);
     }
 

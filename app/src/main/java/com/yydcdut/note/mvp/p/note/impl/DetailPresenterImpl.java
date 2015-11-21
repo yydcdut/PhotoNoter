@@ -42,15 +42,17 @@ public class DetailPresenterImpl implements IDetailPresenter, OnGetGeoCoderResul
     private List<PhotoNote> mPhotoNoteList;
     private String mCategoryLabel;
     private int mComparator;
+    private int mInitPostion;
 
     /* Baidu Map */
     private BaiduMap mBaiduMap;
     private UiSettings mUiSettings;
     private GeoCoder mSearch = null; // 搜索模块，也可去掉地图模块独立使用
 
-    public DetailPresenterImpl(String categoryLabel, int comparator) {
+    public DetailPresenterImpl(String categoryLabel, int position, int comparator) {
         mContext = NoteApplication.getContext();
         mCategoryLabel = categoryLabel;
+        mInitPostion = position;
         mComparator = comparator;
         mPhotoNoteList = PhotoNoteDBModel.getInstance().findByCategoryLabel(categoryLabel, comparator);
     }
@@ -59,8 +61,9 @@ public class DetailPresenterImpl implements IDetailPresenter, OnGetGeoCoderResul
     public void attachView(IView iView) {
         mDetailView = (IDetailView) iView;
         initBaiduMap();
-        showNote(mDetailView.getCurrentPosition());
         mDetailView.setViewPagerAdapter(mCategoryLabel, mDetailView.getCurrentPosition(), mComparator);
+        showNote(mInitPostion);
+        mDetailView.showCurrentPisition(mInitPostion);
     }
 
     private String decodeTimeInDetail(long time) {

@@ -10,6 +10,8 @@ public interface IDetailView extends IView {
 
     void setViewPagerAdapter(String label, int position, int comparator);
 
+    void showCurrentPisition(int position);
+
     BaiduMap getBaiduMap();
 
     int getCurrentPosition();
