@@ -23,13 +23,13 @@ public interface IAlbumPresenter extends IPresenter {
 
     void sortData();
 
-    void refreshData();
-
     void changeCategoryWithPhotos(String categoryLabel);
 
-    void changePhotos2AnotherCategory();
+    void movePhotos2AnotherCategory();
 
     void changePhotosCategory(String categoryLabel);
+
+    void deletePhotos();
 
     void createCategory(String newCategoryLabel);
 

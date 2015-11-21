@@ -26,19 +26,6 @@ public class NavigationCategoryAdapter extends BaseListAdapter<Category> {
         mColor = RandomColor.MATERIAL;
     }
 
-    public void setChecked(int pos, boolean checked) {
-        resetCheck();
-        getGroup().get(pos).setCheck(checked);
-        notifyDataSetChanged();
-    }
-
-    private void resetCheck() {
-        for (int i = 0; i < getGroup().size(); i++) {
-            getGroup().get(i).setCheck(false);
-        }
-        this.notifyDataSetChanged();
-    }
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;

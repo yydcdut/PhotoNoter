@@ -9,13 +9,9 @@ import android.view.ViewGroup;
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.vh.PhotoViewHolder;
 import com.yydcdut.note.bean.PhotoNote;
-import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * Created by yuyidong on 15/10/14.
@@ -71,32 +67,6 @@ public class AlbumAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
     }
 
     /**
-     * 删除选中部分
-     */
-    public void deleteSelectedPhotos() {
-        //注意java.util.ConcurrentModificationException at java.util.ArrayList$ArrayListIterator.next(ArrayList.java:573)
-        TreeMap<Integer, PhotoNote> map = new TreeMap<>(new Comparator<Integer>() {
-            @Override
-            public int compare(Integer lhs, Integer rhs) {
-                return lhs - rhs;
-            }
-        });
-        for (int i = 0; i < mPhotoNoteList.size(); i++) {
-            PhotoNote photoNote = mPhotoNoteList.get(i);
-            if (photoNote.isSelected()) {
-                map.put(i, photoNote);
-            }
-        }
-        int times = 0;
-        for (Map.Entry<Integer, PhotoNote> entry : map.entrySet()) {
-            PhotoNoteDBModel.getInstance().delete(entry.getValue());
-            mPhotoNoteList.remove(entry.getValue());
-            notifyItemRemoved(entry.getKey() - times);
-            times++;
-        }
-    }
-
-    /**
      * 全选
      */
     public void selectAllPhotos() {
@@ -137,7 +107,4 @@ public class AlbumAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
         notifyDataSetChanged();
     }
 
-    public void updateDataWithoutChanged(List<PhotoNote> photoNotes) {
-        mPhotoNoteList = photoNotes;
-    }
 }

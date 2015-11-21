@@ -108,7 +108,7 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
             } else {
                 if (category.isCheck()) {
                     category.setCheck(false);
-                    updateData2DB(updateCategory);
+                    updateData2DB(category);
                 }
             }
         }

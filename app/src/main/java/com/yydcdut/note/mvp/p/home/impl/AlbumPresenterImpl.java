@@ -125,11 +125,6 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
     }
 
     @Override
-    public void refreshData() {
-        mPhotoNoteList = PhotoNoteDBModel.getInstance().findByCategoryLabel(mCategoryLabel, mAlbumSortKind);
-    }
-
-    @Override
     public void changeCategoryWithPhotos(String categoryLabel) {
         mCategoryLabel = categoryLabel;
         mPhotoNoteList = PhotoNoteDBModel.getInstance().findByCategoryLabel(mCategoryLabel, mAlbumSortKind);
@@ -137,13 +132,13 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
     }
 
     @Override
-    public void changePhotos2AnotherCategory() {
+    public void movePhotos2AnotherCategory() {
         List<Category> categoryList = CategoryDBModel.getInstance().findAll();
         final String[] categoryLabelArray = new String[categoryList.size()];
         for (int i = 0; i < categoryLabelArray.length; i++) {
             categoryLabelArray[i] = categoryList.get(i).getLabel();
         }
-        mAlbumView.showChangePhotos2AnotherCategoryDialog(categoryLabelArray);
+        mAlbumView.showMovePhotos2AnotherCategoryDialog(categoryLabelArray);
     }
 
     @Override
@@ -152,6 +147,30 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
             doChangeCategory(toNewCategoryLabel);
             mPhotoNoteList = PhotoNoteDBModel.getInstance().findByCategoryLabelByForce(mCategoryLabel, mAlbumSortKind);
             CategoryDBModel.getInstance().updateChangeCategory(mCategoryLabel, toNewCategoryLabel);
+        }
+    }
+
+    @Override
+    public void deletePhotos() {
+        //注意java.util.ConcurrentModificationException at java.util.ArrayList$ArrayListIterator.next(ArrayList.java:573)
+        TreeMap<Integer, PhotoNote> map = new TreeMap<>(new Comparator<Integer>() {
+            @Override
+            public int compare(Integer lhs, Integer rhs) {
+                return lhs - rhs;
+            }
+        });
+        for (int i = 0; i < mPhotoNoteList.size(); i++) {
+            PhotoNote photoNote = mPhotoNoteList.get(i);
+            if (photoNote.isSelected()) {
+                map.put(i, photoNote);
+            }
+        }
+        int times = 0;
+        for (Map.Entry<Integer, PhotoNote> entry : map.entrySet()) {
+            PhotoNoteDBModel.getInstance().delete(entry.getValue());
+            mPhotoNoteList.remove(entry.getValue());
+            mAlbumView.notifyItemRemoved(entry.getKey() - times);
+            times++;
         }
     }
 
@@ -272,11 +291,10 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
     public boolean handleMessage(Message msg) {
         switch (msg.what) {
             case MSG_UPDATE_DATA:
-                //因为是最新时间，即“图片创建事件”、“图片修改时间”、“笔记创建时间”、“笔记修改时间”，所以要么在最前面，要么在最后面
+                //因为是最新时间，即“图片创建事件”、“图片修改时间”、“笔记创建时间”、“笔记修改时间”，所以要么在最前面，要么在最后面//// TODO: 15/11/20 还是因时间来判断插入到哪里，所以要计算
                 mPhotoNoteList = PhotoNoteDBModel.getInstance().findByCategoryLabel(mCategoryLabel, mAlbumSortKind);
                 mAlbumView.updateData(mPhotoNoteList);
 //                mAdapter.updateDataWithoutChanged(mPhotoNoteList);
-                //todo 上面那句注释可能有bug
                 switch (mAlbumSortKind) {
                     case ComparatorFactory.FACTORY_CREATE_CLOSE:
                     case ComparatorFactory.FACTORY_EDITED_CLOSE:
