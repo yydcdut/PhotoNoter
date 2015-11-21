@@ -180,6 +180,7 @@
     <string name="toast_input_error">Please write something!</string>
     <string name="toast_input_email">Please write your email~</string>
     <string name="toast_input_email_error">Please write right email!</string>
+    <string name="toast_pgedit_not_support">Only Support Jpg Image!</string>
 
     <string name="make_photo_notification">Make Photos In the background, please do not exit the Application!</string>
     <string name="make_photo_notification_title">Making Photos!</string>

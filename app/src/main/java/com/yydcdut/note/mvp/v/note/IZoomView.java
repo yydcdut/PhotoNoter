@@ -17,4 +17,6 @@ public interface IZoomView extends IView {
 
     void finishActivity(boolean hasResult);
 
+    void showSnackBar(String massage);
+
 }

@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 
 import com.yydcdut.note.NoteApplication;
+import com.yydcdut.note.R;
 import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.mvp.IView;
@@ -62,7 +63,12 @@ public class ZoomPresenterImpl implements IZoomPresenter, Handler.Callback {
 
     @Override
     public void jump2PGEditActivity() {
-        mZoomView.jump2PGEditActivity(mPhotoNote.getBigPhotoPathWithoutFile());
+        String path = mPhotoNote.getBigPhotoPathWithoutFile();
+        if (!path.endsWith(".jpg")) {
+            mZoomView.showSnackBar(mContext.getResources().getString(R.string.toast_pgedit_not_support));
+            return;
+        }
+        mZoomView.jump2PGEditActivity(path);
     }
 
     @Override
