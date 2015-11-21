@@ -1,4 +1,4 @@
-package com.yydcdut.note.controller;
+package com.yydcdut.note.mvp.v;
 
 import android.content.res.TypedArray;
 import android.graphics.Point;

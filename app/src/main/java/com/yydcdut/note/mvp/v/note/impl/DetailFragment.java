@@ -6,9 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.yydcdut.note.R;
-import com.yydcdut.note.controller.BaseFragment;
 import com.yydcdut.note.mvp.p.note.IDetailFragPresenter;
 import com.yydcdut.note.mvp.p.note.impl.DetailFragPresenterImpl;
+import com.yydcdut.note.mvp.v.BaseFragment;
 import com.yydcdut.note.mvp.v.note.IDetailFragView;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;

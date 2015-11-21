@@ -7,9 +7,9 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.yydcdut.note.R;
-import com.yydcdut.note.controller.BaseActivity;
 import com.yydcdut.note.mvp.p.home.ISplashPresenter;
 import com.yydcdut.note.mvp.p.home.impl.SplashPresenterImpl;
+import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.home.ISplashView;
 import com.yydcdut.note.utils.LollipopCompat;
 

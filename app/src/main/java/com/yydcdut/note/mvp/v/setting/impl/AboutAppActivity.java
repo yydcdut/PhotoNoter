@@ -8,10 +8,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.yydcdut.note.R;
-import com.yydcdut.note.controller.BaseActivity;
 import com.yydcdut.note.mvp.p.setting.IAboutAppPresenter;
 import com.yydcdut.note.mvp.p.setting.IFeedbackPresenter;
 import com.yydcdut.note.mvp.p.setting.impl.AboutAppPresenterImpl;
+import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.setting.IAboutAppView;
 import com.yydcdut.note.utils.LollipopCompat;
 

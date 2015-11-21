@@ -12,11 +12,11 @@ import android.widget.TextView;
 
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.FrequentImageAdapter;
-import com.yydcdut.note.controller.BaseFragment;
 import com.yydcdut.note.model.CategoryDBModel;
 import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.mvp.p.login.IUserDetailFragPresenter;
 import com.yydcdut.note.mvp.p.login.impl.UserDetailFragPresenterImpl;
+import com.yydcdut.note.mvp.v.BaseFragment;
 import com.yydcdut.note.mvp.v.login.IUserDetailFragView;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;

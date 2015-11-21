@@ -8,10 +8,10 @@ import android.view.View;
 
 import com.evernote.client.android.EvernoteSession;
 import com.yydcdut.note.R;
-import com.yydcdut.note.controller.BaseActivity;
 import com.yydcdut.note.listener.OnSnackBarActionListener;
 import com.yydcdut.note.mvp.p.login.ILoginPresenter;
 import com.yydcdut.note.mvp.p.login.impl.LoginPresenterImpl;
+import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.login.ILoginView;
 import com.yydcdut.note.utils.LollipopCompat;
 import com.yydcdut.note.view.CircleProgressBarLayout;
