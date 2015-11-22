@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.PhoneUtils;
+import com.yydcdut.note.utils.YLog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,6 +40,7 @@ public class FeedbackModel {
     public FeedbackModel(@ContextLife("Application") Context context, LocalStorageUtils localStorageUtils) {
         mLocalStorageUtils = localStorageUtils;
         mContext = context;
+        YLog.i("yuyidong", "FeedbackModel   --->" + this.toString());
     }
 
     public synchronized Map sendFeedback(String feedback_id, String content) {

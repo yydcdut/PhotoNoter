@@ -6,6 +6,10 @@ import android.content.Context;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.injector.PerActivity;
 import com.yydcdut.note.injector.module.ActivityModule;
+import com.yydcdut.note.model.CategoryDBModel;
+import com.yydcdut.note.model.PhotoNoteDBModel;
+import com.yydcdut.note.model.SandBoxDBModel;
+import com.yydcdut.note.model.UserCenter;
 import com.yydcdut.note.mvp.v.home.impl.HomeActivity;
 import com.yydcdut.note.mvp.v.home.impl.IntroduceActivity;
 import com.yydcdut.note.mvp.v.home.impl.SplashActivity;
@@ -18,6 +22,8 @@ import com.yydcdut.note.mvp.v.setting.impl.AboutAppActivity;
 import com.yydcdut.note.mvp.v.setting.impl.EditCategoryActivity;
 import com.yydcdut.note.mvp.v.setting.impl.FeedbackActivity;
 import com.yydcdut.note.mvp.v.setting.impl.SettingActivity;
+import com.yydcdut.note.utils.LocalStorageUtils;
+import com.yydcdut.note.utils.ThreadExecutorPool;
 
 import dagger.Component;
 
@@ -35,6 +41,18 @@ public interface ActivityComponent {
     Context getApplicationContext();
 
     Activity getActivity();
+
+    CategoryDBModel getCategoryDBModel();
+
+    PhotoNoteDBModel getPhotoNoteDBModel();
+
+    SandBoxDBModel getSandBoxDBModel();
+
+    UserCenter getUserCenter();
+
+    LocalStorageUtils getLocalStorageUtils();
+
+    ThreadExecutorPool getThreadExecutorPool();
 
     void inject(HomeActivity homeActivity);
 

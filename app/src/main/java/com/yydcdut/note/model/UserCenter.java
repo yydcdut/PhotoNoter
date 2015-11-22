@@ -18,7 +18,6 @@ import com.tencent.tauth.UiError;
 import com.yydcdut.note.BuildConfig;
 import com.yydcdut.note.bean.IUser;
 import com.yydcdut.note.bean.QQUser;
-import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.ThreadExecutorPool;
@@ -28,18 +27,19 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
+import java.util.Locale;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 /**
  * Created by yuyidong on 15/8/11.
  * todo 需要重构
  */
 public class UserCenter {
+    private static final EvernoteSession.EvernoteService EVERNOTE_SERVICE = EvernoteSession.EvernoteService.PRODUCTION;
+    private static final boolean SUPPORT_APP_LINKED_NOTEBOOKS = true;
+
     private static final String NULL = "";
 
     private static final String NAME = "User";
@@ -71,12 +71,15 @@ public class UserCenter {
     private ThreadExecutorPool mThreadExecutorPool;
     private Context mContext;
 
-    @Singleton
-    @Inject
-    public UserCenter(@ContextLife("Application") Context context, ThreadExecutorPool threadExecutorPool) {
+    //    @Singleton
+//    @Inject
+    public UserCenter(
+//            @ContextLife("Application")
+            Context context, ThreadExecutorPool threadExecutorPool) {
         mThreadExecutorPool = threadExecutorPool;
         mContext = context;
         mSharedPreferences = mContext.getSharedPreferences(NAME, Context.MODE_PRIVATE);
+        initUser();
         if (isLoginEvernote()) {
             LoginEvernote();
         }
@@ -85,6 +88,18 @@ public class UserCenter {
                     ImageLoaderManager.loadImageSync(getQQ().getNetImagePath()));
         }
     }
+
+    private void initUser() {
+        //Set up the Evernote singleton session, use EvernoteSession.getInstance() later
+        new EvernoteSession.Builder(mContext)
+                .setLocale(Locale.SIMPLIFIED_CHINESE)
+                .setEvernoteService(EVERNOTE_SERVICE)
+                .setSupportAppLinkedNotebooks(SUPPORT_APP_LINKED_NOTEBOOKS)
+                .setForceAuthenticationInThirdPartyApp(true)
+                .build(BuildConfig.EVERNOTE_CONSUMER_KEY, BuildConfig.EVERNOTE_CONSUMER_SECRET)
+                .asSingleton();
+    }
+
 
     public boolean isLoginQQ() {
         String openId = mSharedPreferences.getString(Q_OPEN_ID, Q_OPEN_ID_DEFAULT);

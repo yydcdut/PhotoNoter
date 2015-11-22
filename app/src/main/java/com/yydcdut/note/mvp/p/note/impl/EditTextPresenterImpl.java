@@ -95,7 +95,6 @@ public class EditTextPresenterImpl implements IEditTextPresenter, Handler.Callba
         mContext = context;
         mThreadExecutorPool = threadExecutorPool;
         mIatResults = new LinkedHashMap<>();
-        YLog.i("yuyidong", "EditTextPresenterImpl photoNoteDBModel--->" + photoNoteDBModel);
     }
 
     @Override

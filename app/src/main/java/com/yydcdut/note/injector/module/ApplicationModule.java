@@ -6,6 +6,9 @@ import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.CategoryDBModel;
 import com.yydcdut.note.model.PhotoNoteDBModel;
+import com.yydcdut.note.model.SandBoxDBModel;
+import com.yydcdut.note.model.UserCenter;
+import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.ThreadExecutorPool;
 
 import javax.inject.Singleton;
@@ -19,9 +22,21 @@ import dagger.Provides;
 @Module
 public class ApplicationModule {
     private NoteApplication mApplication;
+    private CategoryDBModel mCategoryDBModel;
+    private PhotoNoteDBModel mPhotoNoteDBModel;
+    private SandBoxDBModel mSandBoxDBModel;
+    private UserCenter mUserCenter;
+    private LocalStorageUtils mLocalStorageUtils;
+    private ThreadExecutorPool mThreadExecutorPool;
 
     public ApplicationModule(NoteApplication application) {
         mApplication = application;
+        mThreadExecutorPool = new ThreadExecutorPool();
+        mLocalStorageUtils = new LocalStorageUtils(mApplication.getApplicationContext());
+        mUserCenter = new UserCenter(mApplication.getApplicationContext(), mThreadExecutorPool);
+        mSandBoxDBModel = new SandBoxDBModel(mApplication.getApplicationContext());
+        mPhotoNoteDBModel = new PhotoNoteDBModel(mApplication.getApplicationContext());
+        mCategoryDBModel = new CategoryDBModel(mApplication.getApplicationContext(), mPhotoNoteDBModel, mThreadExecutorPool);
     }
 
     @Provides
@@ -33,19 +48,37 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
+    public CategoryDBModel provideCategoryDBModel() {
+        return mCategoryDBModel;
+    }
+
+    @Provides
+    @Singleton
+    public PhotoNoteDBModel providePhotoNoteDBModel() {
+        return mPhotoNoteDBModel;
+    }
+
+    @Provides
+    @Singleton
+    public SandBoxDBModel provideSandBoxDBModel() {
+        return mSandBoxDBModel;
+    }
+
+    @Provides
+    @Singleton
+    public UserCenter provideUserCenter() {
+        return mUserCenter;
+    }
+
+    @Provides
+    @Singleton
+    public LocalStorageUtils provideLocalStorageUtils() {
+        return mLocalStorageUtils;
+    }
+
+    @Provides
+    @Singleton
     public ThreadExecutorPool provideThreadExecutorPool() {
-        return new ThreadExecutorPool();
-    }
-
-    @Provides
-    @Singleton
-    public CategoryDBModel provideCategoryDBModel(CategoryDBModel categoryDBModel) {
-        return categoryDBModel;
-    }
-
-    @Provides
-    @Singleton
-    public PhotoNoteDBModel providePhotoNoteDBModel(PhotoNoteDBModel photoNoteDBModel) {
-        return photoNoteDBModel;
+        return mThreadExecutorPool;
     }
 }

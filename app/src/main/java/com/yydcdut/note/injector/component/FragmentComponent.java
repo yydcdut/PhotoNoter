@@ -6,9 +6,15 @@ import android.content.Context;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.injector.PerFragment;
 import com.yydcdut.note.injector.module.FragmentModule;
+import com.yydcdut.note.model.CategoryDBModel;
+import com.yydcdut.note.model.PhotoNoteDBModel;
+import com.yydcdut.note.model.SandBoxDBModel;
+import com.yydcdut.note.model.UserCenter;
 import com.yydcdut.note.mvp.v.home.impl.AlbumFragment;
 import com.yydcdut.note.mvp.v.login.impl.UserDetailFragment;
 import com.yydcdut.note.mvp.v.note.impl.DetailFragment;
+import com.yydcdut.note.utils.LocalStorageUtils;
+import com.yydcdut.note.utils.ThreadExecutorPool;
 
 import dagger.Component;
 
@@ -25,6 +31,18 @@ public interface FragmentComponent {
     Context getActivityContext();
 
     Activity getActivity();
+
+    CategoryDBModel getCategoryDBModel();
+
+    PhotoNoteDBModel getPhotoNoteDBModel();
+
+    SandBoxDBModel getSandBoxDBModel();
+
+    UserCenter getUserCenter();
+
+    LocalStorageUtils getLocalStorageUtils();
+
+    ThreadExecutorPool getThreadExecutorPool();
 
     void inject(AlbumFragment albumFragment);
 

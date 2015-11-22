@@ -3,8 +3,6 @@ package com.yydcdut.note.utils;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import javax.inject.Inject;
-
 /**
  * Created by yuyidong on 15/11/22.
  */
@@ -13,7 +11,8 @@ public class ThreadExecutorPool {
 
     private ExecutorService mPool;
 
-    @Inject
+    //    @Inject
+//    @Singleton
     public ThreadExecutorPool() {
         mPool = Executors.newFixedThreadPool(MAX_THREAD_POOL_NUMBER);
     }

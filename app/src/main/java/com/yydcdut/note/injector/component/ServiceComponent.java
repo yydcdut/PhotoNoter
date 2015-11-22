@@ -5,10 +5,16 @@ import android.content.Context;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.injector.PerService;
 import com.yydcdut.note.injector.module.ServiceModule;
+import com.yydcdut.note.model.CategoryDBModel;
+import com.yydcdut.note.model.PhotoNoteDBModel;
+import com.yydcdut.note.model.SandBoxDBModel;
+import com.yydcdut.note.model.UserCenter;
 import com.yydcdut.note.service.CameraService;
 import com.yydcdut.note.service.CheckService;
 import com.yydcdut.note.service.InitService;
 import com.yydcdut.note.service.SandBoxService;
+import com.yydcdut.note.utils.LocalStorageUtils;
+import com.yydcdut.note.utils.ThreadExecutorPool;
 
 import dagger.Component;
 
@@ -24,6 +30,18 @@ public interface ServiceComponent {
 
     @ContextLife("Application")
     Context getApplicationContext();
+
+    CategoryDBModel getCategoryDBModel();
+
+    PhotoNoteDBModel getPhotoNoteDBModel();
+
+    SandBoxDBModel getSandBoxDBModel();
+
+    UserCenter getUserCenter();
+
+    LocalStorageUtils getLocalStorageUtils();
+
+    ThreadExecutorPool getThreadExecutorPool();
 
     void inject(InitService initService);
 

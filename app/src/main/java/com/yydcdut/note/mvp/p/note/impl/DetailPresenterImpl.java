@@ -27,7 +27,6 @@ import com.yydcdut.note.mvp.p.note.IDetailPresenter;
 import com.yydcdut.note.mvp.v.note.IDetailView;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.LocalStorageUtils;
-import com.yydcdut.note.utils.YLog;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -61,7 +60,6 @@ public class DetailPresenterImpl implements IDetailPresenter, OnGetGeoCoderResul
         mContext = context;
         mPhotoNoteDBModel = photoNoteDBModel;
         mLocalStorageUtils = localStorageUtils;
-        YLog.i("yuyidong", "DetailPresenterImpl photoNoteDBModel--->" + photoNoteDBModel);
     }
 
     @Override

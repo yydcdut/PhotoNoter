@@ -5,7 +5,6 @@ import android.app.Application;
 import android.content.Context;
 
 import com.baidu.mapapi.SDKInitializer;
-import com.evernote.client.android.EvernoteSession;
 import com.iflytek.cloud.SpeechUtility;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
@@ -18,8 +17,6 @@ import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.YLog;
 
-import java.util.Locale;
-
 import us.pinguo.edit.sdk.PGEditImageLoader;
 import us.pinguo.edit.sdk.base.PGEditSDK;
 
@@ -28,11 +25,7 @@ import us.pinguo.edit.sdk.base.PGEditSDK;
  */
 public class NoteApplication extends Application {
     private static final String TAG = NoteApplication.class.getSimpleName();
-    private static NoteApplication mInstance;
     private RefWatcher mRefWatcher;
-
-    private static final EvernoteSession.EvernoteService EVERNOTE_SERVICE = EvernoteSession.EvernoteService.PRODUCTION;
-    private static final boolean SUPPORT_APP_LINKED_NOTEBOOKS = true;
 
     private ApplicationComponent mApplicationComponent;
 
@@ -42,7 +35,6 @@ public class NoteApplication extends Application {
 
     @Override
     public void onCreate() {
-        mInstance = NoteApplication.this;
         super.onCreate();
 
         initComponent();
@@ -53,7 +45,6 @@ public class NoteApplication extends Application {
         FilePathUtils.initEnvironment(this);
         Evi.init(this);
         if (!isFromOtherProgress()) {
-            initUser();
             initBaiduSdk();
              /* Camera360 */
             PGEditImageLoader.initImageLoader(this);
@@ -78,17 +69,6 @@ public class NoteApplication extends Application {
      */
     private void initImageLoader() {
         ImageLoaderManager.init(getApplicationContext());
-    }
-
-    private void initUser() {
-        //Set up the Evernote singleton session, use EvernoteSession.getInstance() later
-        new EvernoteSession.Builder(this)
-                .setLocale(Locale.SIMPLIFIED_CHINESE)
-                .setEvernoteService(EVERNOTE_SERVICE)
-                .setSupportAppLinkedNotebooks(SUPPORT_APP_LINKED_NOTEBOOKS)
-                .setForceAuthenticationInThirdPartyApp(true)
-                .build(BuildConfig.EVERNOTE_CONSUMER_KEY, BuildConfig.EVERNOTE_CONSUMER_SECRET)
-                .asSingleton();
     }
 
     private void initBaiduSdk() {

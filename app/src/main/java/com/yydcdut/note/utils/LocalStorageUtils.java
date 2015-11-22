@@ -6,7 +6,6 @@ import android.text.TextUtils;
 
 import com.yydcdut.note.camera.model.ICameraParams;
 import com.yydcdut.note.camera.param.Size;
-import com.yydcdut.note.injector.ContextLife;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,9 +14,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 /**
  * Created by yuyidong on 15-4-1.
@@ -110,9 +106,11 @@ public class LocalStorageUtils {
 
     private static SharedPreferences mSharedPreferences;
 
-    @Inject
-    @Singleton
-    public LocalStorageUtils(@ContextLife("Application") Context context) {
+    //    @Inject
+//    @Singleton
+    public LocalStorageUtils(
+//            @ContextLife("Application")
+            Context context) {
         mSharedPreferences = context.getSharedPreferences(SETTING_NAME, Context.MODE_PRIVATE);
     }
 
