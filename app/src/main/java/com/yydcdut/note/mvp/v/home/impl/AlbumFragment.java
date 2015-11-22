@@ -28,14 +28,16 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.AlbumAdapter;
 import com.yydcdut.note.adapter.vh.PhotoViewHolder;
 import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.camera.controller.CameraActivity;
+import com.yydcdut.note.injector.component.DaggerFragmentComponent;
+import com.yydcdut.note.injector.module.FragmentModule;
 import com.yydcdut.note.listener.FloatingScrollHideListener;
-import com.yydcdut.note.mvp.p.home.IAlbumPresenter;
 import com.yydcdut.note.mvp.p.home.impl.AlbumPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseFragment;
 import com.yydcdut.note.mvp.v.home.IAlbumView;
@@ -52,6 +54,8 @@ import com.yydcdut.note.view.fab.FloatingActionsMenu;
 import java.io.File;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -63,7 +67,8 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
         PhotoViewHolder.OnItemLongClickListener, FloatingActionsMenu.OnFloatingActionsMenuUpdateListener {
     private static final String TAG = AlbumFragment.class.getSimpleName();
 
-    private IAlbumPresenter mAlbumPresenter;
+    @Inject
+    AlbumPresenterImpl mAlbumPresenter;
 
     private static final int INTENT_REQUEST_LOCAL = 101;
     private static final int INTENT_REQUEST_CAMERA = 201;
@@ -120,13 +125,22 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
 
     @Override
     public void getBundle(Bundle bundle) {
-        mAlbumPresenter = new AlbumPresenterImpl(bundle.getString(Const.CATEGORY_LABEL));
+        mAlbumPresenter.bindData(bundle.getString(Const.CATEGORY_LABEL));
         mMainHandler = new Handler();
     }
 
     @Override
     public View inflateView(LayoutInflater inflater) {
         return inflater.inflate(R.layout.frag_album, null);
+    }
+
+    @Override
+    public void initInjector() {
+        mFragmentComponent = DaggerFragmentComponent.builder()
+                .fragmentModule(new FragmentModule(this))
+                .applicationComponent(((NoteApplication) getActivity().getApplication()).getApplicationComponent())
+                .build();
+        mFragmentComponent.inject(this);
     }
 
     @Override

@@ -3,7 +3,6 @@ package com.yydcdut.note;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.evernote.client.android.EvernoteSession;
@@ -11,19 +10,15 @@ import com.iflytek.cloud.SpeechUtility;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 import com.umeng.analytics.MobclickAgent;
-import com.yydcdut.note.model.PhotoNoteDBModel;
-import com.yydcdut.note.model.UserCenter;
-import com.yydcdut.note.service.CheckService;
+import com.yydcdut.note.injector.component.ApplicationComponent;
+import com.yydcdut.note.injector.component.DaggerApplicationComponent;
+import com.yydcdut.note.injector.module.ApplicationModule;
 import com.yydcdut.note.utils.Evi;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
-import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.YLog;
 
-import java.io.File;
 import java.util.Locale;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import us.pinguo.edit.sdk.PGEditImageLoader;
 import us.pinguo.edit.sdk.base.PGEditSDK;
@@ -34,26 +29,15 @@ import us.pinguo.edit.sdk.base.PGEditSDK;
 public class NoteApplication extends Application {
     private static final String TAG = NoteApplication.class.getSimpleName();
     private static NoteApplication mInstance;
-    private static final int MAX_THREAD_POOL_NUMBER = 5;
-    private ExecutorService mPool;
     private RefWatcher mRefWatcher;
 
     private static final EvernoteSession.EvernoteService EVERNOTE_SERVICE = EvernoteSession.EvernoteService.PRODUCTION;
     private static final boolean SUPPORT_APP_LINKED_NOTEBOOKS = true;
 
-    private static Context mContext;
-
-    public NoteApplication() {
-        mContext = this;
-    }
-
-    public static Context getContext() {
-        return mContext;
-    }
+    private ApplicationComponent mApplicationComponent;
 
     public void onLowMemory() {
         super.onLowMemory();
-        mContext = this.getApplicationContext();
     }
 
     @Override
@@ -61,13 +45,13 @@ public class NoteApplication extends Application {
         mInstance = NoteApplication.this;
         super.onCreate();
 
+        initComponent();
+
         mRefWatcher = LeakCanary.install(this);
 
         initImageLoader();
-        initExecutor();
-        FilePathUtils.initEnvironment();
-        Evi.init();
-        initService();
+        FilePathUtils.initEnvironment(this);
+        Evi.init(this);
         if (!isFromOtherProgress()) {
             initUser();
             initBaiduSdk();
@@ -87,33 +71,6 @@ public class NoteApplication extends Application {
 //        CrashHandler.getInstance().init(getApplicationContext());
 
         YLog.setDEBUG(BuildConfig.LOG_DEBUG);
-
-    }
-
-
-    /**
-     * 获得application变量
-     *
-     * @return
-     */
-    public static NoteApplication getInstance() {
-        return mInstance;
-    }
-
-    /**
-     * 初始化线程池
-     */
-    private void initExecutor() {
-        mPool = Executors.newFixedThreadPool(MAX_THREAD_POOL_NUMBER);
-    }
-
-    /**
-     * 获得线程池
-     *
-     * @return
-     */
-    public ExecutorService getExecutorPool() {
-        return mPool;
     }
 
     /**
@@ -121,33 +78,6 @@ public class NoteApplication extends Application {
      */
     private void initImageLoader() {
         ImageLoaderManager.init(getApplicationContext());
-    }
-
-
-    /**
-     * 在服务里面初始化一些东西
-     */
-    private void initService() {
-        if (!LocalStorageUtils.getInstance().isFirstTime()) {
-            int dbNumber = PhotoNoteDBModel.getInstance().getAllNumber();
-            File file = new File(FilePathUtils.getPath());
-            int fileNumber = 0;
-            File[] fileArr = file.listFiles();
-            for (File file1 : fileArr) {
-                if (file1.isDirectory()) {
-                    continue;
-                }
-                if (file1.getName().toLowerCase().endsWith("jpg") ||
-                        file1.getName().toLowerCase().endsWith("png") ||
-                        file1.getName().toLowerCase().endsWith("jpeg")) {
-                    fileNumber++;
-                }
-            }
-            if (fileNumber == dbNumber) {
-                Intent checkIntent = new Intent(this, CheckService.class);
-                startService(checkIntent);
-            }
-        }
     }
 
     private void initUser() {
@@ -159,24 +89,15 @@ public class NoteApplication extends Application {
                 .setForceAuthenticationInThirdPartyApp(true)
                 .build(BuildConfig.EVERNOTE_CONSUMER_KEY, BuildConfig.EVERNOTE_CONSUMER_SECRET)
                 .asSingleton();
-        if (UserCenter.getInstance().isLoginEvernote()) {
-            UserCenter.getInstance().LoginEvernote();
-        }
-
-        if (UserCenter.getInstance().isLoginQQ() && !new File(FilePathUtils.getQQImagePath()).exists()) {
-            FilePathUtils.saveImage(FilePathUtils.getQQImagePath(),
-                    ImageLoaderManager.loadImageSync(UserCenter.getInstance().getQQ().getNetImagePath()));
-        }
-
     }
 
     private void initBaiduSdk() {
-        SDKInitializer.initialize(getContext());
+        SDKInitializer.initialize(this);
     }
 
     private boolean isFromOtherProgress() {
         int pid = android.os.Process.myPid();
-        ActivityManager mActivityManager = (ActivityManager) getContext().getSystemService(Context.ACTIVITY_SERVICE);
+        ActivityManager mActivityManager = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningAppProcessInfo appProcess : mActivityManager.getRunningAppProcesses()) {
             if (pid == appProcess.pid) {
                 if (appProcess.processName.equals("com.yydcdut.note:cameraphots") ||
@@ -187,6 +108,16 @@ public class NoteApplication extends Application {
             }
         }
         return false;
+    }
+
+    private void initComponent() {
+        mApplicationComponent = DaggerApplicationComponent.builder()
+                .applicationModule(new ApplicationModule(this))
+                .build();
+    }
+
+    public ApplicationComponent getApplicationComponent() {
+        return mApplicationComponent;
     }
 
 }

@@ -11,9 +11,13 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import com.umeng.analytics.MobclickAgent;
+import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
+import com.yydcdut.note.injector.component.ActivityComponent;
+import com.yydcdut.note.injector.component.DaggerActivityComponent;
+import com.yydcdut.note.injector.module.ActivityModule;
+import com.yydcdut.note.mvp.p.ThemePresenter;
 import com.yydcdut.note.utils.ActivityCollector;
-import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.LollipopCompat;
 import com.yydcdut.note.utils.ThemeHelper;
 
@@ -22,7 +26,9 @@ import java.lang.reflect.Field;
 /**
  * Created by yyd on 15-4-6.
  */
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity implements IThemeView {
+    protected ActivityComponent mActivityComponent;
+
     public static final int RESULT_NOTHING = 1;
     public static final int RESULT_DATA = 2;
     public static final int RESULT_PICTURE = 3;
@@ -32,15 +38,31 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public static final int REQUEST_NOTHING = 1;
 
-    /**
-     * 设置主题
-     */
-    private void setTheme() {
-        int index = LocalStorageUtils.getInstance().getThemeColor();
-        setTheme(ThemeHelper.THEME.get(index).getStyle());
+    private ThemePresenter mThemePresenter;
+
+    @Override
+    public void setActivityTheme(int index) {
+        super.setTheme(ThemeHelper.THEME.get(index).getStyle());
         if (LollipopCompat.AFTER_LOLLIPOP) {
             getWindow().setNavigationBarColor(getResources().getColor(ThemeHelper.THEME.get(index).getColorPrimary()));
         }
+    }
+
+    @Override
+    public void setStatusBarTranslation(boolean translation, int layout) {
+        View contentView = LayoutInflater.from(this).inflate(layout, null);
+        View totalContentView = null;
+        if (translation) {
+            totalContentView = LayoutInflater.from(this).inflate(R.layout.layout_status_bar_translation, null);
+        } else {
+            totalContentView = LayoutInflater.from(this).inflate(R.layout.layout_status_bar_immersive, null);
+        }
+        FrameLayout frameLayout = (FrameLayout) totalContentView.findViewById(R.id.layout_content);
+        frameLayout.addView(contentView);
+        setContentView(totalContentView);
+        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) frameLayout.getLayoutParams();
+        layoutParams.topMargin = getStatusBarSize();
+        frameLayout.requestLayout();
     }
 
     /**
@@ -66,6 +88,8 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     public abstract int setContentView();
 
+    public abstract void initInjector();
+
     /**
      * init UI && Listener
      */
@@ -79,28 +103,23 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mActivityComponent = DaggerActivityComponent.builder()
+                .activityModule(new ActivityModule(this))
+                .applicationComponent(((NoteApplication) getApplication()).getApplicationComponent())
+                .build();
         ActivityCollector.addActivity(this);
+        mThemePresenter = new ThemePresenter(getApplicationContext());
+        mThemePresenter.attachView(this);
+        mThemePresenter.setTheme();
         boolean isSet = setWindowStatusBar(true && setStatusBar());
         super.onCreate(savedInstanceState);
-        setTheme();
         int layout = setContentView();
         if (isSet) {
-            View contentView = LayoutInflater.from(this).inflate(layout, null);
-            View totalContentView = null;
-            if (LocalStorageUtils.getInstance().getStatusBarTranslation()) {
-                totalContentView = LayoutInflater.from(this).inflate(R.layout.layout_status_bar_translation, null);
-            } else {
-                totalContentView = LayoutInflater.from(this).inflate(R.layout.layout_status_bar_immersive, null);
-            }
-            FrameLayout frameLayout = (FrameLayout) totalContentView.findViewById(R.id.layout_content);
-            frameLayout.addView(contentView);
-            setContentView(totalContentView);
-            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) frameLayout.getLayoutParams();
-            layoutParams.topMargin = getStatusBarSize();
-            frameLayout.requestLayout();
+            mThemePresenter.setStatusBar(layout);
         } else {
             setContentView(layout);
         }
+        initInjector();
         initUiAndListener();
         startActivityAnimation();
     }

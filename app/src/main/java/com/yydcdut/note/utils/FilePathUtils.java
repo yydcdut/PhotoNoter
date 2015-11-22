@@ -1,5 +1,6 @@
 package com.yydcdut.note.utils;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -8,7 +9,6 @@ import android.os.Environment;
 import android.os.StatFs;
 import android.widget.Toast;
 
-import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
@@ -37,11 +37,11 @@ public class FilePathUtils {
 
     private static final String SANDBOX_DIR_NAME = ".database";
 
-    public static void initEnvironment() {
+    public static void initEnvironment(Context context) {
         String state = Environment.getExternalStorageState();
         if (!Environment.MEDIA_MOUNTED.equals(state)) {
-            Toast.makeText(NoteApplication.getContext(),
-                    NoteApplication.getContext().getResources().getString(R.string.toast_sdcard),
+            Toast.makeText(context,
+                    context.getResources().getString(R.string.toast_sdcard),
                     Toast.LENGTH_SHORT).show();
         }
         createDirIfNotExist();

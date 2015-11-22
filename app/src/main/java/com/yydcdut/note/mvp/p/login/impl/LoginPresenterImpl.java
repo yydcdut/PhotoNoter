@@ -6,8 +6,8 @@ import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 
-import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
+import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.listener.OnSnackBarActionListener;
 import com.yydcdut.note.model.UserCenter;
 import com.yydcdut.note.mvp.IView;
@@ -16,6 +16,9 @@ import com.yydcdut.note.mvp.v.login.ILoginView;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.NetworkUtils;
+import com.yydcdut.note.utils.ThreadExecutorPool;
+
+import javax.inject.Inject;
 
 /**
  * Created by yuyidong on 15/11/16.
@@ -24,8 +27,9 @@ public class LoginPresenterImpl implements ILoginPresenter, Handler.Callback {
     private ILoginView mLoginView;
 
     private Context mContext;
-
     private Activity mActivity;
+    private ThreadExecutorPool mThreadExecutorPool;
+    private UserCenter mUserCenter;
 
     private static final int MESSAGE_LOGIN_QQ_OK = 1;
     private static final int MESSAGE_LOGIN_QQ_FAILED = 3;
@@ -33,13 +37,17 @@ public class LoginPresenterImpl implements ILoginPresenter, Handler.Callback {
     private static final int MESSAGE_LOGIN_EVERNOTE_FAILED = 4;
     private Handler mHandler;
 
-    public LoginPresenterImpl(Activity activity) {
+    @Inject
+    public LoginPresenterImpl(Activity activity, @ContextLife("Activity") Context context,
+                              ThreadExecutorPool threadExecutorPool, UserCenter userCenter) {
         mActivity = activity;
+        mContext = context;
+        mThreadExecutorPool = threadExecutorPool;
+        mUserCenter = userCenter;
     }
 
     @Override
     public void attachView(IView iView) {
-        mContext = NoteApplication.getContext();
         mLoginView = (ILoginView) iView;
         mHandler = new Handler(this);
     }
@@ -61,26 +69,26 @@ public class LoginPresenterImpl implements ILoginPresenter, Handler.Callback {
 
     @Override
     public void loginQQ() {
-        if (UserCenter.getInstance().isLoginQQ()) {
+        if (mUserCenter.isLoginQQ()) {
             mLoginView.showSnackBar(mContext.getResources().getString(R.string.toast_already_login));
         } else {
-            UserCenter.getInstance().doLoginQQ(mActivity, mLoginQQListener);
+            mUserCenter.doLoginQQ(mActivity, mLoginQQListener);
         }
     }
 
     @Override
     public void loginEvernote() {
-        if (UserCenter.getInstance().isLoginEvernote()) {
+        if (mUserCenter.isLoginEvernote()) {
             mLoginView.showSnackBar(mContext.getResources().getString(R.string.toast_already_login));
         } else {
-            UserCenter.getInstance().doLoginEvernote(mActivity);
+            mUserCenter.doLoginEvernote(mActivity);
         }
     }
 
     @Override
     public void onEvernoteLoginFinished(boolean successful) {
         if (successful) {
-            UserCenter.getInstance().LoginEvernote();
+            mUserCenter.LoginEvernote();
             mHandler.sendEmptyMessage(MESSAGE_LOGIN_EVERNOTE_OK);
         } else {
             mHandler.sendEmptyMessage(MESSAGE_LOGIN_EVERNOTE_FAILED);
@@ -103,7 +111,7 @@ public class LoginPresenterImpl implements ILoginPresenter, Handler.Callback {
                         new OnSnackBarActionListener() {
                             @Override
                             public void onClick() {
-                                UserCenter.getInstance().doLoginEvernote(mActivity);
+                                mUserCenter.doLoginEvernote(mActivity);
                             }
                         });
                 break;
@@ -113,7 +121,7 @@ public class LoginPresenterImpl implements ILoginPresenter, Handler.Callback {
                         new OnSnackBarActionListener() {
                             @Override
                             public void onClick() {
-                                UserCenter.getInstance().doLoginQQ(mActivity, mLoginQQListener);
+                                mUserCenter.doLoginQQ(mActivity, mLoginQQListener);
                             }
                         });
                 break;
@@ -125,10 +133,10 @@ public class LoginPresenterImpl implements ILoginPresenter, Handler.Callback {
         @Override
         public void onComplete(final String openid, final String accessToken, final String name, final String image) {
             mLoginView.showProgressBar();
-            NoteApplication.getInstance().getExecutorPool().execute(new Runnable() {
+            mThreadExecutorPool.getExecutorPool().execute(new Runnable() {
                 @Override
                 public void run() {
-                    if (UserCenter.getInstance().LoginQQ(openid, accessToken, name, image)) {
+                    if (mUserCenter.LoginQQ(openid, accessToken, name, image)) {
                         Bitmap bitmap = ImageLoaderManager.loadImageSync(image);
                         FilePathUtils.saveImage(FilePathUtils.getQQImagePath(), bitmap);
                         mHandler.sendEmptyMessage(MESSAGE_LOGIN_QQ_OK);

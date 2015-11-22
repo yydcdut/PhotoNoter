@@ -15,8 +15,10 @@ import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
+import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
-import com.yydcdut.note.mvp.p.note.IZoomPresenter;
+import com.yydcdut.note.injector.component.DaggerActivityComponent;
+import com.yydcdut.note.injector.module.ActivityModule;
 import com.yydcdut.note.mvp.p.note.impl.ZoomPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.note.IZoomView;
@@ -24,6 +26,8 @@ import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.view.CircleProgressBarLayout;
 import com.yydcdut.note.view.ZoomImageView;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -47,7 +51,8 @@ public class ZoomActivity extends BaseActivity implements IZoomView {
     @Bind(R.id.layout_progress)
     CircleProgressBarLayout mProgressLayout;
 
-    private IZoomPresenter mZoomPresenter;
+    @Inject
+    ZoomPresenterImpl mZoomPresenter;
 
     /**
      * 启动Activity
@@ -79,10 +84,19 @@ public class ZoomActivity extends BaseActivity implements IZoomView {
     }
 
     @Override
+    public void initInjector() {
+        mActivityComponent = DaggerActivityComponent.builder()
+                .activityModule(new ActivityModule(this))
+                .applicationComponent(((NoteApplication) getApplication()).getApplicationComponent())
+                .build();
+        mActivityComponent.inject(this);
+    }
+
+    @Override
     public void initUiAndListener() {
         Bundle bundle = getIntent().getExtras();
         ButterKnife.bind(this);
-        mZoomPresenter = new ZoomPresenterImpl(bundle.getString(Const.CATEGORY_LABEL),
+        mZoomPresenter.bindData(bundle.getString(Const.CATEGORY_LABEL),
                 bundle.getInt(Const.PHOTO_POSITION), bundle.getInt(Const.COMPARATOR_FACTORY));
         mZoomPresenter.attachView(this);
         initToolBarUI();

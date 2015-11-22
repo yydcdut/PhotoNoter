@@ -4,19 +4,22 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
-import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.bean.Category;
+import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.CategoryDBModel;
 import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.setting.IEditCategoryPresenter;
 import com.yydcdut.note.mvp.v.setting.IEditCategoryView;
+import com.yydcdut.note.utils.ThreadExecutorPool;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 /**
  * Created by yuyidong on 15/11/15.
@@ -39,11 +42,21 @@ public class EditCategoryPresenterImpl implements IEditCategoryPresenter, Handle
      */
     private Map<String, String> mRenameCategoryLabelMap;
 
+    private CategoryDBModel mCategoryDBModel;
+    private ThreadExecutorPool mThreadExecutorPool;
+
+    @Inject
+    public EditCategoryPresenterImpl(@ContextLife("Activity") Context context, CategoryDBModel categoryDBModel,
+                                     ThreadExecutorPool threadExecutorPool) {
+        mContext = context;
+        mCategoryDBModel = categoryDBModel;
+        mThreadExecutorPool = threadExecutorPool;
+    }
+
     @Override
     public void attachView(IView iView) {
-        mContext = NoteApplication.getContext();
         mHandler = new Handler(this);
-        mCategoryList = CategoryDBModel.getInstance().findAll();
+        mCategoryList = mCategoryDBModel.findAll();
         mDeleteCategoryLabelList = new ArrayList<>();
         mRenameCategoryLabelMap = new HashMap<>();
         mEditCategoryView = (IEditCategoryView) iView;
@@ -79,12 +92,12 @@ public class EditCategoryPresenterImpl implements IEditCategoryPresenter, Handle
     @Override
     public void doJob() {
         mEditCategoryView.showProgressBar();
-        NoteApplication.getInstance().getExecutorPool().execute(new Runnable() {
+        mThreadExecutorPool.getExecutorPool().execute(new Runnable() {
             @Override
             public void run() {
                 renameCategories();
                 deleteCategories();
-                CategoryDBModel.getInstance().updateOrder(mCategoryList);
+                mCategoryDBModel.updateOrder(mCategoryList);
                 mHandler.sendEmptyMessage(1);
             }
         });
@@ -101,8 +114,8 @@ public class EditCategoryPresenterImpl implements IEditCategoryPresenter, Handle
                 Map.Entry<String, String> entry = iterator.next();
                 String originalLabel = entry.getKey();
                 String newLabel = entry.getValue();
-                CategoryDBModel.getInstance().refresh();
-                CategoryDBModel.getInstance().updateLabel(originalLabel, newLabel);
+                mCategoryDBModel.refresh();
+                mCategoryDBModel.updateLabel(originalLabel, newLabel);
             }
         }
     }
@@ -113,10 +126,10 @@ public class EditCategoryPresenterImpl implements IEditCategoryPresenter, Handle
     private void deleteCategories() {
         if (mDeleteCategoryLabelList != null && mDeleteCategoryLabelList.size() > 0) {
             for (String label : mDeleteCategoryLabelList) {
-                CategoryDBModel.getInstance().refresh();
-                Category category = CategoryDBModel.getInstance().findByCategoryLabel(label);
+                mCategoryDBModel.refresh();
+                Category category = mCategoryDBModel.findByCategoryLabel(label);
                 boolean isCheck = category.isCheck();
-                CategoryDBModel.getInstance().delete(category);
+                mCategoryDBModel.delete(category);
                 if (isCheck) {//如果是menu中当前选中的这个
                     resetAllCategoriesCheck();
                     if (mCategoryList.size() > 0) {

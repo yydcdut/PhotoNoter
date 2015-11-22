@@ -7,9 +7,9 @@ import android.os.Handler;
 import android.os.Message;
 
 import com.evernote.edam.type.User;
-import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.bean.IUser;
+import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.listener.OnSnackBarActionListener;
 import com.yydcdut.note.model.UserCenter;
 import com.yydcdut.note.mvp.IView;
@@ -18,6 +18,9 @@ import com.yydcdut.note.mvp.v.login.IUserCenterView;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.NetworkUtils;
+import com.yydcdut.note.utils.ThreadExecutorPool;
+
+import javax.inject.Inject;
 
 /**
  * Created by yuyidong on 15/11/16.
@@ -25,6 +28,8 @@ import com.yydcdut.note.utils.NetworkUtils;
 public class UserCenterPresenterImpl implements IUserCenterPresenter, Handler.Callback {
     private IUserCenterView mUserCenterView;
     private Context mContext;
+    private UserCenter mUserCenter;
+    private ThreadExecutorPool mThreadExecutorPool;
 
     private static final int MESSAGE_LOGIN_QQ_OK = 1;
     private static final int MESSAGE_LOGIN_QQ_FAILED = 3;
@@ -35,13 +40,17 @@ public class UserCenterPresenterImpl implements IUserCenterPresenter, Handler.Ca
 
     private boolean[] mInitState;
 
-    public UserCenterPresenterImpl(Activity activity) {
+    @Inject
+    public UserCenterPresenterImpl(Activity activity, @ContextLife("Activity") Context context,
+                                   UserCenter userCenter, ThreadExecutorPool threadExecutorPool) {
         mActivity = activity;
         mHandler = new Handler(this);
-        mContext = NoteApplication.getContext();
+        mContext = context;
         mInitState = new boolean[2];
-        mInitState[0] = UserCenter.getInstance().isLoginQQ();
-        mInitState[1] = UserCenter.getInstance().isLoginEvernote();
+        mUserCenter = userCenter;
+        mThreadExecutorPool = threadExecutorPool;
+        mInitState[0] = mUserCenter.isLoginQQ();
+        mInitState[1] = mUserCenter.isLoginEvernote();
 
     }
 
@@ -69,26 +78,26 @@ public class UserCenterPresenterImpl implements IUserCenterPresenter, Handler.Ca
 
     @Override
     public void loginQQ() {
-        if (UserCenter.getInstance().isLoginQQ()) {
+        if (mUserCenter.isLoginQQ()) {
             return;
         } else {
-            UserCenter.getInstance().doLoginQQ(mActivity, mLoginQQListener);
+            mUserCenter.doLoginQQ(mActivity, mLoginQQListener);
         }
     }
 
     @Override
     public void loginEvernote() {
-        if (UserCenter.getInstance().isLoginEvernote()) {
+        if (mUserCenter.isLoginEvernote()) {
             return;
         } else {
-            UserCenter.getInstance().doLoginEvernote(mActivity);
+            mUserCenter.doLoginEvernote(mActivity);
         }
     }
 
     @Override
     public void onEvernoteLoginFinished(boolean successful) {
         if (successful) {
-            UserCenter.getInstance().LoginEvernote();
+            mUserCenter.LoginEvernote();
             mHandler.sendEmptyMessage(MESSAGE_LOGIN_EVERNOTE_OK);
         } else {
             mHandler.sendEmptyMessage(MESSAGE_LOGIN_EVERNOTE_FAILED);
@@ -97,8 +106,8 @@ public class UserCenterPresenterImpl implements IUserCenterPresenter, Handler.Ca
 
     @Override
     public void initQQ() {
-        if (UserCenter.getInstance().isLoginQQ() && UserCenter.getInstance().getQQ() != null) {
-            IUser qqUser = UserCenter.getInstance().getQQ();
+        if (mUserCenter.isLoginQQ() && mUserCenter.getQQ() != null) {
+            IUser qqUser = mUserCenter.getQQ();
             mUserCenterView.showQQInfo(qqUser.getName(), qqUser.getImagePath());
         } else {
             mUserCenterView.showQQInfo(null, null);
@@ -107,12 +116,12 @@ public class UserCenterPresenterImpl implements IUserCenterPresenter, Handler.Ca
 
     @Override
     public void initEvernote() {
-        mUserCenterView.showEvernote(UserCenter.getInstance().isLoginEvernote());
+        mUserCenterView.showEvernote(mUserCenter.isLoginEvernote());
     }
 
     @Override
     public void finish() {
-        if (mInitState[0] != UserCenter.getInstance().isLoginQQ() || mInitState[1] != UserCenter.getInstance().isLoginEvernote()) {
+        if (mInitState[0] != mUserCenter.isLoginQQ() || mInitState[1] != mUserCenter.isLoginEvernote()) {
             mUserCenterView.finishActivityWithResult(RESULT_DATA_USER);
         } else {
             mUserCenterView.finishActivityWithResult(-1);
@@ -124,13 +133,13 @@ public class UserCenterPresenterImpl implements IUserCenterPresenter, Handler.Ca
         switch (msg.what) {
             case MESSAGE_LOGIN_QQ_OK:
                 initQQ();
-                mUserCenterView.showQQInfoInFrag(UserCenter.getInstance().getQQ().getName());
+                mUserCenterView.showQQInfoInFrag(mUserCenter.getQQ().getName());
                 mUserCenterView.hideProgressBar();
                 mUserCenterView.showSnackBar(mContext.getResources().getString(R.string.toast_success));
                 break;
             case MESSAGE_LOGIN_EVERNOTE_OK:
                 initEvernote();
-                User evernoteUser = UserCenter.getInstance().getEvernote();
+                User evernoteUser = mUserCenter.getEvernote();
                 if (evernoteUser == null) {
                     mUserCenterView.showEvernoteInFrag(true, mContext.getResources().getString(R.string.user_failed));
                 } else {
@@ -144,7 +153,7 @@ public class UserCenterPresenterImpl implements IUserCenterPresenter, Handler.Ca
                         new OnSnackBarActionListener() {
                             @Override
                             public void onClick() {
-                                UserCenter.getInstance().doLoginEvernote(mActivity);
+                                mUserCenter.doLoginEvernote(mActivity);
                             }
                         });
                 break;
@@ -154,7 +163,7 @@ public class UserCenterPresenterImpl implements IUserCenterPresenter, Handler.Ca
                         new OnSnackBarActionListener() {
                             @Override
                             public void onClick() {
-                                UserCenter.getInstance().doLoginQQ(mActivity, mLoginQQListener);
+                                mUserCenter.doLoginQQ(mActivity, mLoginQQListener);
                             }
                         });
                 break;
@@ -166,10 +175,10 @@ public class UserCenterPresenterImpl implements IUserCenterPresenter, Handler.Ca
         @Override
         public void onComplete(final String openid, final String accessToken, final String name, final String image) {
             mUserCenterView.showProgressBar();
-            NoteApplication.getInstance().getExecutorPool().execute(new Runnable() {
+            mThreadExecutorPool.getExecutorPool().execute(new Runnable() {
                 @Override
                 public void run() {
-                    if (UserCenter.getInstance().LoginQQ(openid, accessToken, name, image)) {
+                    if (mUserCenter.LoginQQ(openid, accessToken, name, image)) {
                         Bitmap bitmap = ImageLoaderManager.loadImageSync(image);
                         FilePathUtils.saveImage(FilePathUtils.getQQImagePath(), bitmap);
                         mHandler.sendEmptyMessage(MESSAGE_LOGIN_QQ_OK);

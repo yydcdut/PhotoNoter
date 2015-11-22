@@ -7,10 +7,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 
-import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.bean.PhotoNote;
+import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.CategoryDBModel;
 import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.model.SandBoxDBModel;
@@ -21,6 +21,7 @@ import com.yydcdut.note.mvp.v.home.IAlbumView;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.LocalStorageUtils;
+import com.yydcdut.note.utils.ThreadExecutorPool;
 import com.yydcdut.note.utils.UiHelper;
 
 import java.io.FileNotFoundException;
@@ -30,6 +31,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
+import javax.inject.Inject;
 
 /**
  * Created by yuyidong on 15/11/20.
@@ -47,23 +50,42 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
 
     private Context mContext;
 
-    public AlbumPresenterImpl(String categoryLabel) {
-        mCategoryLabel = categoryLabel;
-        mAlbumSortKind = LocalStorageUtils.getInstance().getSortKind();
+    private LocalStorageUtils mLocalStorageUtils;
+    private PhotoNoteDBModel mPhotoNoteDBModel;
+    private SandBoxDBModel mSandBoxDBModel;
+    private CategoryDBModel mCategoryDBModel;
+    private ThreadExecutorPool mThreadExecutorPool;
+
+    @Inject
+    public AlbumPresenterImpl(@ContextLife("Activity") Context context, PhotoNoteDBModel photoNoteDBModel,
+                              CategoryDBModel categoryDBModel, SandBoxDBModel sandBoxDBModel,
+                              LocalStorageUtils localStorageUtils, ThreadExecutorPool threadExecutorPool) {
+
         mHandler = new Handler(this);
-        mContext = NoteApplication.getContext();
+        mContext = context;
+        mPhotoNoteDBModel = photoNoteDBModel;
+        mCategoryDBModel = categoryDBModel;
+        mSandBoxDBModel = sandBoxDBModel;
+        mLocalStorageUtils = localStorageUtils;
+        mThreadExecutorPool = threadExecutorPool;
+        mAlbumSortKind = mLocalStorageUtils.getSortKind();
     }
 
     @Override
     public void attachView(IView iView) {
         mAlbumView = (IAlbumView) iView;
-        mPhotoNoteList = PhotoNoteDBModel.getInstance().findByCategoryLabel(mCategoryLabel, mAlbumSortKind);
+        mPhotoNoteList = mPhotoNoteDBModel.findByCategoryLabel(mCategoryLabel, mAlbumSortKind);
         mAlbumView.setAdapter(mPhotoNoteList);
     }
 
     @Override
     public void detachView() {
 
+    }
+
+    @Override
+    public void bindData(String categoryLabel) {
+        mCategoryLabel = categoryLabel;
     }
 
     @Override
@@ -75,7 +97,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (SandBoxDBModel.getInstance().getAllNumber() > 0) {
+                if (mSandBoxDBModel.getAllNumber() > 0) {
                     mAlbumView.startSandBoxService();
                 }
             }
@@ -85,12 +107,12 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
     @Override
     public void setAlbumSort(int sort) {
         mAlbumSortKind = sort;
-        LocalStorageUtils.getInstance().setSortKind(mAlbumSortKind);
+        mLocalStorageUtils.setSortKind(mAlbumSortKind);
     }
 
     @Override
     public void saveAlbumSort() {
-        LocalStorageUtils.getInstance().setSortKind(mAlbumSortKind);
+        mLocalStorageUtils.setSortKind(mAlbumSortKind);
     }
 
     @Override
@@ -109,7 +131,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
         //另外个进程发来广播的时候
         //todo  这里可以弄动画，需要计算的过程
         if (broadcast_process || broadcast_service) {
-            mPhotoNoteList = PhotoNoteDBModel.getInstance().findByCategoryLabel(mCategoryLabel, mAlbumSortKind);
+            mPhotoNoteList = mPhotoNoteDBModel.findByCategoryLabel(mCategoryLabel, mAlbumSortKind);
             mAlbumView.updateData(mPhotoNoteList);
         } else if (broadcast_photo) {
             mAlbumView.notifyDataSetChanged();
@@ -126,13 +148,13 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
     @Override
     public void changeCategoryWithPhotos(String categoryLabel) {
         mCategoryLabel = categoryLabel;
-        mPhotoNoteList = PhotoNoteDBModel.getInstance().findByCategoryLabel(mCategoryLabel, mAlbumSortKind);
+        mPhotoNoteList = mPhotoNoteDBModel.findByCategoryLabel(mCategoryLabel, mAlbumSortKind);
         mAlbumView.updateData(mPhotoNoteList);
     }
 
     @Override
     public void movePhotos2AnotherCategory() {
-        List<Category> categoryList = CategoryDBModel.getInstance().findAll();
+        List<Category> categoryList = mCategoryDBModel.findAll();
         final String[] categoryLabelArray = new String[categoryList.size()];
         for (int i = 0; i < categoryLabelArray.length; i++) {
             categoryLabelArray[i] = categoryList.get(i).getLabel();
@@ -144,8 +166,8 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
     public void changePhotosCategory(String toNewCategoryLabel) {
         if (!mCategoryLabel.equals(toNewCategoryLabel)) {
             doChangeCategory(toNewCategoryLabel);
-            mPhotoNoteList = PhotoNoteDBModel.getInstance().findByCategoryLabelByForce(mCategoryLabel, mAlbumSortKind);
-            CategoryDBModel.getInstance().updateChangeCategory(mCategoryLabel, toNewCategoryLabel);
+            mPhotoNoteList = mPhotoNoteDBModel.findByCategoryLabelByForce(mCategoryLabel, mAlbumSortKind);
+            mCategoryDBModel.updateChangeCategory(mCategoryLabel, toNewCategoryLabel);
         }
     }
 
@@ -166,7 +188,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
         }
         int times = 0;
         for (Map.Entry<Integer, PhotoNote> entry : map.entrySet()) {
-            PhotoNoteDBModel.getInstance().delete(entry.getValue());
+            mPhotoNoteDBModel.delete(entry.getValue());
             mPhotoNoteList.remove(entry.getValue());
             mAlbumView.notifyItemRemoved(entry.getKey() - times);
             times++;
@@ -175,10 +197,10 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
 
     @Override
     public void createCategory(String newCategoryLabel) {
-        int totalNumber = CategoryDBModel.getInstance().findAll().size();
+        int totalNumber = mCategoryDBModel.findAll().size();
         if (!TextUtils.isEmpty(newCategoryLabel)) {
             Category category = new Category(newCategoryLabel, 0, totalNumber, true);
-            boolean bool = CategoryDBModel.getInstance().saveCategory(category);
+            boolean bool = mCategoryDBModel.saveCategory(category);
             if (bool) {
                 mAlbumView.changeActivityListMenuCategoryChecked(category);
             } else {
@@ -210,9 +232,9 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
             mPhotoNoteList.remove(entry.getValue());
             mAlbumView.notifyItemRemoved(entry.getKey() - times);
             if (times + 1 != total) {
-                PhotoNoteDBModel.getInstance().update(entry.getValue(), false);
+                mPhotoNoteDBModel.update(entry.getValue(), false);
             } else {
-                PhotoNoteDBModel.getInstance().update(entry.getValue(), true);
+                mPhotoNoteDBModel.update(entry.getValue(), true);
             }
             times++;
         }
@@ -222,7 +244,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
     @Override
     public void savePhotoFromLocal(final Uri imageUri) {
         mAlbumView.showProgressBar();
-        NoteApplication.getInstance().getExecutorPool().execute(new Runnable() {
+        mThreadExecutorPool.getExecutorPool().execute(new Runnable() {
             @Override
             public void run() {
                 PhotoNote photoNote = new PhotoNote(System.currentTimeMillis() + ".jpg", System.currentTimeMillis(),
@@ -240,7 +262,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
                 //保存小图
                 FilePathUtils.saveSmallPhotoFromBigPhoto(photoNote);
                 photoNote.setPaletteColor(UiHelper.getPaletteColor(ImageLoaderManager.loadImageSync(photoNote.getBigPhotoPathWithFile())));
-                PhotoNoteDBModel.getInstance().save(photoNote);
+                mPhotoNoteDBModel.save(photoNote);
                 mHandler.sendEmptyMessage(MSG_UPDATE_DATA);
             }
         });
@@ -263,13 +285,13 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
         //保存小图
         FilePathUtils.saveSmallPhotoFromBigPhoto(photoNote);
         photoNote.setPaletteColor(UiHelper.getPaletteColor(ImageLoaderManager.loadImageSync(photoNote.getBigPhotoPathWithFile())));
-        PhotoNoteDBModel.getInstance().save(photoNote);
+        mPhotoNoteDBModel.save(photoNote);
         mHandler.sendEmptyMessage(MSG_UPDATE_DATA);
     }
 
     @Override
     public void jump2Camera() {
-        if (LocalStorageUtils.getInstance().getCameraSystem()) {
+        if (mLocalStorageUtils.getCameraSystem()) {
             mAlbumView.jump2CameraSystemActivity();
         } else {
             mAlbumView.jump2CameraActivity(mCategoryLabel);
@@ -291,7 +313,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
         switch (msg.what) {
             case MSG_UPDATE_DATA:
                 //因为是最新时间，即“图片创建事件”、“图片修改时间”、“笔记创建时间”、“笔记修改时间”，所以要么在最前面，要么在最后面//// TODO: 15/11/20 还是因时间来判断插入到哪里，所以要计算
-                mPhotoNoteList = PhotoNoteDBModel.getInstance().findByCategoryLabel(mCategoryLabel, mAlbumSortKind);
+                mPhotoNoteList = mPhotoNoteDBModel.findByCategoryLabel(mCategoryLabel, mAlbumSortKind);
                 mAlbumView.updateData(mPhotoNoteList);
                 switch (mAlbumSortKind) {
                     case ComparatorFactory.FACTORY_CREATE_CLOSE:

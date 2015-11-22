@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.SurfaceHolder;
 import android.view.View;
 
-import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.camera.model.AbsCameraModel;
 import com.yydcdut.note.camera.model.camera.CameraModel;
@@ -13,10 +12,7 @@ import com.yydcdut.note.camera.param.Size;
 import com.yydcdut.note.camera.view.AutoFitSurfaceView;
 import com.yydcdut.note.model.compare.SizeComparator;
 import com.yydcdut.note.utils.Const;
-import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.LollipopCompat;
-
-import org.json.JSONException;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,7 +33,8 @@ public class AdjustCamera extends AppCompatActivity implements SurfaceHolder.Cal
 
     private int mCameraNumber = 1;
 
-    private int mCurrentOrientationDegree = LocalStorageUtils.getInstance().getCameraBackRotation();
+    //    private int mCurrentOrientationDegree = LocalStorageUtils.getInstance().getCameraBackRotation();
+    private int mCurrentOrientationDegree = 0;
     private int mDeltaOrientationDegree = 90;
 
     @Override
@@ -57,7 +54,8 @@ public class AdjustCamera extends AppCompatActivity implements SurfaceHolder.Cal
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        mCameraModel = new CameraModel(NoteApplication.getContext(), holder, null);
+        mCameraModel = new CameraModel(getApplicationContext(), holder, null);
+//        mCameraModel = new CameraModel(NoteApplication.getContext(), holder, null);
         mCameraModel.onCreate(AdjustCamera.this);
         mCameraModel.openCamera(mCameraId, mCurrentOrientationDegree);
         mCameraNumber = mCameraModel.getSettingModel().getNumberOfCameras();
@@ -126,11 +124,11 @@ public class AdjustCamera extends AppCompatActivity implements SurfaceHolder.Cal
         Size previewSize = getSuitablePreviewSize(mCameraModel.getSettingModel().getPreviewSizes());
         setPreviewSize(previewSize);
         Size size = null;
-        try {
-            size = LocalStorageUtils.getInstance().getPictureSize(mCameraId);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            size = LocalStorageUtils.getInstance().getPictureSize(mCameraId);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
         mCameraModel.getSettingModel().setPictureSize(size.getWidth(), size.getHeight());
         mCameraModel.startPreview();
     }
@@ -151,10 +149,10 @@ public class AdjustCamera extends AppCompatActivity implements SurfaceHolder.Cal
             case R.id.fab_check:
                 switch (mCameraId) {
                     case Const.CAMERA_FRONT:
-                        LocalStorageUtils.getInstance().setCameraFrontRotation(mCurrentOrientationDegree);
+//                        LocalStorageUtils.getInstance().setCameraFrontRotation(mCurrentOrientationDegree);
                         break;
                     case Const.CAMERA_BACK:
-                        LocalStorageUtils.getInstance().setCameraBackRotation(mCurrentOrientationDegree);
+//                        LocalStorageUtils.getInstance().setCameraBackRotation(mCurrentOrientationDegree);
                         break;
                 }
                 break;
@@ -164,10 +162,10 @@ public class AdjustCamera extends AppCompatActivity implements SurfaceHolder.Cal
                 }
                 if (mCameraId == Const.CAMERA_BACK) {
                     mCameraId = Const.CAMERA_FRONT;
-                    mCurrentOrientationDegree = LocalStorageUtils.getInstance().getCameraFrontRotation();
+//                    mCurrentOrientationDegree = LocalStorageUtils.getInstance().getCameraFrontRotation();
                 } else {
                     mCameraId = Const.CAMERA_BACK;
-                    mCurrentOrientationDegree = LocalStorageUtils.getInstance().getCameraBackRotation();
+//                    mCurrentOrientationDegree = LocalStorageUtils.getInstance().getCameraBackRotation();
                 }
                 reOpenCamera();
                 break;

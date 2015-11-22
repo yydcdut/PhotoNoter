@@ -11,6 +11,8 @@ import com.yydcdut.note.mvp.p.home.IIntroducePresenter;
 import com.yydcdut.note.mvp.v.home.IIntroduceView;
 import com.yydcdut.note.service.InitService;
 
+import javax.inject.Inject;
+
 /**
  * Created by yuyidong on 15/11/18.
  */
@@ -24,6 +26,10 @@ public class IntroducePresenterImpl implements IIntroducePresenter, Handler.Call
     private ServiceConnection mServiceConnection;
 
     private Handler mHandler;
+
+    @Inject
+    public IntroducePresenterImpl() {
+    }
 
     @Override
     public void attachView(IView iView) {

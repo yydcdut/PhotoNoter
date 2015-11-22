@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.yydcdut.note.bean.PhotoNote;
-import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.mvp.v.note.impl.DetailFragment;
 import com.yydcdut.note.utils.Const;
 
@@ -26,8 +25,8 @@ public class DetailPagerAdapter extends PagerAdapter {
 
     private int mComparator;
 
-    public DetailPagerAdapter(FragmentManager fragmentManager, String categoryName, int comparatorFactory) {
-        this.mPhotoNoteGroup = PhotoNoteDBModel.getInstance().findByCategoryLabel(categoryName, comparatorFactory);
+    public DetailPagerAdapter(List<PhotoNote> list, FragmentManager fragmentManager, int comparatorFactory) {
+        this.mPhotoNoteGroup = list;
         this.mFragmentManager = fragmentManager;
         this.mComparator = comparatorFactory;
         mViewCacheView = new HashMap<Integer, View>();

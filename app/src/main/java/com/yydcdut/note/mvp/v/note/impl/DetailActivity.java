@@ -15,9 +15,12 @@ import android.widget.TextView;
 
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.MapView;
+import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.DetailPagerAdapter;
-import com.yydcdut.note.mvp.p.note.IDetailPresenter;
+import com.yydcdut.note.bean.PhotoNote;
+import com.yydcdut.note.injector.component.DaggerActivityComponent;
+import com.yydcdut.note.injector.module.ActivityModule;
 import com.yydcdut.note.mvp.p.note.impl.DetailPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.note.IDetailView;
@@ -28,6 +31,8 @@ import com.yydcdut.note.view.ObservableScrollView;
 import com.yydcdut.note.view.RevealView;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -41,7 +46,8 @@ public class DetailActivity extends BaseActivity implements IDetailView,
         ViewPager.PageTransformer, ObservableScrollView.OnScrollChangedListener {
     private static final float MIN_SCALE = 0.75f;
 
-    private IDetailPresenter mDetailPresenter;
+    @Inject
+    DetailPresenterImpl mDetailPresenter;
 
     private boolean mIsIgnoreBackPress = false;
 
@@ -108,6 +114,15 @@ public class DetailActivity extends BaseActivity implements IDetailView,
     }
 
     @Override
+    public void initInjector() {
+        mActivityComponent = DaggerActivityComponent.builder()
+                .activityModule(new ActivityModule(this))
+                .applicationComponent(((NoteApplication) getApplication()).getApplicationComponent())
+                .build();
+        mActivityComponent.inject(this);
+    }
+
+    @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         calculateHeight();
@@ -140,7 +155,7 @@ public class DetailActivity extends BaseActivity implements IDetailView,
     public void initUiAndListener() {
         ButterKnife.bind(this);
         Bundle bundle = getIntent().getExtras();
-        mDetailPresenter = new DetailPresenterImpl(bundle.getString(Const.CATEGORY_LABEL),
+        mDetailPresenter.bindData(bundle.getString(Const.CATEGORY_LABEL),
                 bundle.getInt(Const.PHOTO_POSITION),
                 bundle.getInt(Const.COMPARATOR_FACTORY));
         mDetailPresenter.attachView(this);
@@ -424,8 +439,14 @@ public class DetailActivity extends BaseActivity implements IDetailView,
     }
 
     @Override
-    public void setViewPagerAdapter(String label, int position, int comparator) {
-        mDetailPagerAdapter = new DetailPagerAdapter(getSupportFragmentManager(), label, comparator);
+    public void setFontSystem(boolean useSystem) {
+        mTitleView.setFontSystem(useSystem);
+        mContentView.setFontSystem(useSystem);
+    }
+
+    @Override
+    public void setViewPagerAdapter(List<PhotoNote> list, int position, int comparator) {
+        mDetailPagerAdapter = new DetailPagerAdapter(list, getSupportFragmentManager(), comparator);
         mViewPager.setAdapter(mDetailPagerAdapter);
         mViewPager.setCurrentItem(position);
     }

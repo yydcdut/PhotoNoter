@@ -37,11 +37,11 @@ public class LollipopCompat {
     }
 
     public static void setStatuColor(Window window) {
-        int index = LocalStorageUtils.getInstance().getThemeColor();
-        if (AFTER_LOLLIPOP) {
-            window.setStatusBarColor(ThemeHelper.THEME.get(index).getStatusColor());
-            window.setNavigationBarColor(ThemeHelper.THEME.get(index).getStatusColor());
-        }
+//        int index = LocalStorageUtils.getInstance().getThemeColor();
+//        if (AFTER_LOLLIPOP) {
+//            window.setStatusBarColor(ThemeHelper.THEME.get(index).getStatusColor());
+//            window.setNavigationBarColor(ThemeHelper.THEME.get(index).getStatusColor());
+//        }
     }
 
 }

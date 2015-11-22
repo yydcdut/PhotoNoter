@@ -1,10 +1,12 @@
 package com.yydcdut.note.model;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.yydcdut.note.bean.PhotoNote;
+import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.compare.ComparatorFactory;
 import com.yydcdut.note.model.observer.IObserver;
 import com.yydcdut.note.model.observer.PhotoNoteChangedObserver;
@@ -17,6 +19,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Created by yuyidong on 15/7/17.
  * 先进行数据库操作，然后再操作动画之类的
@@ -25,15 +30,12 @@ import java.util.Map;
 public class PhotoNoteDBModel extends AbsNotesDBModel implements IModel {
     private List<PhotoNoteChangedObserver> mPhotoNoteChangedObservers = new ArrayList<>();
 
-    private static PhotoNoteDBModel sInstance = new PhotoNoteDBModel();
-
     private Map<String, List<PhotoNote>> mCache = new HashMap<>();
 
-    private PhotoNoteDBModel() {
-    }
-
-    public static PhotoNoteDBModel getInstance() {
-        return sInstance;
+    @Singleton
+    @Inject
+    public PhotoNoteDBModel(@ContextLife("Application") Context context) {
+        super(context);
     }
 
     @Override

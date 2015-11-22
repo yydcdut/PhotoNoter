@@ -9,6 +9,8 @@ import com.yydcdut.note.mvp.IPresenter;
  */
 public interface IAlbumPresenter extends IPresenter {
 
+    void bindData(String categoryLabel);
+
     void checkSandBox();
 
     void setAlbumSort(int sort);

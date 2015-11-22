@@ -1,6 +1,5 @@
 package com.yydcdut.note.mvp.v;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Point;
@@ -12,11 +11,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.yydcdut.note.R;
+import com.yydcdut.note.injector.component.FragmentComponent;
 
 /**
  * Created by yuyidong on 15-3-17.
  */
 public abstract class BaseFragment extends Fragment {
+    protected FragmentComponent mFragmentComponent;
+
     public static final int RESULT_NOTHING = 1;
     public static final int RESULT_DATA = 2;
     public static final int RESULT_PICTURE = 3;
@@ -31,20 +33,6 @@ public abstract class BaseFragment extends Fragment {
      * @param bundle
      */
     public abstract void getBundle(Bundle bundle);
-
-    /**
-     * 初始化一些设置
-     */
-    public void initSetting() {
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        initSetting();
-        getBundle(getArguments());
-        super.onAttach(activity);
-    }
-
 
     /**
      * 得到上下文
@@ -69,6 +57,8 @@ public abstract class BaseFragment extends Fragment {
         return v;
     }
 
+    public abstract void initInjector();
+
     /**
      * 初始化控件
      *
@@ -90,6 +80,8 @@ public abstract class BaseFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        initInjector();
+        getBundle(getArguments());
         initUI(view);
         initData();
         initListener(view);

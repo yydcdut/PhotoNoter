@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
-import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.camera.model.ICameraParams;
 import com.yydcdut.note.camera.param.Size;
+import com.yydcdut.note.injector.ContextLife;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,6 +15,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Created by yuyidong on 15-4-1.
@@ -107,16 +110,24 @@ public class LocalStorageUtils {
 
     private static SharedPreferences mSharedPreferences;
 
-    public static LocalStorageUtils getInstance() {
-        return SingletonClassInstance.sInstance;
+    @Inject
+    @Singleton
+    public LocalStorageUtils(@ContextLife("Application") Context context) {
+        mSharedPreferences = context.getSharedPreferences(SETTING_NAME, Context.MODE_PRIVATE);
     }
 
-    private static class SingletonClassInstance {
-        private static LocalStorageUtils sInstance = new LocalStorageUtils();
-    }
+    private static LocalStorageUtils sInstance;
 
-    private LocalStorageUtils() {
-        mSharedPreferences = NoteApplication.getContext().getSharedPreferences(SETTING_NAME, Context.MODE_PRIVATE);
+    //TODO 这里还是同一个对象吗？毕竟变成public了，很多地方都可以调用
+    public static LocalStorageUtils getInstance(Context context) {
+        if (sInstance == null) {
+            synchronized (LocalStorageUtils.class) {
+                if (sInstance == null) {
+                    sInstance = new LocalStorageUtils(context);
+                }
+            }
+        }
+        return sInstance;
     }
 
     /**

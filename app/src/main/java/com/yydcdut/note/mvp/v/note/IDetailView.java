@@ -1,14 +1,19 @@
 package com.yydcdut.note.mvp.v.note;
 
 import com.baidu.mapapi.map.BaiduMap;
+import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.mvp.IView;
+
+import java.util.List;
 
 /**
  * Created by yuyidong on 15/11/16.
  */
 public interface IDetailView extends IView {
 
-    void setViewPagerAdapter(String label, int position, int comparator);
+    void setFontSystem(boolean usSystem);
+
+    void setViewPagerAdapter(List<PhotoNote> list, int position, int comparator);
 
     void showCurrentPosition(int position);
 

@@ -37,4 +37,14 @@ public interface ISettingPresenter extends IPresenter {
 
     void onCameraIdsSelected(int index);
 
+    boolean getCameraSystem();
+
+    boolean getCameraSaveSetting();
+
+    boolean getCameraMirrorOpen();
+
+    int getCameraNumber();
+
+    boolean getSplashOpen();
+
 }

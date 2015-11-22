@@ -10,10 +10,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.FrequentImageAdapter;
 import com.yydcdut.note.bean.PhotoNote;
-import com.yydcdut.note.mvp.p.login.IUserDetailFragPresenter;
+import com.yydcdut.note.injector.component.DaggerFragmentComponent;
+import com.yydcdut.note.injector.module.FragmentModule;
 import com.yydcdut.note.mvp.p.login.impl.UserDetailFragPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseFragment;
 import com.yydcdut.note.mvp.v.login.IUserDetailFragView;
@@ -22,6 +24,8 @@ import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.view.CircleProgressBarLayout;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -39,7 +43,8 @@ public class UserDetailFragment extends BaseFragment implements IUserDetailFragV
 
     private TextView mLocationView;
 
-    private IUserDetailFragPresenter mUserDetailFragPresenter;
+    @Inject
+    UserDetailFragPresenterImpl mUserDetailFragPresenter;
 
     public static UserDetailFragment newInstance() {
         return new UserDetailFragment();
@@ -47,14 +52,21 @@ public class UserDetailFragment extends BaseFragment implements IUserDetailFragV
 
     @Override
     public void getBundle(Bundle bundle) {
-        mUserDetailFragPresenter = new UserDetailFragPresenterImpl(getActivity(),
-                bundle.getInt(Const.USER_DETAIL_TYPE));
-
+        mUserDetailFragPresenter.bindData(bundle.getInt(Const.USER_DETAIL_TYPE));
     }
 
     @Override
     public View inflateView(LayoutInflater inflater) {
         return inflater.inflate(R.layout.frag_user_detail, null);
+    }
+
+    @Override
+    public void initInjector() {
+        mFragmentComponent = DaggerFragmentComponent.builder()
+                .fragmentModule(new FragmentModule(this))
+                .applicationComponent(((NoteApplication) getActivity().getApplication()).getApplicationComponent())
+                .build();
+        mFragmentComponent.inject(this);
     }
 
     @Override

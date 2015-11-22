@@ -2,9 +2,9 @@ package com.yydcdut.note.mvp.p.setting.impl;
 
 import android.content.Context;
 
-import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.camera.param.Size;
+import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.UserCenter;
 import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.setting.ISettingPresenter;
@@ -17,6 +17,8 @@ import org.json.JSONException;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 /**
  * Created by yuyidong on 15/11/13.
  */
@@ -24,11 +26,17 @@ public class SettingPresenterImpl implements ISettingPresenter {
     private ISettingView mSettingView;
 
     private Context mContext;
+    private LocalStorageUtils mLocalStorageUtils;
+    private UserCenter mUserCenter;
 
     private static final boolean SUPPORT_CAMERA_5_0 = false;
 
-    public SettingPresenterImpl() {
-        mContext = NoteApplication.getContext();
+    @Inject
+    public SettingPresenterImpl(@ContextLife("Activity") Context context, LocalStorageUtils localStorageUtils,
+                                UserCenter userCenter) {
+        mContext = context;
+        mLocalStorageUtils = localStorageUtils;
+        mUserCenter = userCenter;
     }
 
     @Override
@@ -36,20 +44,20 @@ public class SettingPresenterImpl implements ISettingPresenter {
         mSettingView = (ISettingView) iView;
         mSettingView.initPreferenceSetting();
         mSettingView.initAccountSetting();
-        mSettingView.initCameraSetting(LocalStorageUtils.getInstance().getCameraSystem(),
-                LocalStorageUtils.getInstance().getCameraNumber());
+        mSettingView.initCameraSetting(mLocalStorageUtils.getCameraSystem(),
+                mLocalStorageUtils.getCameraNumber());
         mSettingView.initSyncSetting(false, false);
         mSettingView.initAboutSetting();
 
-        setStatusBarClickabe();
-        boolean isQQLogin = UserCenter.getInstance().isLoginQQ();
+        setStatusBarClickable();
+        boolean isQQLogin = mUserCenter.isLoginQQ();
         if (isQQLogin) {
-            mSettingView.initQQ(true, UserCenter.getInstance().getQQ().getName(),
-                    UserCenter.getInstance().getQQ().getImagePath());
+            mSettingView.initQQ(true, mUserCenter.getQQ().getName(),
+                    mUserCenter.getQQ().getImagePath());
         }
-        boolean isEvernoteLogin = UserCenter.getInstance().isLoginEvernote();
+        boolean isEvernoteLogin = mUserCenter.isLoginEvernote();
         if (isEvernoteLogin) {
-            mSettingView.initEvernote(true, UserCenter.getInstance().getEvernote().getUsername());
+            mSettingView.initEvernote(true, mUserCenter.getEvernote().getUsername());
         }
 
     }
@@ -64,7 +72,7 @@ public class SettingPresenterImpl implements ISettingPresenter {
     public void onClickSettingItem(String tag) {
         switch (tag) {
             case ISettingPresenter.TAG_THEME:
-                mSettingView.showThemeColorChooser(LocalStorageUtils.getInstance().getThemeColor());
+                mSettingView.showThemeColorChooser(mLocalStorageUtils.getThemeColor());
                 break;
             case ISettingPresenter.TAG_STATUS_BAR:
                 mSettingView.showStatusBarStyleChooser();
@@ -79,23 +87,23 @@ public class SettingPresenterImpl implements ISettingPresenter {
                 mSettingView.jump2CameraFixActivity();
                 break;
             case ISettingPresenter.TAG_CAMERA_SYSTEM:
-                boolean isSystem = LocalStorageUtils.getInstance().getCameraSystem();
-                LocalStorageUtils.getInstance().setCameraSystem(!isSystem);
+                boolean isSystem = mLocalStorageUtils.getCameraSystem();
+                mLocalStorageUtils.setCameraSystem(!isSystem);
                 mSettingView.setCameraSettingClickable(!isSystem,
-                        LocalStorageUtils.getInstance().getCameraNumber());
+                        mLocalStorageUtils.getCameraNumber());
                 break;
             case ISettingPresenter.TAG_CAMERA2:
-                boolean use = LocalStorageUtils.getInstance().getCameraSystem();
+                boolean use = mLocalStorageUtils.getCameraSystem();
                 if ((!LollipopCompat.AFTER_LOLLIPOP || !SUPPORT_CAMERA_5_0) && !use) {
                     mSettingView.showSnackbar(mContext.getString(R.string.toast_not_support));
                     return;
                 }
                 break;
             case ISettingPresenter.TAG_CAMERA_SIZE:
-                if (LocalStorageUtils.getInstance().getCameraSystem()) {
+                if (mLocalStorageUtils.getCameraSystem()) {
                     break;
                 }
-                int numbers = LocalStorageUtils.getInstance().getCameraNumber();
+                int numbers = mLocalStorageUtils.getCameraNumber();
                 if (numbers == 2) {
                     try {
                         mSettingView.showCameraIdsChooser();
@@ -106,19 +114,19 @@ public class SettingPresenterImpl implements ISettingPresenter {
                 }
                 break;
             case ISettingPresenter.TAG_CAMERA_SAVE:
-                if (LocalStorageUtils.getInstance().getCameraSystem()) {
+                if (mLocalStorageUtils.getCameraSystem()) {
                     break;
                 }
-                boolean isSave = LocalStorageUtils.getInstance().getCameraSaveSetting();
-                LocalStorageUtils.getInstance().setCameraSaveSetting(!isSave);
+                boolean isSave = mLocalStorageUtils.getCameraSaveSetting();
+                mLocalStorageUtils.setCameraSaveSetting(!isSave);
                 mSettingView.setCheckBoxState(ISettingPresenter.TAG_CAMERA_SAVE, !isSave);
                 break;
             case ISettingPresenter.TAG_CAMERA_MIRROR:
-                if (LocalStorageUtils.getInstance().getCameraSystem()) {
+                if (mLocalStorageUtils.getCameraSystem()) {
                     break;
                 }
-                boolean open = LocalStorageUtils.getInstance().getCameraMirrorOpen();
-                LocalStorageUtils.getInstance().setCameraMirrorOpen(!open);
+                boolean open = mLocalStorageUtils.getCameraMirrorOpen();
+                mLocalStorageUtils.setCameraMirrorOpen(!open);
                 mSettingView.setCheckBoxState(ISettingPresenter.TAG_CAMERA_MIRROR, !open);
                 break;
             case ISettingPresenter.TAG_SYNC_AUTO:
@@ -126,8 +134,8 @@ public class SettingPresenterImpl implements ISettingPresenter {
                 mSettingView.showSnackbar(mContext.getString(R.string.toast_not_support));
                 break;
             case ISettingPresenter.TAG_SPLASH:
-                boolean splashOpen = LocalStorageUtils.getInstance().getSplashOpen();
-                LocalStorageUtils.getInstance().setSplashOpen(!splashOpen);
+                boolean splashOpen = mLocalStorageUtils.getSplashOpen();
+                mLocalStorageUtils.setSplashOpen(!splashOpen);
                 mSettingView.setCheckBoxState(ISettingPresenter.TAG_SPLASH, splashOpen);
                 break;
             case ISettingPresenter.TAG_FEEDBACK:
@@ -141,18 +149,18 @@ public class SettingPresenterImpl implements ISettingPresenter {
 
     @Override
     public void onThemeSelected(int index) {
-        LocalStorageUtils.getInstance().setThemeColor(index);
+        mLocalStorageUtils.setThemeColor(index);
         mSettingView.restartActivity();
     }
 
     @Override
     public void onUseSystemFontSelected(boolean use) {
-        LocalStorageUtils.getInstance().setSettingFontSystem(use);
+        mLocalStorageUtils.setSettingFontSystem(use);
     }
 
     @Override
     public void onStatusBarStyleSelected(boolean translate) {
-        LocalStorageUtils.getInstance().setStatusBarTranslation(translate);
+        mLocalStorageUtils.setStatusBarTranslation(translate);
         mSettingView.restartActivity();
     }
 
@@ -160,9 +168,9 @@ public class SettingPresenterImpl implements ISettingPresenter {
     public void onPictureSizeSelected(String cameraId, int index) {
         List<Size> list = null;
         try {
-            list = LocalStorageUtils.getInstance().getPictureSizes(cameraId);
+            list = mLocalStorageUtils.getPictureSizes(cameraId);
             Size size = list.get(index);
-            LocalStorageUtils.getInstance().setPictureSize(cameraId, size);
+            mLocalStorageUtils.setPictureSize(cameraId, size);
         } catch (JSONException e) {
             e.printStackTrace();
             mSettingView.showSnackbar(mContext.getString(R.string.toast_fail));
@@ -173,18 +181,18 @@ public class SettingPresenterImpl implements ISettingPresenter {
     public void onCameraIdsSelected(int index) {
         try {
             String cameraId = Const.CAMERA_BACK;
-            List<Size> list = LocalStorageUtils.getInstance().getPictureSizes(cameraId);
-            Size targetSize = LocalStorageUtils.getInstance().getPictureSize(cameraId);
+            List<Size> list = mLocalStorageUtils.getPictureSizes(cameraId);
+            Size targetSize = mLocalStorageUtils.getPictureSize(cameraId);
             switch (index) {
                 case 0:
                     cameraId = Const.CAMERA_BACK;
-                    list = LocalStorageUtils.getInstance().getPictureSizes(cameraId);
-                    targetSize = LocalStorageUtils.getInstance().getPictureSize(cameraId);
+                    list = mLocalStorageUtils.getPictureSizes(cameraId);
+                    targetSize = mLocalStorageUtils.getPictureSize(cameraId);
                     break;
                 case 1:
                     cameraId = Const.CAMERA_FRONT;
-                    list = LocalStorageUtils.getInstance().getPictureSizes(cameraId);
-                    targetSize = LocalStorageUtils.getInstance().getPictureSize(cameraId);
+                    list = mLocalStorageUtils.getPictureSizes(cameraId);
+                    targetSize = mLocalStorageUtils.getPictureSize(cameraId);
                     break;
             }
             mSettingView.showPictureSizeChooser(cameraId, list, targetSize);
@@ -194,7 +202,32 @@ public class SettingPresenterImpl implements ISettingPresenter {
         }
     }
 
-    private void setStatusBarClickabe() {
+    @Override
+    public boolean getCameraSystem() {
+        return mLocalStorageUtils.getCameraSystem();
+    }
+
+    @Override
+    public boolean getCameraSaveSetting() {
+        return mLocalStorageUtils.getCameraSaveSetting();
+    }
+
+    @Override
+    public boolean getCameraMirrorOpen() {
+        return mLocalStorageUtils.getCameraMirrorOpen();
+    }
+
+    @Override
+    public int getCameraNumber() {
+        return mLocalStorageUtils.getCameraNumber();
+    }
+
+    @Override
+    public boolean getSplashOpen() {
+        return mLocalStorageUtils.getSplashOpen();
+    }
+
+    private void setStatusBarClickable() {
         if (!LollipopCompat.AFTER_LOLLIPOP) {
             mSettingView.setStatusBarClickable(false);
         } else {

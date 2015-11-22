@@ -7,6 +7,8 @@ import com.yydcdut.note.mvp.IPresenter;
  */
 public interface IDetailPresenter extends IPresenter {
 
+    void bindData(String categoryLabel, int position, int comparator);
+
     void showExif();
 
     void showNote(int position);

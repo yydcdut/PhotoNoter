@@ -11,7 +11,6 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.View;
 
-import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.camera.model.AbsCameraModel;
 import com.yydcdut.note.camera.model.ICameraParams;
@@ -87,10 +86,12 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
     private boolean mSoundOpen = false;
     private int mCameraRotation = 0;
 
+    private LocalStorageUtils mLocalStorageUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mLocalStorageUtils = LocalStorageUtils.getInstance(getApplicationContext());
         Bundle bundle = getIntent().getExtras();
         mCategory = bundle.getString(Const.CATEGORY_LABEL);
         LollipopCompat.setFullWindow(getWindow());
@@ -104,17 +105,17 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
         mScreenWidth = getResources().getDisplayMetrics().widthPixels;
         mScreenHeight = getResources().getDisplayMetrics().heightPixels;
 
-        mIsSaving = LocalStorageUtils.getInstance().getCameraSaveSetting();
+        mIsSaving = mLocalStorageUtils.getCameraSaveSetting();
         if (mIsSaving) {
-            mCameraId = LocalStorageUtils.getInstance().getCameraSaveCameraId();
-            mFlashState = LocalStorageUtils.getInstance().getCameraSaveFlash();
-            mTimerState = LocalStorageUtils.getInstance().getCameraSaveTimer();
-            mSoundOpen = LocalStorageUtils.getInstance().getCameraSoundOpen();
-            mSizeState = LocalStorageUtils.getInstance().getCameraPreviewRatioDefault();
-            mExposureCompensation = LocalStorageUtils.getInstance().getCameraExposureCompensation();
-            mLocationOpen = LocalStorageUtils.getInstance().getCameraLocation();
-            mWBState = LocalStorageUtils.getInstance().getCameraWhiteBalance();
-            mGridOpen = LocalStorageUtils.getInstance().getCameraGridOpen();
+            mCameraId = mLocalStorageUtils.getCameraSaveCameraId();
+            mFlashState = mLocalStorageUtils.getCameraSaveFlash();
+            mTimerState = mLocalStorageUtils.getCameraSaveTimer();
+            mSoundOpen = mLocalStorageUtils.getCameraSoundOpen();
+            mSizeState = mLocalStorageUtils.getCameraPreviewRatioDefault();
+            mExposureCompensation = mLocalStorageUtils.getCameraExposureCompensation();
+            mLocationOpen = mLocalStorageUtils.getCameraLocation();
+            mWBState = mLocalStorageUtils.getCameraWhiteBalance();
+            mGridOpen = mLocalStorageUtils.getCameraGridOpen();
         }
         getCameraRotation();
     }
@@ -132,10 +133,10 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
     private void getCameraRotation() {
         switch (mCameraId) {
             case Const.CAMERA_BACK:
-                mCameraRotation = LocalStorageUtils.getInstance().getCameraBackRotation();
+                mCameraRotation = mLocalStorageUtils.getCameraBackRotation();
                 break;
             case Const.CAMERA_FRONT:
-                mCameraRotation = LocalStorageUtils.getInstance().getCameraFrontRotation();
+                mCameraRotation = mLocalStorageUtils.getCameraFrontRotation();
                 break;
         }
     }
@@ -166,7 +167,7 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        mCameraModel = new CameraModel(NoteApplication.getContext(), holder, mCategory);
+        mCameraModel = new CameraModel(getApplicationContext(), holder, mCategory);
         mCameraModel.onCreate(CameraActivity.this);
         mCameraModel.openCamera(mCameraId, mCameraRotation);
     }
@@ -178,7 +179,7 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
         setPreviewSize(previewSize);
         Size size = null;
         try {
-            size = LocalStorageUtils.getInstance().getPictureSize(mCameraId);
+            size = mLocalStorageUtils.getPictureSize(mCameraId);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -429,17 +430,16 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
         super.onPause();
         mCameraModel.stopPreview();
         if (mIsSaving) {
-            LocalStorageUtils.getInstance().setCameraSaveTimer(mTimerState);
-            LocalStorageUtils.getInstance().setCameraSaveCameraId(mCameraId);
-            LocalStorageUtils.getInstance().setCameraSaveFlash(mFlashState);
-            LocalStorageUtils.getInstance().setCameraSoundOpen(mSoundOpen);
-            LocalStorageUtils.getInstance().setCameraPreviewRatio(mSizeState);
-            LocalStorageUtils.getInstance().setCameraExposureCompensation(mExposureCompensation);
-            LocalStorageUtils.getInstance().setCameraLocation(mLocationOpen);
-            LocalStorageUtils.getInstance().setCameraWhiteBalance(mWBState);
-            LocalStorageUtils.getInstance().setCameraGridOpen(mGridOpen);
+            mLocalStorageUtils.setCameraSaveTimer(mTimerState);
+            mLocalStorageUtils.setCameraSaveCameraId(mCameraId);
+            mLocalStorageUtils.setCameraSaveFlash(mFlashState);
+            mLocalStorageUtils.setCameraSoundOpen(mSoundOpen);
+            mLocalStorageUtils.setCameraPreviewRatio(mSizeState);
+            mLocalStorageUtils.setCameraExposureCompensation(mExposureCompensation);
+            mLocalStorageUtils.setCameraLocation(mLocationOpen);
+            mLocalStorageUtils.setCameraWhiteBalance(mWBState);
+            mLocalStorageUtils.setCameraGridOpen(mGridOpen);
         }
-
     }
 
     @Override
@@ -505,7 +505,7 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
         setPreviewSize(previewSize);
         Size size = null;
         try {
-            size = LocalStorageUtils.getInstance().getPictureSize(mCameraId);
+            size = mLocalStorageUtils.getPictureSize(mCameraId);
         } catch (JSONException e) {
             e.printStackTrace();
         }

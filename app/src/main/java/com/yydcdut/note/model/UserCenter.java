@@ -16,17 +16,24 @@ import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 import com.yydcdut.note.BuildConfig;
-import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.bean.IUser;
 import com.yydcdut.note.bean.QQUser;
+import com.yydcdut.note.injector.ContextLife;
+import com.yydcdut.note.utils.FilePathUtils;
+import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
+import com.yydcdut.note.utils.ThreadExecutorPool;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Created by yuyidong on 15/8/11.
@@ -61,16 +68,22 @@ public class UserCenter {
 
     private Tencent mTencent;
 
-    private UserCenter() {
-        mSharedPreferences = NoteApplication.getContext().getSharedPreferences(NAME, Context.MODE_PRIVATE);
-    }
+    private ThreadExecutorPool mThreadExecutorPool;
+    private Context mContext;
 
-    private static class UserCenterHolder {
-        private static final UserCenter INSTANCE = new UserCenter();
-    }
-
-    public static final UserCenter getInstance() {
-        return UserCenterHolder.INSTANCE;
+    @Singleton
+    @Inject
+    public UserCenter(@ContextLife("Application") Context context, ThreadExecutorPool threadExecutorPool) {
+        mThreadExecutorPool = threadExecutorPool;
+        mContext = context;
+        mSharedPreferences = mContext.getSharedPreferences(NAME, Context.MODE_PRIVATE);
+        if (isLoginEvernote()) {
+            LoginEvernote();
+        }
+        if (isLoginQQ() && !new File(FilePathUtils.getQQImagePath()).exists()) {
+            FilePathUtils.saveImage(FilePathUtils.getQQImagePath(),
+                    ImageLoaderManager.loadImageSync(getQQ().getNetImagePath()));
+        }
     }
 
     public boolean isLoginQQ() {
@@ -101,7 +114,7 @@ public class UserCenter {
 
     public void doLoginQQ(Activity activity, OnLoginQQListener listener) {
         if (mTencent == null) {
-            mTencent = Tencent.createInstance(BuildConfig.TENCENT_KEY, NoteApplication.getContext());
+            mTencent = Tencent.createInstance(BuildConfig.TENCENT_KEY, activity.getApplicationContext());
         }
         if (mQQActivity != null) {
             mQQActivity.clear();
@@ -160,7 +173,7 @@ public class UserCenter {
               sdk给我们提供了一个类UserInfo，这个类中封装了QQ用户的一些信息，我么可以通过这个类拿到这些信息
              */
             QQToken qqToken = mTencent.getQQToken();
-            UserInfo info = new UserInfo(NoteApplication.getContext(), qqToken);
+            UserInfo info = new UserInfo(mContext, qqToken);
             //这样我们就拿到这个类了，之后的操作就跟上面的一样了，同样是解析JSON
             final String finalOpenid = openid;
             final String finalAccessToken = accessToken;
@@ -258,7 +271,7 @@ public class UserCenter {
             mEvernoteFuture = null;
             return;
         }
-        mEvernoteFuture = NoteApplication.getInstance().getExecutorPool().submit(new Callable<User>() {
+        mEvernoteFuture = mThreadExecutorPool.getExecutorPool().submit(new Callable<User>() {
             @Override
             public User call() throws Exception {
                 User user = null;

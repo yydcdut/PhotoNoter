@@ -6,23 +6,34 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
-import com.yydcdut.note.mvp.p.home.ISplashPresenter;
+import com.yydcdut.note.injector.component.DaggerActivityComponent;
+import com.yydcdut.note.injector.module.ActivityModule;
 import com.yydcdut.note.mvp.p.home.impl.SplashPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.home.ISplashView;
+import com.yydcdut.note.service.CheckService;
 import com.yydcdut.note.utils.LollipopCompat;
+
+import javax.inject.Inject;
 
 /**
  * Created by yuyidong on 15/7/16.
  */
 public class SplashActivity extends BaseActivity implements ISplashView {
-    private ISplashPresenter mSplashPresenter;
+    @Inject
+    SplashPresenterImpl mSplashPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        mSplashPresenter = new SplashPresenterImpl();
+        mActivityComponent = DaggerActivityComponent.builder()
+                .activityModule(new ActivityModule(this))
+                .applicationComponent(((NoteApplication) getApplication()).getApplicationComponent())
+                .build();
+        mActivityComponent.inject(this);
         mSplashPresenter.attachView(this);
+        mSplashPresenter.initGlobalData();
         mSplashPresenter.isWannaCloseSplash();
         super.onCreate(savedInstanceState);
     }
@@ -39,6 +50,10 @@ public class SplashActivity extends BaseActivity implements ISplashView {
     }
 
     @Override
+    public void initInjector() {
+    }
+
+    @Override
     public void initUiAndListener() {
         View logoView = findViewById(R.id.layout_splash);
         View backgroundView = findViewById(R.id.img_splash_bg);
@@ -52,8 +67,13 @@ public class SplashActivity extends BaseActivity implements ISplashView {
                 ObjectAnimator.ofFloat(backgroundView, "scaleY", 1.3f, 1.05f)
         );
         animation.start();
-
         mSplashPresenter.doingSplash();
+    }
+
+    @Override
+    public void startCheckService() {
+        Intent checkIntent = new Intent(this, CheckService.class);
+        startService(checkIntent);
     }
 
     @Override

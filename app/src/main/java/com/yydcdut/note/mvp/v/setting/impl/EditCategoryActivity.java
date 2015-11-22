@@ -10,10 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
+import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.EditCategoryAdapter;
 import com.yydcdut.note.bean.Category;
-import com.yydcdut.note.mvp.p.setting.IEditCategoryPresenter;
+import com.yydcdut.note.injector.component.DaggerActivityComponent;
+import com.yydcdut.note.injector.module.ActivityModule;
 import com.yydcdut.note.mvp.p.setting.impl.EditCategoryPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.setting.IEditCategoryView;
@@ -24,6 +26,8 @@ import com.yydcdut.sdlv.MenuItem;
 import com.yydcdut.sdlv.SlideAndDragListView;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -41,7 +45,8 @@ public class EditCategoryActivity extends BaseActivity implements IEditCategoryV
 
     private EditCategoryAdapter mCategoryAdapter;
 
-    private IEditCategoryPresenter mEditCategoryPresenter;
+    @Inject
+    EditCategoryPresenterImpl mEditCategoryPresenter;
 
     @Override
     public boolean setStatusBar() {
@@ -54,9 +59,17 @@ public class EditCategoryActivity extends BaseActivity implements IEditCategoryV
     }
 
     @Override
+    public void initInjector() {
+        mActivityComponent = DaggerActivityComponent.builder()
+                .activityModule(new ActivityModule(this))
+                .applicationComponent(((NoteApplication) getApplication()).getApplicationComponent())
+                .build();
+        mActivityComponent.inject(this);
+    }
+
+    @Override
     public void initUiAndListener() {
         ButterKnife.bind(this);
-        mEditCategoryPresenter = new EditCategoryPresenterImpl();
         mEditCategoryPresenter.attachView(this);
         initToolBarUI();
         initListView();

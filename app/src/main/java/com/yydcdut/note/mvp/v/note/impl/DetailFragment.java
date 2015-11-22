@@ -5,14 +5,18 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
-import com.yydcdut.note.mvp.p.note.IDetailFragPresenter;
+import com.yydcdut.note.injector.component.DaggerFragmentComponent;
+import com.yydcdut.note.injector.module.FragmentModule;
 import com.yydcdut.note.mvp.p.note.impl.DetailFragPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseFragment;
 import com.yydcdut.note.mvp.v.note.IDetailFragView;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.view.AutoFitImageView;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -22,7 +26,8 @@ import butterknife.OnClick;
  * Created by yuyidong on 15/11/12.
  */
 public class DetailFragment extends BaseFragment implements IDetailFragView {
-    private IDetailFragPresenter mDetailFragPresenter;
+    @Inject
+    DetailFragPresenterImpl mDetailFragPresenter;
 
     @Bind(R.id.img_detail)
     AutoFitImageView mAutoFitImageView;
@@ -33,13 +38,22 @@ public class DetailFragment extends BaseFragment implements IDetailFragView {
 
     @Override
     public void getBundle(Bundle bundle) {
-        mDetailFragPresenter = new DetailFragPresenterImpl(bundle.getString(Const.CATEGORY_LABEL),
+        mDetailFragPresenter.bindData(bundle.getString(Const.CATEGORY_LABEL),
                 bundle.getInt(Const.PHOTO_POSITION), bundle.getInt(Const.COMPARATOR_FACTORY));
     }
 
     @Override
     public View inflateView(LayoutInflater inflater) {
         return inflater.inflate(R.layout.frag_detail, null);
+    }
+
+    @Override
+    public void initInjector() {
+        mFragmentComponent = DaggerFragmentComponent.builder()
+                .fragmentModule(new FragmentModule(this))
+                .applicationComponent(((NoteApplication) getActivity().getApplication()).getApplicationComponent())
+                .build();
+        mFragmentComponent.inject(this);
     }
 
     @Override

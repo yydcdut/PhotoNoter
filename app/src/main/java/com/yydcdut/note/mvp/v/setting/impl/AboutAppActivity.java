@@ -7,13 +7,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
-import com.yydcdut.note.mvp.p.setting.IAboutAppPresenter;
+import com.yydcdut.note.injector.component.DaggerActivityComponent;
+import com.yydcdut.note.injector.module.ActivityModule;
 import com.yydcdut.note.mvp.p.setting.IFeedbackPresenter;
 import com.yydcdut.note.mvp.p.setting.impl.AboutAppPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.setting.IAboutAppView;
 import com.yydcdut.note.utils.LollipopCompat;
+
+import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -22,7 +26,8 @@ import butterknife.OnClick;
  * Created by yuyidong on 15/9/2.
  */
 public class AboutAppActivity extends BaseActivity implements IAboutAppView {
-    private IAboutAppPresenter mAboutAppPresenter;
+    @Inject
+    AboutAppPresenterImpl mAboutAppPresenter;
 
     @Override
     public boolean setStatusBar() {
@@ -35,9 +40,17 @@ public class AboutAppActivity extends BaseActivity implements IAboutAppView {
     }
 
     @Override
+    public void initInjector() {
+        mActivityComponent = DaggerActivityComponent.builder()
+                .activityModule(new ActivityModule(this))
+                .applicationComponent(((NoteApplication) getApplication()).getApplicationComponent())
+                .build();
+        mActivityComponent.inject(this);
+    }
+
+    @Override
     public void initUiAndListener() {
         ButterKnife.bind(this);
-        mAboutAppPresenter = new AboutAppPresenterImpl();
         mAboutAppPresenter.attachView(this);
         initToolBarUI();
     }

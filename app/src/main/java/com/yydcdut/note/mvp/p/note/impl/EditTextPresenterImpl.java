@@ -25,15 +25,16 @@ import com.iflytek.cloud.RecognizerResult;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechRecognizer;
-import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.bean.PhotoNote;
+import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.listener.OnSnackBarActionListener;
 import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.model.UserCenter;
 import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.note.IEditTextPresenter;
 import com.yydcdut.note.mvp.v.note.IEditTextView;
+import com.yydcdut.note.utils.ThreadExecutorPool;
 import com.yydcdut.note.utils.YLog;
 
 import org.json.JSONArray;
@@ -50,12 +51,17 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import javax.inject.Inject;
+
 /**
  * Created by yuyidong on 15/11/15.
  */
 public class EditTextPresenterImpl implements IEditTextPresenter, Handler.Callback {
     private static final String TAG = EditTextPresenterImpl.class.getSimpleName();
     private Context mContext;
+    private PhotoNoteDBModel mPhotoNoteDBModel;
+    private UserCenter mUserCenter;
+    private ThreadExecutorPool mThreadExecutorPool;
     private IEditTextView mEditTextView;
     /* 数据 */
     private PhotoNote mPhotoNote;
@@ -80,13 +86,16 @@ public class EditTextPresenterImpl implements IEditTextPresenter, Handler.Callba
     /* Voice的是不是显示出来的 */
     private boolean mIsVoiceOpen = false;
 
-    public EditTextPresenterImpl(String category, int position, int comparator) {
-        mPosition = position;
-        mComparator = comparator;
-        mPhotoNote = PhotoNoteDBModel.getInstance().findByCategoryLabel(category, mComparator).get(mPosition);
+    @Inject
+    public EditTextPresenterImpl(@ContextLife("Activity") Context context, PhotoNoteDBModel photoNoteDBModel,
+                                 UserCenter userCenter, ThreadExecutorPool threadExecutorPool) {
+        mPhotoNoteDBModel = photoNoteDBModel;
+        mUserCenter = userCenter;
         mHandler = new Handler(this);
-        mContext = NoteApplication.getContext();
+        mContext = context;
+        mThreadExecutorPool = threadExecutorPool;
         mIatResults = new LinkedHashMap<>();
+        YLog.i("yuyidong", "EditTextPresenterImpl photoNoteDBModel--->" + photoNoteDBModel);
     }
 
     @Override
@@ -97,18 +106,25 @@ public class EditTextPresenterImpl implements IEditTextPresenter, Handler.Callba
     }
 
     @Override
+    public void bindData(String category, int position, int comparator) {
+        mPosition = position;
+        mComparator = comparator;
+        mPhotoNote = mPhotoNoteDBModel.findByCategoryLabel(category, mComparator).get(mPosition);
+    }
+
+    @Override
     public void saveText() {
         mPhotoNote.setTitle(mEditTextView.getNoteTitle());
         mPhotoNote.setContent(mEditTextView.getNoteContent());
         mPhotoNote.setEditedNoteTime(System.currentTimeMillis());
-        PhotoNoteDBModel.getInstance().update(mPhotoNote);
+        mPhotoNoteDBModel.update(mPhotoNote);
     }
 
     @Override
     public void update2Evernote() {
-        if (UserCenter.getInstance().isLoginEvernote()) {
+        if (mUserCenter.isLoginEvernote()) {
             mEditTextView.showProgressBar();
-            NoteApplication.getInstance().getExecutorPool().submit(new Runnable() {
+            mThreadExecutorPool.getExecutorPool().submit(new Runnable() {
                 @Override
                 public void run() {
                     boolean isSuccess = doUpdate2Evernote();

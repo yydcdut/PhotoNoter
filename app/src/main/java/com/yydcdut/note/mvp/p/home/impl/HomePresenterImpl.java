@@ -16,6 +16,8 @@ import com.yydcdut.note.mvp.v.home.IHomeView;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 /**
  * Created by yuyidong on 15/11/19.
  */
@@ -29,19 +31,31 @@ public class HomePresenterImpl implements IHomePresenter, PhotoNoteChangedObserv
 
     private Handler mMainHandler;
 
+    private CategoryDBModel mCategoryDBModel;
+    private PhotoNoteDBModel mPhotoNoteDBModel;
+    private UserCenter mUserCenter;
+
+    @Inject
+    public HomePresenterImpl(CategoryDBModel categoryDBModel, PhotoNoteDBModel photoNoteDBModel,
+                             UserCenter userCenter) {
+        mCategoryDBModel = categoryDBModel;
+        mPhotoNoteDBModel = photoNoteDBModel;
+        mUserCenter = userCenter;
+    }
+
     @Override
     public void attachView(IView iView) {
         mHomeView = (IHomeView) iView;
-        mListData = CategoryDBModel.getInstance().findAll();
+        mListData = mCategoryDBModel.findAll();
         mMainHandler = new Handler(Looper.getMainLooper());
-        PhotoNoteDBModel.getInstance().addObserver(this);
-        CategoryDBModel.getInstance().addObserver(this);
+        mPhotoNoteDBModel.addObserver(this);
+        mCategoryDBModel.addObserver(this);
     }
 
     @Override
     public void detachView() {
-        PhotoNoteDBModel.getInstance().removeObserver(this);
-        CategoryDBModel.getInstance().removeObserver(this);
+        mPhotoNoteDBModel.removeObserver(this);
+        mCategoryDBModel.removeObserver(this);
     }
 
     @Override
@@ -56,7 +70,7 @@ public class HomePresenterImpl implements IHomePresenter, PhotoNoteChangedObserv
 
     @Override
     public int getCheckCategoryPosition() {
-        List<Category> categoryList = CategoryDBModel.getInstance().findAll();
+        List<Category> categoryList = mCategoryDBModel.findAll();
         for (int i = 0; i < categoryList.size(); i++) {
             if (categoryList.get(i).isCheck()) {
                 return i;
@@ -67,7 +81,7 @@ public class HomePresenterImpl implements IHomePresenter, PhotoNoteChangedObserv
 
     @Override
     public void setCheckedCategoryPosition(int position) {
-        CategoryDBModel.getInstance().setCategoryMenuPosition(mListData.get(position));
+        mCategoryDBModel.setCategoryMenuPosition(mListData.get(position));
         mHomeView.notifyCategoryDataChanged();
         mCategoryLabel = mListData.get(position).getLabel();
         mHomeView.changeFragment(mCategoryLabel);
@@ -75,8 +89,8 @@ public class HomePresenterImpl implements IHomePresenter, PhotoNoteChangedObserv
 
     @Override
     public void changeCategoryAfterSaving(Category category) {
-        CategoryDBModel.getInstance().setCategoryMenuPosition(category);
-        mListData = CategoryDBModel.getInstance().refresh();
+        mCategoryDBModel.setCategoryMenuPosition(category);
+        mListData = mCategoryDBModel.refresh();
         mHomeView.notifyCategoryDataChanged();
         mCategoryLabel = category.getLabel();
         mHomeView.changePhotos4Category(mCategoryLabel);
@@ -91,14 +105,14 @@ public class HomePresenterImpl implements IHomePresenter, PhotoNoteChangedObserv
     public void drawerUserClick(int which) {
         switch (which) {
             case USER_ONE:
-                if (UserCenter.getInstance().isLoginQQ()) {
+                if (mUserCenter.isLoginQQ()) {
                     mHomeView.jump2UserCenterActivity();
                 } else {
                     mHomeView.jump2LoginActivity();
                 }
                 break;
             case USER_TWO:
-                if (UserCenter.getInstance().isLoginEvernote()) {
+                if (mUserCenter.isLoginEvernote()) {
                     mHomeView.jump2UserCenterActivity();
                 } else {
                     mHomeView.jump2LoginActivity();
@@ -114,8 +128,8 @@ public class HomePresenterImpl implements IHomePresenter, PhotoNoteChangedObserv
 
     @Override
     public void updateQQInfo() {
-        if (UserCenter.getInstance().isLoginQQ()) {
-            IUser qqUser = UserCenter.getInstance().getQQ();
+        if (mUserCenter.isLoginQQ()) {
+            IUser qqUser = mUserCenter.getQQ();
             mHomeView.updateQQInfo(true, qqUser.getName(), qqUser.getImagePath());
         } else {
             mHomeView.updateQQInfo(false, null, null);
@@ -124,7 +138,7 @@ public class HomePresenterImpl implements IHomePresenter, PhotoNoteChangedObserv
 
     @Override
     public void updateEvernoteInfo() {
-        if (UserCenter.getInstance().isLoginEvernote()) {
+        if (mUserCenter.isLoginEvernote()) {
             mHomeView.updateEvernoteInfo(true);
         } else {
             mHomeView.updateEvernoteInfo(false);
@@ -135,7 +149,7 @@ public class HomePresenterImpl implements IHomePresenter, PhotoNoteChangedObserv
     public void updateFromBroadcast(boolean broadcast_process, boolean broadcast_service) {
         //有时候categoryLabel为null，感觉原因是activity被回收了，但是一直解决不掉，所以迫不得已的解决办法
         if (mCategoryLabel == null) {
-            List<Category> categoryList = CategoryDBModel.getInstance().findAll();
+            List<Category> categoryList = mCategoryDBModel.findAll();
             for (Category category : categoryList) {
                 if (category.isCheck()) {
                     mCategoryLabel = category.getLabel();
@@ -145,16 +159,16 @@ public class HomePresenterImpl implements IHomePresenter, PhotoNoteChangedObserv
 
         //从另外个进程过来的数据
         if (broadcast_process) {
-            int number = PhotoNoteDBModel.getInstance().findByCategoryLabelByForce(mCategoryLabel, -1).size();
-            Category category = CategoryDBModel.getInstance().findByCategoryLabel(mCategoryLabel);
+            int number = mPhotoNoteDBModel.findByCategoryLabelByForce(mCategoryLabel, -1).size();
+            Category category = mCategoryDBModel.findByCategoryLabel(mCategoryLabel);
             category.setPhotosNumber(number);
-            CategoryDBModel.getInstance().update(category);
-            mHomeView.updateCategoryList(CategoryDBModel.getInstance().findAll());
+            mCategoryDBModel.update(category);
+            mHomeView.updateCategoryList(mCategoryDBModel.findAll());
         }
 
         //从Service中来
         if (broadcast_service) {
-            mHomeView.updateCategoryList(CategoryDBModel.getInstance().findAll());
+            mHomeView.updateCategoryList(mCategoryDBModel.findAll());
         }
     }
 
@@ -165,7 +179,7 @@ public class HomePresenterImpl implements IHomePresenter, PhotoNoteChangedObserv
             public void run() {
                 switch (CRUD) {
                     case CategoryChangedObserver.OBSERVER_CATEGORY_DELETE:
-                        mListData = CategoryDBModel.getInstance().findAll();
+                        mListData = mCategoryDBModel.findAll();
                         String beforeLabel = mCategoryLabel;
                         for (Category category : mListData) {
                             if (category.isCheck()) {
@@ -173,7 +187,7 @@ public class HomePresenterImpl implements IHomePresenter, PhotoNoteChangedObserv
                                 break;
                             }
                         }
-                        mHomeView.updateCategoryList(CategoryDBModel.getInstance().findAll());
+                        mHomeView.updateCategoryList(mCategoryDBModel.findAll());
                         if (!mCategoryLabel.equals(beforeLabel)) {
                             mHomeView.changePhotos4Category(mCategoryLabel);
                         }
@@ -182,7 +196,7 @@ public class HomePresenterImpl implements IHomePresenter, PhotoNoteChangedObserv
                     case CategoryChangedObserver.OBSERVER_CATEGORY_CREATE:
                     case CategoryChangedObserver.OBSERVER_CATEGORY_RENAME:
                     case CategoryChangedObserver.OBSERVER_CATEGORY_SORT:
-                        mHomeView.updateCategoryList(CategoryDBModel.getInstance().findAll());
+                        mHomeView.updateCategoryList(mCategoryDBModel.findAll());
                         break;
                 }
             }
@@ -197,12 +211,12 @@ public class HomePresenterImpl implements IHomePresenter, PhotoNoteChangedObserv
                 switch (CRUD) {
                     case PhotoNoteChangedObserver.OBSERVER_PHOTONOTE_DELETE:
                     case PhotoNoteChangedObserver.OBSERVER_PHOTONOTE_CREATE:
-                        int number = PhotoNoteDBModel.getInstance().findByCategoryLabel(mCategoryLabel, -1).size();
-                        Category category = CategoryDBModel.getInstance().findByCategoryLabel(mCategoryLabel);
+                        int number = mPhotoNoteDBModel.findByCategoryLabel(mCategoryLabel, -1).size();
+                        Category category = mCategoryDBModel.findByCategoryLabel(mCategoryLabel);
                         if (category.getPhotosNumber() != number) {
                             category.setPhotosNumber(number);
-                            CategoryDBModel.getInstance().update(category);
-                            mHomeView.updateCategoryList(CategoryDBModel.getInstance().findAll());
+                            mCategoryDBModel.update(category);
+                            mHomeView.updateCategoryList(mCategoryDBModel.findAll());
                         }
                         break;
                 }

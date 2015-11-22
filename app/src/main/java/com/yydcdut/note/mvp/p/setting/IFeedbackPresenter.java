@@ -10,6 +10,8 @@ public interface IFeedbackPresenter extends IPresenter {
     int TYPE_FEEDBACK = 0;
     int TYPE_CONTACT = 1;
 
+    void bindData(int type);
+
     /**
      * 判断email的内容和content的内容的完整性
      *

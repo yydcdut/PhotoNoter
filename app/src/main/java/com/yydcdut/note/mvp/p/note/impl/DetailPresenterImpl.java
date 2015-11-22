@@ -18,18 +18,22 @@ import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
-import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.bean.PhotoNote;
+import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.note.IDetailPresenter;
 import com.yydcdut.note.mvp.v.note.IDetailView;
 import com.yydcdut.note.utils.FilePathUtils;
+import com.yydcdut.note.utils.LocalStorageUtils;
+import com.yydcdut.note.utils.YLog;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+
+import javax.inject.Inject;
 
 /**
  * Created by yuyidong on 15/11/16.
@@ -37,33 +41,37 @@ import java.util.List;
 public class DetailPresenterImpl implements IDetailPresenter, OnGetGeoCoderResultListener {
     private IDetailView mDetailView;
     private Context mContext;
+    private PhotoNoteDBModel mPhotoNoteDBModel;
+    private LocalStorageUtils mLocalStorageUtils;
 
     /* Data */
     private List<PhotoNote> mPhotoNoteList;
     private String mCategoryLabel;
     private int mComparator;
-    private int mInitPostion;
+    private int mInitPosition;
 
     /* Baidu Map */
     private BaiduMap mBaiduMap;
     private UiSettings mUiSettings;
     private GeoCoder mSearch = null; // 搜索模块，也可去掉地图模块独立使用
 
-    public DetailPresenterImpl(String categoryLabel, int position, int comparator) {
-        mContext = NoteApplication.getContext();
-        mCategoryLabel = categoryLabel;
-        mInitPostion = position;
-        mComparator = comparator;
-        mPhotoNoteList = PhotoNoteDBModel.getInstance().findByCategoryLabel(categoryLabel, comparator);
+    @Inject
+    public DetailPresenterImpl(@ContextLife("Activity") Context context, PhotoNoteDBModel photoNoteDBModel,
+                               LocalStorageUtils localStorageUtils) {
+        mContext = context;
+        mPhotoNoteDBModel = photoNoteDBModel;
+        mLocalStorageUtils = localStorageUtils;
+        YLog.i("yuyidong", "DetailPresenterImpl photoNoteDBModel--->" + photoNoteDBModel);
     }
 
     @Override
     public void attachView(IView iView) {
         mDetailView = (IDetailView) iView;
+        mDetailView.setFontSystem(mLocalStorageUtils.getSettingFontSystem());
         initBaiduMap();
-        mDetailView.setViewPagerAdapter(mCategoryLabel, mDetailView.getCurrentPosition(), mComparator);
-        showNote(mInitPostion);
-        mDetailView.showCurrentPosition(mInitPostion);
+        mDetailView.setViewPagerAdapter(mPhotoNoteList, mDetailView.getCurrentPosition(), mComparator);
+        showNote(mInitPosition);
+        mDetailView.showCurrentPosition(mInitPosition);
     }
 
     private String decodeTimeInDetail(long time) {
@@ -100,6 +108,14 @@ public class DetailPresenterImpl implements IDetailPresenter, OnGetGeoCoderResul
     }
 
     @Override
+    public void bindData(String categoryLabel, int position, int comparator) {
+        mCategoryLabel = categoryLabel;
+        mInitPosition = position;
+        mComparator = comparator;
+        mPhotoNoteList = mPhotoNoteDBModel.findByCategoryLabel(mCategoryLabel, mComparator);
+    }
+
+    @Override
     public void showExif() {
         int position = mDetailView.getCurrentPosition();
         PhotoNote photoNote = mPhotoNoteList.get(position);
@@ -122,10 +138,10 @@ public class DetailPresenterImpl implements IDetailPresenter, OnGetGeoCoderResul
         } else {
             title = photoNote.getTitle();
         }
-        if (TextUtils.isEmpty(photoNote.getTitle())) {
+        if (TextUtils.isEmpty(photoNote.getContent())) {
             content = mContext.getResources().getString(R.string.detail_content_nothing);
         } else {
-            content = photoNote.getTitle();
+            content = photoNote.getContent();
         }
         String createdTime = decodeTimeInDetail(photoNote.getCreatedNoteTime());
         String editedTime = decodeTimeInDetail(photoNote.getEditedNoteTime());
@@ -137,7 +153,7 @@ public class DetailPresenterImpl implements IDetailPresenter, OnGetGeoCoderResul
     public void updateNote(String label, int position, int comparator) {
         mCategoryLabel = label;
         mComparator = comparator;
-        mPhotoNoteList = PhotoNoteDBModel.getInstance().findByCategoryLabel(mCategoryLabel, mComparator);
+        mPhotoNoteList = mPhotoNoteDBModel.findByCategoryLabel(mCategoryLabel, mComparator);
         showNote(position);
     }
 

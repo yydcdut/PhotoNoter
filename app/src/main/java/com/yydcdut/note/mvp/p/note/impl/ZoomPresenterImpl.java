@@ -6,9 +6,9 @@ import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 
-import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.bean.PhotoNote;
+import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.note.IZoomPresenter;
@@ -16,13 +16,18 @@ import com.yydcdut.note.mvp.v.note.IZoomView;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
+import com.yydcdut.note.utils.ThreadExecutorPool;
 import com.yydcdut.note.utils.UiHelper;
+
+import javax.inject.Inject;
 
 /**
  * Created by yuyidong on 15/11/15.
  */
 public class ZoomPresenterImpl implements IZoomPresenter, Handler.Callback {
     private Context mContext;
+    private PhotoNoteDBModel mPhotoNoteDBModel;
+    private ThreadExecutorPool mThreadExecutorPool;
     /* 数据 */
     private int mPosition;
     private int mComparator;
@@ -33,10 +38,12 @@ public class ZoomPresenterImpl implements IZoomPresenter, Handler.Callback {
     /* 图片有没有修改过 */
     private boolean mIsChanged = false;
 
-    public ZoomPresenterImpl(String category, int position, int comparator) {
-        mPosition = position;
-        mComparator = comparator;
-        mPhotoNote = PhotoNoteDBModel.getInstance().findByCategoryLabel(category, mComparator).get(mPosition);
+    @Inject
+    public ZoomPresenterImpl(@ContextLife("Activity") Context context, PhotoNoteDBModel photoNoteDBModel,
+                             ThreadExecutorPool threadExecutorPool) {
+        mContext = context;
+        mPhotoNoteDBModel = photoNoteDBModel;
+        mThreadExecutorPool = threadExecutorPool;
     }
 
     /* Handler */
@@ -47,7 +54,6 @@ public class ZoomPresenterImpl implements IZoomPresenter, Handler.Callback {
         mMainHandler = new Handler(this);
         mZoomView = (IZoomView) iView;
         mZoomView.showImage(mPhotoNote.getBigPhotoPathWithFile());
-        mContext = NoteApplication.getContext();
     }
 
     @Override
@@ -59,6 +65,13 @@ public class ZoomPresenterImpl implements IZoomPresenter, Handler.Callback {
     public boolean handleMessage(Message msg) {
         mZoomView.hideProgressBar();
         return false;
+    }
+
+    @Override
+    public void bindData(String category, int position, int comparator) {
+        mPosition = position;
+        mComparator = comparator;
+        mPhotoNote = mPhotoNoteDBModel.findByCategoryLabel(category, mComparator).get(mPosition);
     }
 
     @Override
@@ -79,14 +92,14 @@ public class ZoomPresenterImpl implements IZoomPresenter, Handler.Callback {
     @Override
     public void saveSmallImage(final Bitmap thumbNail) {
         mZoomView.showProgressBar();
-        NoteApplication.getInstance().getExecutorPool().execute(new Runnable() {
+        mThreadExecutorPool.getExecutorPool().execute(new Runnable() {
             @Override
             public void run() {
 
                 FilePathUtils.saveSmallPhotoFromSDK(mPhotoNote.getPhotoName(), thumbNail);
 
                 mPhotoNote.setPaletteColor(UiHelper.getPaletteColor(ImageLoaderManager.loadImageSync(mPhotoNote.getBigPhotoPathWithFile())));
-                PhotoNoteDBModel.getInstance().update(mPhotoNote);
+                mPhotoNoteDBModel.update(mPhotoNote);
 
                 sendBroadcast();
 

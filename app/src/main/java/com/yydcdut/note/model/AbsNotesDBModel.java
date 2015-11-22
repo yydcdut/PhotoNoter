@@ -1,6 +1,7 @@
 package com.yydcdut.note.model;
 
-import com.yydcdut.note.NoteApplication;
+import android.content.Context;
+
 import com.yydcdut.note.model.sqlite.NotesSQLite;
 
 /**
@@ -12,8 +13,10 @@ public abstract class AbsNotesDBModel implements IModel {
 
     protected NotesSQLite mNotesSQLite;
 
-    protected AbsNotesDBModel() {
-        mNotesSQLite = new NotesSQLite(NoteApplication.getContext(), NAME, null, VERSION);
+    protected AbsNotesDBModel(Context context) {
+        if (mNotesSQLite == null) {
+            mNotesSQLite = new NotesSQLite(context, NAME, null, VERSION);
+        }
     }
 
 }

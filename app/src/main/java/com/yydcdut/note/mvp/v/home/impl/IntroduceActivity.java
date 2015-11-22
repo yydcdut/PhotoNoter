@@ -10,15 +10,19 @@ import android.widget.ImageView;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
+import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.IntroducePagerAdapter;
-import com.yydcdut.note.mvp.p.home.IIntroducePresenter;
+import com.yydcdut.note.injector.component.DaggerActivityComponent;
+import com.yydcdut.note.injector.module.ActivityModule;
 import com.yydcdut.note.mvp.p.home.impl.IntroducePresenterImpl;
 import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.home.IIntroduceView;
 import com.yydcdut.note.service.InitService;
 import com.yydcdut.note.utils.LollipopCompat;
 import com.yydcdut.note.view.CircleProgressBarLayout;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -29,21 +33,16 @@ import butterknife.OnPageChange;
  * Created by yuyidong on 15/8/9.
  */
 public class IntroduceActivity extends BaseActivity implements IIntroduceView {
-    /**
-     * Presenter
-     */
-    private IIntroducePresenter mIntroducePresenter;
+    @Inject
+    IntroducePresenterImpl mIntroducePresenter;
 
     @Bind({R.id.img_introduce_1, R.id.img_introduce_2, R.id.img_introduce_3, R.id.img_introduce_4,
             R.id.img_introduce_5, R.id.img_introduce_6})
     ImageView[] mImageViewArray;
-
     @Bind(R.id.btn_introduce_start)
     View mBtnStart;
-
     @Bind(R.id.layout_progress)
     CircleProgressBarLayout mCircleProgressBar;
-
 
     @Override
     public boolean setStatusBar() {
@@ -57,9 +56,17 @@ public class IntroduceActivity extends BaseActivity implements IIntroduceView {
     }
 
     @Override
+    public void initInjector() {
+        mActivityComponent = DaggerActivityComponent.builder()
+                .activityModule(new ActivityModule(this))
+                .applicationComponent(((NoteApplication) getApplication()).getApplicationComponent())
+                .build();
+        mActivityComponent.inject(this);
+    }
+
+    @Override
     public void initUiAndListener() {
         ButterKnife.bind(this);
-        mIntroducePresenter = new IntroducePresenterImpl();
         mIntroducePresenter.attachView(this);
         initViewPager();
         mCircleProgressBar = (CircleProgressBarLayout) findViewById(R.id.layout_progress);

@@ -56,13 +56,13 @@ android {
 
     productFlavors {
         Store360 {}
-        QQ {}
-        WanDouJia {}
-        Xiaomi {}
-        Flyme {}
-        Market91 {}
-        AnZhuo {}
-        BaiDu {}
+//        QQ {}
+//        WanDouJia {}
+//        Xiaomi {}
+//        Flyme {}
+//        Market91 {}
+//        AnZhuo {}
+//        BaiDu {}
 //        AnZhi {}
 //        GFeng {}
 //        AppChina {}

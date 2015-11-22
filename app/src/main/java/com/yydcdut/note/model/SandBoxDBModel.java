@@ -1,14 +1,18 @@
 package com.yydcdut.note.model;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.bean.SandExif;
 import com.yydcdut.note.bean.SandPhoto;
+import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.observer.IObserver;
 import com.yydcdut.note.model.sqlite.SandSQLite;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Created by yuyidong on 15/8/10.
@@ -21,14 +25,10 @@ public class SandBoxDBModel implements IModel {
 
     private SandSQLite mSandSQLite;
 
-    private static SandBoxDBModel sInstance = new SandBoxDBModel();
-
-    private SandBoxDBModel() {
-        mSandSQLite = new SandSQLite(NoteApplication.getContext(), NAME, null, VERSION);
-    }
-
-    public static SandBoxDBModel getInstance() {
-        return sInstance;
+    @Singleton
+    @Inject
+    public SandBoxDBModel(@ContextLife("Application") Context context) {
+        mSandSQLite = new SandSQLite(context, NAME, null, VERSION);
     }
 
     public SandPhoto findFirstOne() {

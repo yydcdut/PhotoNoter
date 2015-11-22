@@ -22,9 +22,11 @@ import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
+import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
+import com.yydcdut.note.injector.component.DaggerActivityComponent;
+import com.yydcdut.note.injector.module.ActivityModule;
 import com.yydcdut.note.listener.OnSnackBarActionListener;
-import com.yydcdut.note.mvp.p.note.IEditTextPresenter;
 import com.yydcdut.note.mvp.p.note.impl.EditTextPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.note.IEditTextView;
@@ -36,6 +38,8 @@ import com.yydcdut.note.view.RevealView;
 import com.yydcdut.note.view.VoiceRippleView;
 import com.yydcdut.note.view.fab2.FloatingMenuLayout;
 import com.yydcdut.note.view.fab2.snack.SnackHelper;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -80,8 +84,8 @@ public class EditTextActivity extends BaseActivity implements IEditTextView, Vie
     View mFabPositionView;
     ImageView mMenuArrowImage;
 
-
-    private IEditTextPresenter mEditTextPresenter;
+    @Inject
+    EditTextPresenterImpl mEditTextPresenter;
 
     private static final String TAG_ARROW = "tag_arrow";
 
@@ -93,6 +97,15 @@ public class EditTextActivity extends BaseActivity implements IEditTextView, Vie
     @Override
     public int setContentView() {
         return R.layout.activity_edit;
+    }
+
+    @Override
+    public void initInjector() {
+        mActivityComponent = DaggerActivityComponent.builder()
+                .activityModule(new ActivityModule(this))
+                .applicationComponent(((NoteApplication) getApplication()).getApplicationComponent())
+                .build();
+        mActivityComponent.inject(this);
     }
 
     /**
@@ -118,7 +131,7 @@ public class EditTextActivity extends BaseActivity implements IEditTextView, Vie
     public void initUiAndListener() {
         ButterKnife.bind(this);
         Bundle bundle = getIntent().getExtras();
-        mEditTextPresenter = new EditTextPresenterImpl(bundle.getString(Const.CATEGORY_LABEL),
+        mEditTextPresenter.bindData(bundle.getString(Const.CATEGORY_LABEL),
                 bundle.getInt(Const.PHOTO_POSITION), bundle.getInt(Const.COMPARATOR_FACTORY));
         mEditTextPresenter.attachView(this);
         initToolBar();

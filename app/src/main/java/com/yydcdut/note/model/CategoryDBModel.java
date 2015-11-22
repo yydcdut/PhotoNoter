@@ -1,19 +1,24 @@
 package com.yydcdut.note.model;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.bean.PhotoNote;
+import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.compare.ComparatorFactory;
 import com.yydcdut.note.model.observer.CategoryChangedObserver;
 import com.yydcdut.note.model.observer.IObserver;
 import com.yydcdut.note.model.sqlite.NotesSQLite;
+import com.yydcdut.note.utils.ThreadExecutorPool;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Created by yuyidong on 15/7/17.
@@ -24,14 +29,18 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
 
     private List<Category> mCache;
 
-    private static CategoryDBModel sInstance = new CategoryDBModel();
+    private ThreadExecutorPool mThreadExecutorPool;
 
-    private CategoryDBModel() {
+    private PhotoNoteDBModel mPhotoNoteDBModel;
+
+    @Singleton
+    @Inject
+    public CategoryDBModel(@ContextLife("Application") Context context, PhotoNoteDBModel photoNoteDBModel,
+                           ThreadExecutorPool threadExecutorPool) {
+        super(context);
+        mPhotoNoteDBModel = photoNoteDBModel;
+        mThreadExecutorPool = threadExecutorPool;
         findAll();
-    }
-
-    public static CategoryDBModel getInstance() {
-        return sInstance;
     }
 
     @Override
@@ -168,12 +177,12 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
         Category oldCategory = findByCategoryLabel(oldCategoryLabel);
         Category targetCategory = findByCategoryLabel(targetCategoryLabel);
         //更新移动过去的category数目
-        int targetNumber = PhotoNoteDBModel.getInstance().findByCategoryLabel(targetCategory.getLabel(), ComparatorFactory.FACTORY_NOT_SORT).size();
+        int targetNumber = mPhotoNoteDBModel.findByCategoryLabel(targetCategory.getLabel(), ComparatorFactory.FACTORY_NOT_SORT).size();
         targetCategory.setPhotosNumber(targetNumber);
-        CategoryDBModel.getInstance().update(targetCategory, false);
-        int oldNumber = PhotoNoteDBModel.getInstance().findByCategoryLabel(oldCategory.getLabel(), ComparatorFactory.FACTORY_NOT_SORT).size();
+        update(targetCategory, false);
+        int oldNumber = mPhotoNoteDBModel.findByCategoryLabel(oldCategory.getLabel(), ComparatorFactory.FACTORY_NOT_SORT).size();
         oldCategory.setPhotosNumber(oldNumber);
-        CategoryDBModel.getInstance().update(oldCategory);
+        update(oldCategory);
         doObserver(IObserver.OBSERVER_CATEGORY_MOVE);
     }
 
@@ -194,15 +203,15 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
             bool &= updateData2DB(category);
             if (bool) {
                 //处理PhotoNote
-                List<PhotoNote> photoNoteList = PhotoNoteDBModel.getInstance().findByCategoryLabel(originalLabel, ComparatorFactory.FACTORY_NOT_SORT);
+                List<PhotoNote> photoNoteList = mPhotoNoteDBModel.findByCategoryLabel(originalLabel, ComparatorFactory.FACTORY_NOT_SORT);
                 int total = photoNoteList.size();
                 int number = 0;
                 for (PhotoNote photoNote : photoNoteList) {
                     photoNote.setCategoryLabel(newLabel);
                     if ((number++) + 1 == total) {
-                        PhotoNoteDBModel.getInstance().update(photoNote, true);
+                        mPhotoNoteDBModel.update(photoNote, true);
                     } else {
-                        PhotoNoteDBModel.getInstance().update(photoNote, false);
+                        mPhotoNoteDBModel.update(photoNote, false);
                     }
                 }
             }
@@ -267,10 +276,10 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
      * @param label
      */
     private void deletePhotoNotes(final String label) {
-        NoteApplication.getInstance().getExecutorPool().execute(new Runnable() {
+        mThreadExecutorPool.getExecutorPool().execute(new Runnable() {
             @Override
             public void run() {
-                PhotoNoteDBModel.getInstance().deleteByCategoryWithoutObserver(label);
+                mPhotoNoteDBModel.deleteByCategoryWithoutObserver(label);
             }
         });
     }

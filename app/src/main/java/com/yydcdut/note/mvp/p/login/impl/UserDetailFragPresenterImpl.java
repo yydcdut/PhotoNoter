@@ -12,9 +12,9 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.evernote.edam.type.User;
-import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.bean.IUser;
+import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.CategoryDBModel;
 import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.model.SandBoxDBModel;
@@ -27,9 +27,12 @@ import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.NetworkUtils;
+import com.yydcdut.note.utils.ThreadExecutorPool;
 import com.yydcdut.note.utils.TimeDecoder;
 
 import java.text.DecimalFormat;
+
+import javax.inject.Inject;
 
 /**
  * Created by yuyidong on 15/11/16.
@@ -38,6 +41,12 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter, Ha
     private IUserDetailFragView mUserDetailFragView;
     private Activity mActivity;
     private Context mContext;
+    private UserCenter mUserCenter;
+    private PhotoNoteDBModel mPhotoNoteDBModel;
+    private CategoryDBModel mCategoryDBModel;
+    private SandBoxDBModel mSandBoxDBModel;
+    private LocalStorageUtils mLocalStorageUtils;
+    private ThreadExecutorPool mThreadExecutorPool;
 
     private static final int MESSAGE_LOGIN_QQ_OK = 1;
     private static final int MESSAGE_LOGIN_QQ_FAILED = 3;
@@ -48,10 +57,19 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter, Ha
     private int mType;
     private String mLocation;
 
-    public UserDetailFragPresenterImpl(Activity activity, int type) {
+    @Inject
+    public UserDetailFragPresenterImpl(Activity activity, @ContextLife("Activity") Context context,
+                                       UserCenter userCenter, PhotoNoteDBModel photoNoteDBModel,
+                                       CategoryDBModel categoryDBModel, SandBoxDBModel sandBoxDBModel,
+                                       LocalStorageUtils localStorageUtils, ThreadExecutorPool threadExecutorPool) {
         mActivity = activity;
-        mType = type;
-        mContext = NoteApplication.getContext();
+        mContext = context;
+        mUserCenter = userCenter;
+        mPhotoNoteDBModel = photoNoteDBModel;
+        mCategoryDBModel = categoryDBModel;
+        mSandBoxDBModel = sandBoxDBModel;
+        mLocalStorageUtils = localStorageUtils;
+        mThreadExecutorPool = threadExecutorPool;
         mHandler = new Handler(this);
     }
 
@@ -64,12 +82,12 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter, Ha
                 mUserDetailFragView.initUserDetail(getLocation(), getUseAge(), getPhone(), getAndroid(), calculateStorage());
                 break;
             case 1:
-                mUserDetailFragView.initUserImages(PhotoNoteDBModel.getInstance().findByCategoryLabel(
-                        CategoryDBModel.getInstance().findAll().get(0).getLabel(), ComparatorFactory.FACTORY_NOT_SORT));
+                mUserDetailFragView.initUserImages(mPhotoNoteDBModel.findByCategoryLabel(
+                        mCategoryDBModel.findAll().get(0).getLabel(), ComparatorFactory.FACTORY_NOT_SORT));
                 break;
             case 2:
-                mUserDetailFragView.initUserInfo(UserCenter.getInstance().isLoginQQ(), getQQName(),
-                        UserCenter.getInstance().isLoginEvernote(), getEvernoteName(), getFolderStorage(),
+                mUserDetailFragView.initUserInfo(mUserCenter.isLoginQQ(), getQQName(),
+                        mUserCenter.isLoginEvernote(), getEvernoteName(), getFolderStorage(),
                         getNotesNumber(), getSandboxNumber(), getWordNumber(), getCloud());
                 break;
         }
@@ -80,6 +98,11 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter, Ha
         if (mType == 0 && mLocationClient != null) {
             mLocationClient.stop();
         }
+    }
+
+    @Override
+    public void bindData(int type) {
+        mType = type;
     }
 
     @Override
@@ -94,35 +117,35 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter, Ha
 
     @Override
     public void loginOrOutQQ() {
-        if (UserCenter.getInstance().isLoginQQ()) {
-            UserCenter.getInstance().logoutQQ();
+        if (mUserCenter.isLoginQQ()) {
+            mUserCenter.logoutQQ();
             mUserDetailFragView.logoutQQ();
         } else {
-            UserCenter.getInstance().doLoginQQ(mActivity, mLoginQQListener);
+            mUserCenter.doLoginQQ(mActivity, mLoginQQListener);
         }
     }
 
     @Override
     public void loginOrOutEvernote() {
-        if (UserCenter.getInstance().isLoginEvernote()) {
-            UserCenter.getInstance().logoutEvernote();
+        if (mUserCenter.isLoginEvernote()) {
+            mUserCenter.logoutEvernote();
             mUserDetailFragView.logoutEvernote();
         } else {
-            UserCenter.getInstance().doLoginEvernote(mActivity);
+            mUserCenter.doLoginEvernote(mActivity);
         }
     }
 
     private String getQQName() {
-        if (UserCenter.getInstance().isLoginQQ()) {
-            return UserCenter.getInstance().getQQ().getName();
+        if (mUserCenter.isLoginQQ()) {
+            return mUserCenter.getQQ().getName();
         } else {
             return mContext.getResources().getString(R.string.not_login);
         }
     }
 
     private String getEvernoteName() {
-        if (UserCenter.getInstance().isLoginEvernote()) {
-            User user = UserCenter.getInstance().getEvernote();
+        if (mUserCenter.isLoginEvernote()) {
+            User user = mUserCenter.getEvernote();
             if (user == null) {
                 return mContext.getResources().getString(R.string.user_failed);
             } else {
@@ -149,11 +172,11 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter, Ha
     }
 
     private String getNotesNumber() {
-        return PhotoNoteDBModel.getInstance().getAllNumber() + "";
+        return mPhotoNoteDBModel.getAllNumber() + "";
     }
 
     private String getSandboxNumber() {
-        return SandBoxDBModel.getInstance().getAllNumber() + "";
+        return mSandBoxDBModel.getAllNumber() + "";
     }
 
     private String getWordNumber() {
@@ -166,7 +189,7 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter, Ha
 
 
     private String getLocation() {
-        mLocationClient = new LocationClient(NoteApplication.getContext());
+        mLocationClient = new LocationClient(mContext);
         mLocationClient.registerLocationListener(new BDLocationListener() {
             @Override
             public void onReceiveLocation(BDLocation bdLocation) {
@@ -191,7 +214,7 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter, Ha
     }
 
     private String getUseAge() {
-        long startTime = LocalStorageUtils.getInstance().getStartUsageTime();
+        long startTime = mLocalStorageUtils.getStartUsageTime();
         long now = System.currentTimeMillis();
         return TimeDecoder.calculateDeltaTime(now, startTime) + " " + mContext.getResources().getString(R.string.uc_usage_age_unit);
     }
@@ -224,10 +247,10 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter, Ha
         @Override
         public void onComplete(final String openid, final String accessToken, final String name, final String image) {
             mUserDetailFragView.showProgressBar();
-            NoteApplication.getInstance().getExecutorPool().execute(new Runnable() {
+            mThreadExecutorPool.getExecutorPool().execute(new Runnable() {
                 @Override
                 public void run() {
-                    if (UserCenter.getInstance().LoginQQ(openid, accessToken, name, image)) {
+                    if (mUserCenter.LoginQQ(openid, accessToken, name, image)) {
                         Bitmap bitmap = ImageLoaderManager.loadImageSync(image);
                         FilePathUtils.saveImage(FilePathUtils.getQQImagePath(), bitmap);
                         mHandler.sendEmptyMessage(MESSAGE_LOGIN_QQ_OK);
@@ -251,7 +274,7 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter, Ha
     public boolean handleMessage(Message msg) {
         switch (msg.what) {
             case MESSAGE_LOGIN_QQ_OK:
-                IUser qqUser = UserCenter.getInstance().getQQ();
+                IUser qqUser = mUserCenter.getQQ();
                 mUserDetailFragView.hideProgressBar();
                 mUserDetailFragView.showQQ(qqUser.getName(), qqUser.getImagePath());
                 mUserDetailFragView.showSnakebar(mContext.getResources().getString(R.string.toast_success));

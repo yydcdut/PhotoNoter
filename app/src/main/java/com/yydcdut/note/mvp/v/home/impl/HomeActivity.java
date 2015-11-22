@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -28,9 +27,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.CategoryAdapter;
 import com.yydcdut.note.bean.Category;
+import com.yydcdut.note.injector.component.DaggerActivityComponent;
+import com.yydcdut.note.injector.module.ActivityModule;
 import com.yydcdut.note.mvp.p.home.IHomePresenter;
 import com.yydcdut.note.mvp.p.home.impl.HomePresenterImpl;
 import com.yydcdut.note.mvp.v.BaseActivity;
@@ -39,31 +41,22 @@ import com.yydcdut.note.mvp.v.login.impl.LoginActivity;
 import com.yydcdut.note.mvp.v.login.impl.UserCenterActivity;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
-import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.LollipopCompat;
 import com.yydcdut.note.view.RoundedImageView;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class HomeActivity extends BaseActivity implements IHomeView, View.OnClickListener {
     private static final int LAYOUT_FRAGMENT_ID = R.id.container;
-    /**
-     * 相册的fragment
-     */
-    private AlbumFragment mFragment;
+    private long mLastBackTime = 0;//退出程序用
 
-    /**
-     * 退出程序用
-     */
-    private long mLastBackTime = 0;
-
+    private AlbumFragment mFragment;//相册的fragment
     private CategoryAdapter mCategoryAdapter;
-
-    protected IHomePresenter mHomePresenter;
-
     /* User header */
     public TextView mUserName;
     public RoundedImageView mUserPhoto;
@@ -80,6 +73,8 @@ public class HomeActivity extends BaseActivity implements IHomeView, View.OnClic
     public DrawerLayout mDrawerLayout;
     @Bind(R.id.relativeDrawer)
     public FrameLayout mRelativeDrawer;//Fragment
+    @Inject
+    HomePresenterImpl mHomePresenter;
 
     private ActionBarDrawerToggleCompat mDrawerToggle;
 
@@ -92,6 +87,15 @@ public class HomeActivity extends BaseActivity implements IHomeView, View.OnClic
     public int setContentView() {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         return R.layout.navigation_main;
+    }
+
+    @Override
+    public void initInjector() {
+        mActivityComponent = DaggerActivityComponent.builder()
+                .activityModule(new ActivityModule(this))
+                .applicationComponent(((NoteApplication) getApplication()).getApplicationComponent())
+                .build();
+        mActivityComponent.inject(this);
     }
 
     @Override
@@ -109,7 +113,6 @@ public class HomeActivity extends BaseActivity implements IHomeView, View.OnClic
     @Override
     public void initUiAndListener() {
         ButterKnife.bind(this);
-        mHomePresenter = new HomePresenterImpl();
         mHomePresenter.attachView(this);
         mMenuListView.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -120,13 +123,7 @@ public class HomeActivity extends BaseActivity implements IHomeView, View.OnClic
 
         if (LollipopCompat.AFTER_LOLLIPOP) {
             try {
-                Resources.Theme theme = this.getTheme();
-                TypedArray typedArray = null;
-                if (LocalStorageUtils.getInstance().getStatusBarTranslation()) {
-                    typedArray = theme.obtainStyledAttributes(new int[]{android.R.attr.colorPrimary});
-                } else {
-                    typedArray = theme.obtainStyledAttributes(new int[]{android.R.attr.colorPrimaryDark});
-                }
+                TypedArray typedArray = this.getTheme().obtainStyledAttributes(new int[]{android.R.attr.colorPrimaryDark});
                 mDrawerLayout.setStatusBarBackground(typedArray.getResourceId(0, 0));
             } catch (Exception e) {
                 e.getMessage();

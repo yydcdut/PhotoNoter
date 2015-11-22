@@ -15,10 +15,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.evernote.client.android.EvernoteSession;
+import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.UserCenterFragmentAdapter;
+import com.yydcdut.note.injector.component.DaggerActivityComponent;
+import com.yydcdut.note.injector.module.ActivityModule;
 import com.yydcdut.note.listener.OnSnackBarActionListener;
-import com.yydcdut.note.mvp.p.login.IUserCenterPresenter;
 import com.yydcdut.note.mvp.p.login.impl.UserCenterPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.login.IUserCenterView;
@@ -27,6 +29,8 @@ import com.yydcdut.note.utils.LollipopCompat;
 import com.yydcdut.note.view.CircleProgressBarLayout;
 import com.yydcdut.note.view.RoundedImageView;
 import com.yydcdut.note.view.UserCenterArrowView;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -37,8 +41,8 @@ import butterknife.OnPageChange;
  * Created by yuyidong on 15/8/26.
  */
 public class UserCenterActivity extends BaseActivity implements IUserCenterView {
-
-    private IUserCenterPresenter mUserCenterPresenter;
+    @Inject
+    UserCenterPresenterImpl mUserCenterPresenter;
 
     @Bind(R.id.layout_user_vp_bg)
     View mBackgroundImage;
@@ -77,9 +81,17 @@ public class UserCenterActivity extends BaseActivity implements IUserCenterView 
     }
 
     @Override
+    public void initInjector() {
+        mActivityComponent = DaggerActivityComponent.builder()
+                .activityModule(new ActivityModule(this))
+                .applicationComponent(((NoteApplication) getApplication()).getApplicationComponent())
+                .build();
+        mActivityComponent.inject(this);
+    }
+
+    @Override
     public void initUiAndListener() {
         ButterKnife.bind(this);
-        mUserCenterPresenter = new UserCenterPresenterImpl(this);
         mUserCenterPresenter.attachView(this);
         if (LollipopCompat.AFTER_LOLLIPOP) {
             findViewById(R.id.layout_status).setBackgroundColor(getResources().getColor(android.R.color.darker_gray));

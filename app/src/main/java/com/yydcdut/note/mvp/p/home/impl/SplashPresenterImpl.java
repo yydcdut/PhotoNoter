@@ -3,10 +3,16 @@ package com.yydcdut.note.mvp.p.home.impl;
 import android.os.Handler;
 import android.os.Message;
 
+import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.home.ISplashPresenter;
 import com.yydcdut.note.mvp.v.home.ISplashView;
+import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.LocalStorageUtils;
+
+import java.io.File;
+
+import javax.inject.Inject;
 
 /**
  * Created by yuyidong on 15/11/18.
@@ -18,8 +24,13 @@ public class SplashPresenterImpl implements ISplashPresenter, Handler.Callback {
 
     private static final int MESSAGE_WHAT = 1;
 
-    public SplashPresenterImpl() {
+    private PhotoNoteDBModel mPhotoNoteDBModel;
+    private LocalStorageUtils mLocalStorageUtils;
 
+    @Inject
+    public SplashPresenterImpl(PhotoNoteDBModel photoNoteDBModel, LocalStorageUtils localStorageUtils) {
+        mPhotoNoteDBModel = photoNoteDBModel;
+        mLocalStorageUtils = localStorageUtils;
     }
 
     @Override
@@ -43,8 +54,32 @@ public class SplashPresenterImpl implements ISplashPresenter, Handler.Callback {
     }
 
     @Override
+    public void initGlobalData() {
+        //todo 这个是耗时操作，最好放线程，或者一天检查一次就够了
+        if (!mLocalStorageUtils.isFirstTime()) {
+            int dbNumber = mPhotoNoteDBModel.getAllNumber();
+            File file = new File(FilePathUtils.getPath());
+            int fileNumber = 0;
+            File[] fileArr = file.listFiles();
+            for (File file1 : fileArr) {
+                if (file1.isDirectory()) {
+                    continue;
+                }
+                if (file1.getName().toLowerCase().endsWith("jpg") ||
+                        file1.getName().toLowerCase().endsWith("png") ||
+                        file1.getName().toLowerCase().endsWith("jpeg")) {
+                    fileNumber++;
+                }
+            }
+            if (fileNumber != dbNumber) {
+                mSplashView.startCheckService();
+            }
+        }
+    }
+
+    @Override
     public void isWannaCloseSplash() {
-        if (!LocalStorageUtils.getInstance().getSplashOpen()) {
+        if (!mLocalStorageUtils.getSplashOpen()) {
             mSplashView.jump2Album();
         } else {
             mHandler = new Handler(this);
@@ -61,7 +96,7 @@ public class SplashPresenterImpl implements ISplashPresenter, Handler.Callback {
     @Override
     public boolean handleMessage(Message msg) {
         if (msg.what == MESSAGE_WHAT) {
-            if (!LocalStorageUtils.getInstance().notGotoIntroduce()) {
+            if (!mLocalStorageUtils.notGotoIntroduce()) {
                 mSplashView.jump2Introduce();
             } else {
                 mSplashView.jump2Album();

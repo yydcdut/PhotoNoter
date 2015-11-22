@@ -19,9 +19,12 @@ import android.widget.TextView;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
+import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.camera.controller.AdjustCamera;
 import com.yydcdut.note.camera.param.Size;
+import com.yydcdut.note.injector.component.DaggerActivityComponent;
+import com.yydcdut.note.injector.module.ActivityModule;
 import com.yydcdut.note.mvp.p.setting.IFeedbackPresenter;
 import com.yydcdut.note.mvp.p.setting.ISettingPresenter;
 import com.yydcdut.note.mvp.p.setting.impl.SettingPresenterImpl;
@@ -31,7 +34,6 @@ import com.yydcdut.note.mvp.v.setting.ISettingView;
 import com.yydcdut.note.utils.ActivityCollector;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
-import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.LollipopCompat;
 import com.yydcdut.note.view.ColorChooserDialog;
 import com.yydcdut.note.view.RoundedImageView;
@@ -41,6 +43,8 @@ import org.json.JSONException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -60,7 +64,8 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
     @Bind(R.id.layout_toolbar)
     View mToolbarLayout;
 
-    private ISettingPresenter mSettingPresenter;
+    @Inject
+    SettingPresenterImpl mSettingPresenter;
 
     private boolean mIsHiding = false;
 
@@ -77,11 +82,19 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
     }
 
     @Override
+    public void initInjector() {
+        mActivityComponent = DaggerActivityComponent.builder()
+                .activityModule(new ActivityModule(this))
+                .applicationComponent(((NoteApplication) getApplication()).getApplicationComponent())
+                .build();
+        mActivityComponent.inject(this);
+    }
+
+    @Override
     public void initUiAndListener() {
         ButterKnife.bind(this);
         mViewMap = new HashMap<>();
         initToolBarUI();
-        mSettingPresenter = new SettingPresenterImpl();
         mSettingPresenter.attachView(this);
     }
 
@@ -229,7 +242,7 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
         setClick(viewCapture);
         setTag(viewCapture, ISettingPresenter.TAG_CAMERA_SYSTEM);
         setData(viewCapture, R.drawable.ic_photo_camera_grey_24dp, R.string.camera_system);
-        initLocalData(viewCapture, LocalStorageUtils.getInstance().getCameraSystem());
+        initLocalData(viewCapture, mSettingPresenter.getCameraSystem());
         linearLayout.addView(viewCapture);
 
         final View cameraView = getItemCheckView();
@@ -251,14 +264,14 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
         setClick(viewSave);
         setTag(viewSave, ISettingPresenter.TAG_CAMERA_SAVE);
         setData(viewSave, R.drawable.ic_tune_gray_24dp, R.string.camera_save);
-        initLocalData(viewSave, LocalStorageUtils.getInstance().getCameraSaveSetting());
+        initLocalData(viewSave, mSettingPresenter.getCameraSaveSetting());
         linearLayout.addView(viewSave);
 
         final View viewMirror = getItemCheckView();
         setClick(viewMirror);
         setTag(viewMirror, ISettingPresenter.TAG_CAMERA_MIRROR);
         setData(viewMirror, R.drawable.ic_compare_gray_24dp, R.string.camera_mirror);
-        initLocalData(viewMirror, LocalStorageUtils.getInstance().getCameraMirrorOpen());
+        initLocalData(viewMirror, mSettingPresenter.getCameraMirrorOpen());
         linearLayout.addView(viewMirror);
         if (cameraNumbers < 2) {
             ((TextView) viewMirror.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
@@ -283,7 +296,7 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
             ((TextView) viewSave.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_gray));
             ((TextView) viewMirror.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_gray));
             ((TextView) viewFix.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_gray));
-            if (LocalStorageUtils.getInstance().getCameraNumber() < 2) {
+            if (mSettingPresenter.getCameraNumber() < 2) {
                 ((TextView) viewMirror.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
             }
         }
@@ -379,7 +392,7 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
         setClick(viewSplash);
         setTag(viewSplash, ISettingPresenter.TAG_SPLASH);
         setData(viewSplash, R.drawable.ic_send_grey_24dp, R.string.splash);
-        initLocalData(viewSplash, !LocalStorageUtils.getInstance().getSplashOpen());
+        initLocalData(viewSplash, !mSettingPresenter.getSplashOpen());
         linearLayout.addView(viewSplash);
 
         View viewFeedback = getItemView();

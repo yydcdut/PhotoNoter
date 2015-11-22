@@ -7,14 +7,18 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.evernote.client.android.EvernoteSession;
+import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
+import com.yydcdut.note.injector.component.DaggerActivityComponent;
+import com.yydcdut.note.injector.module.ActivityModule;
 import com.yydcdut.note.listener.OnSnackBarActionListener;
-import com.yydcdut.note.mvp.p.login.ILoginPresenter;
 import com.yydcdut.note.mvp.p.login.impl.LoginPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.login.ILoginView;
 import com.yydcdut.note.utils.LollipopCompat;
 import com.yydcdut.note.view.CircleProgressBarLayout;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -24,7 +28,8 @@ import butterknife.OnClick;
  * Created by yuyidong on 15-3-25.
  */
 public class LoginActivity extends BaseActivity implements ILoginView {
-    private ILoginPresenter mLoginPresenter;
+    @Inject
+    LoginPresenterImpl mLoginPresenter;
 
     private static final String TAG = LoginActivity.class.getSimpleName();
 
@@ -44,9 +49,17 @@ public class LoginActivity extends BaseActivity implements ILoginView {
     @Override
     public void initUiAndListener() {
         ButterKnife.bind(this);
-        mLoginPresenter = new LoginPresenterImpl(this);
         mLoginPresenter.attachView(this);
         initToolBarUI();
+    }
+
+    @Override
+    public void initInjector() {
+        mActivityComponent = DaggerActivityComponent.builder()
+                .activityModule(new ActivityModule(this))
+                .applicationComponent(((NoteApplication) getApplication()).getApplicationComponent())
+                .build();
+        mActivityComponent.inject(this);
     }
 
     private void initToolBarUI() {

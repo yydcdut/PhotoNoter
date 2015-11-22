@@ -1,6 +1,5 @@
 package com.yydcdut.note.bean;
 
-import com.yydcdut.note.model.UserCenter;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 
@@ -45,8 +44,8 @@ public class QQUser implements IUser {
             return "file://" + FilePathUtils.getQQImagePath();
         } else {
             FilePathUtils.saveImage(FilePathUtils.getQQImagePath(),
-                    ImageLoaderManager.loadImageSync(UserCenter.getInstance().getQQ().getNetImagePath()));
-            return UserCenter.getInstance().getQQ().getNetImagePath();
+                    ImageLoaderManager.loadImageSync(getNetImagePath()));
+            return getNetImagePath();
         }
     }
 }

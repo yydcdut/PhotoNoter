@@ -7,6 +7,8 @@ import com.yydcdut.note.mvp.p.note.IDetailFragPresenter;
 import com.yydcdut.note.mvp.v.note.IDetailFragView;
 import com.yydcdut.note.utils.FilePathUtils;
 
+import javax.inject.Inject;
+
 /**
  * Created by yuyidong on 15/11/16.
  */
@@ -18,10 +20,11 @@ public class DetailFragPresenterImpl implements IDetailFragPresenter {
     private int mPosition;
     private int mComparator;
 
-    public DetailFragPresenterImpl(String label, int position, int comparator) {
-        mPosition = position;
-        mComparator = comparator;
-        mPhotoNote = PhotoNoteDBModel.getInstance().findByCategoryLabel(label, mComparator).get(mPosition);
+    private PhotoNoteDBModel mPhotoNoteDBModel;
+
+    @Inject
+    public DetailFragPresenterImpl(PhotoNoteDBModel photoNoteDBModel) {
+        mPhotoNoteDBModel = photoNoteDBModel;
     }
 
     @Override
@@ -32,7 +35,13 @@ public class DetailFragPresenterImpl implements IDetailFragPresenter {
 
     @Override
     public void detachView() {
+    }
 
+    @Override
+    public void bindData(String label, int position, int comparator) {
+        mPosition = position;
+        mComparator = comparator;
+        mPhotoNote = mPhotoNoteDBModel.findByCategoryLabel(label, mComparator).get(mPosition);
     }
 
     @Override

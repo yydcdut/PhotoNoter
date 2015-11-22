@@ -16,8 +16,10 @@ import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.TypeEvaluator;
 import com.nineoldandroids.animation.ValueAnimator;
+import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
-import com.yydcdut.note.mvp.p.setting.IFeedbackPresenter;
+import com.yydcdut.note.injector.component.DaggerActivityComponent;
+import com.yydcdut.note.injector.module.ActivityModule;
 import com.yydcdut.note.mvp.p.setting.impl.FeedbackPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.setting.IFeedbackView;
@@ -25,6 +27,8 @@ import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.LollipopCompat;
 import com.yydcdut.note.view.CircleProgressBarLayout;
 import com.yydcdut.note.view.RevealView;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -49,7 +53,8 @@ public class FeedbackActivity extends BaseActivity implements IFeedbackView {
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
 
-    private IFeedbackPresenter mFeedbackPresenter;
+    @Inject
+    FeedbackPresenterImpl mFeedbackPresenter;
 
     @Override
     public boolean setStatusBar() {
@@ -62,9 +67,18 @@ public class FeedbackActivity extends BaseActivity implements IFeedbackView {
     }
 
     @Override
+    public void initInjector() {
+        mActivityComponent = DaggerActivityComponent.builder()
+                .activityModule(new ActivityModule(this))
+                .applicationComponent(((NoteApplication) getApplication()).getApplicationComponent())
+                .build();
+        mActivityComponent.inject(this);
+    }
+
+    @Override
     public void initUiAndListener() {
         ButterKnife.bind(this);
-        mFeedbackPresenter = new FeedbackPresenterImpl(getIntent().getIntExtra(
+        mFeedbackPresenter.bindData(getIntent().getIntExtra(
                 mFeedbackPresenter.TYPE, mFeedbackPresenter.TYPE_FEEDBACK));
         initToolBarUI();
         mFeedbackPresenter.attachView(this);

@@ -9,6 +9,8 @@ import com.yydcdut.note.mvp.IPresenter;
  */
 public interface IZoomPresenter extends IPresenter {
 
+    void bindData(String category, int position, int comparator);
+
     void jump2PGEditActivity();
 
     void refreshImage();

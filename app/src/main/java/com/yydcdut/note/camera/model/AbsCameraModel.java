@@ -13,7 +13,6 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.yydcdut.note.ICameraData;
-import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.camera.param.Size;
 import com.yydcdut.note.service.CameraService;
 import com.yydcdut.note.utils.Const;
@@ -89,7 +88,7 @@ public class AbsCameraModel implements ICameraModel {
 
     @Override
     public void onCreate(Context context) {
-        mLocationClient = new LocationClient(NoteApplication.getContext());
+        mLocationClient = new LocationClient(context);
         mLocationClient.registerLocationListener(new BDLocationListener() {
             @Override
             public void onReceiveLocation(BDLocation bdLocation) {
