@@ -133,6 +133,7 @@ public class DetailActivity extends BaseActivity implements IDetailView,
                 (int) getResources().getDimension(R.dimen.dimen_24dip);
         mFab.setX(moveX);
         mFab.setY(moveY);
+        mFab.setVisibility(View.VISIBLE);
         int containerHeight = findViewById(R.id.layout_detail_scroll_container).getHeight();
         mMapView.getLayoutParams().height = (int) (containerHeight - getResources().getDimension(R.dimen.detail_control));
     }

@@ -298,6 +298,7 @@
             android:id="@+id/fab_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="invisible"
             fab:fab_colorNormal="?attr/colorPrimary"
             fab:fab_colorPressed="?attr/colorPrimaryDark"
             fab:fab_icon="@drawable/ic_text_format_white_24dp"/>
