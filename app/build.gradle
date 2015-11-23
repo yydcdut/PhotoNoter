@@ -92,6 +92,8 @@ dependencies {
     compile 'com.yydcdut.sdlv:sdlv:0.2@aar'
     compile 'com.google.dagger:dagger:2.0'
     apt 'com.google.dagger:dagger-compiler:2.0'
+    compile 'io.reactivex:rxandroid:1.0.1'
+    compile 'io.reactivex:rxjava:1.0.14'
     provided 'org.glassfish:javax.annotation:10.0-b28'
     compile files('src/libs/universal-image-loader-1.9.4.jar')
     compile files('src/libs/umeng-analytics-v5.5.3.jar')
