@@ -112,6 +112,7 @@ public class LocalStorageUtils {
 //            @ContextLife("Application")
             Context context) {
         mSharedPreferences = context.getSharedPreferences(SETTING_NAME, Context.MODE_PRIVATE);
+        sInstance = this;
     }
 
     private static LocalStorageUtils sInstance;
