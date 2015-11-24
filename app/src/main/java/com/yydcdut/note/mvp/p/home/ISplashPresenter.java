@@ -10,8 +10,6 @@ public interface ISplashPresenter extends IPresenter {
 
     void onActivityPause();
 
-    void initGlobalData();
-
     void isWannaCloseSplash();
 
     void doingSplash();

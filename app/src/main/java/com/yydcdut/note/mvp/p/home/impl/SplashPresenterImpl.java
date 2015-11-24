@@ -7,10 +7,7 @@ import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.home.ISplashPresenter;
 import com.yydcdut.note.mvp.v.home.ISplashView;
-import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.LocalStorageUtils;
-
-import java.io.File;
 
 import javax.inject.Inject;
 
@@ -50,30 +47,6 @@ public class SplashPresenterImpl implements ISplashPresenter, Handler.Callback {
     public void onActivityPause() {
         if (mHandler != null && mHandler.hasMessages(MESSAGE_WHAT)) {
             mHandler.removeMessages(MESSAGE_WHAT);
-        }
-    }
-
-    @Override
-    public void initGlobalData() {
-        //todo 这个是耗时操作，最好放线程，或者一天检查一次就够了
-        if (!mLocalStorageUtils.isFirstTime()) {
-            int dbNumber = mPhotoNoteDBModel.getAllNumber();
-            File file = new File(FilePathUtils.getPath());
-            int fileNumber = 0;
-            File[] fileArr = file.listFiles();
-            for (File file1 : fileArr) {
-                if (file1.isDirectory()) {
-                    continue;
-                }
-                if (file1.getName().toLowerCase().endsWith("jpg") ||
-                        file1.getName().toLowerCase().endsWith("png") ||
-                        file1.getName().toLowerCase().endsWith("jpeg")) {
-                    fileNumber++;
-                }
-            }
-            if (fileNumber != dbNumber) {
-                mSplashView.startCheckService();
-            }
         }
     }
 

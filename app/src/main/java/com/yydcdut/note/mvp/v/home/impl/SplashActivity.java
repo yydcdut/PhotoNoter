@@ -13,7 +13,6 @@ import com.yydcdut.note.injector.module.ActivityModule;
 import com.yydcdut.note.mvp.p.home.impl.SplashPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.home.ISplashView;
-import com.yydcdut.note.service.CheckService;
 import com.yydcdut.note.utils.LollipopCompat;
 
 import javax.inject.Inject;
@@ -33,7 +32,6 @@ public class SplashActivity extends BaseActivity implements ISplashView {
                 .build();
         mActivityComponent.inject(this);
         mSplashPresenter.attachView(this);
-        mSplashPresenter.initGlobalData();
         mSplashPresenter.isWannaCloseSplash();
         super.onCreate(savedInstanceState);
     }
@@ -68,12 +66,6 @@ public class SplashActivity extends BaseActivity implements ISplashView {
         );
         animation.start();
         mSplashPresenter.doingSplash();
-    }
-
-    @Override
-    public void startCheckService() {
-        Intent checkIntent = new Intent(this, CheckService.class);
-        startService(checkIntent);
     }
 
     @Override
