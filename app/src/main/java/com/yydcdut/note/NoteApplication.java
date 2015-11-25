@@ -37,9 +37,11 @@ public class NoteApplication extends Application {
 
     private ApplicationComponent mApplicationComponent;
 
-    public void onLowMemory() {
-        super.onLowMemory();
-    }
+//    @Override
+//    protected void attachBaseContext(Context base) {
+//        super.attachBaseContext(base);
+//        MultiDex.install(this);
+//    }
 
     @Override
     public void onCreate() {
