@@ -1,9 +1,13 @@
 package com.yydcdut.note.model.sqlite;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
+
+import com.yydcdut.note.utils.YLog;
 
 /**
  * Created by yuyidong on 15/10/15.
@@ -20,6 +24,7 @@ public class NotesSQLite extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String sql_category = "create table if not exists " + TABLE_CATEGORY + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "label TEXT NOT NULL, " +
+                "showLabel TEXT NOT NULL DEFAULT \" \", " +
                 "photosNumber INTEGER NOT NULL, " +
                 "isCheck INTEGER NOT NULL, " +
                 "sort INTEGER NOT NULL);";
@@ -44,11 +49,34 @@ public class NotesSQLite extends SQLiteOpenHelper {
         if (oldVersion == 1 && newVersion == 2) {
             updateDBFrom1to2(db);
         }
+        if (oldVersion == 2 && newVersion == 3) {
+            updateCategoryFrom3to2(db);
+        }
+        if (oldVersion == 1 && newVersion == 3) {
+            updateDBFrom1to2(db);
+            updateCategoryFrom3to2(db);
+        }
     }
 
     private void updateDBFrom1to2(SQLiteDatabase db) {
         String sql = "ALTER TABLE " + TABLE_PHOTONOTE + " ADD palette INTEGER DEFAULT " + Color.WHITE + ";";
         db.execSQL(sql);
+    }
+
+    private void updateCategoryFrom3to2(SQLiteDatabase db) {
+        YLog.i("yuyidong", "111111111");
+        String sql = "ALTER TABLE " + TABLE_CATEGORY + " ADD showLabel TEXT DEFAULT \" \";";
+        db.execSQL(sql);
+        Cursor cursor = db.query(NotesSQLite.TABLE_CATEGORY, null, null, null, null, null, "sort asc");
+        while (cursor.moveToNext()) {
+            int id = cursor.getInt(cursor.getColumnIndex("_id"));
+            String label = cursor.getString(cursor.getColumnIndex("label"));
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("showLabel", label);
+            db.update(NotesSQLite.TABLE_CATEGORY, contentValues, "_id = ?", new String[]{id + ""});
+        }
+        cursor.close();
+        YLog.i("yuyidong", "222222");
     }
 
 }
