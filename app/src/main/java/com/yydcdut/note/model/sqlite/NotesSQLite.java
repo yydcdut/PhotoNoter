@@ -7,8 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
 
-import com.yydcdut.note.utils.YLog;
-
 /**
  * Created by yuyidong on 15/10/15.
  */
@@ -64,7 +62,6 @@ public class NotesSQLite extends SQLiteOpenHelper {
     }
 
     private void updateCategoryFrom3to2(SQLiteDatabase db) {
-        YLog.i("yuyidong", "111111111");
         String sql = "ALTER TABLE " + TABLE_CATEGORY + " ADD showLabel TEXT DEFAULT \" \";";
         db.execSQL(sql);
         Cursor cursor = db.query(NotesSQLite.TABLE_CATEGORY, null, null, null, null, null, "sort asc");
@@ -76,7 +73,6 @@ public class NotesSQLite extends SQLiteOpenHelper {
             db.update(NotesSQLite.TABLE_CATEGORY, contentValues, "_id = ?", new String[]{id + ""});
         }
         cursor.close();
-        YLog.i("yuyidong", "222222");
     }
 
 }
