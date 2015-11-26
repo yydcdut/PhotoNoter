@@ -22,7 +22,7 @@ import com.yydcdut.note.utils.YLog;
 import java.io.File;
 
 import rx.Observable;
-import rx.Observer;
+import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import us.pinguo.edit.sdk.PGEditImageLoader;
@@ -131,26 +131,15 @@ public class NoteApplication extends Application {
                                     file.getName().toLowerCase().endsWith(".jpeg");
                         }
                     })
-                    .subscribe(new Observer<File>() {
-                        private int mNumber = 0;
-
+                    .count()
+                    .subscribe(new Action1<Integer>() {
                         @Override
-                        public void onCompleted() {
+                        public void call(Integer integer) {
                             int dbNumber = mApplicationComponent.getPhotoNoteDBModel().getAllNumber();
-                            if (mNumber != dbNumber) {
+                            if (integer != dbNumber) {
                                 Intent checkIntent = new Intent(getApplicationContext(), CheckService.class);
                                 startService(checkIntent);
                             }
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-
-                        }
-
-                        @Override
-                        public void onNext(File file) {
-                            mNumber++;
                         }
                     });
         }
