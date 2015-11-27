@@ -3,6 +3,7 @@ package com.yydcdut.note.model.rx;
 import android.content.Context;
 
 import com.yydcdut.note.bean.Category;
+import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.rx.exception.LabelExistException;
 import com.yydcdut.note.model.rx.exception.NotExistCategoryException;
 import com.yydcdut.note.model.sql.CategoryDB;
@@ -10,6 +11,7 @@ import com.yydcdut.note.model.sql.CategoryDB;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -23,8 +25,9 @@ public class RxCategory {
 
     private CategoryDB mCategoryDB;
 
+    @Singleton
     @Inject
-    public RxCategory(Context context) {
+    public RxCategory(@ContextLife("Application") Context context) {
         mCategoryDB = new CategoryDB(context);
         mCache = mCategoryDB.findAll();
     }
