@@ -170,7 +170,7 @@ public class InitServicePresenterImpl implements IInitServicePresenter {
      * 处理Category
      */
     private void initDefaultCategory() {
-        mCategoryDBModel.saveCategory(new Category(0, "App介绍", 16, 0, true));
+        mCategoryDBModel.saveCategory(new Category(0, "App介绍", "App介绍", 16, 0, true));
         mHandler.sendEmptyMessage(ADD);
     }
 

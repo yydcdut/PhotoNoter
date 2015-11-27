@@ -77,7 +77,8 @@ public class EditCategoryPresenterImpl implements IEditCategoryPresenter, Handle
         }
         Category category = mCategoryList.get(index);
         mRenameCategoryLabelMap.put(category.getLabel(), newLabel);
-        category.setLabel(newLabel);
+        category.setShowLabel(newLabel);
+//        category.setLabel(newLabel);
         mEditCategoryView.updateListView();
     }
 

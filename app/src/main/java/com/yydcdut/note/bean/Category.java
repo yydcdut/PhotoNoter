@@ -6,21 +6,24 @@ package com.yydcdut.note.bean;
 public class Category implements IObject {
 
     private int id;
-    private String label;
+    private final String label;
+    private String showLabel;
     private int photosNumber;
     private int sort;
     private boolean isCheck;
 
-    public Category(int id, String label, int photosNumber, int sort, boolean isCheck) {
+    public Category(int id, String label, String showLabel, int photosNumber, int sort, boolean isCheck) {
         this.id = id;
         this.label = label;
+        this.showLabel = showLabel;
         this.photosNumber = photosNumber;
         this.isCheck = isCheck;
         this.sort = sort;
     }
 
-    public Category(String label, int photosNumber, int sort, boolean isCheck) {
+    public Category(String label, String showLabel, int photosNumber, int sort, boolean isCheck) {
         this.label = label;
+        this.showLabel = showLabel;
         this.photosNumber = photosNumber;
         this.isCheck = isCheck;
         this.sort = sort;
@@ -46,8 +49,12 @@ public class Category implements IObject {
         return label;
     }
 
-    public void setLabel(String label) {
-        this.label = label;
+    public String getShowLabel() {
+        return showLabel;
+    }
+
+    public void setShowLabel(String showLabel) {
+        this.showLabel = showLabel;
     }
 
     public int getPhotosNumber() {
@@ -71,6 +78,7 @@ public class Category implements IObject {
         return "Category{" +
                 "id=" + id +
                 ", label='" + label + '\'' +
+                ", showLabel='" + showLabel + '\'' +
                 ", photosNumber=" + photosNumber +
                 ", sort=" + sort +
                 ", isCheck=" + isCheck +

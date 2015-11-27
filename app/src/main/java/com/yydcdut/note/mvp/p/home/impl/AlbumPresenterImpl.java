@@ -199,7 +199,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
     public void createCategory(String newCategoryLabel) {
         int totalNumber = mCategoryDBModel.findAll().size();
         if (!TextUtils.isEmpty(newCategoryLabel)) {
-            Category category = new Category(newCategoryLabel, 0, totalNumber, true);
+            Category category = new Category(newCategoryLabel, newCategoryLabel, 0, totalNumber, true);
             boolean bool = mCategoryDBModel.saveCategory(category);
             if (bool) {
                 mAlbumView.changeActivityListMenuCategoryChecked(category);

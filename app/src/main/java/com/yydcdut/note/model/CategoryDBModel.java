@@ -69,10 +69,11 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
             while (cursor.moveToNext()) {
                 int id = cursor.getInt(cursor.getColumnIndex("_id"));
                 String label = cursor.getString(cursor.getColumnIndex("label"));
+                String showLabel = cursor.getString(cursor.getColumnIndex("showLabel"));
                 int photosNumber = cursor.getInt(cursor.getColumnIndex("photosNumber"));
                 boolean isCheck = cursor.getInt(cursor.getColumnIndex("isCheck")) == 0 ? false : true;
                 int sort = cursor.getInt(cursor.getColumnIndex("sort"));
-                Category category = new Category(id, label, photosNumber, sort, isCheck);
+                Category category = new Category(id, label, showLabel, photosNumber, sort, isCheck);
                 mCache.add(category);
             }
             cursor.close();
@@ -92,10 +93,11 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
         while (cursor.moveToNext()) {
             int id = cursor.getInt(cursor.getColumnIndex("_id"));
             String label = cursor.getString(cursor.getColumnIndex("label"));
+            String showLabel = cursor.getString(cursor.getColumnIndex("showLabel"));
             int photosNumber = cursor.getInt(cursor.getColumnIndex("photosNumber"));
             boolean isCheck = cursor.getInt(cursor.getColumnIndex("isCheck")) == 0 ? false : true;
             int sort = cursor.getInt(cursor.getColumnIndex("sort"));
-            Category category = new Category(id, label, photosNumber, sort, isCheck);
+            Category category = new Category(id, label, showLabel, photosNumber, sort, isCheck);
             mCache.add(category);
         }
         cursor.close();
@@ -131,7 +133,7 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
      * @return
      */
     public boolean saveCategory(Category category) {
-        if (checkLabelExist(category)) {
+        if (checkShowLabelExist(category)) {
             return false;
         }
         if (category.isCheck()) {
@@ -195,11 +197,12 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
      */
     public boolean updateLabel(String originalLabel, String newLabel) {
         boolean bool = true;
-        bool &= (!checkLabelExist(newLabel));
+        bool &= (!checkShowLabelExist(newLabel));
         if (bool) {
             //数据可能在EditCategoryActivity中改过了，
             Category category = findByCategoryLabel(originalLabel);
-            category.setLabel(newLabel);
+            category.setShowLabel(newLabel);
+//            category.setLabel(newLabel);
             bool &= updateData2DB(category);
             if (bool) {
                 //处理PhotoNote
@@ -293,7 +296,7 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
 
     private boolean update(Category category, boolean refresh) {
         boolean bool = true;
-        if (checkLabelExist(category)) {
+        if (checkShowLabelExist(category)) {
             bool &= updateData2DB(category);
         }
         if (bool && refresh) {
@@ -303,13 +306,13 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
         return bool;
     }
 
-    private boolean checkLabelExist(Category category) {
-        return checkLabelExist(category.getLabel());
+    private boolean checkShowLabelExist(Category category) {
+        return checkShowLabelExist(category.getShowLabel());
     }
 
-    private boolean checkLabelExist(String newLabel) {
+    private boolean checkShowLabelExist(String newLabel) {
         for (Category item : mCache) {
-            if (item.getLabel().equals(newLabel)) {
+            if (item.getShowLabel().equals(newLabel)) {
                 return true;
             }
         }
@@ -320,6 +323,7 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
         SQLiteDatabase db = mNotesSQLite.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("label", category.getLabel());
+        contentValues.put("showLabel", category.getShowLabel());
         contentValues.put("photosNumber", category.getPhotosNumber());
         contentValues.put("isCheck", category.isCheck() ? 1 : 0);
         contentValues.put("sort", category.getSort());
@@ -332,6 +336,7 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
         SQLiteDatabase db = mNotesSQLite.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("label", category.getLabel());
+        contentValues.put("showLabel", category.getShowLabel());
         contentValues.put("photosNumber", category.getPhotosNumber());
         contentValues.put("isCheck", category.isCheck() ? 1 : 0);
         contentValues.put("sort", category.getSort());
