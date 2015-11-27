@@ -167,9 +167,9 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
     @Override
     public void changePhotosCategory(int toCategoryId) {
         if (mCategoryId != toCategoryId) {
-            doChangeCategory(toCategoryId);
+            int changedNumber = doChangeCategory(toCategoryId);
             mPhotoNoteList = mPhotoNoteDBModel.findByCategoryLabelByForce(mCategoryId, mAlbumSortKind);
-            mCategoryDBModel.updateChangeCategory(mCategoryId, toCategoryId);
+            mCategoryDBModel.updateChangeCategory(mCategoryId, toCategoryId, changedNumber);
         }
     }
 
@@ -213,7 +213,11 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
         }
     }
 
-    private void doChangeCategory(int toNewCategoryId) {
+    /**
+     * @param toNewCategoryId
+     * @return 变化了多少个
+     */
+    private int doChangeCategory(int toNewCategoryId) {
         TreeMap<Integer, PhotoNote> map = new TreeMap<>(new Comparator<Integer>() {
             @Override
             public int compare(Integer lhs, Integer rhs) {
@@ -240,6 +244,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
             }
             times++;
         }
+        return map.size();
     }
 
 

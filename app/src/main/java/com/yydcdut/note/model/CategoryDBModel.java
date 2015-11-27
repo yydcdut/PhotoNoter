@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.injector.ContextLife;
-import com.yydcdut.note.model.compare.ComparatorFactory;
 import com.yydcdut.note.model.observer.CategoryChangedObserver;
 import com.yydcdut.note.model.observer.IObserver;
 import com.yydcdut.note.model.sqlite.NotesSQLite;
@@ -175,15 +174,13 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
         return update(category, true);
     }
 
-    public void updateChangeCategory(int oldCategoryId, int targetCategoryId) {
+    public void updateChangeCategory(int oldCategoryId, int targetCategoryId, int changeNumber) {
         Category oldCategory = findByCategoryId(oldCategoryId);
         Category targetCategory = findByCategoryId(targetCategoryId);
         //更新移动过去的category数目
-        int targetNumber = mPhotoNoteDBModel.findByCategoryId(targetCategory.getId(), ComparatorFactory.FACTORY_NOT_SORT).size();
-        targetCategory.setPhotosNumber(targetNumber);
+        targetCategory.setPhotosNumber(targetCategory.getPhotosNumber() + changeNumber);
         update(targetCategory, false);
-        int oldNumber = mPhotoNoteDBModel.findByCategoryId(oldCategory.getId(), ComparatorFactory.FACTORY_NOT_SORT).size();
-        oldCategory.setPhotosNumber(oldNumber);
+        oldCategory.setPhotosNumber(oldCategory.getPhotosNumber() - changeNumber);
         update(oldCategory);
         doObserver(IObserver.OBSERVER_CATEGORY_MOVE);
     }
