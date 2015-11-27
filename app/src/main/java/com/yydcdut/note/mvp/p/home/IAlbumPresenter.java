@@ -9,7 +9,7 @@ import com.yydcdut.note.mvp.IPresenter;
  */
 public interface IAlbumPresenter extends IPresenter {
 
-    void bindData(String categoryLabel);
+    void bindData(int categoryId);
 
     void checkSandBox();
 
@@ -25,11 +25,11 @@ public interface IAlbumPresenter extends IPresenter {
 
     void sortData();
 
-    void changeCategoryWithPhotos(String categoryLabel);
+    void changeCategoryWithPhotos(int categoryId);
 
     void movePhotos2AnotherCategory();
 
-    void changePhotosCategory(String categoryLabel);
+    void changePhotosCategory(int categoryId);
 
     void deletePhotos();
 

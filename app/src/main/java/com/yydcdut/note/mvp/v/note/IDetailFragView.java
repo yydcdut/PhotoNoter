@@ -9,6 +9,6 @@ public interface IDetailFragView extends IView {
 
     void showImage(int width, int height, String path);
 
-    void jump2ZoomActivity(String label, int position, int comparator);
+    void jump2ZoomActivity(int categoryId, int position, int comparator);
 
 }

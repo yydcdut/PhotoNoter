@@ -54,7 +54,7 @@ public class AdjustCamera extends AppCompatActivity implements SurfaceHolder.Cal
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        mCameraModel = new CameraModel(getApplicationContext(), holder, null);
+        mCameraModel = new CameraModel(getApplicationContext(), holder, -1);
 //        mCameraModel = new CameraModel(NoteApplication.getContext(), holder, null);
         mCameraModel.onCreate(AdjustCamera.this);
         mCameraModel.openCamera(mCameraId, mCurrentOrientationDegree);

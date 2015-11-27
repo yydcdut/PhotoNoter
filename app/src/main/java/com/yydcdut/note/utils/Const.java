@@ -6,7 +6,7 @@ package com.yydcdut.note.utils;
 public interface Const {
     /* intent */
     String PHOTO_POSITION = "photoPosition";
-    String CATEGORY_LABEL = "categoryLabel";
+    String CATEGORY_ID_4_PHOTNOTES = "categoryId4PhotoNotes";
     String COMPARATOR_FACTORY = "camparator";
     String USER_DETAIL_TYPE = "user_detail_type";
     /* 动画 */

@@ -49,7 +49,7 @@ public class PhotoNote implements IObject {
     /**
      * Category中的类别
      */
-    private String categoryLabel;
+    private int categoryId;
     /**
      * 标记
      */
@@ -61,7 +61,7 @@ public class PhotoNote implements IObject {
 
     public PhotoNote(String photoName, long createdPhotoTime, long editedPhotoTime,
                      String title, String content, long createdNoteTime,
-                     long editedNoteTime, String categoryLabel) {
+                     long editedNoteTime, int categoryId) {
         this.photoName = photoName;
         this.createdPhotoTime = createdPhotoTime;
         this.editedPhotoTime = editedPhotoTime;
@@ -69,12 +69,12 @@ public class PhotoNote implements IObject {
         this.content = content;
         this.createdNoteTime = createdNoteTime;
         this.editedNoteTime = editedNoteTime;
-        this.categoryLabel = categoryLabel;
+        this.categoryId = categoryId;
     }
 
     public PhotoNote(int id, String photoName, long createdPhotoTime, long editedPhotoTime,
                      String title, String content, long createdNoteTime,
-                     long editedNoteTime, String categoryLabel) {
+                     long editedNoteTime, int categoryId) {
         this.id = id;
         this.photoName = photoName;
         this.createdPhotoTime = createdPhotoTime;
@@ -83,7 +83,7 @@ public class PhotoNote implements IObject {
         this.content = content;
         this.createdNoteTime = createdNoteTime;
         this.editedNoteTime = editedNoteTime;
-        this.categoryLabel = categoryLabel;
+        this.categoryId = categoryId;
     }
 
     public String getSmallPhotoPathWithFile() {
@@ -178,12 +178,12 @@ public class PhotoNote implements IObject {
         this.id = id;
     }
 
-    public String getCategoryLabel() {
-        return categoryLabel;
+    public int getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategoryLabel(String categoryLabel) {
-        this.categoryLabel = categoryLabel;
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
     }
 
     public int getPaletteColor() {

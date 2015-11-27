@@ -41,9 +41,9 @@ public interface IHomeView extends IView {
 
     void notifyCategoryDataChanged();
 
-    void changeFragment(String categoryLabel);
+    void changeFragment(int categoryId);
 
-    void changePhotos4Category(String categoryLabel);
+    void changePhotos4Category(int categoryId);
 
     void jump2LoginActivity();
 

@@ -43,7 +43,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
     private IAlbumView mAlbumView;
 
     private List<PhotoNote> mPhotoNoteList;
-    private String mCategoryLabel;
+    private int mCategoryId = -1;
     private int mAlbumSortKind;
 
     private Handler mHandler;
@@ -74,7 +74,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
     @Override
     public void attachView(IView iView) {
         mAlbumView = (IAlbumView) iView;
-        mPhotoNoteList = mPhotoNoteDBModel.findByCategoryLabel(mCategoryLabel, mAlbumSortKind);
+        mPhotoNoteList = mPhotoNoteDBModel.findByCategoryId(mCategoryId, mAlbumSortKind);
         mAlbumView.setAdapter(mPhotoNoteList);
     }
 
@@ -84,8 +84,8 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
     }
 
     @Override
-    public void bindData(String categoryLabel) {
-        mCategoryLabel = categoryLabel;
+    public void bindData(int categoryId) {
+        mCategoryId = categoryId;
     }
 
     @Override
@@ -122,7 +122,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
 
     @Override
     public void jump2DetailActivity(int position) {
-        mAlbumView.jump2DetailActivity(mCategoryLabel, position, mAlbumSortKind);
+        mAlbumView.jump2DetailActivity(mCategoryId, position, mAlbumSortKind);
     }
 
     @Override
@@ -131,7 +131,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
         //另外个进程发来广播的时候
         //todo  这里可以弄动画，需要计算的过程
         if (broadcast_process || broadcast_service) {
-            mPhotoNoteList = mPhotoNoteDBModel.findByCategoryLabel(mCategoryLabel, mAlbumSortKind);
+            mPhotoNoteList = mPhotoNoteDBModel.findByCategoryId(mCategoryId, mAlbumSortKind);
             mAlbumView.updateData(mPhotoNoteList);
         } else if (broadcast_photo) {
             mAlbumView.notifyDataSetChanged();
@@ -146,28 +146,30 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
     }
 
     @Override
-    public void changeCategoryWithPhotos(String categoryLabel) {
-        mCategoryLabel = categoryLabel;
-        mPhotoNoteList = mPhotoNoteDBModel.findByCategoryLabel(mCategoryLabel, mAlbumSortKind);
+    public void changeCategoryWithPhotos(int categoryId) {
+        mCategoryId = categoryId;
+        mPhotoNoteList = mPhotoNoteDBModel.findByCategoryId(mCategoryId, mAlbumSortKind);
         mAlbumView.updateData(mPhotoNoteList);
     }
 
     @Override
     public void movePhotos2AnotherCategory() {
         List<Category> categoryList = mCategoryDBModel.findAll();
+        final String[] categoryIdStringArray = new String[categoryList.size()];
         final String[] categoryLabelArray = new String[categoryList.size()];
-        for (int i = 0; i < categoryLabelArray.length; i++) {
+        for (int i = 0; i < categoryIdStringArray.length; i++) {
+            categoryIdStringArray[i] = categoryList.get(i).getId() + "";
             categoryLabelArray[i] = categoryList.get(i).getLabel();
         }
-        mAlbumView.showMovePhotos2AnotherCategoryDialog(categoryLabelArray);
+        mAlbumView.showMovePhotos2AnotherCategoryDialog(categoryIdStringArray, categoryLabelArray);
     }
 
     @Override
-    public void changePhotosCategory(String toNewCategoryLabel) {
-        if (!mCategoryLabel.equals(toNewCategoryLabel)) {
-            doChangeCategory(toNewCategoryLabel);
-            mPhotoNoteList = mPhotoNoteDBModel.findByCategoryLabelByForce(mCategoryLabel, mAlbumSortKind);
-            mCategoryDBModel.updateChangeCategory(mCategoryLabel, toNewCategoryLabel);
+    public void changePhotosCategory(int toCategoryId) {
+        if (mCategoryId != toCategoryId) {
+            doChangeCategory(toCategoryId);
+            mPhotoNoteList = mPhotoNoteDBModel.findByCategoryLabelByForce(mCategoryId, mAlbumSortKind);
+            mCategoryDBModel.updateChangeCategory(mCategoryId, toCategoryId);
         }
     }
 
@@ -199,9 +201,9 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
     public void createCategory(String newCategoryLabel) {
         int totalNumber = mCategoryDBModel.findAll().size();
         if (!TextUtils.isEmpty(newCategoryLabel)) {
-            Category category = new Category(newCategoryLabel, newCategoryLabel, 0, totalNumber, true);
-            boolean bool = mCategoryDBModel.saveCategory(category);
-            if (bool) {
+            long id = mCategoryDBModel.saveCategory(newCategoryLabel, 0, totalNumber, true);
+            if (id > 0) {
+                Category category = mCategoryDBModel.findByCategoryId((int) id);
                 mAlbumView.changeActivityListMenuCategoryChecked(category);
             } else {
                 mAlbumView.showToast(mContext.getResources().getString(R.string.toast_fail));
@@ -211,7 +213,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
         }
     }
 
-    private void doChangeCategory(String toNewCategoryLabel) {
+    private void doChangeCategory(int toNewCategoryId) {
         TreeMap<Integer, PhotoNote> map = new TreeMap<>(new Comparator<Integer>() {
             @Override
             public int compare(Integer lhs, Integer rhs) {
@@ -222,7 +224,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
             PhotoNote photoNote = mPhotoNoteList.get(i);
             if (photoNote.isSelected()) {
                 photoNote.setSelected(false);
-                photoNote.setCategoryLabel(toNewCategoryLabel);
+                photoNote.setCategoryId(toNewCategoryId);
                 map.put(i, photoNote);
             }
         }
@@ -249,7 +251,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
             public void run() {
                 PhotoNote photoNote = new PhotoNote(System.currentTimeMillis() + ".jpg", System.currentTimeMillis(),
                         System.currentTimeMillis(), "", "", System.currentTimeMillis(),
-                        System.currentTimeMillis(), mCategoryLabel);
+                        System.currentTimeMillis(), mCategoryId);
                 ContentResolver cr = mContext.getContentResolver();
                 //复制大图
                 try {
@@ -273,7 +275,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
         mAlbumView.showProgressBar();
         PhotoNote photoNote = new PhotoNote(System.currentTimeMillis() + ".jpg", System.currentTimeMillis(),
                 System.currentTimeMillis(), "", "", System.currentTimeMillis(),
-                System.currentTimeMillis(), mCategoryLabel);
+                System.currentTimeMillis(), mCategoryId);
         //复制大图
         try {
             FilePathUtils.copyFile(FilePathUtils.getTempFilePath(), photoNote.getBigPhotoPathWithoutFile());
@@ -294,7 +296,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
         if (mLocalStorageUtils.getCameraSystem()) {
             mAlbumView.jump2CameraSystemActivity();
         } else {
-            mAlbumView.jump2CameraActivity(mCategoryLabel);
+            mAlbumView.jump2CameraActivity(mCategoryId);
         }
     }
 
@@ -313,7 +315,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
         switch (msg.what) {
             case MSG_UPDATE_DATA:
                 //因为是最新时间，即“图片创建事件”、“图片修改时间”、“笔记创建时间”、“笔记修改时间”，所以要么在最前面，要么在最后面//// TODO: 15/11/20 还是因时间来判断插入到哪里，所以要计算
-                mPhotoNoteList = mPhotoNoteDBModel.findByCategoryLabel(mCategoryLabel, mAlbumSortKind);
+                mPhotoNoteList = mPhotoNoteDBModel.findByCategoryId(mCategoryId, mAlbumSortKind);
                 mAlbumView.updateData(mPhotoNoteList);
                 switch (mAlbumSortKind) {
                     case ComparatorFactory.FACTORY_CREATE_CLOSE:

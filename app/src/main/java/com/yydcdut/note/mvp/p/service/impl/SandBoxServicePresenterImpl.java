@@ -125,7 +125,7 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter, Ha
         }
 
         PhotoNote photoNote = new PhotoNote(fileName, sandPhoto.getTime(), sandPhoto.getTime(), "", "",
-                sandPhoto.getTime(), sandPhoto.getTime(), sandPhoto.getCategory());
+                sandPhoto.getTime(), sandPhoto.getTime(), sandPhoto.getCategoryId());
         photoNote.setPaletteColor(UiHelper.getPaletteColor(newBitmap));
         boolean bool = mPhotoNoteDBModel.save(photoNote);
         if (bool) {

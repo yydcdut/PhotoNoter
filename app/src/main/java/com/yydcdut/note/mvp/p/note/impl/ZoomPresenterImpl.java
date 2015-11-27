@@ -68,10 +68,10 @@ public class ZoomPresenterImpl implements IZoomPresenter, Handler.Callback {
     }
 
     @Override
-    public void bindData(String category, int position, int comparator) {
+    public void bindData(int categoryId, int position, int comparator) {
         mPosition = position;
         mComparator = comparator;
-        mPhotoNote = mPhotoNoteDBModel.findByCategoryLabel(category, mComparator).get(mPosition);
+        mPhotoNote = mPhotoNoteDBModel.findByCategoryId(categoryId, mComparator).get(mPosition);
     }
 
     @Override

@@ -66,12 +66,12 @@ public class CameraServicePresenterImpl implements ICameraServicePresenter {
     }
 
     @Override
-    public void add2DB(String fileName, int size, String cameraId, long time, String category,
+    public void add2DB(String fileName, int size, String cameraId, long time, int categoryId,
                        boolean isMirror, int ratio, int orientation,
                        String latitude, String lontitude, int whiteBalance, int flash,
                        int imageLength, int imageWidth, String make, String model) {
         SandExif sandExif = new SandExif(orientation, latitude, lontitude, whiteBalance, flash, imageLength, imageWidth, make, model);
-        SandPhoto sandPhoto = new SandPhoto(SandPhoto.ID_NULL, time, cameraId, category, isMirror, ratio, fileName, size, sandExif);
+        SandPhoto sandPhoto = new SandPhoto(SandPhoto.ID_NULL, time, cameraId, categoryId, isMirror, ratio, fileName, size, sandExif);
         long id = mSandBoxDBModel.save(sandPhoto);
         sandPhoto.setId(id);
         mQueue.offer(sandPhoto);
@@ -160,7 +160,7 @@ public class CameraServicePresenterImpl implements ICameraServicePresenter {
         }
 
         PhotoNote photoNote = new PhotoNote(fileName, sandPhoto.getTime(), sandPhoto.getTime(), "", "",
-                sandPhoto.getTime(), sandPhoto.getTime(), sandPhoto.getCategory());
+                sandPhoto.getTime(), sandPhoto.getTime(), sandPhoto.getCategoryId());
         photoNote.setPaletteColor(UiHelper.getPaletteColor(newBitmap));
         boolean bool = mPhotoNoteDBModel.save(photoNote);
         if (bool) {

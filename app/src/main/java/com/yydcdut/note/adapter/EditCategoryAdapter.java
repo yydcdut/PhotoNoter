@@ -39,7 +39,7 @@ public class EditCategoryAdapter extends BaseListAdapter<Category> {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        String label = getGroup().get(position).getShowLabel();
+        String label = getGroup().get(position).getLabel();
         String firstWord = null;
         if (label.length() > 0) {
             firstWord = label.substring(0, 1);
@@ -53,7 +53,7 @@ public class EditCategoryAdapter extends BaseListAdapter<Category> {
             holder.imgLogo.setImageDrawable(TextDrawable.builder().buildRound(firstWord, mColor.getColor(firstWord)));
             holder.txtName.setTextColor(getContext().getResources().getColor(R.color.txt_gray));
         }
-        holder.txtName.setText(getGroup().get(position).getShowLabel());
+        holder.txtName.setText(getGroup().get(position).getLabel());
         return convertView;
     }
 

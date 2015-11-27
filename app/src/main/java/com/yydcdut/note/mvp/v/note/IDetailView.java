@@ -25,6 +25,6 @@ public interface IDetailView extends IView {
 
     void showExif(String exif);
 
-    void jump2EditTextActivity(String label, int position, int comparator);
+    void jump2EditTextActivity(int categoryId, int position, int comparator);
 
 }

@@ -6,7 +6,7 @@ import com.yydcdut.note.mvp.IPresenter;
  * Created by yuyidong on 15/11/15.
  */
 public interface IEditTextPresenter extends IPresenter {
-    void bindData(String category, int position, int comparator);
+    void bindData(int categoryId, int position, int comparator);
 
     void saveText();
 

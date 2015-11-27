@@ -5,35 +5,17 @@ package com.yydcdut.note.bean;
  */
 public class Category implements IObject {
 
-    private int id;
-    private final String label;
-    private String showLabel;
+    private final int id;
+    private String label;
     private int photosNumber;
-    private int sort;
     private boolean isCheck;
+    private int sort;
 
-    public Category(int id, String label, String showLabel, int photosNumber, int sort, boolean isCheck) {
+    public Category(int id, String label, int photosNumber, int sort, boolean isCheck) {
         this.id = id;
         this.label = label;
-        this.showLabel = showLabel;
         this.photosNumber = photosNumber;
         this.isCheck = isCheck;
-        this.sort = sort;
-    }
-
-    public Category(String label, String showLabel, int photosNumber, int sort, boolean isCheck) {
-        this.label = label;
-        this.showLabel = showLabel;
-        this.photosNumber = photosNumber;
-        this.isCheck = isCheck;
-        this.sort = sort;
-    }
-
-    public int getSort() {
-        return sort;
-    }
-
-    public void setSort(int sort) {
         this.sort = sort;
     }
 
@@ -41,20 +23,12 @@ public class Category implements IObject {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getLabel() {
         return label;
     }
 
-    public String getShowLabel() {
-        return showLabel;
-    }
-
-    public void setShowLabel(String showLabel) {
-        this.showLabel = showLabel;
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     public int getPhotosNumber() {
@@ -73,15 +47,22 @@ public class Category implements IObject {
         this.isCheck = isCheck;
     }
 
+    public int getSort() {
+        return sort;
+    }
+
+    public void setSort(int sort) {
+        this.sort = sort;
+    }
+
     @Override
     public String toString() {
         return "Category{" +
                 "id=" + id +
                 ", label='" + label + '\'' +
-                ", showLabel='" + showLabel + '\'' +
                 ", photosNumber=" + photosNumber +
-                ", sort=" + sort +
                 ", isCheck=" + isCheck +
+                ", sort=" + sort +
                 '}';
     }
 }

@@ -8,7 +8,7 @@ import com.yydcdut.note.mvp.IPresenter;
 public interface ICameraServicePresenter extends IPresenter {
     void stopThread();
 
-    void add2DB(String fileName, int size, String cameraId, long time, String category,
+    void add2DB(String fileName, int size, String cameraId, long time, int categoryId,
                 boolean isMirror, int ratio, int orientation,
                 String latitude, String lontitude, int whiteBalance, int flash,
                 int imageLength, int imageWidth, String make, String model);

@@ -36,11 +36,11 @@ public class EditCategoryPresenterImpl implements IEditCategoryPresenter, Handle
     /**
      * 要删除的category
      */
-    private List<String> mDeleteCategoryLabelList;
+    private List<Integer> mDeleteCategoryIdList;
     /**
      * 要重命名的category
      */
-    private Map<String, String> mRenameCategoryLabelMap;
+    private Map<Integer, String> mRenameCategoryLabelMap;
 
     private CategoryDBModel mCategoryDBModel;
     private ThreadExecutorPool mThreadExecutorPool;
@@ -57,7 +57,7 @@ public class EditCategoryPresenterImpl implements IEditCategoryPresenter, Handle
     public void attachView(IView iView) {
         mHandler = new Handler(this);
         mCategoryList = mCategoryDBModel.findAll();
-        mDeleteCategoryLabelList = new ArrayList<>();
+        mDeleteCategoryIdList = new ArrayList<>();
         mRenameCategoryLabelMap = new HashMap<>();
         mEditCategoryView = (IEditCategoryView) iView;
         mEditCategoryView.showCategoryList(mCategoryList);
@@ -66,7 +66,7 @@ public class EditCategoryPresenterImpl implements IEditCategoryPresenter, Handle
     @Override
     public void detachView() {
         mRenameCategoryLabelMap.clear();
-        mDeleteCategoryLabelList.clear();
+        mDeleteCategoryIdList.clear();
     }
 
     @Override
@@ -76,17 +76,15 @@ public class EditCategoryPresenterImpl implements IEditCategoryPresenter, Handle
             return;
         }
         Category category = mCategoryList.get(index);
-        mRenameCategoryLabelMap.put(category.getLabel(), newLabel);
-        category.setShowLabel(newLabel);
-//        category.setLabel(newLabel);
+        mRenameCategoryLabelMap.put(category.getId(), newLabel);
+        category.setLabel(newLabel);
         mEditCategoryView.updateListView();
     }
 
     @Override
     public void deleteCategory(int index) {
         Category category = mCategoryList.remove(index);
-        String label = category.getLabel();
-        mDeleteCategoryLabelList.add(label);
+        mDeleteCategoryIdList.add(category.getId());
         mEditCategoryView.updateListView();
     }
 
@@ -110,13 +108,13 @@ public class EditCategoryPresenterImpl implements IEditCategoryPresenter, Handle
      */
     private void renameCategories() {
         if (mRenameCategoryLabelMap != null && mRenameCategoryLabelMap.size() > 0) {
-            Iterator<Map.Entry<String, String>> iterator = mRenameCategoryLabelMap.entrySet().iterator();
+            Iterator<Map.Entry<Integer, String>> iterator = mRenameCategoryLabelMap.entrySet().iterator();
             while (iterator.hasNext()) {
-                Map.Entry<String, String> entry = iterator.next();
-                String originalLabel = entry.getKey();
+                Map.Entry<Integer, String> entry = iterator.next();
+                Integer categoryId = entry.getKey();
                 String newLabel = entry.getValue();
                 mCategoryDBModel.refresh();
-                mCategoryDBModel.updateLabel(originalLabel, newLabel);
+                mCategoryDBModel.updateLabel(categoryId, newLabel);
             }
         }
     }
@@ -125,10 +123,10 @@ public class EditCategoryPresenterImpl implements IEditCategoryPresenter, Handle
      * 删除分类
      */
     private void deleteCategories() {
-        if (mDeleteCategoryLabelList != null && mDeleteCategoryLabelList.size() > 0) {
-            for (String label : mDeleteCategoryLabelList) {
+        if (mDeleteCategoryIdList != null && mDeleteCategoryIdList.size() > 0) {
+            for (int id : mDeleteCategoryIdList) {
                 mCategoryDBModel.refresh();
-                Category category = mCategoryDBModel.findByCategoryLabel(label);
+                Category category = mCategoryDBModel.findByCategoryId(id);
                 boolean isCheck = category.isCheck();
                 mCategoryDBModel.delete(category);
                 if (isCheck) {//如果是menu中当前选中的这个

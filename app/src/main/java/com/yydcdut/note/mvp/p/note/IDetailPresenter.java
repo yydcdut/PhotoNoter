@@ -7,13 +7,13 @@ import com.yydcdut.note.mvp.IPresenter;
  */
 public interface IDetailPresenter extends IPresenter {
 
-    void bindData(String categoryLabel, int position, int comparator);
+    void bindData(int categoryID, int position, int comparator);
 
     void showExif();
 
     void showNote(int position);
 
-    void updateNote(String label, int position, int comparator);
+    void updateNote(int categoryId, int position, int comparator);
 
     void jump2EditTextActivity();
 }

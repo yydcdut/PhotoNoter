@@ -21,7 +21,7 @@ import javax.inject.Singleton;
  */
 public class SandBoxDBModel implements IModel {
     private static final String NAME = "SandBox.db";
-    private static final int VERSION = 3;
+    private static final int VERSION = 4;
 
     private SandSQLite mSandSQLite;
 
@@ -39,7 +39,13 @@ public class SandBoxDBModel implements IModel {
             long id = cursor.getLong(cursor.getColumnIndex("_id"));
             long time = cursor.getLong(cursor.getColumnIndex("time"));
             String cameraId = cursor.getString(cursor.getColumnIndex("cameraId"));
-            String category = cursor.getString(cursor.getColumnIndex("category"));
+            String categoryIdString = cursor.getString(cursor.getColumnIndex("category"));
+            int categoryId;
+            try {
+                categoryId = Integer.parseInt(categoryIdString);
+            } catch (Exception e) {
+                categoryId = -1;
+            }
             String isMirrorString = cursor.getString(cursor.getColumnIndex("mirror"));
             boolean isMirror = isMirrorString.equals("0") ? false : true;
             int ratio = cursor.getInt(cursor.getColumnIndex("ratio"));
@@ -58,7 +64,7 @@ public class SandBoxDBModel implements IModel {
 
             SandExif sandExif = new SandExif(orientation1, latitude, lontitude, whiteBalance, flash,
                     imageLength, imageWidth, make, model);
-            sandPhoto = new SandPhoto(id, time, cameraId, category, isMirror,
+            sandPhoto = new SandPhoto(id, time, cameraId, categoryId, isMirror,
                     ratio, fileName, size, sandExif);
         }
         cursor.close();
@@ -78,7 +84,7 @@ public class SandBoxDBModel implements IModel {
         contentValues.put("data", new byte[]{'a'});
         contentValues.put("time", sandPhoto.getTime());
         contentValues.put("cameraId", sandPhoto.getCameraId());
-        contentValues.put("category", sandPhoto.getCategory());
+        contentValues.put("category", sandPhoto.getCategoryId() + "");
         contentValues.put("mirror", sandPhoto.isMirror());
         contentValues.put("ratio", sandPhoto.getRatio());
         contentValues.put("fileName", sandPhoto.getFileName());

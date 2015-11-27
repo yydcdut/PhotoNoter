@@ -15,13 +15,13 @@ public interface IAlbumView extends IView {
 
     void startSandBoxService();
 
-    void jump2DetailActivity(String categoryLabel, int position, int comparator);
+    void jump2DetailActivity(int categoryId, int position, int comparator);
 
     void notifyDataSetChanged();
 
     void updateData(List<PhotoNote> photoNoteList);
 
-    void showMovePhotos2AnotherCategoryDialog(String[] categoryLabelArray);
+    void showMovePhotos2AnotherCategoryDialog(String[] categoryIdArray, String[] categoryLabelArray);
 
     void notifyItemRemoved(int position);
 
@@ -35,7 +35,7 @@ public interface IAlbumView extends IView {
 
     void changeActivityListMenuCategoryChecked(Category category);
 
-    void jump2CameraActivity(String categoryLabel);
+    void jump2CameraActivity(int categoryId);
 
     void jump2CameraSystemActivity();
 }

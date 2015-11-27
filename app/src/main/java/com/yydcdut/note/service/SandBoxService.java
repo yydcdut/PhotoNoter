@@ -5,7 +5,6 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 
@@ -30,10 +29,7 @@ public class SandBoxService extends Service implements ISandBoxServiceView {
 
     @Override
     public IBinder onBind(Intent intent) {
-        return new SandBoxBinder();
-    }
-
-    public class SandBoxBinder extends Binder {
+        return null;
     }
 
     @Override

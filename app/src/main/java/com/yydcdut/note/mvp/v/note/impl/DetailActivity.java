@@ -156,7 +156,7 @@ public class DetailActivity extends BaseActivity implements IDetailView,
     public void initUiAndListener() {
         ButterKnife.bind(this);
         Bundle bundle = getIntent().getExtras();
-        mDetailPresenter.bindData(bundle.getString(Const.CATEGORY_LABEL),
+        mDetailPresenter.bindData(bundle.getInt(Const.CATEGORY_ID_4_PHOTNOTES),
                 bundle.getInt(Const.PHOTO_POSITION),
                 bundle.getInt(Const.COMPARATOR_FACTORY));
         mDetailPresenter.attachView(this);
@@ -395,7 +395,7 @@ public class DetailActivity extends BaseActivity implements IDetailView,
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_DATA) {
             Bundle bundle = data.getExtras();
-            mDetailPresenter.updateNote(bundle.getString(Const.CATEGORY_LABEL),
+            mDetailPresenter.updateNote(bundle.getInt(Const.CATEGORY_ID_4_PHOTNOTES),
                     bundle.getInt(Const.PHOTO_POSITION), bundle.getInt(Const.COMPARATOR_FACTORY));
         }
         closeRevealColorView();
@@ -481,8 +481,8 @@ public class DetailActivity extends BaseActivity implements IDetailView,
     }
 
     @Override
-    public void jump2EditTextActivity(String label, int position, int comparator) {
-        EditTextActivity.startActivityForResult(DetailActivity.this, label, position, comparator);
+    public void jump2EditTextActivity(int categoryId, int position, int comparator) {
+        EditTextActivity.startActivityForResult(DetailActivity.this, categoryId, position, comparator);
     }
 
     @Override

@@ -7,6 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by yuyidong on 15/10/15.
  */
@@ -22,7 +25,6 @@ public class NotesSQLite extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String sql_category = "create table if not exists " + TABLE_CATEGORY + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "label TEXT NOT NULL, " +
-                "showLabel TEXT NOT NULL DEFAULT \" \", " +
                 "photosNumber INTEGER NOT NULL, " +
                 "isCheck INTEGER NOT NULL, " +
                 "sort INTEGER NOT NULL);";
@@ -38,7 +40,8 @@ public class NotesSQLite extends SQLiteOpenHelper {
                 "editedNoteTime LONG NOT NULL, " +
                 "tag INTEGER DEFAULT 0, " +//还没用
                 "palette INTEGER DEFAULT " + Color.WHITE + ", " +
-                "categoryLabel TEXT NOT NULL);";
+                "categoryId INTEGER NOT NULL DEFAULT 0, " +
+                "categoryLabel TEXT NOT NULL);";//FIXME:categoryLabel已经废弃掉了
         db.execSQL(sql_photoNote);
     }
 
@@ -61,18 +64,34 @@ public class NotesSQLite extends SQLiteOpenHelper {
         db.execSQL(sql);
     }
 
+    /**
+     * 回归以_id为索引的方式
+     *
+     * @param db
+     */
     private void updateCategoryFrom3to2(SQLiteDatabase db) {
-        String sql = "ALTER TABLE " + TABLE_CATEGORY + " ADD showLabel TEXT DEFAULT \" \";";
+        String sql = "ALTER TABLE " + TABLE_PHOTONOTE + " ADD categoryId INTEGER NOT NULL DEFAULT 0;";
         db.execSQL(sql);
-        Cursor cursor = db.query(NotesSQLite.TABLE_CATEGORY, null, null, null, null, null, "sort asc");
-        while (cursor.moveToNext()) {
-            int id = cursor.getInt(cursor.getColumnIndex("_id"));
-            String label = cursor.getString(cursor.getColumnIndex("label"));
-            ContentValues contentValues = new ContentValues();
-            contentValues.put("showLabel", label);
-            db.update(NotesSQLite.TABLE_CATEGORY, contentValues, "_id = ?", new String[]{id + ""});
+        Map<String, Integer> categoryLabel2Id = new HashMap<>();
+        //获取Category
+        Cursor cursorCategory = db.query(NotesSQLite.TABLE_CATEGORY, null, null, null, null, null, "sort asc");
+        while (cursorCategory.moveToNext()) {
+            int id = cursorCategory.getInt(cursorCategory.getColumnIndex("_id"));
+            String label = cursorCategory.getString(cursorCategory.getColumnIndex("label"));
+            categoryLabel2Id.put(label, id);
         }
-        cursor.close();
+        cursorCategory.close();
+        Cursor cursorNote = db.query(NotesSQLite.TABLE_PHOTONOTE, null, null, null, null, null, null);
+        while (cursorNote.moveToNext()) {
+            int id = cursorNote.getInt(cursorNote.getColumnIndex("_id"));
+            String categoryLabel = cursorNote.getString(cursorNote.getColumnIndex("categoryLabel"));
+            int categoryId = categoryLabel2Id.get(categoryLabel) == null ? 0 : categoryLabel2Id.get(categoryLabel);
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("categoryId", categoryId);
+            db.update(NotesSQLite.TABLE_PHOTONOTE, contentValues, "_id = ?", new String[]{id + ""});
+        }
+        cursorNote.close();
     }
+
 
 }

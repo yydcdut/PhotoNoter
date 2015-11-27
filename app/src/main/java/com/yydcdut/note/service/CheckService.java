@@ -49,7 +49,7 @@ public class CheckService extends IntentService implements ICheckServiceView {
         List<Category> categoryList = mCategoryDBModel.findAll();
         boolean isChanged = false;
         for (Category category : categoryList) {
-            List<PhotoNote> photoNoteList = mPhotoNoteDBModel.findByCategoryLabel(category.getLabel(), -1);
+            List<PhotoNote> photoNoteList = mPhotoNoteDBModel.findByCategoryId(category.getId(), -1);
             if (category.getPhotosNumber() != photoNoteList.size()) {
                 category.setPhotosNumber(photoNoteList.size());
                 isChanged = true;
@@ -69,7 +69,7 @@ public class CheckService extends IntentService implements ICheckServiceView {
         //数据库不在&大图小图都在，删除大图小图
         List<Category> categoryList = mCategoryDBModel.findAll();
         for (Category category : categoryList) {
-            List<PhotoNote> photoNoteList = mPhotoNoteDBModel.findByCategoryLabel(category.getLabel(), -1);
+            List<PhotoNote> photoNoteList = mPhotoNoteDBModel.findByCategoryId(category.getId(), -1);
             for (int i = 0; i < photoNoteList.size(); i++) {
                 PhotoNote photoNote = photoNoteList.get(i);
                 int result = FilePathUtils.isFileExist(photoNote.getPhotoName());

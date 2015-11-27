@@ -38,10 +38,10 @@ public class DetailFragPresenterImpl implements IDetailFragPresenter {
     }
 
     @Override
-    public void bindData(String label, int position, int comparator) {
+    public void bindData(int categoryId, int position, int comparator) {
         mPosition = position;
         mComparator = comparator;
-        mPhotoNote = mPhotoNoteDBModel.findByCategoryLabel(label, mComparator).get(mPosition);
+        mPhotoNote = mPhotoNoteDBModel.findByCategoryId(categoryId, mComparator).get(mPosition);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class DetailFragPresenterImpl implements IDetailFragPresenter {
 
     @Override
     public void jump2ZoomActivity() {
-        mDetailFragView.jump2ZoomActivity(mPhotoNote.getCategoryLabel(), mPosition, mComparator);
+        mDetailFragView.jump2ZoomActivity(mPhotoNote.getCategoryId(), mPosition, mComparator);
     }
 
 

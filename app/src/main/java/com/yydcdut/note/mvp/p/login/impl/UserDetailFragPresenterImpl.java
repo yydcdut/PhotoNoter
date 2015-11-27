@@ -82,8 +82,8 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter, Ha
                 mUserDetailFragView.initUserDetail(getLocation(), getUseAge(), getPhone(), getAndroid(), calculateStorage());
                 break;
             case 1:
-                mUserDetailFragView.initUserImages(mPhotoNoteDBModel.findByCategoryLabel(
-                        mCategoryDBModel.findAll().get(0).getLabel(), ComparatorFactory.FACTORY_NOT_SORT));
+                mUserDetailFragView.initUserImages(mPhotoNoteDBModel.findByCategoryId(
+                        mCategoryDBModel.findAll().get(0).getId(), ComparatorFactory.FACTORY_NOT_SORT));
                 break;
             case 2:
                 mUserDetailFragView.initUserInfo(mUserCenter.isLoginQQ(), getQQName(),

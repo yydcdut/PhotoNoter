@@ -145,7 +145,7 @@ public class AbsCameraModel implements ICameraModel {
         }
     }
 
-    public boolean addData2Service(byte[] data, String cameraId, long time, String category,
+    public boolean addData2Service(byte[] data, String cameraId, long time, int categoryId,
                                    boolean isMirror, int ratio) {
         boolean bool = true;
         int size = data.length;
@@ -205,7 +205,7 @@ public class AbsCameraModel implements ICameraModel {
         String make = Build.BRAND;
         String model = Build.MODEL;
         try {
-            mCameraService.add(fileName, size, cameraId, time, category, isMirror, ratio,
+            mCameraService.add(fileName, size, cameraId, time, categoryId, isMirror, ratio,
                     orientation, latitude, lontitude, whiteBalance, flash, imageLength, imageWidth, make, model);
         } catch (RemoteException e) {
             e.printStackTrace();

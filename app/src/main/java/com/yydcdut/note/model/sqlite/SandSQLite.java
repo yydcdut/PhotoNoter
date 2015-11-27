@@ -2,6 +2,7 @@ package com.yydcdut.note.model.sqlite;
 
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.database.Cursor;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -10,6 +11,8 @@ import com.yydcdut.note.utils.FilePathUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by yuyidong on 15/8/10.
@@ -27,7 +30,7 @@ public class SandSQLite extends SQLiteOpenHelper {
                 "data BLOB NOT NULL, " +//数据byte[],已经废弃
                 "time LONG NOT NULL, " +//时间
                 "cameraId CHAR(1) NOT NULL, " +//前置还是后置摄像头
-                "category VARCHAR(50) NOT NULL, " +//分类
+                "category VARCHAR(50) NOT NULL, " +//分类//FIXME:现在变成CategoryId了
                 "mirror CHAR(1) NOT NULL DEFAULT '0', " +//镜像
                 "ratio INTEGER NOT NULL DEFAULT 0, " +//比例，4：3？16：9？1：1
                 "orientation_ INTEGER DEFAULT 0, " +//方向
@@ -47,6 +50,18 @@ public class SandSQLite extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if (oldVersion == 3 && newVersion == 4) {
+            updateFrom3To4(db);
+        }
+        if (oldVersion == 2 && newVersion == 4) {
+            updateFrom2To3(db);
+            updateFrom3To4(db);
+        }
+        if (oldVersion == 1 && newVersion == 4) {
+            updateFrom1To2(db);
+            updateFrom2To3(db);
+            updateFrom3To4(db);
+        }
         if (oldVersion == 2 && newVersion == 3) {
             updateFrom2To3(db);
         }
@@ -57,6 +72,7 @@ public class SandSQLite extends SQLiteOpenHelper {
         if (oldVersion == 1 && newVersion == 2) {
             updateFrom1To2(db);
         }
+
     }
 
     private void updateFrom1To2(SQLiteDatabase db) {
@@ -102,6 +118,24 @@ public class SandSQLite extends SQLiteOpenHelper {
         //大小
         String size = "ALTER TABLE " + TABLE + " ADD size INTEGER NOT NULL DEFAULT -1;";
         db.execSQL(size);
+    }
+
+    /**
+     * 因为category字段的意义变了，以前存的是label，现在存的是categoryId了
+     *
+     * @param db
+     */
+    private void updateFrom3To4(SQLiteDatabase db) {
+        Cursor cursor = db.query(SandSQLite.TABLE, null, null, null, null, null, null, null);
+        List<Long> list = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            long id = cursor.getLong(cursor.getColumnIndex("_id"));
+            list.add(id);
+        }
+        cursor.close();
+        for (long id : list) {
+            int rows = db.delete(SandSQLite.TABLE, "_id = ?", new String[]{id + ""});
+        }
     }
 
     public static class DatabaseContext extends ContextWrapper {

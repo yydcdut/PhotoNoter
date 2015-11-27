@@ -62,7 +62,7 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
     private int mScreenWidth = -1;
     private int mScreenHeight = -1;
     /* Category */
-    private String mCategory;
+    private int mCategoryId;
     /* Camera Zoom */
     private float mZoomCurrentSpan = 0;
     private int mFirstZoomValue = 0;
@@ -93,7 +93,7 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
         super.onCreate(savedInstanceState);
         mLocalStorageUtils = LocalStorageUtils.getInstance(getApplicationContext());
         Bundle bundle = getIntent().getExtras();
-        mCategory = bundle.getString(Const.CATEGORY_LABEL);
+        mCategoryId = bundle.getInt(Const.CATEGORY_ID_4_PHOTNOTES);
         LollipopCompat.setFullWindow(getWindow());
         setContentView(R.layout.activity_camera);
         initData();
@@ -167,7 +167,7 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        mCameraModel = new CameraModel(getApplicationContext(), holder, mCategory);
+        mCameraModel = new CameraModel(getApplicationContext(), holder, mCategoryId);
         mCameraModel.onCreate(CameraActivity.this);
         mCameraModel.openCamera(mCameraId, mCameraRotation);
     }

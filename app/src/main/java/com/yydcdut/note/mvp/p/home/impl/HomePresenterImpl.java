@@ -25,9 +25,9 @@ public class HomePresenterImpl implements IHomePresenter, PhotoNoteChangedObserv
     private IHomeView mHomeView;
     private List<Category> mListData;
     /**
-     * 当前的category的label
+     * 当前的category的Id
      */
-    private String mCategoryLabel;
+    private int mCategoryId = -1;
 
     private Handler mMainHandler;
 
@@ -58,14 +58,13 @@ public class HomePresenterImpl implements IHomePresenter, PhotoNoteChangedObserv
         mCategoryDBModel.removeObserver(this);
     }
 
-    @Override
-    public void setCategoryLabel(String categoryLabel) {
-        mCategoryLabel = categoryLabel;
+    public void setCategoryId(int categoryId) {
+        mCategoryId = categoryId;
     }
 
     @Override
-    public String getCategoryLabel() {
-        return mCategoryLabel;
+    public int getCategoryId() {
+        return mCategoryId;
     }
 
     @Override
@@ -83,8 +82,8 @@ public class HomePresenterImpl implements IHomePresenter, PhotoNoteChangedObserv
     public void setCheckedCategoryPosition(int position) {
         mCategoryDBModel.setCategoryMenuPosition(mListData.get(position));
         mHomeView.notifyCategoryDataChanged();
-        mCategoryLabel = mListData.get(position).getLabel();
-        mHomeView.changeFragment(mCategoryLabel);
+        mCategoryId = mListData.get(position).getId();
+        mHomeView.changeFragment(mCategoryId);
     }
 
     @Override
@@ -92,8 +91,8 @@ public class HomePresenterImpl implements IHomePresenter, PhotoNoteChangedObserv
         mCategoryDBModel.setCategoryMenuPosition(category);
         mListData = mCategoryDBModel.refresh();
         mHomeView.notifyCategoryDataChanged();
-        mCategoryLabel = category.getLabel();
-        mHomeView.changePhotos4Category(mCategoryLabel);
+        mCategoryId = category.getId();
+        mHomeView.changePhotos4Category(mCategoryId);
     }
 
     @Override
@@ -148,19 +147,19 @@ public class HomePresenterImpl implements IHomePresenter, PhotoNoteChangedObserv
     @Override
     public void updateFromBroadcast(boolean broadcast_process, boolean broadcast_service) {
         //有时候categoryLabel为null，感觉原因是activity被回收了，但是一直解决不掉，所以迫不得已的解决办法
-        if (mCategoryLabel == null) {
+        if (mCategoryId == -1) {
             List<Category> categoryList = mCategoryDBModel.findAll();
             for (Category category : categoryList) {
                 if (category.isCheck()) {
-                    mCategoryLabel = category.getLabel();
+                    mCategoryId = category.getId();
                 }
             }
         }
 
         //从另外个进程过来的数据
         if (broadcast_process) {
-            int number = mPhotoNoteDBModel.findByCategoryLabelByForce(mCategoryLabel, -1).size();
-            Category category = mCategoryDBModel.findByCategoryLabel(mCategoryLabel);
+            int number = mPhotoNoteDBModel.findByCategoryLabelByForce(mCategoryId, -1).size();
+            Category category = mCategoryDBModel.findByCategoryId(mCategoryId);
             category.setPhotosNumber(number);
             mCategoryDBModel.update(category);
             mHomeView.updateCategoryList(mCategoryDBModel.findAll());
@@ -180,16 +179,16 @@ public class HomePresenterImpl implements IHomePresenter, PhotoNoteChangedObserv
                 switch (CRUD) {
                     case CategoryChangedObserver.OBSERVER_CATEGORY_DELETE:
                         mListData = mCategoryDBModel.findAll();
-                        String beforeLabel = mCategoryLabel;
+                        int beforeCategoryId = mCategoryId;
                         for (Category category : mListData) {
                             if (category.isCheck()) {
-                                mCategoryLabel = category.getLabel();
+                                mCategoryId = category.getId();
                                 break;
                             }
                         }
                         mHomeView.updateCategoryList(mCategoryDBModel.findAll());
-                        if (!mCategoryLabel.equals(beforeLabel)) {
-                            mHomeView.changePhotos4Category(mCategoryLabel);
+                        if (mCategoryId != beforeCategoryId) {
+                            mHomeView.changePhotos4Category(mCategoryId);
                         }
                         break;
                     case CategoryChangedObserver.OBSERVER_CATEGORY_MOVE:
@@ -204,15 +203,15 @@ public class HomePresenterImpl implements IHomePresenter, PhotoNoteChangedObserv
     }
 
     @Override
-    public void onUpdate(final int CRUD, String categoryLabel) {
+    public void onUpdate(final int CRUD, int categoryId) {
         mMainHandler.post(new Runnable() {
             @Override
             public void run() {
                 switch (CRUD) {
                     case PhotoNoteChangedObserver.OBSERVER_PHOTONOTE_DELETE:
                     case PhotoNoteChangedObserver.OBSERVER_PHOTONOTE_CREATE:
-                        int number = mPhotoNoteDBModel.findByCategoryLabel(mCategoryLabel, -1).size();
-                        Category category = mCategoryDBModel.findByCategoryLabel(mCategoryLabel);
+                        int number = mPhotoNoteDBModel.findByCategoryId(mCategoryId, -1).size();
+                        Category category = mCategoryDBModel.findByCategoryId(mCategoryId);
                         if (category.getPhotosNumber() != number) {
                             category.setPhotosNumber(number);
                             mCategoryDBModel.update(category);
@@ -223,4 +222,5 @@ public class HomePresenterImpl implements IHomePresenter, PhotoNoteChangedObserv
             }
         });
     }
+
 }

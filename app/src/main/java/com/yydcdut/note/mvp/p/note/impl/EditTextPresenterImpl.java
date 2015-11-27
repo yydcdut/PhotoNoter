@@ -105,10 +105,10 @@ public class EditTextPresenterImpl implements IEditTextPresenter, Handler.Callba
     }
 
     @Override
-    public void bindData(String category, int position, int comparator) {
+    public void bindData(int categoryId, int position, int comparator) {
         mPosition = position;
         mComparator = comparator;
-        mPhotoNote = mPhotoNoteDBModel.findByCategoryLabel(category, mComparator).get(mPosition);
+        mPhotoNote = mPhotoNoteDBModel.findByCategoryId(categoryId, mComparator).get(mPosition);
     }
 
     @Override
@@ -138,7 +138,7 @@ public class EditTextPresenterImpl implements IEditTextPresenter, Handler.Callba
     @Override
     public void finishActivity(boolean saved) {
         mIsFinishing = true;
-        mEditTextView.finishActivityWithAnimation(saved, mPhotoNote.getCategoryLabel(), mPosition, mComparator);
+        mEditTextView.finishActivityWithAnimation(saved, mPhotoNote.getCategoryId(), mPosition, mComparator);
     }
 
     @Override

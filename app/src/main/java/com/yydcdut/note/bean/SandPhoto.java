@@ -9,7 +9,7 @@ public class SandPhoto implements IObject {
     private long id;
     private final long time;
     private final String cameraId;
-    private final String category;
+    private final int categoryId;
     private final boolean isMirror;
     private final int ratio;
     private final String fileName;
@@ -17,12 +17,12 @@ public class SandPhoto implements IObject {
 
     private final SandExif mSandExif;
 
-    public SandPhoto(long id, long time, String cameraId, String category,
+    public SandPhoto(long id, long time, String cameraId, int categoryId,
                      boolean isMirror, int ratio, String fileName, int size, SandExif sandExif) {
         this.id = id;
         this.time = time;
         this.cameraId = cameraId;
-        this.category = category;
+        this.categoryId = categoryId;
         this.isMirror = isMirror;
         this.ratio = ratio;
         this.fileName = fileName;
@@ -38,8 +38,8 @@ public class SandPhoto implements IObject {
         return cameraId;
     }
 
-    public String getCategory() {
-        return category;
+    public int getCategoryId() {
+        return categoryId;
     }
 
     public long getId() {
@@ -76,7 +76,7 @@ public class SandPhoto implements IObject {
                 "id=" + id +
                 ", time=" + time +
                 ", cameraId='" + cameraId + '\'' +
-                ", category='" + category + '\'' +
+                ", categoryId=" + categoryId +
                 ", isMirror=" + isMirror +
                 ", ratio=" + ratio +
                 ", fileName='" + fileName + '\'' +

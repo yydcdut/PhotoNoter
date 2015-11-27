@@ -103,9 +103,9 @@ public class HomeActivity extends BaseActivity implements IHomeView, View.OnClic
         super.onCreate(savedInstanceState);
         initReceiver();
         if (savedInstanceState != null) {
-            String category = savedInstanceState.getString(Const.CATEGORY_LABEL, "NULL");
-            if (!category.equals("NULL")) {
-                mHomePresenter.setCategoryLabel(category);
+            int categoryId = savedInstanceState.getInt(Const.CATEGORY_ID_4_PHOTNOTES, -1);
+            if (categoryId != -1) {
+                mHomePresenter.setCategoryId(categoryId);
             }
         }
     }
@@ -400,22 +400,22 @@ public class HomeActivity extends BaseActivity implements IHomeView, View.OnClic
 
 
     @Override
-    public void changeFragment(String categoryLabel) {
+    public void changeFragment(int categoryId) {
         if (mFragment == null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             mFragment = new AlbumFragment().newInstance();
             Bundle bundle = new Bundle();
-            bundle.putString(Const.CATEGORY_LABEL, categoryLabel);
+            bundle.putInt(Const.CATEGORY_ID_4_PHOTNOTES, categoryId);
             mFragment.setArguments(bundle);
             fragmentManager.beginTransaction().replace(LAYOUT_FRAGMENT_ID, mFragment).commit();
         } else {
-            mFragment.changePhotos4Category(categoryLabel);
+            mFragment.changePhotos4Category(categoryId);
         }
     }
 
     @Override
-    public void changePhotos4Category(String categoryLabel) {
-        mFragment.changePhotos4Category(categoryLabel);
+    public void changePhotos4Category(int categoryId) {
+        mFragment.changePhotos4Category(categoryId);
     }
 
     @Override
@@ -430,13 +430,13 @@ public class HomeActivity extends BaseActivity implements IHomeView, View.OnClic
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putString(Const.CATEGORY_LABEL, mHomePresenter.getCategoryLabel());
+        outState.putInt(Const.CATEGORY_ID_4_PHOTNOTES, mHomePresenter.getCategoryId());
         super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        mHomePresenter.setCategoryLabel(savedInstanceState.getString(Const.CATEGORY_LABEL));
+        mHomePresenter.setCategoryId(savedInstanceState.getInt(Const.CATEGORY_ID_4_PHOTNOTES));
         super.onRestoreInstanceState(savedInstanceState);
     }
 

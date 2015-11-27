@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.os.Message;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.camera.param.Size;
 import com.yydcdut.note.injector.ContextLife;
@@ -48,6 +47,8 @@ public class InitServicePresenterImpl implements IInitServicePresenter {
     private PhotoNoteDBModel mPhotoNoteDBModel;
     private LocalStorageUtils mLocalStorageUtils;
     private ThreadExecutorPool mThreadExecutorPool;
+
+    private long mCategoryId = 0;
 
     @Inject
     public InitServicePresenterImpl(@ContextLife("Service") Context context, CategoryDBModel categoryDBModel, PhotoNoteDBModel photoNoteDBModel,
@@ -170,7 +171,7 @@ public class InitServicePresenterImpl implements IInitServicePresenter {
      * 处理Category
      */
     private void initDefaultCategory() {
-        mCategoryDBModel.saveCategory(new Category(0, "App介绍", "App介绍", 16, 0, true));
+        mCategoryId = mCategoryDBModel.saveCategory("App介绍", 16, 0, true);
         mHandler.sendEmptyMessage(ADD);
     }
 
@@ -247,7 +248,7 @@ public class InitServicePresenterImpl implements IInitServicePresenter {
                 }
                 for (int i = 0; i < outFileName.length; i++) {
                     PhotoNote photoNote = new PhotoNote(outFileName[i], System.currentTimeMillis(), System.currentTimeMillis(),
-                            titles[i], contents[i], System.currentTimeMillis(), System.currentTimeMillis(), "App介绍");
+                            titles[i], contents[i], System.currentTimeMillis(), System.currentTimeMillis(), (int) mCategoryId);
                     photoNote.setPaletteColor(UiHelper.getPaletteColor(ImageLoaderManager.loadImageSync(photoNote.getBigPhotoPathWithFile())));
                     mPhotoNoteDBModel.save(photoNote);
                 }

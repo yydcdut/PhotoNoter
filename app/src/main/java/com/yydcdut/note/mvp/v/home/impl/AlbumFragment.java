@@ -2,18 +2,15 @@ package com.yydcdut.note.mvp.v.home.impl;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -125,7 +122,7 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
 
     @Override
     public void getBundle(Bundle bundle) {
-        mAlbumPresenter.bindData(bundle.getString(Const.CATEGORY_LABEL));
+        mAlbumPresenter.bindData(bundle.getInt(Const.CATEGORY_ID_4_PHOTNOTES));
         mMainHandler = new Handler();
     }
 
@@ -509,12 +506,12 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
     /**
      * 换Category
      *
-     * @param categoryLabel
+     * @param categoryId
      */
-    public void changePhotos4Category(String categoryLabel) {
+    public void changePhotos4Category(int categoryId) {
         mAdapter.cancelSelectPhotos();
         menuPreviewMode();
-        mAlbumPresenter.changeCategoryWithPhotos(categoryLabel);
+        mAlbumPresenter.changeCategoryWithPhotos(categoryId);
     }
 
     /**
@@ -577,24 +574,14 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
     @Override
     public void startSandBoxService() {
         Intent intent = new Intent(getContext(), SandBoxService.class);
-        getActivity().bindService(intent, new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-
-            }
-        }, Context.BIND_AUTO_CREATE);
+        getActivity().startService(intent);
     }
 
     @Override
-    public void jump2DetailActivity(String categoryLabel, int position, int comparator) {
+    public void jump2DetailActivity(int categoryId, int position, int comparator) {
         Intent intent = new Intent(getContext(), DetailActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putString(Const.CATEGORY_LABEL, categoryLabel);
+        bundle.putInt(Const.CATEGORY_ID_4_PHOTNOTES, categoryId);
         bundle.putInt(Const.PHOTO_POSITION, position);
         bundle.putInt(Const.COMPARATOR_FACTORY, comparator);
         intent.putExtras(bundle);
@@ -612,13 +599,13 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
     }
 
     @Override
-    public void showMovePhotos2AnotherCategoryDialog(final String[] categoryLabelArray) {
+    public void showMovePhotos2AnotherCategoryDialog(final String[] categoryIdStringArray, final String[] categoryLabelArray) {
         new AlertDialog.Builder(getContext(), R.style.note_dialog)
                 .setTitle(R.string.dialog_title_move)
                 .setItems(categoryLabelArray, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mAlbumPresenter.changePhotosCategory(categoryLabelArray[which]);
+                        mAlbumPresenter.changePhotosCategory(Integer.parseInt(categoryIdStringArray[which]));
                         menuPreviewMode();
                     }
                 })
@@ -657,10 +644,10 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
     }
 
     @Override
-    public void jump2CameraActivity(String categoryLabel) {
+    public void jump2CameraActivity(int categoryId) {
         Intent intent = new Intent(getContext(), CameraActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putString(Const.CATEGORY_LABEL, categoryLabel);
+        bundle.putInt(Const.CATEGORY_ID_4_PHOTNOTES, categoryId);
         intent.putExtras(bundle);
         getContext().startActivity(intent);
     }
@@ -672,6 +659,4 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         startActivityForResult(intent, INTENT_REQUEST_CAMERA);
     }
-
-
 }

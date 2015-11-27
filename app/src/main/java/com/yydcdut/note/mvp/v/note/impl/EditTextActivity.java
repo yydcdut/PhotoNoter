@@ -112,14 +112,14 @@ public class EditTextActivity extends BaseActivity implements IEditTextView, Vie
      * 启动Activity
      *
      * @param activity
-     * @param categoryLabel
+     * @param categoryId
      * @param photoNotePosition
      * @param comparator
      */
-    public static void startActivityForResult(Activity activity, String categoryLabel, int photoNotePosition, int comparator) {
+    public static void startActivityForResult(Activity activity, int categoryId, int photoNotePosition, int comparator) {
         Intent intent = new Intent(activity, EditTextActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putString(Const.CATEGORY_LABEL, categoryLabel);
+        bundle.putInt(Const.CATEGORY_ID_4_PHOTNOTES, categoryId);
         bundle.putInt(Const.PHOTO_POSITION, photoNotePosition);
         bundle.putInt(Const.COMPARATOR_FACTORY, comparator);
         intent.putExtras(bundle);
@@ -131,7 +131,7 @@ public class EditTextActivity extends BaseActivity implements IEditTextView, Vie
     public void initUiAndListener() {
         ButterKnife.bind(this);
         Bundle bundle = getIntent().getExtras();
-        mEditTextPresenter.bindData(bundle.getString(Const.CATEGORY_LABEL),
+        mEditTextPresenter.bindData(bundle.getInt(Const.CATEGORY_ID_4_PHOTNOTES),
                 bundle.getInt(Const.PHOTO_POSITION), bundle.getInt(Const.COMPARATOR_FACTORY));
         mEditTextPresenter.attachView(this);
         initToolBar();
@@ -298,7 +298,7 @@ public class EditTextActivity extends BaseActivity implements IEditTextView, Vie
     }
 
     @Override
-    public void finishActivityWithAnimation(final boolean saved, final String category, final int position, final int comparator) {
+    public void finishActivityWithAnimation(final boolean saved, final int categoryId, final int position, final int comparator) {
         int actionBarHeight = getActionBarSize();
         int screenHeight = Evi.sScreenHeight;
         int contentEditHeight = screenHeight - actionBarHeight * 2;
@@ -321,7 +321,7 @@ public class EditTextActivity extends BaseActivity implements IEditTextView, Vie
                     Intent intent = new Intent();
                     Bundle bundle = new Bundle();
                     bundle.putInt(Const.PHOTO_POSITION, position);
-                    bundle.putString(Const.CATEGORY_LABEL, category);
+                    bundle.putInt(Const.CATEGORY_ID_4_PHOTNOTES, categoryId);
                     bundle.putInt(Const.COMPARATOR_FACTORY, comparator);
                     intent.putExtras(bundle);
                     setResult(RESULT_DATA, intent);

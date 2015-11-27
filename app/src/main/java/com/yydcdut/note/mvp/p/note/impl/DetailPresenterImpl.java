@@ -45,7 +45,7 @@ public class DetailPresenterImpl implements IDetailPresenter, OnGetGeoCoderResul
 
     /* Data */
     private List<PhotoNote> mPhotoNoteList;
-    private String mCategoryLabel;
+    private int mCategoryId;
     private int mComparator;
     private int mInitPosition;
 
@@ -106,11 +106,11 @@ public class DetailPresenterImpl implements IDetailPresenter, OnGetGeoCoderResul
     }
 
     @Override
-    public void bindData(String categoryLabel, int position, int comparator) {
-        mCategoryLabel = categoryLabel;
+    public void bindData(int categoryID, int position, int comparator) {
+        mCategoryId = categoryID;
         mInitPosition = position;
         mComparator = comparator;
-        mPhotoNoteList = mPhotoNoteDBModel.findByCategoryLabel(mCategoryLabel, mComparator);
+        mPhotoNoteList = mPhotoNoteDBModel.findByCategoryId(categoryID, mComparator);
     }
 
     @Override
@@ -148,16 +148,16 @@ public class DetailPresenterImpl implements IDetailPresenter, OnGetGeoCoderResul
     }
 
     @Override
-    public void updateNote(String label, int position, int comparator) {
-        mCategoryLabel = label;
+    public void updateNote(int categoryId, int position, int comparator) {
+        mCategoryId = categoryId;
         mComparator = comparator;
-        mPhotoNoteList = mPhotoNoteDBModel.findByCategoryLabel(mCategoryLabel, mComparator);
+        mPhotoNoteList = mPhotoNoteDBModel.findByCategoryId(mCategoryId, mComparator);
         showNote(position);
     }
 
     @Override
     public void jump2EditTextActivity() {
-        mDetailView.jump2EditTextActivity(mCategoryLabel, mDetailView.getCurrentPosition(), mComparator);
+        mDetailView.jump2EditTextActivity(mCategoryId, mDetailView.getCurrentPosition(), mComparator);
     }
 
     private void gps(String path) throws IOException {

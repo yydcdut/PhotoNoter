@@ -58,14 +58,14 @@ public class ZoomActivity extends BaseActivity implements IZoomView {
      * 启动Activity
      *
      * @param fragment
-     * @param categoryLabel
+     * @param categoryId
      * @param photoNotePosition
      * @param comparator
      */
-    public static void startActivityForResult(Fragment fragment, String categoryLabel, int photoNotePosition, int comparator) {
+    public static void startActivityForResult(Fragment fragment, int categoryId, int photoNotePosition, int comparator) {
         Intent intent = new Intent(fragment.getContext(), ZoomActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putString(Const.CATEGORY_LABEL, categoryLabel);
+        bundle.putInt(Const.CATEGORY_ID_4_PHOTNOTES, categoryId);
         bundle.putInt(Const.PHOTO_POSITION, photoNotePosition);
         bundle.putInt(Const.COMPARATOR_FACTORY, comparator);
         intent.putExtras(bundle);
@@ -96,7 +96,7 @@ public class ZoomActivity extends BaseActivity implements IZoomView {
     public void initUiAndListener() {
         Bundle bundle = getIntent().getExtras();
         ButterKnife.bind(this);
-        mZoomPresenter.bindData(bundle.getString(Const.CATEGORY_LABEL),
+        mZoomPresenter.bindData(bundle.getInt(Const.CATEGORY_ID_4_PHOTNOTES),
                 bundle.getInt(Const.PHOTO_POSITION), bundle.getInt(Const.COMPARATOR_FACTORY));
         mZoomPresenter.attachView(this);
         initToolBarUI();

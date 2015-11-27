@@ -41,14 +41,14 @@ public class CategoryAdapter extends BaseListAdapter<Category> {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        String label = getGroup().get(position).getShowLabel();
+        String label = getGroup().get(position).getLabel();
         String firstWord = null;
         if (label.length() > 0) {
             firstWord = label.substring(0, 1);
         } else {
             firstWord = "N";
         }
-        holder.txtName.setText(getGroup().get(position).getShowLabel());
+        holder.txtName.setText(getGroup().get(position).getLabel());
         holder.txtPicturesNum.setText(getGroup().get(position).getPhotosNumber() + "");
         if (getGroup().get(position).isCheck()) {
             convertView.setBackgroundResource(R.drawable.selector_check_item_navigation);

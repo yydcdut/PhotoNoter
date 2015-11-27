@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.yydcdut.note.bean.Category;
-import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.compare.ComparatorFactory;
 import com.yydcdut.note.model.observer.CategoryChangedObserver;
@@ -69,11 +68,10 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
             while (cursor.moveToNext()) {
                 int id = cursor.getInt(cursor.getColumnIndex("_id"));
                 String label = cursor.getString(cursor.getColumnIndex("label"));
-                String showLabel = cursor.getString(cursor.getColumnIndex("showLabel"));
                 int photosNumber = cursor.getInt(cursor.getColumnIndex("photosNumber"));
                 boolean isCheck = cursor.getInt(cursor.getColumnIndex("isCheck")) == 0 ? false : true;
                 int sort = cursor.getInt(cursor.getColumnIndex("sort"));
-                Category category = new Category(id, label, showLabel, photosNumber, sort, isCheck);
+                Category category = new Category(id, label, photosNumber, sort, isCheck);
                 mCache.add(category);
             }
             cursor.close();
@@ -93,11 +91,10 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
         while (cursor.moveToNext()) {
             int id = cursor.getInt(cursor.getColumnIndex("_id"));
             String label = cursor.getString(cursor.getColumnIndex("label"));
-            String showLabel = cursor.getString(cursor.getColumnIndex("showLabel"));
             int photosNumber = cursor.getInt(cursor.getColumnIndex("photosNumber"));
             boolean isCheck = cursor.getInt(cursor.getColumnIndex("isCheck")) == 0 ? false : true;
             int sort = cursor.getInt(cursor.getColumnIndex("sort"));
-            Category category = new Category(id, label, showLabel, photosNumber, sort, isCheck);
+            Category category = new Category(id, label, photosNumber, sort, isCheck);
             mCache.add(category);
         }
         cursor.close();
@@ -127,24 +124,27 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
     }
 
     /**
-     * 保持分类，并且刷新
+     * 保存分类，并且刷新
      *
-     * @param category
+     * @param label
+     * @param photosNumber
+     * @param sort
+     * @param isCheck
      * @return
      */
-    public boolean saveCategory(Category category) {
-        if (checkShowLabelExist(category)) {
-            return false;
+    public long saveCategory(String label, int photosNumber, int sort, boolean isCheck) {
+        if (checkLabelExist(label)) {
+            return -1;
         }
-        if (category.isCheck()) {
+        if (isCheck) {
             resetCheck();
         }
-        long id = saveData2DB(category);
+        long id = saveData2DB(label, photosNumber, sort, isCheck);
         if (id >= 0) {
             refresh();
         }
         doObserver(IObserver.OBSERVER_CATEGORY_CREATE);
-        return id >= 0;
+        return id;
     }
 
     private void resetCheck() {
@@ -175,49 +175,32 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
         return update(category, true);
     }
 
-    public void updateChangeCategory(String oldCategoryLabel, String targetCategoryLabel) {
-        Category oldCategory = findByCategoryLabel(oldCategoryLabel);
-        Category targetCategory = findByCategoryLabel(targetCategoryLabel);
+    public void updateChangeCategory(int oldCategoryId, int targetCategoryId) {
+        Category oldCategory = findByCategoryId(oldCategoryId);
+        Category targetCategory = findByCategoryId(targetCategoryId);
         //更新移动过去的category数目
-        int targetNumber = mPhotoNoteDBModel.findByCategoryLabel(targetCategory.getLabel(), ComparatorFactory.FACTORY_NOT_SORT).size();
+        int targetNumber = mPhotoNoteDBModel.findByCategoryId(targetCategory.getId(), ComparatorFactory.FACTORY_NOT_SORT).size();
         targetCategory.setPhotosNumber(targetNumber);
         update(targetCategory, false);
-        int oldNumber = mPhotoNoteDBModel.findByCategoryLabel(oldCategory.getLabel(), ComparatorFactory.FACTORY_NOT_SORT).size();
+        int oldNumber = mPhotoNoteDBModel.findByCategoryId(oldCategory.getId(), ComparatorFactory.FACTORY_NOT_SORT).size();
         oldCategory.setPhotosNumber(oldNumber);
         update(oldCategory);
         doObserver(IObserver.OBSERVER_CATEGORY_MOVE);
     }
 
     /**
-     * todo 时间会比较长
-     *
-     * @param originalLabel
+     * @param categoryId
      * @param newLabel
      * @return
      */
-    public boolean updateLabel(String originalLabel, String newLabel) {
+    public boolean updateLabel(int categoryId, String newLabel) {
         boolean bool = true;
-        bool &= (!checkShowLabelExist(newLabel));
+        bool &= (!checkLabelExist(newLabel));
         if (bool) {
             //数据可能在EditCategoryActivity中改过了，
-            Category category = findByCategoryLabel(originalLabel);
-            category.setShowLabel(newLabel);
-//            category.setLabel(newLabel);
+            Category category = findByCategoryId(categoryId);
+            category.setLabel(newLabel);
             bool &= updateData2DB(category);
-            if (bool) {
-                //处理PhotoNote
-                List<PhotoNote> photoNoteList = mPhotoNoteDBModel.findByCategoryLabel(originalLabel, ComparatorFactory.FACTORY_NOT_SORT);
-                int total = photoNoteList.size();
-                int number = 0;
-                for (PhotoNote photoNote : photoNoteList) {
-                    photoNote.setCategoryLabel(newLabel);
-                    if ((number++) + 1 == total) {
-                        mPhotoNoteDBModel.update(photoNote, true);
-                    } else {
-                        mPhotoNoteDBModel.update(photoNote, false);
-                    }
-                }
-            }
         }
         if (bool) {
             refresh();
@@ -227,14 +210,14 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
     }
 
     /**
-     * 通过label查抄
+     * 通过Id查
      *
-     * @param categoryLabel
+     * @param categoryId
      * @return
      */
-    public Category findByCategoryLabel(String categoryLabel) {
+    public Category findByCategoryId(int categoryId) {
         for (Category category : mCache) {
-            if (category.getLabel().equals(categoryLabel)) {
+            if (category.getId() == categoryId) {
                 return category;
             }
         }
@@ -270,19 +253,19 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
         mCache.remove(category);
         deleteData2DB(category);
         doObserver(IObserver.OBSERVER_CATEGORY_DELETE);
-        deletePhotoNotes(label);
+        deletePhotoNotes(category.getId());
     }
 
     /**
      * 删除Category下面的图片
      *
-     * @param label
+     * @param id
      */
-    private void deletePhotoNotes(final String label) {
+    private void deletePhotoNotes(final int id) {
         mThreadExecutorPool.getExecutorPool().execute(new Runnable() {
             @Override
             public void run() {
-                mPhotoNoteDBModel.deleteByCategoryWithoutObserver(label);
+                mPhotoNoteDBModel.deleteByCategoryWithoutObserver(id);
             }
         });
     }
@@ -296,7 +279,7 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
 
     private boolean update(Category category, boolean refresh) {
         boolean bool = true;
-        if (checkShowLabelExist(category)) {
+        if (checkLabelExist(category)) {
             bool &= updateData2DB(category);
         }
         if (bool && refresh) {
@@ -306,27 +289,26 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
         return bool;
     }
 
-    private boolean checkShowLabelExist(Category category) {
-        return checkShowLabelExist(category.getShowLabel());
+    private boolean checkLabelExist(Category category) {
+        return checkLabelExist(category.getLabel());
     }
 
-    private boolean checkShowLabelExist(String newLabel) {
+    private boolean checkLabelExist(String newLabel) {
         for (Category item : mCache) {
-            if (item.getShowLabel().equals(newLabel)) {
+            if (item.getLabel().equals(newLabel)) {
                 return true;
             }
         }
         return false;
     }
 
-    private long saveData2DB(Category category) {
+    private long saveData2DB(String label, int photosNumber, int sort, boolean isCheck) {
         SQLiteDatabase db = mNotesSQLite.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put("label", category.getLabel());
-        contentValues.put("showLabel", category.getShowLabel());
-        contentValues.put("photosNumber", category.getPhotosNumber());
-        contentValues.put("isCheck", category.isCheck() ? 1 : 0);
-        contentValues.put("sort", category.getSort());
+        contentValues.put("label", label);
+        contentValues.put("photosNumber", photosNumber);
+        contentValues.put("isCheck", isCheck ? 1 : 0);
+        contentValues.put("sort", sort);
         long id = db.insert(NotesSQLite.TABLE_CATEGORY, null, contentValues);
         db.close();
         return id;
@@ -336,7 +318,6 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
         SQLiteDatabase db = mNotesSQLite.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("label", category.getLabel());
-        contentValues.put("showLabel", category.getShowLabel());
         contentValues.put("photosNumber", category.getPhotosNumber());
         contentValues.put("isCheck", category.isCheck() ? 1 : 0);
         contentValues.put("sort", category.getSort());

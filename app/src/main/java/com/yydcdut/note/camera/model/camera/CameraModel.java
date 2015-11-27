@@ -38,16 +38,16 @@ public class CameraModel extends AbsCameraModel {
     private Context mContext;
     private SettingModel mSettingModel;
     private FocusModel mFocusModel;
-    private String mCategory;
+    private int mCategoryId;
 
 
     private int mViewWidth;
     private int mViewHeight;
 
-    public CameraModel(Context context, SurfaceHolder surfaceHolder, String category) {
+    public CameraModel(Context context, SurfaceHolder surfaceHolder, int categoryId) {
         mContext = context;
         mSurfaceHolder = surfaceHolder;
-        mCategory = category;
+        mCategoryId = categoryId;
     }
 
 
@@ -167,7 +167,7 @@ public class CameraModel extends AbsCameraModel {
         if (getFocusModel().getFocusState() != ICameraFocus.FOCUS_STATE_FOCUSING && mCameraState == STATE_CAMERA_PREVIEW_NORMAL) {
             time = System.currentTimeMillis();
             try {
-                mCamera.takePicture(sound ? new SoundCallBack() : null, null, new PictureCallBack(time, mCategory, ratio));
+                mCamera.takePicture(sound ? new SoundCallBack() : null, null, new PictureCallBack(time, mCategoryId, ratio));
             } catch (RuntimeException e) {
                 Toast.makeText(mContext, mContext.getResources().getString(R.string.toast_fail), Toast.LENGTH_SHORT).show();
             }
@@ -182,18 +182,18 @@ public class CameraModel extends AbsCameraModel {
      */
     private class PictureCallBack implements Camera.PictureCallback {
         private long time;
-        private String category;
+        private int categoryId;
         private int ratio;
 
-        public PictureCallBack(long time, String category, int ratio) {
+        public PictureCallBack(long time, int categoryId, int ratio) {
             this.time = time;
-            this.category = category;
+            this.categoryId = categoryId;
             this.ratio = ratio;
         }
 
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
-            addData2Service(data, mCurrentCameraId, time, category, false, ratio);
+            addData2Service(data, mCurrentCameraId, time, categoryId, false, ratio);
             //这里经常崩溃，做个延时处理
             new Handler().postDelayed(new Runnable() {
                 @Override

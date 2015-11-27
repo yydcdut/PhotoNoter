@@ -46,7 +46,7 @@ public class DetailPagerAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         DetailFragment fragment = DetailFragment.newInstance();
         Bundle bundle = new Bundle();
-        bundle.putString(Const.CATEGORY_LABEL, mPhotoNoteGroup.get(position).getCategoryLabel());
+        bundle.putInt(Const.CATEGORY_ID_4_PHOTNOTES, mPhotoNoteGroup.get(position).getCategoryId());
         bundle.putInt(Const.PHOTO_POSITION, position);
         bundle.putInt(Const.COMPARATOR_FACTORY, mComparator);
         fragment.setArguments(bundle);
