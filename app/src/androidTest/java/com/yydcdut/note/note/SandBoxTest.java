@@ -2,19 +2,104 @@ package com.yydcdut.note.note;
 
 import android.test.InstrumentationTestCase;
 
+import com.yydcdut.note.bean.SandExif;
+import com.yydcdut.note.bean.SandPhoto;
+import com.yydcdut.note.model.rx.RxSandBox;
+import com.yydcdut.note.utils.YLog;
+
+import rx.Subscriber;
+
 /**
  * Created by yuyidong on 15/11/6.
  */
 public class SandBoxTest extends InstrumentationTestCase {
+    private RxSandBox mRxSandBox;
 
-    public void testFind() {
-//        SandPhoto sandPhoto = new SandPhoto(1, new byte[]{1, 2, 3}, 1l, "0", "sss", false, 1, new SandExif(0, "s", "ss", 0, 0, 0, 1, "1", "1"));
-//        SandBoxDBModel.getInstance().save(sandPhoto);
-//        Log.i("yuyidong", SandBoxDBModel.getInstance().getAllNumber() + "    allNumber");
-//        Log.i("yuyidong", (Resources.getSystem().getInteger(com.android.internal.R.integer.config_cursorWindowSize) * 1024) + "  ");
-//        for (int i = 0; i < SandBoxDBModel.getInstance().getAllNumber(); i++) {
-//            Log.i("yuyidong", "1111114546546541651615315165313515");
-//            SandBoxDBModel.getInstance().findFirstOne();
-//        }
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        mRxSandBox = new RxSandBox(this.getInstrumentation().getTargetContext());
+    }
+
+    public void testSave() {
+        SandPhoto sandPhoto = new SandPhoto(SandPhoto.ID_NULL, 1l, "0", 1, false, 1, "111", 11, new SandExif(0, "s", "ss", 0, 0, 0, 1, "1", "1"));
+        mRxSandBox.saveOne(sandPhoto)
+                .subscribe(new Subscriber<SandPhoto>() {
+                    @Override
+                    public void onCompleted() {
+                        YLog.i("yuyidong", "onCompleted");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        YLog.i("yuyidong", "onError");
+
+                    }
+
+                    @Override
+                    public void onNext(SandPhoto sandPhoto) {
+                        YLog.i("yuyidong", sandPhoto.toString());
+                    }
+                });
+    }
+
+    public void testFindOneAndDelete() {
+        mRxSandBox.findFirstOne()
+                .subscribe(new Subscriber<SandPhoto>() {
+                    @Override
+                    public void onCompleted() {
+                        YLog.i("yuyidong", "onCompleted");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        YLog.i("yuyidong", "onError");
+
+                    }
+
+                    @Override
+                    public void onNext(SandPhoto sandPhoto) {
+                        YLog.i("yuyidong", sandPhoto.toString());
+                        mRxSandBox.deleteOne(sandPhoto)
+                                .subscribe(new Subscriber<Integer>() {
+                                    @Override
+                                    public void onCompleted() {
+                                        YLog.i("yuyidong", "onCompleted");
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        YLog.i("yuyidong", "onError");
+
+                                    }
+
+                                    @Override
+                                    public void onNext(Integer Integer) {
+                                        YLog.i("yuyidong", "Integer--->" + Integer);
+                                    }
+                                });
+                    }
+                });
+    }
+
+    public void testGetNumber() {
+        mRxSandBox.getNumber()
+                .subscribe(new Subscriber<Integer>() {
+                    @Override
+                    public void onCompleted() {
+                        YLog.i("yuyidong", "onCompleted");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        YLog.i("yuyidong", "onError");
+
+                    }
+
+                    @Override
+                    public void onNext(Integer Integer) {
+                        YLog.i("yuyidong", "Integer--->" + Integer);
+                    }
+                });
     }
 }
