@@ -55,34 +55,6 @@ public class CategoryDB extends AbsNotesDBModel {
         return list;
     }
 
-    /**
-     * 保存数据
-     *
-     * @param categories
-     * @return
-     */
-    public boolean save(Category... categories) {
-        SQLiteDatabase db = mNotesSQLite.getWritableDatabase();
-        db.beginTransaction();
-        try {
-            for (Category category : categories) {
-                ContentValues contentValues = new ContentValues();
-                contentValues.put("label", category.getLabel());
-                contentValues.put("photosNumber", category.getPhotosNumber());
-                contentValues.put("isCheck", category.isCheck() ? 1 : 0);
-                contentValues.put("sort", category.getSort());
-                long id = db.insert(NotesSQLite.TABLE_CATEGORY, null, contentValues);
-            }
-            db.setTransactionSuccessful();
-        } catch (Exception e) {
-            return false;
-        } finally {
-            db.endTransaction();
-            db.close();
-        }
-        return true;
-    }
-
     public long save(String label, int photosNumber, int sort, boolean isCheck) {
         SQLiteDatabase db = mNotesSQLite.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
