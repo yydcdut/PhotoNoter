@@ -5,7 +5,7 @@ import android.content.Context;
 import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.compare.ComparatorFactory;
-import com.yydcdut.note.model.sql.PhotoNoteDB;
+import com.yydcdut.note.model.dao.PhotoNoteDB;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -17,6 +17,7 @@ import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by yuyidong on 15/11/27.
@@ -42,6 +43,7 @@ public class RxPhotoNote {
      */
     public Observable<List<PhotoNote>> findByCategoryId(int categoryId, int comparatorFactory) {
         return Observable.just(categoryId)
+                .subscribeOn(Schedulers.io())
                 .map(integer -> mCache.get(integer))//通过categoryId从缓存中找到数据
                 .map(photoNoteList -> {//如果数据为空，从数据库中取数据，如果不为空，直接使用这数据，最后经过排序之后返回
                     if (photoNoteList == null) {
@@ -62,6 +64,7 @@ public class RxPhotoNote {
      */
     public Observable<List<PhotoNote>> refreshByCategoryId(int categoryId, int comparatorFactory) {
         return Observable.just(categoryId)
+                .subscribeOn(Schedulers.io())
                 .map(integer -> mPhotoNoteDB.findByCategoryId(integer))//通过categoryId从数据库中找到数据
                 .map(photoNoteList -> {//经过排序之后返回
                     sortList(photoNoteList, comparatorFactory);
@@ -71,8 +74,12 @@ public class RxPhotoNote {
     }
 
     public Observable<List<PhotoNote>> updatePhotoNotes(List<PhotoNote> photoNoteList) {
+        if (photoNoteList.size() == 0) {
+            throw new IllegalArgumentException("参数的长度为0");
+        }
         int categoryId = photoNoteList.get(0).getCategoryId();
         return Observable.from(photoNoteList)
+                .subscribeOn(Schedulers.io())
                 .map(photoNote1 -> mPhotoNoteDB.update(photoNote1))//更新
                 .map(integer -> categoryId)//得到CategoryId
                 .map(integer1 -> mCache.get(integer1));//返回数据
@@ -81,6 +88,7 @@ public class RxPhotoNote {
 
     public Observable<List<PhotoNote>> updatePhotoNote(PhotoNote photoNote) {
         return Observable.just(photoNote)
+                .subscribeOn(Schedulers.io())
                 .map(photoNote1 -> mPhotoNoteDB.update(photoNote1))//更新
                 .map(integer -> photoNote.getCategoryId())//得到CategoryId
                 .map(integer1 -> mCache.get(integer1));//返回数据
@@ -89,6 +97,7 @@ public class RxPhotoNote {
 
     public Observable<PhotoNote> savePhotoNotes(List<PhotoNote> photoNoteList) {
         return Observable.from(photoNoteList)
+                .subscribeOn(Schedulers.io())
                 .filter(photoNote1 -> photoNote1.getId() == PhotoNote.NO_ID)//确定这个是新的PhotoNote
                 .map(photoNote2 -> mPhotoNoteDB.save(photoNote2))//保存
                 .filter(aLong -> aLong != -1)//获取到ID
@@ -103,6 +112,7 @@ public class RxPhotoNote {
 
     public Observable<PhotoNote> savePhotoNote(PhotoNote photoNote) {
         return Observable.just(photoNote)
+                .subscribeOn(Schedulers.io())
                 .filter(photoNote1 -> photoNote1.getId() == PhotoNote.NO_ID)//确定这个是新的PhotoNote
                 .map(photoNote2 -> mPhotoNoteDB.save(photoNote2))//保存
                 .filter(aLong -> aLong != -1)//获取到ID
@@ -116,8 +126,12 @@ public class RxPhotoNote {
     }
 
     public Observable<List<PhotoNote>> deletePhotoNotes(List<PhotoNote> photoNoteList) {
+        if (photoNoteList.size() == 0) {
+            throw new IllegalArgumentException("参数的长度为0");
+        }
         int categoryId = photoNoteList.get(0).getCategoryId();
         return Observable.from(photoNoteList)
+                .subscribeOn(Schedulers.io())
                 .map(photoNote1 -> mPhotoNoteDB.delete(photoNote1))//做删除操作
                 .filter(integer -> integer > 0)//返回的是删除的条数
                 .map(integer1 -> {
@@ -131,6 +145,7 @@ public class RxPhotoNote {
     public Observable<List<PhotoNote>> deletePhotoNote(PhotoNote photoNote) {
         int categoryId = photoNote.getCategoryId();
         return Observable.just(photoNote)
+                .subscribeOn(Schedulers.io())
                 .map(photoNote1 -> mPhotoNoteDB.delete(photoNote1))//做删除操作
                 .filter(integer -> integer > 0)//返回的是删除的条数
                 .map(integer1 -> {

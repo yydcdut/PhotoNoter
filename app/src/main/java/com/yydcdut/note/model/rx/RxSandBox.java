@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.yydcdut.note.bean.SandPhoto;
 import com.yydcdut.note.injector.ContextLife;
-import com.yydcdut.note.model.sql.SandBoxDB;
+import com.yydcdut.note.model.dao.SandBoxDB;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

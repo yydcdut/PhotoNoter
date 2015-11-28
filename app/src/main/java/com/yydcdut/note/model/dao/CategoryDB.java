@@ -1,4 +1,4 @@
-package com.yydcdut.note.model.sql;
+package com.yydcdut.note.model.dao;
 
 import android.content.ContentValues;
 import android.content.Context;

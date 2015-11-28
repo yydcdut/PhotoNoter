@@ -4,9 +4,9 @@ import android.content.Context;
 
 import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.injector.ContextLife;
+import com.yydcdut.note.model.dao.CategoryDB;
 import com.yydcdut.note.model.rx.exception.LabelExistException;
 import com.yydcdut.note.model.rx.exception.NotExistCategoryException;
-import com.yydcdut.note.model.sql.CategoryDB;
 
 import java.util.List;
 
