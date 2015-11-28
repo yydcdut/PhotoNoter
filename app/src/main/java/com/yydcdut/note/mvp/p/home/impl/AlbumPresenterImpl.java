@@ -10,6 +10,10 @@ import android.text.TextUtils;
 import com.yydcdut.note.R;
 import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.bean.PhotoNote;
+import com.yydcdut.note.bus.CategoryCreateEvent;
+import com.yydcdut.note.bus.CategoryMoveEvent;
+import com.yydcdut.note.bus.PhotoNoteCreateEvent;
+import com.yydcdut.note.bus.PhotoNoteDeleteEvent;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.CategoryDBModel;
 import com.yydcdut.note.model.PhotoNoteDBModel;
@@ -33,6 +37,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import javax.inject.Inject;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by yuyidong on 15/11/20.
@@ -170,6 +176,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
             int changedNumber = doChangeCategory(toCategoryId);
             mPhotoNoteList = mPhotoNoteDBModel.findByCategoryLabelByForce(mCategoryId, mAlbumSortKind);
             mCategoryDBModel.updateChangeCategory(mCategoryId, toCategoryId, changedNumber);
+            EventBus.getDefault().post(new CategoryMoveEvent());
         }
     }
 
@@ -191,6 +198,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
         int times = 0;
         for (Map.Entry<Integer, PhotoNote> entry : map.entrySet()) {
             mPhotoNoteDBModel.delete(entry.getValue());
+            EventBus.getDefault().post(new PhotoNoteDeleteEvent());
             mPhotoNoteList.remove(entry.getValue());
             mAlbumView.notifyItemRemoved(entry.getKey() - times);
             times++;
@@ -202,6 +210,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
         int totalNumber = mCategoryDBModel.findAll().size();
         if (!TextUtils.isEmpty(newCategoryLabel)) {
             long id = mCategoryDBModel.saveCategory(newCategoryLabel, 0, totalNumber, true);
+            EventBus.getDefault().post(new CategoryCreateEvent());
             if (id > 0) {
                 Category category = mCategoryDBModel.findByCategoryId((int) id);
                 mAlbumView.changeActivityListMenuCategoryChecked(category);
@@ -270,6 +279,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
                 FilePathUtils.saveSmallPhotoFromBigPhoto(photoNote);
                 photoNote.setPaletteColor(UiHelper.getPaletteColor(ImageLoaderManager.loadImageSync(photoNote.getBigPhotoPathWithFile())));
                 mPhotoNoteDBModel.save(photoNote);
+                EventBus.getDefault().post(new PhotoNoteCreateEvent());
                 mHandler.sendEmptyMessage(MSG_UPDATE_DATA);
             }
         });
@@ -293,6 +303,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
         FilePathUtils.saveSmallPhotoFromBigPhoto(photoNote);
         photoNote.setPaletteColor(UiHelper.getPaletteColor(ImageLoaderManager.loadImageSync(photoNote.getBigPhotoPathWithFile())));
         mPhotoNoteDBModel.save(photoNote);
+        EventBus.getDefault().post(new PhotoNoteCreateEvent());
         mHandler.sendEmptyMessage(MSG_UPDATE_DATA);
     }
 

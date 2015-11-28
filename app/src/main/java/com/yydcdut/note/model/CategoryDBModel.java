@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.injector.ContextLife;
-import com.yydcdut.note.model.observer.CategoryChangedObserver;
 import com.yydcdut.note.model.observer.IObserver;
 import com.yydcdut.note.model.sqlite.NotesSQLite;
 import com.yydcdut.note.utils.ThreadExecutorPool;
@@ -23,7 +22,6 @@ import javax.inject.Singleton;
  * 只允许在AlbumFragment、HomeActivity和EditCategoryActivity中调用
  */
 public class CategoryDBModel extends AbsNotesDBModel implements IModel {
-    private List<CategoryChangedObserver> mCategoryChangedObservers = new ArrayList<>();
 
     private List<Category> mCache;
 
@@ -43,19 +41,11 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
 
     @Override
     public boolean addObserver(IObserver iObserver) {
-        if (iObserver instanceof CategoryChangedObserver) {
-            mCategoryChangedObservers.add((CategoryChangedObserver) iObserver);
-            return true;
-        }
         return false;
     }
 
     @Override
     public boolean removeObserver(IObserver iObserver) {
-        if (iObserver instanceof CategoryChangedObserver) {
-            mCategoryChangedObservers.remove((CategoryChangedObserver) iObserver);
-            return true;
-        }
         return false;
     }
 
@@ -142,7 +132,6 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
         if (id >= 0) {
             refresh();
         }
-        doObserver(IObserver.OBSERVER_CATEGORY_CREATE);
         return id;
     }
 
@@ -182,7 +171,6 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
         update(targetCategory, false);
         oldCategory.setPhotosNumber(oldCategory.getPhotosNumber() - changeNumber);
         update(oldCategory);
-        doObserver(IObserver.OBSERVER_CATEGORY_MOVE);
     }
 
     /**
@@ -202,7 +190,6 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
         if (bool) {
             refresh();
         }
-        doObserver(IObserver.OBSERVER_CATEGORY_RENAME);
         return bool;
     }
 
@@ -236,7 +223,6 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
             bool &= updateData2DB(category);
         }
         refresh();
-        doObserver(IObserver.OBSERVER_CATEGORY_SORT);
         return bool;
     }
 
@@ -249,7 +235,6 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
         final String label = category.getLabel();
         mCache.remove(category);
         deleteData2DB(category);
-        doObserver(IObserver.OBSERVER_CATEGORY_DELETE);
         deletePhotoNotes(category.getId());
     }
 
@@ -282,7 +267,6 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
         if (bool && refresh) {
             refresh();
         }
-        doObserver(IObserver.OBSERVER_CATEGORY_UPDATE);
         return bool;
     }
 
@@ -321,12 +305,6 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
         int rows = db.update(NotesSQLite.TABLE_CATEGORY, contentValues, "_id = ?", new String[]{category.getId() + ""});
         db.close();
         return rows >= 0;
-    }
-
-    private void doObserver(int CRUD) {
-        for (CategoryChangedObserver observer : mCategoryChangedObservers) {
-            observer.onUpdate(CRUD);
-        }
     }
 
 }

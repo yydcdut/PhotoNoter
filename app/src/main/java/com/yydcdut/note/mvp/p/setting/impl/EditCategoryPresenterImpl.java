@@ -6,6 +6,9 @@ import android.os.Message;
 
 import com.yydcdut.note.R;
 import com.yydcdut.note.bean.Category;
+import com.yydcdut.note.bus.CategoryDeleteEvent;
+import com.yydcdut.note.bus.CategoryRenameEvent;
+import com.yydcdut.note.bus.CategorySortEvent;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.CategoryDBModel;
 import com.yydcdut.note.mvp.IView;
@@ -20,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by yuyidong on 15/11/15.
@@ -97,6 +102,7 @@ public class EditCategoryPresenterImpl implements IEditCategoryPresenter, Handle
                 renameCategories();
                 deleteCategories();
                 mCategoryDBModel.updateOrder(mCategoryList);
+                EventBus.getDefault().post(new CategorySortEvent());
                 mHandler.sendEmptyMessage(1);
             }
         });
@@ -115,6 +121,7 @@ public class EditCategoryPresenterImpl implements IEditCategoryPresenter, Handle
                 String newLabel = entry.getValue();
                 mCategoryDBModel.refresh();
                 mCategoryDBModel.updateLabel(categoryId, newLabel);
+                EventBus.getDefault().post(new CategoryRenameEvent());
             }
         }
     }
@@ -129,6 +136,7 @@ public class EditCategoryPresenterImpl implements IEditCategoryPresenter, Handle
                 Category category = mCategoryDBModel.findByCategoryId(id);
                 boolean isCheck = category.isCheck();
                 mCategoryDBModel.delete(category);
+                EventBus.getDefault().post(new CategoryDeleteEvent());
                 if (isCheck) {//如果是menu中当前选中的这个
                     resetAllCategoriesCheck();
                     if (mCategoryList.size() > 0) {

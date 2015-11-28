@@ -100,6 +100,7 @@ dependencies {
     apt 'com.google.dagger:dagger-compiler:2.0'
     compile 'io.reactivex:rxandroid:1.0.1'
     compile 'io.reactivex:rxjava:1.0.14'
+    compile 'de.greenrobot:eventbus:3.0.0-beta1'
     provided 'org.glassfish:javax.annotation:10.0-b28'
     compile files('src/libs/umeng-analytics-v5.5.3.jar')
     compile files('src/libs/mta-sdk-1.6.2.jar')

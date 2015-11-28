@@ -9,7 +9,6 @@ import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.compare.ComparatorFactory;
 import com.yydcdut.note.model.observer.IObserver;
-import com.yydcdut.note.model.observer.PhotoNoteChangedObserver;
 import com.yydcdut.note.model.sqlite.NotesSQLite;
 import com.yydcdut.note.utils.FilePathUtils;
 
@@ -28,7 +27,6 @@ import javax.inject.Singleton;
  * //todo DAO设计模式
  */
 public class PhotoNoteDBModel extends AbsNotesDBModel implements IModel {
-    private List<PhotoNoteChangedObserver> mPhotoNoteChangedObservers = new ArrayList<>();
 
     private Map<Integer, List<PhotoNote>> mCache = new HashMap<>();
 
@@ -40,19 +38,11 @@ public class PhotoNoteDBModel extends AbsNotesDBModel implements IModel {
 
     @Override
     public boolean addObserver(IObserver iObserver) {
-        if (iObserver instanceof PhotoNoteChangedObserver) {
-            mPhotoNoteChangedObservers.add((PhotoNoteChangedObserver) iObserver);
-            return true;
-        }
         return false;
     }
 
     @Override
     public boolean removeObserver(IObserver iObserver) {
-        if (iObserver instanceof PhotoNoteChangedObserver) {
-            mPhotoNoteChangedObservers.remove((PhotoNoteChangedObserver) iObserver);
-            return true;
-        }
         return false;
     }
 
@@ -85,7 +75,6 @@ public class PhotoNoteDBModel extends AbsNotesDBModel implements IModel {
     public boolean update(PhotoNote photoNote, boolean refresh) {
         boolean bool = updateData2DB(photoNote);
         if (bool) {
-            doObserver(IObserver.OBSERVER_PHOTONOTE_UPDATE, photoNote.getCategoryId());
         }
         if (refresh) {
             refreshCache(photoNote.getCategoryId());
@@ -97,10 +86,8 @@ public class PhotoNoteDBModel extends AbsNotesDBModel implements IModel {
         boolean bool = true;
         if (isSaved(photoNote)) {
             bool &= updateData2DB(photoNote);
-            doObserver(IObserver.OBSERVER_PHOTONOTE_UPDATE, photoNote.getCategoryId());
         } else {
             bool &= saveData2DB(photoNote) >= 0;
-            doObserver(IObserver.OBSERVER_PHOTONOTE_CREATE, photoNote.getCategoryId());
         }
         if (bool) {
             bool &= refreshCache(photoNote.getCategoryId());
@@ -112,7 +99,6 @@ public class PhotoNoteDBModel extends AbsNotesDBModel implements IModel {
         mCache.get(photoNote.getCategoryId()).remove(photoNote);
         //注意 java.util.ConcurrentModificationException
         deleteData2DB(photoNote);
-        doObserver(IObserver.OBSERVER_PHOTONOTE_DELETE, photoNote.getCategoryId());
         FilePathUtils.deleteAllFiles(photoNote.getPhotoName());
     }
 
@@ -142,12 +128,6 @@ public class PhotoNoteDBModel extends AbsNotesDBModel implements IModel {
             delete(wait4Delete.get(i));
         }
         mCache.remove(categoryId);
-    }
-
-    private void doObserver(int CRUD, int categoryId) {
-        for (PhotoNoteChangedObserver observer : mPhotoNoteChangedObservers) {
-            observer.onUpdate(CRUD, categoryId);
-        }
     }
 
     private List<PhotoNote> findDataByCategoryId2DB(int categoryId) {
