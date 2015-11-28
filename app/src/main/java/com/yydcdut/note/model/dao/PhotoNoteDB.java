@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.model.AbsNotesDBModel;
-import com.yydcdut.note.model.observer.IObserver;
 import com.yydcdut.note.model.sqlite.NotesSQLite;
 
 import java.util.ArrayList;
@@ -23,16 +22,6 @@ public class PhotoNoteDB extends AbsNotesDBModel {
 
     public PhotoNoteDB(Context context) {
         super(context);
-    }
-
-    @Override
-    public boolean addObserver(IObserver iObserver) {
-        return false;
-    }
-
-    @Override
-    public boolean removeObserver(IObserver iObserver) {
-        return false;
     }
 
     public List<PhotoNote> findByCategoryId(int categoryId) {

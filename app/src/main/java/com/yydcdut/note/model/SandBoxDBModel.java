@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import com.yydcdut.note.bean.SandExif;
 import com.yydcdut.note.bean.SandPhoto;
 import com.yydcdut.note.injector.ContextLife;
-import com.yydcdut.note.model.observer.IObserver;
 import com.yydcdut.note.model.sqlite.SandSQLite;
 
 import javax.inject.Inject;
@@ -19,7 +18,7 @@ import javax.inject.Singleton;
  * 不要有cache，因为这个db随时都在变
  * 记住关DB，关Cursor
  */
-public class SandBoxDBModel implements IModel {
+public class SandBoxDBModel {
     private static final String NAME = "SandBox.db";
     private static final int VERSION = 4;
 
@@ -130,16 +129,4 @@ public class SandBoxDBModel implements IModel {
         db.close();
         return number;
     }
-
-
-    @Override
-    public boolean addObserver(IObserver iObserver) {
-        return false;
-    }
-
-    @Override
-    public boolean removeObserver(IObserver iObserver) {
-        return false;
-    }
-
 }

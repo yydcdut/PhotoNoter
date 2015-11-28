@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.compare.ComparatorFactory;
-import com.yydcdut.note.model.observer.IObserver;
 import com.yydcdut.note.model.sqlite.NotesSQLite;
 import com.yydcdut.note.utils.FilePathUtils;
 
@@ -26,7 +25,7 @@ import javax.inject.Singleton;
  * 先进行数据库操作，然后再操作动画之类的
  * //todo DAO设计模式
  */
-public class PhotoNoteDBModel extends AbsNotesDBModel implements IModel {
+public class PhotoNoteDBModel extends AbsNotesDBModel {
 
     private Map<Integer, List<PhotoNote>> mCache = new HashMap<>();
 
@@ -34,16 +33,6 @@ public class PhotoNoteDBModel extends AbsNotesDBModel implements IModel {
     @Inject
     public PhotoNoteDBModel(@ContextLife("Application") Context context) {
         super(context);
-    }
-
-    @Override
-    public boolean addObserver(IObserver iObserver) {
-        return false;
-    }
-
-    @Override
-    public boolean removeObserver(IObserver iObserver) {
-        return false;
     }
 
     public List<PhotoNote> findByCategoryId(int categoryId, int comparatorFactory) {

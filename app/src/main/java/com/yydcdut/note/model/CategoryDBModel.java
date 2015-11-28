@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.injector.ContextLife;
-import com.yydcdut.note.model.observer.IObserver;
 import com.yydcdut.note.model.sqlite.NotesSQLite;
 import com.yydcdut.note.utils.ThreadExecutorPool;
 
@@ -21,7 +20,7 @@ import javax.inject.Singleton;
  * Created by yuyidong on 15/7/17.
  * 只允许在AlbumFragment、HomeActivity和EditCategoryActivity中调用
  */
-public class CategoryDBModel extends AbsNotesDBModel implements IModel {
+public class CategoryDBModel extends AbsNotesDBModel {
 
     private List<Category> mCache;
 
@@ -37,16 +36,6 @@ public class CategoryDBModel extends AbsNotesDBModel implements IModel {
         mPhotoNoteDBModel = photoNoteDBModel;
         mThreadExecutorPool = threadExecutorPool;
         findAll();
-    }
-
-    @Override
-    public boolean addObserver(IObserver iObserver) {
-        return false;
-    }
-
-    @Override
-    public boolean removeObserver(IObserver iObserver) {
-        return false;
     }
 
     public List<Category> findAll() {
