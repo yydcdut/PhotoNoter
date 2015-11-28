@@ -15,9 +15,7 @@ public class ComparatorFactory {
     public static final int FACTORY_EDITED_FAR = 3;
     public static final int FACTORY_EDITED_CLOSE = 4;
 
-
     public static Comparator<PhotoNote> get(int factory) {
-
         switch (factory) {
             case FACTORY_CREATE_FAR:
                 return new CreateFarComparable();

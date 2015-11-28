@@ -10,10 +10,11 @@ import java.util.Random;
  * Created by yyd on 15-3-29.
  */
 public class PhotoNote implements IObject {
+    public static final int NO_ID = -1;
     /**
      * ID
      */
-    private int id;
+    private int id = NO_ID;
     /**
      * 名字
      */
@@ -62,6 +63,7 @@ public class PhotoNote implements IObject {
     public PhotoNote(String photoName, long createdPhotoTime, long editedPhotoTime,
                      String title, String content, long createdNoteTime,
                      long editedNoteTime, int categoryId) {
+        this.id = NO_ID;
         this.photoName = photoName;
         this.createdPhotoTime = createdPhotoTime;
         this.editedPhotoTime = editedPhotoTime;
@@ -194,5 +196,23 @@ public class PhotoNote implements IObject {
         if (paletteColor != Color.WHITE) {
             mPaletteColor = paletteColor;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "PhotoNote{" +
+                "id=" + id +
+                ", photoName='" + photoName + '\'' +
+                ", createdPhotoTime=" + createdPhotoTime +
+                ", editedPhotoTime=" + editedPhotoTime +
+                ", isSelected=" + isSelected +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", createdNoteTime=" + createdNoteTime +
+                ", editedNoteTime=" + editedNoteTime +
+                ", categoryId=" + categoryId +
+                ", tag=" + tag +
+                ", mPaletteColor=" + mPaletteColor +
+                '}';
     }
 }
