@@ -26,15 +26,13 @@ import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechRecognizer;
 import com.yydcdut.note.R;
-import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.listener.OnSnackBarActionListener;
-import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.model.UserCenter;
+import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.note.IEditTextPresenter;
 import com.yydcdut.note.mvp.v.note.IEditTextView;
-import com.yydcdut.note.utils.ThreadExecutorPool;
 import com.yydcdut.note.utils.YLog;
 
 import org.json.JSONArray;
@@ -53,18 +51,20 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
+
 /**
  * Created by yuyidong on 15/11/15.
  */
 public class EditTextPresenterImpl implements IEditTextPresenter, Handler.Callback {
     private static final String TAG = EditTextPresenterImpl.class.getSimpleName();
     private Context mContext;
-    private PhotoNoteDBModel mPhotoNoteDBModel;
+    private RxPhotoNote mRxPhotoNote;
     private UserCenter mUserCenter;
-    private ThreadExecutorPool mThreadExecutorPool;
     private IEditTextView mEditTextView;
     /* 数据 */
-    private PhotoNote mPhotoNote;
+    private int mCategoryId;
     private int mPosition;
     private int mComparator;
 
@@ -87,49 +87,62 @@ public class EditTextPresenterImpl implements IEditTextPresenter, Handler.Callba
     private boolean mIsVoiceOpen = false;
 
     @Inject
-    public EditTextPresenterImpl(@ContextLife("Activity") Context context, PhotoNoteDBModel photoNoteDBModel,
-                                 UserCenter userCenter, ThreadExecutorPool threadExecutorPool) {
-        mPhotoNoteDBModel = photoNoteDBModel;
+    public EditTextPresenterImpl(@ContextLife("Activity") Context context, RxPhotoNote rxPhotoNote,
+                                 UserCenter userCenter) {
+        mRxPhotoNote = rxPhotoNote;
         mUserCenter = userCenter;
         mHandler = new Handler(this);
         mContext = context;
-        mThreadExecutorPool = threadExecutorPool;
         mIatResults = new LinkedHashMap<>();
     }
 
     @Override
     public void attachView(IView iView) {
         mEditTextView = (IEditTextView) iView;
-        mEditTextView.setNoteTitle(mPhotoNote.getTitle());
-        mEditTextView.setNoteContent(mPhotoNote.getContent());
+        mRxPhotoNote.findByCategoryId(mCategoryId, mComparator)
+                .map(photoNoteList -> photoNoteList.get(mPosition))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(photoNote -> {
+                    mEditTextView.setNoteTitle(photoNote.getTitle());
+                    mEditTextView.setNoteContent(photoNote.getContent());
+                });
     }
 
     @Override
     public void bindData(int categoryId, int position, int comparator) {
+        mCategoryId = categoryId;
         mPosition = position;
         mComparator = comparator;
-        mPhotoNote = mPhotoNoteDBModel.findByCategoryId(categoryId, mComparator).get(mPosition);
     }
 
     @Override
     public void saveText() {
-        mPhotoNote.setTitle(mEditTextView.getNoteTitle());
-        mPhotoNote.setContent(mEditTextView.getNoteContent());
-        mPhotoNote.setEditedNoteTime(System.currentTimeMillis());
-        mPhotoNoteDBModel.update(mPhotoNote);
+        mRxPhotoNote.findByCategoryId(mCategoryId, mComparator)
+                .map(photoNoteList -> photoNoteList.get(mPosition))
+                .subscribe(photoNote -> {
+                    photoNote.setTitle(mEditTextView.getNoteTitle());
+                    photoNote.setContent(mEditTextView.getNoteContent());
+                    photoNote.setEditedNoteTime(System.currentTimeMillis());
+                    mRxPhotoNote.savePhotoNote(photoNote).subscribe();
+                });
     }
 
     @Override
     public void update2Evernote() {
         if (mUserCenter.isLoginEvernote()) {
-            mEditTextView.showProgressBar();
-            mThreadExecutorPool.getExecutorPool().submit(new Runnable() {
-                @Override
-                public void run() {
-                    boolean isSuccess = doUpdate2Evernote();
-                    mHandler.sendEmptyMessage(isSuccess ? MSG_SUCCESS : MSG_NOT_SUCCESS);
-                }
-            });
+            mRxPhotoNote.findByCategoryId(mCategoryId, mComparator)
+                    .map(photoNoteList -> photoNoteList.get(mPosition))
+                    .doOnSubscribe(new Action0() {//todo // FIXME: 15/11/29 lambda
+                        @Override
+                        public void call() {
+                            mEditTextView.showProgressBar();
+                        }
+                    })
+                    .subscribeOn(AndroidSchedulers.mainThread())
+                    .subscribe(photoNote -> {
+                        boolean isSuccess = doUpdate2Evernote(photoNote.getBigPhotoPathWithoutFile(), photoNote.getPhotoName());
+                        mHandler.sendEmptyMessage(isSuccess ? MSG_SUCCESS : MSG_NOT_SUCCESS);
+                    });
         } else {
             mEditTextView.showSnakeBar(mContext.getResources().getString(R.string.not_login));
         }
@@ -138,7 +151,7 @@ public class EditTextPresenterImpl implements IEditTextPresenter, Handler.Callba
     @Override
     public void finishActivity(boolean saved) {
         mIsFinishing = true;
-        mEditTextView.finishActivityWithAnimation(saved, mPhotoNote.getCategoryId(), mPosition, mComparator);
+        mEditTextView.finishActivityWithAnimation(saved, mCategoryId, mPosition, mComparator);
     }
 
     @Override
@@ -335,7 +348,7 @@ public class EditTextPresenterImpl implements IEditTextPresenter, Handler.Callba
         return false;
     }
 
-    private boolean doUpdate2Evernote() {
+    private boolean doUpdate2Evernote(String bigPhotoPathWithoutFile, String photoName) {
         boolean isSuccess = true;
         try {
             EvernoteNoteStoreClient noteStoreClient = EvernoteSession.getInstance().getEvernoteClientFactory().getNoteStoreClient();
@@ -362,11 +375,11 @@ public class EditTextPresenterImpl implements IEditTextPresenter, Handler.Callba
             InputStream in = null;
             try {
                 // Hash the data in the image file. The hash is used to reference the file in the ENML note content.
-                in = new BufferedInputStream(new FileInputStream(mPhotoNote.getBigPhotoPathWithoutFile()));
+                in = new BufferedInputStream(new FileInputStream(bigPhotoPathWithoutFile));
                 FileData data = null;
-                data = new FileData(EvernoteUtil.hash(in), new File(mPhotoNote.getBigPhotoPathWithoutFile()));
+                data = new FileData(EvernoteUtil.hash(in), new File(bigPhotoPathWithoutFile));
                 ResourceAttributes attributes = new ResourceAttributes();
-                attributes.setFileName(mPhotoNote.getPhotoName());
+                attributes.setFileName(photoName);
 
                 // Create a new Resource
                 Resource resource = new Resource();

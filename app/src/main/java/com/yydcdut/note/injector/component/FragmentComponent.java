@@ -6,10 +6,10 @@ import android.content.Context;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.injector.PerFragment;
 import com.yydcdut.note.injector.module.FragmentModule;
-import com.yydcdut.note.model.CategoryDBModel;
-import com.yydcdut.note.model.PhotoNoteDBModel;
-import com.yydcdut.note.model.SandBoxDBModel;
 import com.yydcdut.note.model.UserCenter;
+import com.yydcdut.note.model.rx.RxCategory;
+import com.yydcdut.note.model.rx.RxPhotoNote;
+import com.yydcdut.note.model.rx.RxSandBox;
 import com.yydcdut.note.mvp.v.home.impl.AlbumFragment;
 import com.yydcdut.note.mvp.v.login.impl.UserDetailFragment;
 import com.yydcdut.note.mvp.v.note.impl.DetailFragment;
@@ -32,11 +32,11 @@ public interface FragmentComponent {
 
     Activity getActivity();
 
-    CategoryDBModel getCategoryDBModel();
+    RxCategory getRxCategory();
 
-    PhotoNoteDBModel getPhotoNoteDBModel();
+    RxPhotoNote getRxPhotoNote();
 
-    SandBoxDBModel getSandBoxDBModel();
+    RxSandBox getRxSandBox();
 
     UserCenter getUserCenter();
 

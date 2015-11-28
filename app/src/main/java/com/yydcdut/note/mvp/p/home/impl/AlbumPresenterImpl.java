@@ -4,7 +4,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
 
 import com.yydcdut.note.R;
@@ -15,73 +14,66 @@ import com.yydcdut.note.bus.CategoryMoveEvent;
 import com.yydcdut.note.bus.PhotoNoteCreateEvent;
 import com.yydcdut.note.bus.PhotoNoteDeleteEvent;
 import com.yydcdut.note.injector.ContextLife;
-import com.yydcdut.note.model.CategoryDBModel;
-import com.yydcdut.note.model.PhotoNoteDBModel;
-import com.yydcdut.note.model.SandBoxDBModel;
 import com.yydcdut.note.model.compare.ComparatorFactory;
+import com.yydcdut.note.model.rx.RxCategory;
+import com.yydcdut.note.model.rx.RxPhotoNote;
+import com.yydcdut.note.model.rx.RxSandBox;
 import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.home.IAlbumPresenter;
 import com.yydcdut.note.mvp.v.home.IAlbumView;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.LocalStorageUtils;
-import com.yydcdut.note.utils.ThreadExecutorPool;
 import com.yydcdut.note.utils.UiHelper;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 
 /**
  * Created by yuyidong on 15/11/20.
  */
-public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
-    private static final int MSG_UPDATE_DATA = 100;
+public class AlbumPresenterImpl implements IAlbumPresenter {
 
     private IAlbumView mAlbumView;
 
-    private List<PhotoNote> mPhotoNoteList;
     private int mCategoryId = -1;
     private int mAlbumSortKind;
-
-    private Handler mHandler;
 
     private Context mContext;
 
     private LocalStorageUtils mLocalStorageUtils;
-    private PhotoNoteDBModel mPhotoNoteDBModel;
-    private SandBoxDBModel mSandBoxDBModel;
-    private CategoryDBModel mCategoryDBModel;
-    private ThreadExecutorPool mThreadExecutorPool;
+    private RxCategory mRxCategory;
+    private RxPhotoNote mRxPhotoNote;
+    private RxSandBox mRxSandBox;
 
     @Inject
-    public AlbumPresenterImpl(@ContextLife("Activity") Context context, PhotoNoteDBModel photoNoteDBModel,
-                              CategoryDBModel categoryDBModel, SandBoxDBModel sandBoxDBModel,
-                              LocalStorageUtils localStorageUtils, ThreadExecutorPool threadExecutorPool) {
+    public AlbumPresenterImpl(@ContextLife("Activity") Context context, RxCategory rxCategory,
+                              RxPhotoNote rxPhotoNote, RxSandBox rxSandBox,
+                              LocalStorageUtils localStorageUtils) {
 
-        mHandler = new Handler(this);
         mContext = context;
-        mPhotoNoteDBModel = photoNoteDBModel;
-        mCategoryDBModel = categoryDBModel;
-        mSandBoxDBModel = sandBoxDBModel;
+        mRxCategory = rxCategory;
+        mRxPhotoNote = rxPhotoNote;
+        mRxSandBox = rxSandBox;
         mLocalStorageUtils = localStorageUtils;
-        mThreadExecutorPool = threadExecutorPool;
         mAlbumSortKind = mLocalStorageUtils.getSortKind();
     }
 
     @Override
     public void attachView(IView iView) {
         mAlbumView = (IAlbumView) iView;
-        mPhotoNoteList = mPhotoNoteDBModel.findByCategoryId(mCategoryId, mAlbumSortKind);
-        mAlbumView.setAdapter(mPhotoNoteList);
+        mRxPhotoNote.findByCategoryId(mCategoryId, mAlbumSortKind)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(photoNoteList -> mAlbumView.setAdapter(photoNoteList));
     }
 
     @Override
@@ -98,14 +90,17 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
     public void checkSandBox() {
         /**
          * 主要针对于拍完照回到这个界面之后判断沙盒里面还要数据没
-         * 这里有延迟的原因是因为怕卡
          */
-        mHandler.postDelayed(new Runnable() {
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (mSandBoxDBModel.getAllNumber() > 0) {
-                    mAlbumView.startSandBoxService();
-                }
+                //todo RxJava有delay的方法，写这的时候还不知道怎么用，等重构完回来改
+                mRxSandBox.getNumber()
+                        .subscribe(integer -> {
+                            if (integer > 0) {
+                                mAlbumView.startSandBoxService();
+                            }
+                        });
             }
         }, 3000);
     }
@@ -137,8 +132,9 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
         //另外个进程发来广播的时候
         //todo  这里可以弄动画，需要计算的过程
         if (broadcast_process || broadcast_service) {
-            mPhotoNoteList = mPhotoNoteDBModel.findByCategoryId(mCategoryId, mAlbumSortKind);
-            mAlbumView.updateData(mPhotoNoteList);
+            mRxPhotoNote.findByCategoryId(mCategoryId, mAlbumSortKind)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(photoNoteList -> mAlbumView.updateData(photoNoteList));
         } else if (broadcast_photo) {
             mAlbumView.notifyDataSetChanged();
         }
@@ -146,165 +142,232 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
 
     @Override
     public void sortData() {
-        Collections.sort(mPhotoNoteList, ComparatorFactory.get(mAlbumSortKind));
-//        mAlbumView.updateData(mPhotoNoteList);
-        mAlbumView.notifyDataSetChanged();
+        mRxPhotoNote.findByCategoryId(mCategoryId, mAlbumSortKind)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(photoNoteList -> mAlbumView.notifyDataSetChanged());
     }
 
     @Override
     public void changeCategoryWithPhotos(int categoryId) {
         mCategoryId = categoryId;
-        mPhotoNoteList = mPhotoNoteDBModel.findByCategoryId(mCategoryId, mAlbumSortKind);
-        mAlbumView.updateData(mPhotoNoteList);
+        mRxPhotoNote.findByCategoryId(mCategoryId, mAlbumSortKind)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(photoNoteList -> mAlbumView.updateData(photoNoteList));
     }
 
     @Override
     public void movePhotos2AnotherCategory() {
-        List<Category> categoryList = mCategoryDBModel.findAll();
-        final String[] categoryIdStringArray = new String[categoryList.size()];
-        final String[] categoryLabelArray = new String[categoryList.size()];
-        for (int i = 0; i < categoryIdStringArray.length; i++) {
-            categoryIdStringArray[i] = categoryList.get(i).getId() + "";
-            categoryLabelArray[i] = categoryList.get(i).getLabel();
-        }
-        mAlbumView.showMovePhotos2AnotherCategoryDialog(categoryIdStringArray, categoryLabelArray);
+        mRxCategory.getAllCategories()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(categories -> {
+                    final String[] categoryIdStringArray = new String[categories.size()];
+                    final String[] categoryLabelArray = new String[categories.size()];
+                    for (int i = 0; i < categoryIdStringArray.length; i++) {
+                        categoryIdStringArray[i] = categories.get(i).getId() + "";
+                        categoryLabelArray[i] = categories.get(i).getLabel();
+                    }
+                    mAlbumView.showMovePhotos2AnotherCategoryDialog(categoryIdStringArray, categoryLabelArray);
+                });
     }
 
     @Override
     public void changePhotosCategory(int toCategoryId) {
         if (mCategoryId != toCategoryId) {
-            int changedNumber = doChangeCategory(toCategoryId);
-            mPhotoNoteList = mPhotoNoteDBModel.findByCategoryLabelByForce(mCategoryId, mAlbumSortKind);
-            mCategoryDBModel.updateChangeCategory(mCategoryId, toCategoryId, changedNumber);
-            EventBus.getDefault().post(new CategoryMoveEvent());
+            mRxPhotoNote.findByCategoryId(mCategoryId, mAlbumSortKind)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .map(photoNoteList -> {
+                        TreeMap<Integer, PhotoNote> map = getTreeMap();
+                        for (int i = 0; i < photoNoteList.size(); i++) {
+                            PhotoNote photoNote = photoNoteList.get(i);
+                            if (photoNote.isSelected()) {
+                                photoNote.setSelected(false);
+                                photoNote.setCategoryId(toCategoryId);
+                                map.put(i, photoNote);
+                            }
+                        }
+                        int times = 0;
+                        for (Map.Entry<Integer, PhotoNote> entry : map.entrySet()) {
+                            photoNoteList.remove(entry.getValue());
+                            mAlbumView.notifyItemRemoved(entry.getKey() - times);//todo 这个在这里合适吗？觉得严重的不合适
+                            mRxPhotoNote.updatePhotoNote(entry.getValue()).subscribe();
+                            times++;
+                        }
+                        return map.size();
+                    })
+                    .subscribe(integer -> {
+                        mRxCategory.updateChangeCategory(mCategoryId, toCategoryId, integer)
+                                .subscribe(categories -> EventBus.getDefault().post(new CategoryMoveEvent()));
+                    });
         }
     }
 
     @Override
     public void deletePhotos() {
         //注意java.util.ConcurrentModificationException at java.util.ArrayList$ArrayListIterator.next(ArrayList.java:573)
-        TreeMap<Integer, PhotoNote> map = new TreeMap<>(new Comparator<Integer>() {
+        mRxPhotoNote.findByCategoryId(mCategoryId, mAlbumSortKind)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(photoNoteList -> {
+                    TreeMap<Integer, PhotoNote> map = getTreeMap();
+                    for (int i = 0; i < photoNoteList.size(); i++) {
+                        PhotoNote photoNote = photoNoteList.get(i);
+                        if (photoNote.isSelected()) {
+                            map.put(i, photoNote);
+                        }
+                    }
+                    int times = 0;
+                    for (Map.Entry<Integer, PhotoNote> entry : map.entrySet()) {
+                        photoNoteList.remove(entry.getValue());
+                        mAlbumView.notifyItemRemoved(entry.getKey() - times);
+                        times++;
+                        mRxPhotoNote.deletePhotoNote(entry.getValue()).subscribe();
+                    }
+                    EventBus.getDefault().post(new PhotoNoteDeleteEvent());
+                });
+    }
+
+    /**
+     * 得到经过Key(Integer)的排序的map
+     *
+     * @return
+     */
+    private TreeMap<Integer, PhotoNote> getTreeMap() {
+        return new TreeMap<>(new Comparator<Integer>() {
             @Override
             public int compare(Integer lhs, Integer rhs) {
                 return lhs - rhs;
             }
         });
-        for (int i = 0; i < mPhotoNoteList.size(); i++) {
-            PhotoNote photoNote = mPhotoNoteList.get(i);
-            if (photoNote.isSelected()) {
-                map.put(i, photoNote);
-            }
-        }
-        int times = 0;
-        for (Map.Entry<Integer, PhotoNote> entry : map.entrySet()) {
-            mPhotoNoteDBModel.delete(entry.getValue());
-            EventBus.getDefault().post(new PhotoNoteDeleteEvent());
-            mPhotoNoteList.remove(entry.getValue());
-            mAlbumView.notifyItemRemoved(entry.getKey() - times);
-            times++;
-        }
     }
 
     @Override
     public void createCategory(String newCategoryLabel) {
-        int totalNumber = mCategoryDBModel.findAll().size();
-        if (!TextUtils.isEmpty(newCategoryLabel)) {
-            long id = mCategoryDBModel.saveCategory(newCategoryLabel, 0, totalNumber, true);
-            EventBus.getDefault().post(new CategoryCreateEvent());
-            if (id > 0) {
-                Category category = mCategoryDBModel.findByCategoryId((int) id);
-                mAlbumView.changeActivityListMenuCategoryChecked(category);
-            } else {
-                mAlbumView.showToast(mContext.getResources().getString(R.string.toast_fail));
-            }
-        } else {
-            mAlbumView.showToast(mContext.getResources().getString(R.string.toast_fail));
-        }
-    }
-
-    /**
-     * @param toNewCategoryId
-     * @return 变化了多少个
-     */
-    private int doChangeCategory(int toNewCategoryId) {
-        TreeMap<Integer, PhotoNote> map = new TreeMap<>(new Comparator<Integer>() {
-            @Override
-            public int compare(Integer lhs, Integer rhs) {
-                return lhs - rhs;
-            }
-        });
-        for (int i = 0; i < mPhotoNoteList.size(); i++) {
-            PhotoNote photoNote = mPhotoNoteList.get(i);
-            if (photoNote.isSelected()) {
-                photoNote.setSelected(false);
-                photoNote.setCategoryId(toNewCategoryId);
-                map.put(i, photoNote);
-            }
-        }
-        int times = 0;
-        int total = map.size();
-        for (Map.Entry<Integer, PhotoNote> entry : map.entrySet()) {
-            mPhotoNoteList.remove(entry.getValue());
-            mAlbumView.notifyItemRemoved(entry.getKey() - times);
-            if (times + 1 != total) {
-                mPhotoNoteDBModel.update(entry.getValue(), false);
-            } else {
-                mPhotoNoteDBModel.update(entry.getValue(), true);
-            }
-            times++;
-        }
-        return map.size();
+        mRxCategory.getAllCategories()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(categories -> {
+                    int totalNumber = categories.size();
+                    if (!TextUtils.isEmpty(newCategoryLabel)) {
+                        mRxCategory.saveCategory(newCategoryLabel, 0, totalNumber, true)
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(categories1 -> {
+                                    EventBus.getDefault().post(new CategoryCreateEvent());
+                                    boolean success = false;
+                                    for (Category category : categories1) {
+                                        if (category.getLabel().equals(newCategoryLabel)) {
+                                            mAlbumView.changeActivityListMenuCategoryChecked(category);
+                                            success = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!success) {
+                                        mAlbumView.showToast(mContext.getResources().getString(R.string.toast_fail));
+                                    }
+                                });
+                    } else {
+                        mAlbumView.showToast(mContext.getResources().getString(R.string.toast_fail));
+                    }
+                });
     }
 
 
     @Override
     public void savePhotoFromLocal(final Uri imageUri) {
-        mAlbumView.showProgressBar();
-        mThreadExecutorPool.getExecutorPool().execute(new Runnable() {
-            @Override
-            public void run() {
-                PhotoNote photoNote = new PhotoNote(System.currentTimeMillis() + ".jpg", System.currentTimeMillis(),
-                        System.currentTimeMillis(), "", "", System.currentTimeMillis(),
-                        System.currentTimeMillis(), mCategoryId);
-                ContentResolver cr = mContext.getContentResolver();
-                //复制大图
-                try {
-                    FilePathUtils.copyFile(cr.openInputStream(imageUri), photoNote.getBigPhotoPathWithoutFile());
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                //保存小图
-                FilePathUtils.saveSmallPhotoFromBigPhoto(photoNote);
-                photoNote.setPaletteColor(UiHelper.getPaletteColor(ImageLoaderManager.loadImageSync(photoNote.getBigPhotoPathWithFile())));
-                mPhotoNoteDBModel.save(photoNote);
-                EventBus.getDefault().post(new PhotoNoteCreateEvent());
-                mHandler.sendEmptyMessage(MSG_UPDATE_DATA);
-            }
-        });
+        PhotoNote photoNote = new PhotoNote(System.currentTimeMillis() + ".jpg", System.currentTimeMillis(),
+                System.currentTimeMillis(), "", "", System.currentTimeMillis(),
+                System.currentTimeMillis(), mCategoryId);
+        mRxPhotoNote.savePhotoNote(photoNote)
+                .map(photoNote1 -> {
+                    //复制大图
+                    ContentResolver cr = mContext.getContentResolver();
+                    try {
+                        FilePathUtils.copyFile(cr.openInputStream(imageUri), photoNote1.getBigPhotoPathWithoutFile());
+                        //保存小图
+                        FilePathUtils.saveSmallPhotoFromBigPhoto(photoNote1);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    photoNote1.setPaletteColor(UiHelper.getPaletteColor(ImageLoaderManager.loadImageSync(photoNote.getBigPhotoPathWithFile())));
+                    mRxPhotoNote.updatePhotoNote(photoNote1).subscribe();
+                    return photoNote1;
+                })
+                .doOnSubscribe(new Action0() {//TODO FIXME lambda
+                    @Override
+                    public void call() {
+                        mAlbumView.showProgressBar();
+                    }
+                })
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe(photoNote2 -> {
+                    EventBus.getDefault().post(new PhotoNoteCreateEvent());
+                    //因为是最新时间，即“图片创建事件”、“图片修改时间”、“笔记创建时间”、“笔记修改时间”，所以要么在最前面，要么在最后面//// TODO: 15/11/20 还是因时间来判断插入到哪里，所以要计算
+                    mRxPhotoNote.findByCategoryId(mCategoryId, mAlbumSortKind)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(photoNoteList -> {
+                                mAlbumView.updateData(photoNoteList);
+                                switch (mAlbumSortKind) {
+                                    case ComparatorFactory.FACTORY_CREATE_CLOSE:
+                                    case ComparatorFactory.FACTORY_EDITED_CLOSE:
+                                        mAlbumView.notifyItemInserted(photoNoteList.size() - 1);
+                                        break;
+                                    case ComparatorFactory.FACTORY_CREATE_FAR:
+                                    case ComparatorFactory.FACTORY_EDITED_FAR:
+                                        mAlbumView.notifyItemInserted(0);
+                                        break;
+                                }
+                                mAlbumView.hideProgressBar();
+                            });
+                });
     }
 
     @Override
     public void savePhotoFromSystemCamera() {
-        mAlbumView.showProgressBar();
         PhotoNote photoNote = new PhotoNote(System.currentTimeMillis() + ".jpg", System.currentTimeMillis(),
                 System.currentTimeMillis(), "", "", System.currentTimeMillis(),
                 System.currentTimeMillis(), mCategoryId);
-        //复制大图
-        try {
-            FilePathUtils.copyFile(FilePathUtils.getTempFilePath(), photoNote.getBigPhotoPathWithoutFile());
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        //保存小图
-        FilePathUtils.saveSmallPhotoFromBigPhoto(photoNote);
-        photoNote.setPaletteColor(UiHelper.getPaletteColor(ImageLoaderManager.loadImageSync(photoNote.getBigPhotoPathWithFile())));
-        mPhotoNoteDBModel.save(photoNote);
-        EventBus.getDefault().post(new PhotoNoteCreateEvent());
-        mHandler.sendEmptyMessage(MSG_UPDATE_DATA);
+        mRxPhotoNote.savePhotoNote(photoNote)
+                .map(photoNote1 -> {
+                    //复制大图
+                    try {
+                        FilePathUtils.copyFile(FilePathUtils.getTempFilePath(), photoNote1.getBigPhotoPathWithoutFile());
+                        //保存小图
+                        FilePathUtils.saveSmallPhotoFromBigPhoto(photoNote);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    photoNote1.setPaletteColor(UiHelper.getPaletteColor(ImageLoaderManager.loadImageSync(photoNote.getBigPhotoPathWithFile())));
+                    mRxPhotoNote.updatePhotoNote(photoNote1).subscribe();
+                    return photoNote1;
+                })
+                .doOnSubscribe(new Action0() {//todo // FIXME: 15/11/29 lambda
+                    @Override
+                    public void call() {
+                        mAlbumView.showProgressBar();
+                    }
+                })
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe(photoNote2 -> {
+                    EventBus.getDefault().post(new PhotoNoteCreateEvent());
+                    //因为是最新时间，即“图片创建事件”、“图片修改时间”、“笔记创建时间”、“笔记修改时间”，所以要么在最前面，要么在最后面//// TODO: 15/11/20 还是因时间来判断插入到哪里，所以要计算
+                    mRxPhotoNote.findByCategoryId(mCategoryId, mAlbumSortKind)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(photoNoteList -> {
+                                mAlbumView.updateData(photoNoteList);
+                                switch (mAlbumSortKind) {
+                                    case ComparatorFactory.FACTORY_CREATE_CLOSE:
+                                    case ComparatorFactory.FACTORY_EDITED_CLOSE:
+                                        mAlbumView.notifyItemInserted(photoNoteList.size() - 1);
+                                        break;
+                                    case ComparatorFactory.FACTORY_CREATE_FAR:
+                                    case ComparatorFactory.FACTORY_EDITED_FAR:
+                                        mAlbumView.notifyItemInserted(0);
+                                        break;
+                                }
+                                mAlbumView.hideProgressBar();
+                            });
+                });
     }
 
     @Override
@@ -321,32 +384,6 @@ public class AlbumPresenterImpl implements IAlbumPresenter, Handler.Callback {
         if (!FilePathUtils.isSDCardStoredEnough()) {
             mAlbumView.showToast(mContext.getResources().getString(R.string.no_space));
             return false;
-        }
-        return true;
-    }
-
-
-    @Override
-    public boolean handleMessage(Message msg) {
-        switch (msg.what) {
-            case MSG_UPDATE_DATA:
-                //因为是最新时间，即“图片创建事件”、“图片修改时间”、“笔记创建时间”、“笔记修改时间”，所以要么在最前面，要么在最后面//// TODO: 15/11/20 还是因时间来判断插入到哪里，所以要计算
-                mPhotoNoteList = mPhotoNoteDBModel.findByCategoryId(mCategoryId, mAlbumSortKind);
-                mAlbumView.updateData(mPhotoNoteList);
-                switch (mAlbumSortKind) {
-                    case ComparatorFactory.FACTORY_CREATE_CLOSE:
-                    case ComparatorFactory.FACTORY_EDITED_CLOSE:
-                        mAlbumView.notifyItemInserted(mPhotoNoteList.size() - 1);
-                        break;
-                    case ComparatorFactory.FACTORY_CREATE_FAR:
-                    case ComparatorFactory.FACTORY_EDITED_FAR:
-                        mAlbumView.notifyItemInserted(0);
-                        break;
-                }
-                mAlbumView.hideProgressBar();
-                break;
-            default:
-                break;
         }
         return true;
     }

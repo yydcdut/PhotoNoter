@@ -4,54 +4,52 @@ import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.bean.IUser;
 import com.yydcdut.note.bus.CategoryCreateEvent;
 import com.yydcdut.note.bus.CategoryDeleteEvent;
+import com.yydcdut.note.bus.CategoryEditEvent;
 import com.yydcdut.note.bus.CategoryMoveEvent;
-import com.yydcdut.note.bus.CategoryRenameEvent;
-import com.yydcdut.note.bus.CategorySortEvent;
 import com.yydcdut.note.bus.CategoryUpdateEvent;
 import com.yydcdut.note.bus.PhotoNoteCreateEvent;
 import com.yydcdut.note.bus.PhotoNoteDeleteEvent;
-import com.yydcdut.note.model.CategoryDBModel;
-import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.model.UserCenter;
+import com.yydcdut.note.model.compare.ComparatorFactory;
+import com.yydcdut.note.model.rx.RxCategory;
+import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.home.IHomePresenter;
 import com.yydcdut.note.mvp.v.home.IHomeView;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by yuyidong on 15/11/19.
  */
 public class HomePresenterImpl implements IHomePresenter {
     private IHomeView mHomeView;
-    private List<Category> mListData;
     /**
      * 当前的category的Id
      */
     private int mCategoryId = -1;
 
-    private CategoryDBModel mCategoryDBModel;
-    private PhotoNoteDBModel mPhotoNoteDBModel;
+    private RxCategory mRxCategory;
+    private RxPhotoNote mRxPhotoNote;
+
     private UserCenter mUserCenter;
 
     @Inject
-    public HomePresenterImpl(CategoryDBModel categoryDBModel, PhotoNoteDBModel photoNoteDBModel,
+    public HomePresenterImpl(RxCategory rxCategory, RxPhotoNote rxPhotoNote,
                              UserCenter userCenter) {
-        mCategoryDBModel = categoryDBModel;
-        mPhotoNoteDBModel = photoNoteDBModel;
+        mRxCategory = rxCategory;
+        mRxPhotoNote = rxPhotoNote;
         mUserCenter = userCenter;
     }
 
     @Override
     public void attachView(IView iView) {
         mHomeView = (IHomeView) iView;
-        mListData = mCategoryDBModel.findAll();
         EventBus.getDefault().register(this);
     }
 
@@ -70,36 +68,55 @@ public class HomePresenterImpl implements IHomePresenter {
     }
 
     @Override
-    public int getCheckCategoryPosition() {
-        List<Category> categoryList = mCategoryDBModel.findAll();
-        for (int i = 0; i < categoryList.size(); i++) {
-            if (categoryList.get(i).isCheck()) {
-                return i;
-            }
-        }
-        return 0;
+    public void setCheckCategoryPosition() {
+        //todo
+        mRxCategory.getAllCategories()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(categories -> {
+                    boolean checkSuccessful = false;
+                    for (int i = 0; i < categories.size(); i++) {
+                        if (categories.get(i).isCheck()) {
+                            mHomeView.setCheckPosition(i);
+                            checkSuccessful = true;
+                            break;
+                        }
+                    }
+                    if (!checkSuccessful) {
+                        mHomeView.setCheckPosition(0);
+                    }
+                });
     }
 
     @Override
     public void setCheckedCategoryPosition(int position) {
-        mCategoryDBModel.setCategoryMenuPosition(mListData.get(position));
-        mHomeView.notifyCategoryDataChanged();
-        mCategoryId = mListData.get(position).getId();
-        mHomeView.changeFragment(mCategoryId);
+        mRxCategory.getAllCategories()
+                .subscribe(categories -> {
+                    mRxCategory.setCategoryMenuPosition(categories.get(position).getId())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(categories1 -> {
+                                mHomeView.notifyCategoryDataChanged();
+                                mCategoryId = categories1.get(position).getId();
+                                mHomeView.changeFragment(mCategoryId);
+                            });
+                });
     }
 
     @Override
     public void changeCategoryAfterSaving(Category category) {
-        mCategoryDBModel.setCategoryMenuPosition(category);
-        mListData = mCategoryDBModel.refresh();
-        mHomeView.notifyCategoryDataChanged();
-        mCategoryId = category.getId();
-        mHomeView.changePhotos4Category(mCategoryId);
+        mRxCategory.setCategoryMenuPosition(category.getId())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(categories -> {
+                    mHomeView.notifyCategoryDataChanged();
+                    mCategoryId = category.getId();
+                    mHomeView.changePhotos4Category(mCategoryId);
+                });
     }
 
     @Override
     public void setAdapter() {
-        mHomeView.setCategoryList(mListData);
+        mRxCategory.getAllCategories()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(categories -> mHomeView.setCategoryList(categories));
     }
 
     @Override
@@ -150,92 +167,118 @@ public class HomePresenterImpl implements IHomePresenter {
     public void updateFromBroadcast(boolean broadcast_process, boolean broadcast_service) {
         //有时候categoryLabel为null，感觉原因是activity被回收了，但是一直解决不掉，所以迫不得已的解决办法
         if (mCategoryId == -1) {
-            List<Category> categoryList = mCategoryDBModel.findAll();
-            for (Category category : categoryList) {
-                if (category.isCheck()) {
-                    mCategoryId = category.getId();
-                }
-            }
+            mRxCategory.getAllCategories()
+                    .subscribe(categories -> {
+                        for (Category category : categories) {
+                            if (category.isCheck()) {
+                                mCategoryId = category.getId();
+                            }
+                        }
+                    });
         }
 
         //从另外个进程过来的数据
         if (broadcast_process) {
-            int number = mPhotoNoteDBModel.findByCategoryLabelByForce(mCategoryId, -1).size();
-            Category category = mCategoryDBModel.findByCategoryId(mCategoryId);
-            category.setPhotosNumber(number);
-            mCategoryDBModel.update(category);
-            mHomeView.updateCategoryList(mCategoryDBModel.findAll());
+            mRxPhotoNote.findByCategoryId(mCategoryId, ComparatorFactory.FACTORY_NOT_SORT)
+                    .subscribe(photoNoteList -> {
+                        mRxCategory.findByCategoryId(mCategoryId)
+                                .subscribe(category -> {
+                                    category.setPhotosNumber(photoNoteList.size());
+                                    mRxCategory.updateCategory(category)
+                                            .observeOn(AndroidSchedulers.mainThread())
+                                            .subscribe(categories -> {
+                                                mHomeView.notifyCategoryDataChanged();
+                                            });
+                                });
+                    });
         }
 
         //从Service中来
         if (broadcast_service) {
-            mHomeView.updateCategoryList(mCategoryDBModel.findAll());
+            mRxCategory.getAllCategories()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(categories -> mHomeView.updateCategoryList(categories));
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void onCategoryCreateEvent(CategoryCreateEvent categoryCreateEvent) {
-        mHomeView.updateCategoryList(mCategoryDBModel.findAll());
+        mRxCategory.getAllCategories()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(categories -> mHomeView.updateCategoryList(categories));
     }
 
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void onCategoryUpdateEvent(CategoryUpdateEvent categoryUpdateEvent) {
-        mHomeView.updateCategoryList(mCategoryDBModel.findAll());
+        mRxCategory.getAllCategories()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(categories -> mHomeView.updateCategoryList(categories));
     }
 
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void onCategoryMoveEvent(CategoryMoveEvent categoryMoveEvent) {
-        mHomeView.updateCategoryList(mCategoryDBModel.findAll());
+        mRxCategory.getAllCategories()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(categories -> mHomeView.updateCategoryList(categories));
     }
 
     @Subscribe(threadMode = ThreadMode.MainThread)
-    public void onCategoryRenameEvent(CategoryRenameEvent categoryRenameEvent) {
-        mHomeView.updateCategoryList(mCategoryDBModel.findAll());
-    }
-
-    @Subscribe(threadMode = ThreadMode.MainThread)
-    public void onCategorySortEvent(CategorySortEvent categorySortEvent) {
-        mHomeView.updateCategoryList(mCategoryDBModel.findAll());
+    public void onCategoryRenameEvent(CategoryEditEvent categoryEditEvent) {
+        mRxCategory.getAllCategories()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(categories -> mHomeView.updateCategoryList(categories));
     }
 
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void onCategoryDeleteEvent(CategoryDeleteEvent categoryDeleteEvent) {
-        mListData = mCategoryDBModel.findAll();
-        int beforeCategoryId = mCategoryId;
-        for (Category category : mListData) {
-            if (category.isCheck()) {
-                mCategoryId = category.getId();
-                break;
-            }
-        }
-        mHomeView.updateCategoryList(mCategoryDBModel.findAll());
-        if (mCategoryId != beforeCategoryId) {
-            mHomeView.changePhotos4Category(mCategoryId);
-        }
+        mRxCategory.getAllCategories()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(categories -> {
+                    int beforeCategoryId = mCategoryId;
+                    for (Category category : categories) {
+                        if (category.isCheck()) {
+                            mCategoryId = category.getId();
+                            break;
+                        }
+                    }
+                    mHomeView.updateCategoryList(categories);
+                    if (mCategoryId != beforeCategoryId) {
+                        mHomeView.changePhotos4Category(mCategoryId);
+                    }
+                });
+
     }
 
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void onPhotoNoteCreateEvent(PhotoNoteCreateEvent photoNoteCreateEvent) {
-        int number = mPhotoNoteDBModel.findByCategoryId(mCategoryId, -1).size();
-        Category category = mCategoryDBModel.findByCategoryId(mCategoryId);
-        if (category.getPhotosNumber() != number) {
-            category.setPhotosNumber(number);
-            mCategoryDBModel.update(category);
-            EventBus.getDefault().post(new CategoryUpdateEvent());
-            mHomeView.updateCategoryList(mCategoryDBModel.findAll());
-        }
+        mRxPhotoNote.findByCategoryId(mCategoryId, ComparatorFactory.FACTORY_NOT_SORT)
+                .subscribe(photoNoteList -> {
+                    mRxCategory.findByCategoryId(mCategoryId)
+                            .subscribe(category -> {
+                                category.setPhotosNumber(photoNoteList.size());
+                                mRxCategory.updateCategory(category)
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe(categories -> {
+                                            mHomeView.updateCategoryList(categories);
+                                        });
+                            });
+                });
     }
 
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void onPhotoNoteDeleteEvent(PhotoNoteDeleteEvent photoNoteDeleteEvent) {
-        int number = mPhotoNoteDBModel.findByCategoryId(mCategoryId, -1).size();
-        Category category = mCategoryDBModel.findByCategoryId(mCategoryId);
-        if (category.getPhotosNumber() != number) {
-            category.setPhotosNumber(number);
-            mCategoryDBModel.update(category);
-            EventBus.getDefault().post(new CategoryUpdateEvent());
-            mHomeView.updateCategoryList(mCategoryDBModel.findAll());
-        }
+        mRxPhotoNote.findByCategoryId(mCategoryId, ComparatorFactory.FACTORY_NOT_SORT)
+                .subscribe(photoNoteList -> {
+                    mRxCategory.findByCategoryId(mCategoryId)
+                            .subscribe(category -> {
+                                category.setPhotosNumber(photoNoteList.size());
+                                mRxCategory.updateCategory(category)
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe(categories -> {
+                                            mHomeView.updateCategoryList(categories);
+                                        });
+                            });
+                });
     }
 
 }

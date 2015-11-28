@@ -8,21 +8,22 @@ import android.support.annotation.Nullable;
 import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.bean.PhotoNote;
-import com.yydcdut.note.model.CategoryDBModel;
-import com.yydcdut.note.model.PhotoNoteDBModel;
+import com.yydcdut.note.model.compare.ComparatorFactory;
+import com.yydcdut.note.model.rx.RxCategory;
+import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.mvp.v.service.ICheckServiceView;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
 
-import java.util.List;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by yuyidong on 15/7/17.
  */
 public class CheckService extends IntentService implements ICheckServiceView {
 
-    private CategoryDBModel mCategoryDBModel;
-    private PhotoNoteDBModel mPhotoNoteDBModel;
+    private RxCategory mRxCategory;
+    private RxPhotoNote mRxPhotoNote;
 
     public CheckService() {
         super("com.yydcdut.note.service.CheckService");
@@ -36,8 +37,8 @@ public class CheckService extends IntentService implements ICheckServiceView {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        mCategoryDBModel = ((NoteApplication) getApplication()).getApplicationComponent().getCategoryDBModel();
-        mPhotoNoteDBModel = ((NoteApplication) getApplication()).getApplicationComponent().getPhotoNoteDBModel();
+        mRxCategory = ((NoteApplication) getApplication()).getApplicationComponent().getRxCategory();
+        mRxPhotoNote = ((NoteApplication) getApplication()).getApplicationComponent().getRxPhotoNote();
         checkCategoryPhotoNumber();
         checkBigAndSmallPhoto();
     }
@@ -46,18 +47,18 @@ public class CheckService extends IntentService implements ICheckServiceView {
      * 判断category中的photoNumber是否正确
      */
     private void checkCategoryPhotoNumber() {
-        List<Category> categoryList = mCategoryDBModel.findAll();
-        boolean isChanged = false;
-        for (Category category : categoryList) {
-            List<PhotoNote> photoNoteList = mPhotoNoteDBModel.findByCategoryId(category.getId(), -1);
-            if (category.getPhotosNumber() != photoNoteList.size()) {
-                category.setPhotosNumber(photoNoteList.size());
-                isChanged = true;
-            }
-        }
-        if (isChanged) {
-            mCategoryDBModel.updateCategoryListInService(categoryList);
-        }
+        mRxCategory.getAllCategories()
+                .subscribe(categories -> {
+                    for (Category category : categories) {
+                        mRxPhotoNote.findByCategoryId(category.getId(), ComparatorFactory.FACTORY_NOT_SORT)
+                                .subscribe(photoNoteList1 -> {
+                                    if (category.getPhotosNumber() != photoNoteList1.size()) {
+                                        category.setPhotosNumber(photoNoteList1.size());
+                                        mRxCategory.updateCategory(category).subscribe();
+                                    }
+                                });
+                    }
+                });
     }
 
     /**
@@ -67,28 +68,37 @@ public class CheckService extends IntentService implements ICheckServiceView {
         //大图不在&小图在&数据库在，说明可能是人为删除的，所以同时把小图和数据库中的数据删除
         //小图不在&大图在&数据库在，说明可能是系统删除的，所以生成一张小图
         //数据库不在&大图小图都在，删除大图小图
-        List<Category> categoryList = mCategoryDBModel.findAll();
-        for (Category category : categoryList) {
-            List<PhotoNote> photoNoteList = mPhotoNoteDBModel.findByCategoryId(category.getId(), -1);
-            for (int i = 0; i < photoNoteList.size(); i++) {
-                PhotoNote photoNote = photoNoteList.get(i);
-                int result = FilePathUtils.isFileExist(photoNote.getPhotoName());
-                switch (result) {
-                    case FilePathUtils.ALL_NOT_EXIST:
-                    case FilePathUtils.BIG_PHOTO_NOT_EXIST:
-                        // java.util.ConcurrentModificationException
-                        mPhotoNoteDBModel.delete(photoNote);
-                        FilePathUtils.deleteAllFiles(photoNote.getPhotoName());
-                        break;
-                    case FilePathUtils.SMALL_PHOTO_NOT_EXIST:
-                        FilePathUtils.saveSmallPhotoFromBigPhoto(photoNote);
-                        break;
-                    case FilePathUtils.ALL_EXIST:
-                    default:
-                        break;
-                }
-            }
-        }
+        mRxCategory.getAllCategories()
+                .subscribe(categories -> {
+                    for (Category category : categories) {
+                        mRxPhotoNote.findByCategoryId(category.getId(), ComparatorFactory.FACTORY_NOT_SORT)
+                                .subscribe(photoNoteList -> {
+                                    for (PhotoNote photoNote : photoNoteList) {
+                                        int result = FilePathUtils.isFileExist(photoNote.getPhotoName());
+                                        switch (result) {
+                                            case FilePathUtils.ALL_NOT_EXIST:
+                                            case FilePathUtils.BIG_PHOTO_NOT_EXIST:
+                                                // java.util.ConcurrentModificationException
+                                                deletePhotoAndFiles(photoNote);
+                                                break;
+                                            case FilePathUtils.SMALL_PHOTO_NOT_EXIST:
+                                                FilePathUtils.saveSmallPhotoFromBigPhoto(photoNote);
+                                                break;
+                                            case FilePathUtils.ALL_EXIST:
+                                            default:
+                                                break;
+                                        }
+                                    }
+                                });
+                    }
+                });
+    }
+
+    private void deletePhotoAndFiles(PhotoNote photoNote) {
+        String fileName = photoNote.getPhotoName();
+        mRxPhotoNote.deletePhotoNote(photoNote)
+                .observeOn(Schedulers.io())
+                .subscribe(photoNoteList -> FilePathUtils.deleteAllFiles(fileName));
     }
 
     @Override

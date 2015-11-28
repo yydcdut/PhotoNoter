@@ -14,7 +14,7 @@ public interface IHomePresenter extends IPresenter {
 
     int getCategoryId();
 
-    int getCheckCategoryPosition();
+    void setCheckCategoryPosition();
 
     void setCheckedCategoryPosition(int position);
 

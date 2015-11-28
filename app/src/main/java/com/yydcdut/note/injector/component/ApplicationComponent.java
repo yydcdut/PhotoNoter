@@ -4,10 +4,10 @@ import android.content.Context;
 
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.injector.module.ApplicationModule;
-import com.yydcdut.note.model.CategoryDBModel;
-import com.yydcdut.note.model.PhotoNoteDBModel;
-import com.yydcdut.note.model.SandBoxDBModel;
 import com.yydcdut.note.model.UserCenter;
+import com.yydcdut.note.model.rx.RxCategory;
+import com.yydcdut.note.model.rx.RxPhotoNote;
+import com.yydcdut.note.model.rx.RxSandBox;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.ThreadExecutorPool;
 
@@ -24,15 +24,15 @@ public interface ApplicationComponent {
     @ContextLife("Application")
     Context getContext();
 
-    CategoryDBModel getCategoryDBModel();
-
-    PhotoNoteDBModel getPhotoNoteDBModel();
-
-    SandBoxDBModel getSandBoxDBModel();
-
     UserCenter getUserCenter();
 
     LocalStorageUtils getLocalStorageUtils();
 
     ThreadExecutorPool getThreadExecutorPool();
+
+    RxCategory getRxCategory();
+
+    RxPhotoNote getRxPhotoNote();
+
+    RxSandBox getRxSandBox();
 }

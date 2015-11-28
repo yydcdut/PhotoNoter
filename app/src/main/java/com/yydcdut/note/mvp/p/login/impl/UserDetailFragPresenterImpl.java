@@ -15,11 +15,10 @@ import com.evernote.edam.type.User;
 import com.yydcdut.note.R;
 import com.yydcdut.note.bean.IUser;
 import com.yydcdut.note.injector.ContextLife;
-import com.yydcdut.note.model.CategoryDBModel;
-import com.yydcdut.note.model.PhotoNoteDBModel;
-import com.yydcdut.note.model.SandBoxDBModel;
 import com.yydcdut.note.model.UserCenter;
-import com.yydcdut.note.model.compare.ComparatorFactory;
+import com.yydcdut.note.model.rx.RxCategory;
+import com.yydcdut.note.model.rx.RxPhotoNote;
+import com.yydcdut.note.model.rx.RxSandBox;
 import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.login.IUserDetailFragPresenter;
 import com.yydcdut.note.mvp.v.login.IUserDetailFragView;
@@ -36,15 +35,16 @@ import javax.inject.Inject;
 
 /**
  * Created by yuyidong on 15/11/16.
+ * todo 应该拆分
  */
 public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter, Handler.Callback {
     private IUserDetailFragView mUserDetailFragView;
     private Activity mActivity;
     private Context mContext;
     private UserCenter mUserCenter;
-    private PhotoNoteDBModel mPhotoNoteDBModel;
-    private CategoryDBModel mCategoryDBModel;
-    private SandBoxDBModel mSandBoxDBModel;
+    private RxPhotoNote mRxPhotoNote;
+    private RxCategory mRxCategory;
+    private RxSandBox mRxSandBox;
     private LocalStorageUtils mLocalStorageUtils;
     private ThreadExecutorPool mThreadExecutorPool;
 
@@ -59,15 +59,15 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter, Ha
 
     @Inject
     public UserDetailFragPresenterImpl(Activity activity, @ContextLife("Activity") Context context,
-                                       UserCenter userCenter, PhotoNoteDBModel photoNoteDBModel,
-                                       CategoryDBModel categoryDBModel, SandBoxDBModel sandBoxDBModel,
+                                       UserCenter userCenter, RxSandBox rxSandBox,
+                                       RxCategory rxCategory, RxPhotoNote rxPhotoNote,
                                        LocalStorageUtils localStorageUtils, ThreadExecutorPool threadExecutorPool) {
         mActivity = activity;
         mContext = context;
         mUserCenter = userCenter;
-        mPhotoNoteDBModel = photoNoteDBModel;
-        mCategoryDBModel = categoryDBModel;
-        mSandBoxDBModel = sandBoxDBModel;
+        mRxCategory = rxCategory;
+        mRxPhotoNote = rxPhotoNote;
+        mRxSandBox = rxSandBox;
         mLocalStorageUtils = localStorageUtils;
         mThreadExecutorPool = threadExecutorPool;
         mHandler = new Handler(this);
@@ -82,13 +82,13 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter, Ha
                 mUserDetailFragView.initUserDetail(getLocation(), getUseAge(), getPhone(), getAndroid(), calculateStorage());
                 break;
             case 1:
-                mUserDetailFragView.initUserImages(mPhotoNoteDBModel.findByCategoryId(
-                        mCategoryDBModel.findAll().get(0).getId(), ComparatorFactory.FACTORY_NOT_SORT));
+//                mUserDetailFragView.initUserImages(mPhotoNoteDBModel.findByCategoryId(
+//                        mCategoryDBModel.findAll().get(0).getId(), ComparatorFactory.FACTORY_NOT_SORT));
                 break;
             case 2:
-                mUserDetailFragView.initUserInfo(mUserCenter.isLoginQQ(), getQQName(),
-                        mUserCenter.isLoginEvernote(), getEvernoteName(), getFolderStorage(),
-                        getNotesNumber(), getSandboxNumber(), getWordNumber(), getCloud());
+//                mUserDetailFragView.initUserInfo(mUserCenter.isLoginQQ(), getQQName(),
+//                        mUserCenter.isLoginEvernote(), getEvernoteName(), getFolderStorage(),
+//                        getNotesNumber(), getSandboxNumber(), getWordNumber(), getCloud());
                 break;
         }
     }
@@ -171,13 +171,13 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter, Ha
         }
     }
 
-    private String getNotesNumber() {
-        return mPhotoNoteDBModel.getAllNumber() + "";
-    }
-
-    private String getSandboxNumber() {
-        return mSandBoxDBModel.getAllNumber() + "";
-    }
+//    private String getNotesNumber() {
+//        return mPhotoNoteDBModel.getAllNumber() + "";
+//    }
+//
+//    private String getSandboxNumber() {
+//        return mSandBoxDBModel.getAllNumber() + "";
+//    }
 
     private String getWordNumber() {
         return mContext.getResources().getString(R.string.uc_unkown);

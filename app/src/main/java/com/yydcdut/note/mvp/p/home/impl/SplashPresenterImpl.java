@@ -3,7 +3,6 @@ package com.yydcdut.note.mvp.p.home.impl;
 import android.os.Handler;
 import android.os.Message;
 
-import com.yydcdut.note.model.PhotoNoteDBModel;
 import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.home.ISplashPresenter;
 import com.yydcdut.note.mvp.v.home.ISplashView;
@@ -21,12 +20,10 @@ public class SplashPresenterImpl implements ISplashPresenter, Handler.Callback {
 
     private static final int MESSAGE_WHAT = 1;
 
-    private PhotoNoteDBModel mPhotoNoteDBModel;
     private LocalStorageUtils mLocalStorageUtils;
 
     @Inject
-    public SplashPresenterImpl(PhotoNoteDBModel photoNoteDBModel, LocalStorageUtils localStorageUtils) {
-        mPhotoNoteDBModel = photoNoteDBModel;
+    public SplashPresenterImpl(LocalStorageUtils localStorageUtils) {
         mLocalStorageUtils = localStorageUtils;
     }
 

@@ -8,8 +8,8 @@ import android.media.ExifInterface;
 import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.bean.SandExif;
 import com.yydcdut.note.bean.SandPhoto;
-import com.yydcdut.note.model.PhotoNoteDBModel;
-import com.yydcdut.note.model.SandBoxDBModel;
+import com.yydcdut.note.model.rx.RxPhotoNote;
+import com.yydcdut.note.model.rx.RxSandBox;
 import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.service.ICameraServicePresenter;
 import com.yydcdut.note.mvp.v.service.ICameraServiceView;
@@ -40,13 +40,13 @@ public class CameraServicePresenterImpl implements ICameraServicePresenter {
 
     private byte[] object = new byte[1];
 
-    private PhotoNoteDBModel mPhotoNoteDBModel;
-    private SandBoxDBModel mSandBoxDBModel;
+    private RxPhotoNote mRxPhotoNote;
+    private RxSandBox mRxSandBox;
 
     @Inject
-    public CameraServicePresenterImpl(PhotoNoteDBModel photoNoteDBModel, SandBoxDBModel sandBoxDBModel) {
-        mPhotoNoteDBModel = photoNoteDBModel;
-        mSandBoxDBModel = sandBoxDBModel;
+    public CameraServicePresenterImpl(RxPhotoNote rxPhotoNote, RxSandBox rxSandBox) {
+        mRxPhotoNote = rxPhotoNote;
+        mRxSandBox = rxSandBox;
         new Thread(new MakePhotoRunnable()).start();
     }
 
@@ -72,12 +72,15 @@ public class CameraServicePresenterImpl implements ICameraServicePresenter {
                        int imageLength, int imageWidth, String make, String model) {
         SandExif sandExif = new SandExif(orientation, latitude, lontitude, whiteBalance, flash, imageLength, imageWidth, make, model);
         SandPhoto sandPhoto = new SandPhoto(SandPhoto.ID_NULL, time, cameraId, categoryId, isMirror, ratio, fileName, size, sandExif);
-        long id = mSandBoxDBModel.save(sandPhoto);
-        sandPhoto.setId(id);
-        mQueue.offer(sandPhoto);
-        synchronized (object) {
-            object.notifyAll();
-        }
+        mRxSandBox.saveOne(sandPhoto)
+                .subscribe(sandPhoto1 -> {
+                    synchronized (object) {
+                        long id = sandPhoto1.getId();
+                        sandPhoto.setId(id);
+                        mQueue.offer(sandPhoto);
+                        object.notifyAll();
+                    }
+                });
     }
 
     /**
@@ -162,19 +165,20 @@ public class CameraServicePresenterImpl implements ICameraServicePresenter {
         PhotoNote photoNote = new PhotoNote(fileName, sandPhoto.getTime(), sandPhoto.getTime(), "", "",
                 sandPhoto.getTime(), sandPhoto.getTime(), sandPhoto.getCategoryId());
         photoNote.setPaletteColor(UiHelper.getPaletteColor(newBitmap));
-        boolean bool = mPhotoNoteDBModel.save(photoNote);
-        if (bool) {
-            mCameraServiceView.sendBroadCast();
-        }
+        mRxPhotoNote.savePhotoNote(photoNote)
+                .subscribe(photoNote1 -> {
+                    System.gc();
+                    try {
+                        setExif(photoNote, sandPhoto.getSandExif());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    deleteFromDBAndSDCard(sandPhoto);
+                    mCameraServiceView.sendBroadCast();
+                });
         newBitmap.recycle();
         newBitmap = null;
-        System.gc();
-        try {
-            setExif(photoNote, sandPhoto.getSandExif());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        deleteFromDBAndSDCard(sandPhoto);
+
     }
 
     private byte[] getDataFromFile(String fileName, int size) {
@@ -234,8 +238,10 @@ public class CameraServicePresenterImpl implements ICameraServicePresenter {
      * @return
      */
     private void deleteFromDBAndSDCard(SandPhoto sandPhoto) {
-        mSandBoxDBModel.delete(sandPhoto);
-        new File(FilePathUtils.getSandBoxDir() + sandPhoto.getFileName()).delete();
+        String path = FilePathUtils.getSandBoxDir() + sandPhoto.getFileName();
+        mRxSandBox.deleteOne(sandPhoto)
+                .subscribe(integer -> {
+                    new File(path).delete();
+                });
     }
-
 }

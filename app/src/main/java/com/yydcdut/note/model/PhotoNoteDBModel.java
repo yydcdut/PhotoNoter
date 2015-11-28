@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.yydcdut.note.bean.PhotoNote;
-import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.compare.ComparatorFactory;
 import com.yydcdut.note.model.sqlite.NotesSQLite;
 import com.yydcdut.note.utils.FilePathUtils;
@@ -17,21 +16,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 /**
  * Created by yuyidong on 15/7/17.
  * 先进行数据库操作，然后再操作动画之类的
  * //todo DAO设计模式
  */
+//FIXME:这个类先不忙删
+@Deprecated
 public class PhotoNoteDBModel extends AbsNotesDBModel {
 
     private Map<Integer, List<PhotoNote>> mCache = new HashMap<>();
 
-    @Singleton
-    @Inject
-    public PhotoNoteDBModel(@ContextLife("Application") Context context) {
+    private PhotoNoteDBModel(Context context) {
         super(context);
     }
 

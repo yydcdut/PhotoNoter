@@ -7,26 +7,22 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.yydcdut.note.bean.SandExif;
 import com.yydcdut.note.bean.SandPhoto;
-import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.sqlite.SandSQLite;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 /**
  * Created by yuyidong on 15/8/10.
  * 不要有cache，因为这个db随时都在变
  * 记住关DB，关Cursor
  */
+//FIXME:这个类先不忙删
+@Deprecated
 public class SandBoxDBModel {
     private static final String NAME = "SandBox.db";
     private static final int VERSION = 4;
 
     private SandSQLite mSandSQLite;
 
-    @Singleton
-    @Inject
-    public SandBoxDBModel(@ContextLife("Application") Context context) {
+    private SandBoxDBModel(Context context) {
         mSandSQLite = new SandSQLite(context, NAME, null, VERSION);
     }
 

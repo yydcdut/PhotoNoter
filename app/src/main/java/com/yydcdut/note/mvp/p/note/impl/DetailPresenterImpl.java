@@ -21,7 +21,7 @@ import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.yydcdut.note.R;
 import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.injector.ContextLife;
-import com.yydcdut.note.model.PhotoNoteDBModel;
+import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.note.IDetailPresenter;
 import com.yydcdut.note.mvp.v.note.IDetailView;
@@ -30,9 +30,10 @@ import com.yydcdut.note.utils.LocalStorageUtils;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.List;
 
 import javax.inject.Inject;
+
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by yuyidong on 15/11/16.
@@ -40,11 +41,10 @@ import javax.inject.Inject;
 public class DetailPresenterImpl implements IDetailPresenter, OnGetGeoCoderResultListener {
     private IDetailView mDetailView;
     private Context mContext;
-    private PhotoNoteDBModel mPhotoNoteDBModel;
+    private RxPhotoNote mRxPhotoNote;
     private LocalStorageUtils mLocalStorageUtils;
 
     /* Data */
-    private List<PhotoNote> mPhotoNoteList;
     private int mCategoryId;
     private int mComparator;
     private int mInitPosition;
@@ -55,10 +55,10 @@ public class DetailPresenterImpl implements IDetailPresenter, OnGetGeoCoderResul
     private GeoCoder mSearch = null; // 搜索模块，也可去掉地图模块独立使用
 
     @Inject
-    public DetailPresenterImpl(@ContextLife("Activity") Context context, PhotoNoteDBModel photoNoteDBModel,
+    public DetailPresenterImpl(@ContextLife("Activity") Context context, RxPhotoNote rxPhotoNote,
                                LocalStorageUtils localStorageUtils) {
         mContext = context;
-        mPhotoNoteDBModel = photoNoteDBModel;
+        mRxPhotoNote = rxPhotoNote;
         mLocalStorageUtils = localStorageUtils;
     }
 
@@ -67,9 +67,13 @@ public class DetailPresenterImpl implements IDetailPresenter, OnGetGeoCoderResul
         mDetailView = (IDetailView) iView;
         mDetailView.setFontSystem(mLocalStorageUtils.getSettingFontSystem());
         initBaiduMap();
-        mDetailView.setViewPagerAdapter(mPhotoNoteList, mDetailView.getCurrentPosition(), mComparator);
-        showNote(mInitPosition);
-        mDetailView.showCurrentPosition(mInitPosition);
+        mRxPhotoNote.findByCategoryId(mCategoryId, mComparator)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(photoNoteList -> {
+                    mDetailView.setViewPagerAdapter(photoNoteList, mInitPosition, mComparator);
+                    showNote(mInitPosition);
+                });
+
     }
 
     private String decodeTimeInDetail(long time) {
@@ -110,48 +114,54 @@ public class DetailPresenterImpl implements IDetailPresenter, OnGetGeoCoderResul
         mCategoryId = categoryID;
         mInitPosition = position;
         mComparator = comparator;
-        mPhotoNoteList = mPhotoNoteDBModel.findByCategoryId(categoryID, mComparator);
     }
 
     @Override
     public void showExif() {
-        int position = mDetailView.getCurrentPosition();
-        PhotoNote photoNote = mPhotoNoteList.get(position);
-        try {
-            mDetailView.showExif(getExifInfomation(photoNote.getBigPhotoPathWithoutFile()));
-            gps(photoNote.getBigPhotoPathWithoutFile());
-        } catch (IOException e) {
-            e.printStackTrace();
-            mDetailView.showExif(mContext.getResources().getString(R.string.toast_fail));
-        }
+        mRxPhotoNote.findByCategoryId(mCategoryId, mComparator)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(photoNoteList -> {
+                    int position = mDetailView.getCurrentPosition();
+                    PhotoNote photoNote = photoNoteList.get(position);
+                    try {
+                        mDetailView.showExif(getExifInfomation(photoNote.getBigPhotoPathWithoutFile()));
+                        gps(photoNote.getBigPhotoPathWithoutFile());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        mDetailView.showExif(mContext.getResources().getString(R.string.toast_fail));
+                    }
+                });
     }
 
     @Override
     public void showNote(int position) {
-        PhotoNote photoNote = mPhotoNoteList.get(position);
-        String title;
-        String content;
-        if (TextUtils.isEmpty(photoNote.getTitle())) {
-            title = mContext.getResources().getString(R.string.detail_content_nothing);
-        } else {
-            title = photoNote.getTitle();
-        }
-        if (TextUtils.isEmpty(photoNote.getContent())) {
-            content = mContext.getResources().getString(R.string.detail_content_nothing);
-        } else {
-            content = photoNote.getContent();
-        }
-        String createdTime = decodeTimeInDetail(photoNote.getCreatedNoteTime());
-        String editedTime = decodeTimeInDetail(photoNote.getEditedNoteTime());
-        mDetailView.showNote(title, content, createdTime, editedTime);
-        showExif();
+        mRxPhotoNote.findByCategoryId(mCategoryId, mComparator)
+                .map(photoNoteList -> photoNoteList.get(position))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(photoNote1 -> {
+                    String title;
+                    String content;
+                    if (TextUtils.isEmpty(photoNote1.getTitle())) {
+                        title = mContext.getResources().getString(R.string.detail_content_nothing);
+                    } else {
+                        title = photoNote1.getTitle();
+                    }
+                    if (TextUtils.isEmpty(photoNote1.getContent())) {
+                        content = mContext.getResources().getString(R.string.detail_content_nothing);
+                    } else {
+                        content = photoNote1.getContent();
+                    }
+                    String createdTime = decodeTimeInDetail(photoNote1.getCreatedNoteTime());
+                    String editedTime = decodeTimeInDetail(photoNote1.getEditedNoteTime());
+                    mDetailView.showNote(title, content, createdTime, editedTime);
+                    showExif();
+                });
     }
 
     @Override
     public void updateNote(int categoryId, int position, int comparator) {
         mCategoryId = categoryId;
         mComparator = comparator;
-        mPhotoNoteList = mPhotoNoteDBModel.findByCategoryId(mCategoryId, mComparator);
         showNote(position);
     }
 

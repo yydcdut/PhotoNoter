@@ -10,21 +10,17 @@ import com.yydcdut.note.model.AbsNotesDBModel;
 import com.yydcdut.note.model.sqlite.NotesSQLite;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by yuyidong on 15/11/27.
  */
 public class PhotoNoteDB extends AbsNotesDBModel {
-    private Map<Integer, List<PhotoNote>> mCache = new HashMap<>();
-
     public PhotoNoteDB(Context context) {
         super(context);
     }
 
-    public List<PhotoNote> findByCategoryId(int categoryId) {
+    public synchronized List<PhotoNote> findByCategoryId(int categoryId) {
         List<PhotoNote> list = new ArrayList<>();
         SQLiteDatabase db = mNotesSQLite.getReadableDatabase();
         Cursor cursor = db.query(NotesSQLite.TABLE_PHOTONOTE, null, "categoryId = ?", new String[]{categoryId + ""}, null, null, null);
@@ -50,7 +46,7 @@ public class PhotoNoteDB extends AbsNotesDBModel {
         return list;
     }
 
-    public PhotoNote findByPhotoNoteId(long photoNoteId) {
+    public synchronized PhotoNote findByPhotoNoteId(long photoNoteId) {
         SQLiteDatabase db = mNotesSQLite.getReadableDatabase();
         Cursor cursor = db.query(NotesSQLite.TABLE_PHOTONOTE, null, "_id = ?", new String[]{photoNoteId + ""}, null, null, null);
         PhotoNote photoNote = null;
@@ -75,7 +71,7 @@ public class PhotoNoteDB extends AbsNotesDBModel {
         return photoNote;
     }
 
-    public int update(PhotoNote... photoNotes) {
+    public synchronized int update(PhotoNote... photoNotes) {
         SQLiteDatabase db = mNotesSQLite.getWritableDatabase();
         int rows = 0;
         for (PhotoNote photoNote : photoNotes) {
@@ -97,7 +93,7 @@ public class PhotoNoteDB extends AbsNotesDBModel {
         return rows;
     }
 
-    public long save(PhotoNote... photoNotes) {
+    public synchronized long save(PhotoNote... photoNotes) {
         SQLiteDatabase db = mNotesSQLite.getWritableDatabase();
         db.beginTransaction();
         long id = -1;
@@ -127,7 +123,7 @@ public class PhotoNoteDB extends AbsNotesDBModel {
         return id;
     }
 
-    public boolean isExistInDB(PhotoNote photoNote) {
+    public synchronized boolean isExistInDB(PhotoNote photoNote) {
         int categoryId = photoNote.getCategoryId();
         List<PhotoNote> photoNoteList = findByCategoryId(categoryId);
         for (PhotoNote item : photoNoteList) {
@@ -138,7 +134,7 @@ public class PhotoNoteDB extends AbsNotesDBModel {
         return false;
     }
 
-    public int delete(PhotoNote... photoNotes) {
+    public synchronized int delete(PhotoNote... photoNotes) {
         SQLiteDatabase db = mNotesSQLite.getWritableDatabase();
         db.beginTransaction();
         int rows = 0;
@@ -156,7 +152,7 @@ public class PhotoNoteDB extends AbsNotesDBModel {
         return rows;
     }
 
-    public int getAllNumber() {
+    public synchronized int getAllNumber() {
         int number = 0;
         SQLiteDatabase db = mNotesSQLite.getReadableDatabase();
         String sql = "select count(*) from " + NotesSQLite.TABLE_PHOTONOTE + ";";

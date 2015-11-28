@@ -6,20 +6,18 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.yydcdut.note.bean.Category;
-import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.sqlite.NotesSQLite;
 import com.yydcdut.note.utils.ThreadExecutorPool;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 /**
  * Created by yuyidong on 15/7/17.
  * 只允许在AlbumFragment、HomeActivity和EditCategoryActivity中调用
  */
+//FIXME:这个类先不忙删
+@Deprecated
 public class CategoryDBModel extends AbsNotesDBModel {
 
     private List<Category> mCache;
@@ -28,10 +26,8 @@ public class CategoryDBModel extends AbsNotesDBModel {
 
     private PhotoNoteDBModel mPhotoNoteDBModel;
 
-    @Singleton
-    @Inject
-    public CategoryDBModel(@ContextLife("Application") Context context, PhotoNoteDBModel photoNoteDBModel,
-                           ThreadExecutorPool threadExecutorPool) {
+    private CategoryDBModel(Context context, PhotoNoteDBModel photoNoteDBModel,
+                            ThreadExecutorPool threadExecutorPool) {
         super(context);
         mPhotoNoteDBModel = photoNoteDBModel;
         mThreadExecutorPool = threadExecutorPool;

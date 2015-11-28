@@ -10,14 +10,13 @@ import android.os.Message;
 import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.bean.SandExif;
 import com.yydcdut.note.bean.SandPhoto;
-import com.yydcdut.note.model.PhotoNoteDBModel;
-import com.yydcdut.note.model.SandBoxDBModel;
+import com.yydcdut.note.model.rx.RxPhotoNote;
+import com.yydcdut.note.model.rx.RxSandBox;
 import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.service.ISandBoxServicePresenter;
 import com.yydcdut.note.mvp.v.service.ISandBoxServiceView;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
-import com.yydcdut.note.utils.ThreadExecutorPool;
 import com.yydcdut.note.utils.TimeDecoder;
 import com.yydcdut.note.utils.UiHelper;
 import com.yydcdut.note.utils.YLog;
@@ -36,16 +35,13 @@ import javax.inject.Inject;
 public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter, Handler.Callback {
     private ISandBoxServiceView mSandBoxServiceView;
 
-    private SandBoxDBModel mSandBoxDBModel;
-    private PhotoNoteDBModel mPhotoNoteDBModel;
-    private ThreadExecutorPool mThreadExecutorPool;
+    private RxPhotoNote mRxPhotoNote;
+    private RxSandBox mRxSandBox;
 
     @Inject
-    public SandBoxServicePresenterImpl(SandBoxDBModel sandBoxDBModel, PhotoNoteDBModel photoNoteDBModel,
-                                       ThreadExecutorPool threadExecutorPool) {
-        mSandBoxDBModel = sandBoxDBModel;
-        mPhotoNoteDBModel = photoNoteDBModel;
-        mThreadExecutorPool = threadExecutorPool;
+    public SandBoxServicePresenterImpl(RxSandBox rxSandBox, RxPhotoNote rxPhotoNote) {
+        mRxPhotoNote = rxPhotoNote;
+        mRxSandBox = rxSandBox;
     }
 
     @Override
@@ -53,26 +49,25 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter, Ha
         mSandBoxServiceView = (ISandBoxServiceView) iView;
         mSandBoxServiceView.notification();
         final Handler handler = new Handler(this);
-        if (mSandBoxDBModel.getAllNumber() > 0) {
-            mSandBoxServiceView.notification();
-            mThreadExecutorPool.getExecutorPool().execute(new Runnable() {
-                @Override
-                public void run() {
-                    int total = mSandBoxDBModel.getAllNumber();
-                    for (int i = 0; i < total; i++) {
-                        SandPhoto sandPhoto = mSandBoxDBModel.findFirstOne();
-                        if (sandPhoto.getSize() == -1 || sandPhoto.getFileName().equals("X")) {
-                            deleteFromDBAndSDCard(sandPhoto);
-                        } else {
-                            makePhoto(sandPhoto);
+        mRxSandBox.getNumber()
+                .subscribe(integer -> {
+                    if (integer > 0) {
+                        int total = integer;
+                        for (int i = 0; i < total; i++) {
+                            mRxSandBox.findFirstOne()
+                                    .subscribe(sandPhoto1 -> {
+                                        if (sandPhoto1.getSize() == -1 || sandPhoto1.getFileName().equals("X")) {
+                                            deleteFromDBAndSDCard(sandPhoto1);
+                                        } else {
+                                            makePhoto(sandPhoto1);
+                                        }
+                                    });
                         }
+                        handler.sendEmptyMessage(0);
+                    } else {
+                        handler.sendEmptyMessage(0);
                     }
-                    handler.sendEmptyMessage(0);
-                }
-            });
-        } else {
-            handler.sendEmptyMessage(0);
-        }
+                });
     }
 
     /**
@@ -127,19 +122,19 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter, Ha
         PhotoNote photoNote = new PhotoNote(fileName, sandPhoto.getTime(), sandPhoto.getTime(), "", "",
                 sandPhoto.getTime(), sandPhoto.getTime(), sandPhoto.getCategoryId());
         photoNote.setPaletteColor(UiHelper.getPaletteColor(newBitmap));
-        boolean bool = mPhotoNoteDBModel.save(photoNote);
-        if (bool) {
-            mSandBoxServiceView.sendBroadCast();
-        }
+        mRxPhotoNote.savePhotoNote(photoNote)
+                .subscribe(photoNote1 -> {
+                    System.gc();
+                    try {
+                        setExif(photoNote, sandPhoto.getSandExif());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    deleteFromDBAndSDCard(sandPhoto);
+                });
         newBitmap.recycle();
         newBitmap = null;
         System.gc();
-        try {
-            setExif(photoNote, sandPhoto.getSandExif());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        deleteFromDBAndSDCard(sandPhoto);
     }
 
     private void setExif(PhotoNote photoNote, SandExif sandExif) throws IOException {
@@ -198,8 +193,11 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter, Ha
      * @return
      */
     private void deleteFromDBAndSDCard(SandPhoto sandPhoto) {
-        mSandBoxDBModel.delete(sandPhoto);
-        new File(FilePathUtils.getSandBoxDir() + sandPhoto.getFileName()).delete();
+        String path = FilePathUtils.getSandBoxDir() + sandPhoto.getFileName();
+        mRxSandBox.deleteOne(sandPhoto)
+                .subscribe(integer -> {
+                    new File(path).delete();
+                });
     }
 
 

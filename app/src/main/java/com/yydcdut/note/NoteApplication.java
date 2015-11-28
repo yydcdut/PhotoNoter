@@ -23,7 +23,6 @@ import java.io.File;
 
 import rx.Observable;
 import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import us.pinguo.edit.sdk.PGEditImageLoader;
 import us.pinguo.edit.sdk.base.PGEditSDK;
@@ -117,30 +116,23 @@ public class NoteApplication extends Application {
             Observable.from(new File(FilePathUtils.getPath()).listFiles())
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.computation())
-                    .filter(new Func1<File, Boolean>() {//过滤掉 文件夹
-                        @Override
-                        public Boolean call(File file) {
-                            return !file.isDirectory();
-                        }
-                    })
-                    .filter(new Func1<File, Boolean>() {//过滤出 jpg、png、JPEG
-                        @Override
-                        public Boolean call(File file) {
-                            return file.getName().toLowerCase().endsWith(".jpg") ||
-                                    file.getName().toLowerCase().endsWith(".png") ||
-                                    file.getName().toLowerCase().endsWith(".jpeg");
-                        }
-                    })
+                    .filter(file1 -> !file1.isDirectory())
+                    .filter(file -> file.getName().toLowerCase().endsWith(".jpg") ||
+                            file.getName().toLowerCase().endsWith(".png") ||
+                            file.getName().toLowerCase().endsWith(".jpeg"))
                     .count()
-                    .subscribe(new Action1<Integer>() {
-                        @Override
-                        public void call(Integer integer) {
-                            int dbNumber = mApplicationComponent.getPhotoNoteDBModel().getAllNumber();
-                            if (integer != dbNumber) {
-                                Intent checkIntent = new Intent(getApplicationContext(), CheckService.class);
-                                startService(checkIntent);
-                            }
-                        }
+                    .subscribe(fileNumber -> {
+                        mApplicationComponent.getRxSandBox()
+                                .getNumber()
+                                .subscribe(new Action1<Integer>() {
+                                    @Override
+                                    public void call(Integer dbNumber) {
+                                        if (fileNumber != dbNumber) {
+                                            Intent checkIntent = new Intent(getApplicationContext(), CheckService.class);
+                                            startService(checkIntent);
+                                        }
+                                    }
+                                });
                     });
         }
     }

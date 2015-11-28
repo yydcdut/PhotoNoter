@@ -4,10 +4,10 @@ import android.content.Context;
 
 import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.injector.ContextLife;
-import com.yydcdut.note.model.CategoryDBModel;
-import com.yydcdut.note.model.PhotoNoteDBModel;
-import com.yydcdut.note.model.SandBoxDBModel;
 import com.yydcdut.note.model.UserCenter;
+import com.yydcdut.note.model.rx.RxCategory;
+import com.yydcdut.note.model.rx.RxPhotoNote;
+import com.yydcdut.note.model.rx.RxSandBox;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.ThreadExecutorPool;
 
@@ -22,9 +22,9 @@ import dagger.Provides;
 @Module
 public class ApplicationModule {
     private NoteApplication mApplication;
-    private CategoryDBModel mCategoryDBModel;
-    private PhotoNoteDBModel mPhotoNoteDBModel;
-    private SandBoxDBModel mSandBoxDBModel;
+    private RxCategory mRxCategory;
+    private RxPhotoNote mRxPhotoNote;
+    private RxSandBox mRxSandBox;
     private UserCenter mUserCenter;
     private LocalStorageUtils mLocalStorageUtils;
     private ThreadExecutorPool mThreadExecutorPool;
@@ -34,9 +34,9 @@ public class ApplicationModule {
         mThreadExecutorPool = new ThreadExecutorPool();
         mLocalStorageUtils = new LocalStorageUtils(mApplication.getApplicationContext());
         mUserCenter = new UserCenter(mApplication.getApplicationContext(), mThreadExecutorPool);
-        mSandBoxDBModel = new SandBoxDBModel(mApplication.getApplicationContext());
-        mPhotoNoteDBModel = new PhotoNoteDBModel(mApplication.getApplicationContext());
-        mCategoryDBModel = new CategoryDBModel(mApplication.getApplicationContext(), mPhotoNoteDBModel, mThreadExecutorPool);
+        mRxSandBox = new RxSandBox(mApplication.getApplicationContext());
+        mRxPhotoNote = new RxPhotoNote(mApplication.getApplicationContext());
+        mRxCategory = new RxCategory(mApplication.getApplicationContext());
     }
 
     @Provides
@@ -48,20 +48,20 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    public CategoryDBModel provideCategoryDBModel() {
-        return mCategoryDBModel;
+    public RxCategory provideRxCategory() {
+        return mRxCategory;
     }
 
     @Provides
     @Singleton
-    public PhotoNoteDBModel providePhotoNoteDBModel() {
-        return mPhotoNoteDBModel;
+    public RxPhotoNote provideRxPhotoNote() {
+        return mRxPhotoNote;
     }
 
     @Provides
     @Singleton
-    public SandBoxDBModel provideSandBoxDBModel() {
-        return mSandBoxDBModel;
+    public RxSandBox provideRxSandBox() {
+        return mRxSandBox;
     }
 
     @Provides
@@ -81,4 +81,5 @@ public class ApplicationModule {
     public ThreadExecutorPool provideThreadExecutorPool() {
         return mThreadExecutorPool;
     }
+
 }

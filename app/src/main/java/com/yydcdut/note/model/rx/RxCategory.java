@@ -186,8 +186,8 @@ public class RxCategory {
                     mCategoryDB.update(category);
                     return mCache;
                 });
-
     }
+
 
     /**
      * 更新Label
@@ -278,6 +278,12 @@ public class RxCategory {
                     mCache.addAll(mCategoryDB.findAll());
                     return mCache;
                 });
+    }
+
+    public Observable<Category> findByCategoryId(int id) {
+        return Observable.from(mCache)
+                .subscribeOn(Schedulers.computation())
+                .filter(category -> category.getId() == id);
     }
 
 

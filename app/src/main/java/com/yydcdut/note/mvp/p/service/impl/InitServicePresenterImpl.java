@@ -11,8 +11,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.camera.param.Size;
 import com.yydcdut.note.injector.ContextLife;
-import com.yydcdut.note.model.CategoryDBModel;
-import com.yydcdut.note.model.PhotoNoteDBModel;
+import com.yydcdut.note.model.rx.RxCategory;
+import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.service.IInitServicePresenter;
 import com.yydcdut.note.utils.FilePathUtils;
@@ -36,26 +36,27 @@ import javax.inject.Inject;
  * Created by yuyidong on 15/11/22.
  */
 public class InitServicePresenterImpl implements IInitServicePresenter {
-    private static final int QUITE = 3;
+    private static final int QUITE = 2 + 16;
     private static final int ADD = 1;
     private AtomicInteger mNumber = new AtomicInteger(0);
 
     private Handler mHandler;
 
     private Context mContext;
-    private CategoryDBModel mCategoryDBModel;
-    private PhotoNoteDBModel mPhotoNoteDBModel;
+    private RxPhotoNote mRxPhotoNote;
+    private RxCategory mRxCategory;
     private LocalStorageUtils mLocalStorageUtils;
     private ThreadExecutorPool mThreadExecutorPool;
 
     private long mCategoryId = 0;
 
     @Inject
-    public InitServicePresenterImpl(@ContextLife("Service") Context context, CategoryDBModel categoryDBModel, PhotoNoteDBModel photoNoteDBModel,
-                                    LocalStorageUtils localStorageUtils, ThreadExecutorPool threadExecutorPool) {
+    public InitServicePresenterImpl(@ContextLife("Service") Context context, RxCategory rxCategory,
+                                    RxPhotoNote rxPhotoNote, LocalStorageUtils localStorageUtils,
+                                    ThreadExecutorPool threadExecutorPool) {
         mContext = context;
-        mCategoryDBModel = categoryDBModel;
-        mPhotoNoteDBModel = photoNoteDBModel;
+        mRxCategory = rxCategory;
+        mRxPhotoNote = rxPhotoNote;
         mLocalStorageUtils = localStorageUtils;
         mThreadExecutorPool = threadExecutorPool;
         initLooper();
@@ -171,8 +172,8 @@ public class InitServicePresenterImpl implements IInitServicePresenter {
      * 处理Category
      */
     private void initDefaultCategory() {
-        mCategoryId = mCategoryDBModel.saveCategory("App介绍", 16, 0, true);
-        mHandler.sendEmptyMessage(ADD);
+        mRxCategory.saveCategory("App介绍", 16, 0, true)
+                .subscribe(categories -> mHandler.sendEmptyMessage(ADD));
     }
 
     private void initDefaultPhotoNote() {
@@ -246,13 +247,15 @@ public class InitServicePresenterImpl implements IInitServicePresenter {
                     mHandler.sendEmptyMessage(ADD);
                     return;
                 }
+                ArrayList<PhotoNote> arrayList = new ArrayList<PhotoNote>(outFileName.length);
                 for (int i = 0; i < outFileName.length; i++) {
                     PhotoNote photoNote = new PhotoNote(outFileName[i], System.currentTimeMillis(), System.currentTimeMillis(),
                             titles[i], contents[i], System.currentTimeMillis(), System.currentTimeMillis(), (int) mCategoryId);
                     photoNote.setPaletteColor(UiHelper.getPaletteColor(ImageLoaderManager.loadImageSync(photoNote.getBigPhotoPathWithFile())));
-                    mPhotoNoteDBModel.save(photoNote);
+                    arrayList.add(photoNote);
                 }
-                mHandler.sendEmptyMessage(ADD);
+                mRxPhotoNote.savePhotoNotes(arrayList)
+                        .subscribe(photoNote -> mHandler.sendEmptyMessage(ADD));
             }
         });
     }

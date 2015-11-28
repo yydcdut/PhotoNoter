@@ -142,8 +142,7 @@ public class HomeActivity extends BaseActivity implements IHomeView, View.OnClic
         mHomePresenter.updateEvernoteInfo();
         mUserBackground.setImageDrawable(getResources().getDrawable(R.drawable.bg_user_background));
 
-        int position = mHomePresenter.getCheckCategoryPosition();
-        mHomePresenter.setCheckedCategoryPosition(position);
+        mHomePresenter.setCheckCategoryPosition();
     }
 
     @Override
@@ -426,6 +425,11 @@ public class HomeActivity extends BaseActivity implements IHomeView, View.OnClic
     @Override
     public void jump2UserCenterActivity() {
         startActivityForResult(new Intent(this, UserCenterActivity.class), REQUEST_NOTHING);
+    }
+
+    @Override
+    public void setCheckPosition(int position) {
+        mHomePresenter.setCheckedCategoryPosition(position);
     }
 
     @Override

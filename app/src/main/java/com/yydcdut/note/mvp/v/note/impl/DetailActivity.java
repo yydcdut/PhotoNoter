@@ -156,20 +156,19 @@ public class DetailActivity extends BaseActivity implements IDetailView,
     public void initUiAndListener() {
         ButterKnife.bind(this);
         Bundle bundle = getIntent().getExtras();
-        mDetailPresenter.bindData(bundle.getInt(Const.CATEGORY_ID_4_PHOTNOTES),
-                bundle.getInt(Const.PHOTO_POSITION),
+        mDetailPresenter.bindData(bundle.getInt(Const.CATEGORY_ID_4_PHOTNOTES), bundle.getInt(Const.PHOTO_POSITION),
                 bundle.getInt(Const.COMPARATOR_FACTORY));
         mDetailPresenter.attachView(this);
         initToolBar();
         initMap();
-        initListner();
+        initListener();
     }
 
     private void initMap() {
         mMapView.showZoomControls(false);//隐藏缩放控件
     }
 
-    private void initListner() {
+    private void initListener() {
         mViewPager.setPageTransformer(true, this);
         mScrollView.setOnScrollChangedListener(this);
     }

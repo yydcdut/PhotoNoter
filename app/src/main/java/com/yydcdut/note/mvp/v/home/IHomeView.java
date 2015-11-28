@@ -49,4 +49,6 @@ public interface IHomeView extends IView {
 
     void jump2UserCenterActivity();
 
+    void setCheckPosition(int position);
+
 }

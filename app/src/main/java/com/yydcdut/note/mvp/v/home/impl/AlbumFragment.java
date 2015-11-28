@@ -150,8 +150,8 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
     @Override
     public void initListener(View view) {
         mFloatingActionsMenu.setOnFloatingActionsMenuUpdateListener(this);
-        mFloatingScrollHideListener = new FloatingScrollHideListener(mFloatingActionsMenu, mGridLayoutManager);
-        mRecyclerView.addOnScrollListener(mFloatingScrollHideListener);
+//        mFloatingScrollHideListener = new FloatingScrollHideListener(mFloatingActionsMenu, mGridLayoutManager);
+//        mRecyclerView.addOnScrollListener(mFloatingScrollHideListener);
         mAlbumRevealView.setOnTouchListener(mEmptyTouch);
         mLayoutRevealView.setOnTouchListener(mEmptyTouch);
     }

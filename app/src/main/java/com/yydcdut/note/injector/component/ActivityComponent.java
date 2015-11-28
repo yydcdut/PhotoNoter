@@ -6,10 +6,10 @@ import android.content.Context;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.injector.PerActivity;
 import com.yydcdut.note.injector.module.ActivityModule;
-import com.yydcdut.note.model.CategoryDBModel;
-import com.yydcdut.note.model.PhotoNoteDBModel;
-import com.yydcdut.note.model.SandBoxDBModel;
 import com.yydcdut.note.model.UserCenter;
+import com.yydcdut.note.model.rx.RxCategory;
+import com.yydcdut.note.model.rx.RxPhotoNote;
+import com.yydcdut.note.model.rx.RxSandBox;
 import com.yydcdut.note.mvp.v.home.impl.HomeActivity;
 import com.yydcdut.note.mvp.v.home.impl.IntroduceActivity;
 import com.yydcdut.note.mvp.v.home.impl.SplashActivity;
@@ -42,11 +42,11 @@ public interface ActivityComponent {
 
     Activity getActivity();
 
-    CategoryDBModel getCategoryDBModel();
+    RxCategory getRxCategory();
 
-    PhotoNoteDBModel getPhotoNoteDBModel();
+    RxPhotoNote getRxPhotoNote();
 
-    SandBoxDBModel getSandBoxDBModel();
+    RxSandBox getRxSandBox();
 
     UserCenter getUserCenter();
 

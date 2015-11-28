@@ -48,9 +48,9 @@ public class RxPhotoNote {
                 .map(photoNoteList -> {//如果数据为空，从数据库中取数据，如果不为空，直接使用这数据，最后经过排序之后返回
                     if (photoNoteList == null) {
                         photoNoteList = mPhotoNoteDB.findByCategoryId(categoryId);
+                        mCache.put(categoryId, photoNoteList);
                     }
                     sortList(photoNoteList, comparatorFactory);
-                    mCache.put(categoryId, photoNoteList);
                     return photoNoteList;
                 });
     }

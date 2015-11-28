@@ -26,7 +26,7 @@ public class CategoryDB extends AbsNotesDBModel {
      *
      * @return Categories
      */
-    public List<Category> findAll() {
+    public synchronized List<Category> findAll() {
         List<Category> list = new ArrayList<>();
         SQLiteDatabase db = mNotesSQLite.getReadableDatabase();
         Cursor cursor = db.query(NotesSQLite.TABLE_CATEGORY, null, null, null, null, null, "sort asc");
@@ -44,7 +44,7 @@ public class CategoryDB extends AbsNotesDBModel {
         return list;
     }
 
-    public long save(String label, int photosNumber, int sort, boolean isCheck) {
+    public synchronized long save(String label, int photosNumber, int sort, boolean isCheck) {
         SQLiteDatabase db = mNotesSQLite.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("label", label);
@@ -62,7 +62,7 @@ public class CategoryDB extends AbsNotesDBModel {
      * @param categories 需要更新的分类
      * @return
      */
-    public int update(Category... categories) {
+    public synchronized int update(Category... categories) {
         SQLiteDatabase db = mNotesSQLite.getWritableDatabase();
         db.beginTransaction();
         int rows = 0;
@@ -92,7 +92,7 @@ public class CategoryDB extends AbsNotesDBModel {
      * @param categories
      * @return
      */
-    public int delete(Category... categories) {
+    public synchronized int delete(Category... categories) {
         SQLiteDatabase db = mNotesSQLite.getWritableDatabase();
         db.beginTransaction();
         int rows = 0;
@@ -109,6 +109,4 @@ public class CategoryDB extends AbsNotesDBModel {
         }
         return rows;
     }
-
-
 }
