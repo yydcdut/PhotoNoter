@@ -155,7 +155,7 @@ public class PhotoNoteTest extends InstrumentationTestCase {
         arrayList.add(photoNote);
         arrayList.add(photoNote2);
         mRxPhotoNote.savePhotoNotes(arrayList)
-                .subscribe(new Subscriber<PhotoNote>() {
+                .subscribe(new Subscriber<List<PhotoNote>>() {
                     @Override
                     public void onCompleted() {
                         YLog.i("yuyidong", "onCompleted--->");
@@ -167,8 +167,8 @@ public class PhotoNoteTest extends InstrumentationTestCase {
                     }
 
                     @Override
-                    public void onNext(PhotoNote photoNote) {
-                        YLog.i("yuyidong", "photoNote--->" + photoNote.toString());
+                    public void onNext(List<PhotoNote> photoNoteList) {
+                        YLog.i("yuyidong", "photoNote--->" + photoNoteList.size());
                     }
                 });
 

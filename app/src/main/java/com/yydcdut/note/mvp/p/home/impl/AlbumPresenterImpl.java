@@ -25,6 +25,7 @@ import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.UiHelper;
+import com.yydcdut.note.utils.YLog;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -134,7 +135,10 @@ public class AlbumPresenterImpl implements IAlbumPresenter {
         if (broadcast_process || broadcast_service) {
             mRxPhotoNote.findByCategoryId(mCategoryId, mAlbumSortKind)
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(photoNoteList -> mAlbumView.updateData(photoNoteList));
+                    .subscribe(photoNoteList -> {
+                        mAlbumView.updateData(photoNoteList);
+                        YLog.i("yuyidong", "photoNoteList.size()--->" + photoNoteList.size());
+                    });
         } else if (broadcast_photo) {
             mAlbumView.notifyDataSetChanged();
         }

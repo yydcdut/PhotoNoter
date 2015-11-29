@@ -36,7 +36,7 @@ import javax.inject.Inject;
  * Created by yuyidong on 15/11/22.
  */
 public class InitServicePresenterImpl implements IInitServicePresenter {
-    private static final int QUITE = 2 + 16;
+    private static final int QUITE = 3;
     private static final int ADD = 1;
     private AtomicInteger mNumber = new AtomicInteger(0);
 
@@ -48,7 +48,7 @@ public class InitServicePresenterImpl implements IInitServicePresenter {
     private LocalStorageUtils mLocalStorageUtils;
     private ThreadExecutorPool mThreadExecutorPool;
 
-    private long mCategoryId = 0;
+    private long mCategoryId = 1;
 
     @Inject
     public InitServicePresenterImpl(@ContextLife("Service") Context context, RxCategory rxCategory,
@@ -82,13 +82,8 @@ public class InitServicePresenterImpl implements IInitServicePresenter {
 
     @Override
     public void initContent() {
-        mThreadExecutorPool.getExecutorPool().execute(new Runnable() {
-            @Override
-            public void run() {
-                initDefaultCategory();
-                initDefaultPhotoNote();
-            }
-        });
+        initDefaultCategory();
+        initDefaultPhotoNote();
     }
 
     @Override
@@ -244,6 +239,7 @@ public class InitServicePresenterImpl implements IInitServicePresenter {
                     e.printStackTrace();
                 }
                 if (!bool) {
+                    //如果没有成功，就走这里，不走存PhotoNote的逻辑了
                     mHandler.sendEmptyMessage(ADD);
                     return;
                 }
@@ -255,7 +251,7 @@ public class InitServicePresenterImpl implements IInitServicePresenter {
                     arrayList.add(photoNote);
                 }
                 mRxPhotoNote.savePhotoNotes(arrayList)
-                        .subscribe(photoNote -> mHandler.sendEmptyMessage(ADD));
+                        .subscribe(photoNoteList -> mHandler.sendEmptyMessage(ADD));
             }
         });
     }

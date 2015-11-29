@@ -138,7 +138,12 @@ public class RxCategory {
                 } else {
                     mInTimes++;
                     long id = mCategoryDB.save(label, photosNumber, sort, /* isCheck */true);
-                    subscriber.onNext(id);
+                    if (mCache.size() != 0) {
+                        subscriber.onNext(id);
+                    } else {
+                        //如果mCache中没有数据，直接跳到lift中
+                        subscriber.onCompleted();
+                    }
                 }
             }
         })
@@ -146,15 +151,30 @@ public class RxCategory {
                 .map(aLong -> mCache)//重新获取cache数据
                 .flatMap(categories1 -> Observable.from(categories1))//转换成一个个的
                 .filter(category -> category.isCheck())//过滤出check为true的
-                .map(category3 -> {//将check为true的转换false，保存到数据,刷新mCache
-                    category3.setCheck(false);
-                    mCategoryDB.update(category3);
-                    mCache.clear();
-                    mCache.addAll(mCategoryDB.findAll());
-                    return mCache;
+                .lift(new Observable.Operator<List<Category>, Category>() {
+                    @Override
+                    public Subscriber<? super Category> call(Subscriber<? super List<Category>> subscriber) {
+                        return new Subscriber<Category>() {
+                            @Override
+                            public void onCompleted() {
+                                mCache.clear();
+                                mCache.addAll(mCategoryDB.findAll());
+                                subscriber.onNext(mCache);
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                            }
+
+                            @Override
+                            public void onNext(Category category3) {
+                                //如果有check为true的话，进入到这里，如果没有的话直接进入到onCompleted
+                                category3.setCheck(false);
+                                mCategoryDB.update(category3);
+                            }
+                        };
+                    }
                 });
-
-
     }
 
     /**
@@ -268,7 +288,7 @@ public class RxCategory {
     }
 
     public Observable<List<Category>> delete(int id) {
-        //todo 删除PhotoNote数据,删除图片
+        //FIXME 删除PhotoNote数据,删除图片
         return Observable.just(id)
                 .subscribeOn(Schedulers.io())
                 .map(integer -> findCategoryByIdInCache(id))

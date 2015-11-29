@@ -82,7 +82,31 @@ public class RxPhotoNote {
                 .subscribeOn(Schedulers.io())
                 .map(photoNote1 -> mPhotoNoteDB.update(photoNote1))//更新
                 .map(integer -> categoryId)//得到CategoryId
-                .map(integer1 -> mCache.get(integer1));//返回数据
+                .lift(new Observable.Operator<List<PhotoNote>, Integer>() {
+                    @Override
+                    public Subscriber<? super Integer> call(Subscriber<? super List<PhotoNote>> subscriber) {
+                        return new Subscriber<Integer>() {
+                            private int mCategoryId = -1;
+
+                            @Override
+                            public void onCompleted() {
+                                if (mCategoryId != -1) {
+                                    subscriber.onNext(mCache.get(mCategoryId));
+                                }
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+
+                            @Override
+                            public void onNext(Integer integer) {
+                                mCategoryId = integer;
+                            }
+                        };
+                    }
+                });
 
     }
 
@@ -95,19 +119,43 @@ public class RxPhotoNote {
 
     }
 
-    public Observable<PhotoNote> savePhotoNotes(List<PhotoNote> photoNoteList) {
+    public Observable<List<PhotoNote>> savePhotoNotes(List<PhotoNote> photoNoteList) {
         return Observable.from(photoNoteList)
                 .subscribeOn(Schedulers.io())
-                .filter(photoNote1 -> photoNote1.getId() == PhotoNote.NO_ID)//确定这个是新的PhotoNote
-                .map(photoNote2 -> mPhotoNoteDB.save(photoNote2))//保存
-                .filter(aLong -> aLong != -1)//获取到ID
-                .map(aLong1 -> mPhotoNoteDB.findByPhotoNoteId(aLong1))//通过这个ID再找到存在数据库中的
-                .filter(photoNote3 -> photoNote3 != null)//过滤一下，得找到
-                .map(photoNote4 -> {//存到缓存中
-                    mCache.remove(photoNote4.getCategoryId());
-                    mCache.put(photoNote4.getCategoryId(), mPhotoNoteDB.findByCategoryId(photoNote4.getCategoryId()));
-                    return photoNote4;
+                .filter(photoNote -> photoNote.getId() == PhotoNote.NO_ID)
+                .map(photoNote1 -> mPhotoNoteDB.save(photoNote1))
+                .filter(aLong -> aLong != -1)
+                .map(aLong1 -> mPhotoNoteDB.findByPhotoNoteId(aLong1))
+                .filter(photoNote2 -> photoNote2 != null)
+                .lift(new Observable.Operator<List<PhotoNote>, PhotoNote>() {
+                    @Override
+                    public Subscriber<? super PhotoNote> call(Subscriber<? super List<PhotoNote>> subscriber) {
+                        return new Subscriber<PhotoNote>() {
+                            private int mCategoryId = -1;
+
+                            @Override
+                            public void onCompleted() {
+                                if (mCategoryId != -1) {
+                                    mCache.remove(mCategoryId);
+                                    mCache.put(mCategoryId, mPhotoNoteDB.findByCategoryId(mCategoryId));
+                                    subscriber.onNext(mCache.get(mCategoryId));
+                                }
+
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+
+                            @Override
+                            public void onNext(PhotoNote photoNote) {
+                                mCategoryId = photoNote.getId();
+                            }
+                        };
+                    }
                 });
+
     }
 
     public Observable<PhotoNote> savePhotoNote(PhotoNote photoNote) {
@@ -134,12 +182,28 @@ public class RxPhotoNote {
                 .subscribeOn(Schedulers.io())
                 .map(photoNote1 -> mPhotoNoteDB.delete(photoNote1))//做删除操作
                 .filter(integer -> integer > 0)//返回的是删除的条数
-                .map(integer1 -> {
-                    mCache.remove(categoryId);
-                    mCache.put(categoryId, mPhotoNoteDB.findByCategoryId(categoryId));
-                    return mCache.get(categoryId);
-                });
+                .lift(new Observable.Operator<List<PhotoNote>, Integer>() {
+                    @Override
+                    public Subscriber<? super Integer> call(Subscriber<? super List<PhotoNote>> subscriber) {
+                        return new Subscriber<Integer>() {
+                            @Override
+                            public void onCompleted() {
+                                mCache.remove(categoryId);
+                                mCache.put(categoryId, mPhotoNoteDB.findByCategoryId(categoryId));
+                                subscriber.onNext(mCache.get(categoryId));
+                            }
 
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+
+                            @Override
+                            public void onNext(Integer integer) {
+                            }
+                        };
+                    }
+                });
     }
 
     public Observable<List<PhotoNote>> deletePhotoNote(PhotoNote photoNote) {
