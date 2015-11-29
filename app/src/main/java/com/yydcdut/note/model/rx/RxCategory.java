@@ -292,7 +292,6 @@ public class RxCategory {
     }
 
     public Observable<List<Category>> delete(int id) {
-        //FIXME 删除PhotoNote数据,删除图片
         return Observable.just(id)
                 .subscribeOn(Schedulers.io())
                 .map(integer -> findCategoryByIdInCache(id))

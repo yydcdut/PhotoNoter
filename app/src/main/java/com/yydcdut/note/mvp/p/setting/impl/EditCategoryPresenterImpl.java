@@ -6,13 +6,17 @@ import android.os.Message;
 
 import com.yydcdut.note.R;
 import com.yydcdut.note.bean.Category;
+import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.bus.CategoryDeleteEvent;
 import com.yydcdut.note.bus.CategoryEditEvent;
 import com.yydcdut.note.injector.ContextLife;
+import com.yydcdut.note.model.compare.ComparatorFactory;
 import com.yydcdut.note.model.rx.RxCategory;
+import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.setting.IEditCategoryPresenter;
 import com.yydcdut.note.mvp.v.setting.IEditCategoryView;
+import com.yydcdut.note.utils.FilePathUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +29,7 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by yuyidong on 15/11/15.
@@ -51,11 +56,14 @@ public class EditCategoryPresenterImpl implements IEditCategoryPresenter, Handle
     private Map<Integer, String> mRenameCategoryLabelMap;
 
     private RxCategory mRxCategory;
+    private RxPhotoNote mRxPhotoNote;
 
     @Inject
-    public EditCategoryPresenterImpl(@ContextLife("Activity") Context context, RxCategory rxCategory) {
+    public EditCategoryPresenterImpl(@ContextLife("Activity") Context context, RxCategory rxCategory,
+                                     RxPhotoNote rxPhotoNote) {
         mContext = context;
         mRxCategory = rxCategory;
+        mRxPhotoNote = rxPhotoNote;
     }
 
     @Override
@@ -145,8 +153,16 @@ public class EditCategoryPresenterImpl implements IEditCategoryPresenter, Handle
     private void deleteCategories() {
         if (mDeleteCategoryIdList.size() > 0) {
             mRxCategory.refreshCategories()
+                    .observeOn(Schedulers.io())
                     .subscribe(categories -> {
                         for (int id : mDeleteCategoryIdList) {
+                            mRxPhotoNote.findByCategoryId(id, ComparatorFactory.FACTORY_NOT_SORT)
+                                    .subscribe(photoNoteList -> {
+                                        for (PhotoNote photoNote : photoNoteList) {
+                                            FilePathUtils.deleteAllFiles(photoNote.getPhotoName());
+                                        }
+                                        mRxPhotoNote.deletePhotoNotes(photoNoteList).subscribe();
+                                    });
                             mRxCategory.delete(id).subscribe(categories2 -> mHandler.sendEmptyMessage(1));
                         }
                     });
