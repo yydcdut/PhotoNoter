@@ -126,7 +126,6 @@ public class RxPhotoNote {
                 .map(photoNote1 -> mPhotoNoteDB.save(photoNote1))
                 .filter(aLong -> aLong != -1)
                 .map(aLong1 -> mPhotoNoteDB.findByPhotoNoteId(aLong1))
-                .filter(photoNote2 -> photoNote2 != null)
                 .lift(new Observable.Operator<List<PhotoNote>, PhotoNote>() {
                     @Override
                     public Subscriber<? super PhotoNote> call(Subscriber<? super List<PhotoNote>> subscriber) {
@@ -165,7 +164,6 @@ public class RxPhotoNote {
                 .map(photoNote2 -> mPhotoNoteDB.save(photoNote2))//保存
                 .filter(aLong -> aLong != -1)//获取到ID
                 .map(aLong1 -> mPhotoNoteDB.findByPhotoNoteId(aLong1))//通过这个ID再找到存在数据库中的
-                .filter(photoNote3 -> photoNote3 != null)//过滤一下，得找到
                 .map(photoNote4 -> {//存到缓存中
                     mCache.remove(photoNote4.getCategoryId());
                     mCache.put(photoNote4.getCategoryId(), mPhotoNoteDB.findByCategoryId(photoNote4.getCategoryId()));

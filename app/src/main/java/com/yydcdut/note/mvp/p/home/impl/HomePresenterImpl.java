@@ -179,7 +179,7 @@ public class HomePresenterImpl implements IHomePresenter {
 
         //从另外个进程过来的数据
         if (broadcast_process) {
-            mRxPhotoNote.findByCategoryId(mCategoryId, ComparatorFactory.FACTORY_NOT_SORT)
+            mRxPhotoNote.refreshByCategoryId(mCategoryId, ComparatorFactory.FACTORY_NOT_SORT)
                     .subscribe(photoNoteList -> {
                         mRxCategory.findByCategoryId(mCategoryId)
                                 .subscribe(category -> {

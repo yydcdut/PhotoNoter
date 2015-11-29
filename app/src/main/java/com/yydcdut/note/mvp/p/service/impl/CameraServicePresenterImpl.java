@@ -150,7 +150,7 @@ public class CameraServicePresenterImpl implements ICameraServicePresenter {
             newBitmap = Bitmap.createBitmap(bitmap, beginWidth, beginHeight, width, height, matrix, true);
         } catch (Exception e) {
             YLog.e("yuyidong", "maybe oom--->" + e.getMessage());
-            //todo 打个log
+            //todo 做个统计
             return;
         }
         bitmap.recycle();
@@ -167,7 +167,6 @@ public class CameraServicePresenterImpl implements ICameraServicePresenter {
         photoNote.setPaletteColor(UiHelper.getPaletteColor(newBitmap));
         mRxPhotoNote.savePhotoNote(photoNote)
                 .subscribe(photoNote1 -> {
-                    System.gc();
                     try {
                         setExif(photoNote, sandPhoto.getSandExif());
                     } catch (IOException e) {
@@ -178,7 +177,7 @@ public class CameraServicePresenterImpl implements ICameraServicePresenter {
                 });
         newBitmap.recycle();
         newBitmap = null;
-
+        System.gc();
     }
 
     private byte[] getDataFromFile(String fileName, int size) {
