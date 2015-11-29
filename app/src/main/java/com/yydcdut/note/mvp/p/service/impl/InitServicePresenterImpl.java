@@ -149,7 +149,17 @@ public class InitServicePresenterImpl implements IInitServicePresenter {
      *
      * @param cameraId
      * @return
-     * @throws JSONException
+     * @throws JSONException todo:当没有获得权限的时候这里会崩
+     *                       java.lang.RuntimeException: Camera is being used after Camera.release() was called
+     *                       at android.hardware.Camera.native_getParameters(Native Method)
+     *                       at android.hardware.Camera.getParameters(Camera.java:3195)
+     *                       at com.yydcdut.note.mvp.p.service.impl.InitServicePresenterImpl.getPictureSizeJsonArray(InitServicePresenterImpl.java:158)
+     *                       at com.yydcdut.note.mvp.p.service.impl.InitServicePresenterImpl.initCameraPictureSize(InitServicePresenterImpl.java:132)
+     *                       at com.yydcdut.note.mvp.p.service.impl.InitServicePresenterImpl.access$100(InitServicePresenterImpl.java:39)
+     *                       at com.yydcdut.note.mvp.p.service.impl.InitServicePresenterImpl$2.run(InitServicePresenterImpl.java:95)
+     *                       at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1112)
+     *                       at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:587)
+     *                       at java.lang.Thread.run(Thread.java:818)
      */
     private List<Size> getPictureSizeJsonArray(int cameraId) throws JSONException {
         Camera camera = Camera.open(cameraId);
