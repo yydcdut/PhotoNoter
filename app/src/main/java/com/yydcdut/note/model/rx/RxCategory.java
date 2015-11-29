@@ -42,6 +42,7 @@ public class RxCategory {
             @Override
             public void call(Subscriber<? super List<Category>> subscriber) {
                 subscriber.onNext(mCache);
+                subscriber.onCompleted();
             }
         }).subscribeOn(Schedulers.io());
     }
@@ -58,6 +59,7 @@ public class RxCategory {
                 mCache.clear();
                 mCache.addAll(mCategoryDB.findAll());
                 subscriber.onNext(mCache);
+                subscriber.onCompleted();
             }
         }).subscribeOn(Schedulers.io());
     }
@@ -140,6 +142,7 @@ public class RxCategory {
                     long id = mCategoryDB.save(label, photosNumber, sort, /* isCheck */true);
                     if (mCache.size() != 0) {
                         subscriber.onNext(id);
+                        subscriber.onCompleted();
                     } else {
                         //如果mCache中没有数据，直接跳到lift中
                         subscriber.onCompleted();
@@ -281,8 +284,9 @@ public class RxCategory {
                     Category category = mCache.get(i);
                     category.setSort(i);
                     mCategoryDB.update(category);
-                    subscriber.onNext(mCache);
                 }
+                subscriber.onNext(mCache);
+                subscriber.onCompleted();
             }
         }).subscribeOn(Schedulers.io());
     }

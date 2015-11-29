@@ -72,7 +72,6 @@ public class EditCategoryActivity extends BaseActivity implements IEditCategoryV
         ButterKnife.bind(this);
         mEditCategoryPresenter.attachView(this);
         initToolBarUI();
-        initListView();
     }
 
     private void initToolBarUI() {
@@ -194,6 +193,7 @@ public class EditCategoryActivity extends BaseActivity implements IEditCategoryV
     public void showCategoryList(List<Category> categoryList) {
         mCategoryAdapter = new EditCategoryAdapter(this, categoryList);
         mListView.setOnDragListener(this, categoryList);
+        initListView();
     }
 
     @Override

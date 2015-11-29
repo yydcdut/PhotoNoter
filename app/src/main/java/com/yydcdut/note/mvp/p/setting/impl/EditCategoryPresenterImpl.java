@@ -23,12 +23,17 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
+import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by yuyidong on 15/11/15.
  */
 public class EditCategoryPresenterImpl implements IEditCategoryPresenter, Handler.Callback {
+    private static final int MESSAGE_RENAME_NONE = -1;
+    private static final int MESSAGE_DELETE_NONE = -2;
+    private static final int MESSAGE_FINISH = -3;
+
     private Context mContext;
 
     private IEditCategoryView mEditCategoryView;
@@ -67,6 +72,7 @@ public class EditCategoryPresenterImpl implements IEditCategoryPresenter, Handle
 
     @Override
     public void detachView() {
+        mRxCategory.refreshCategories().subscribe();
         mRenameCategoryLabelMap.clear();
         mDeleteCategoryIdList.clear();
     }
@@ -90,7 +96,11 @@ public class EditCategoryPresenterImpl implements IEditCategoryPresenter, Handle
     @Override
     public void deleteCategory(int index) {
         mRxCategory.getAllCategories()
-                .map(categories -> categories.get(index))
+                .map(categories -> {
+                    Category category = categories.get(index);
+                    categories.remove(category);
+                    return category;
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(category1 -> {
                     mDeleteCategoryIdList.add(category1.getId());
@@ -102,7 +112,9 @@ public class EditCategoryPresenterImpl implements IEditCategoryPresenter, Handle
     public void doJob() {
         mEditCategoryView.showProgressBar();
         renameCategories();
-        deleteCategories();
+    }
+
+    private void sortCategories() {
         mRxCategory.updateOrder().subscribe(categories -> mHandler.sendEmptyMessage(1));
     }
 
@@ -111,13 +123,19 @@ public class EditCategoryPresenterImpl implements IEditCategoryPresenter, Handle
      */
     private void renameCategories() {
         if (mRenameCategoryLabelMap.size() > 0) {
-            Iterator<Map.Entry<Integer, String>> iterator = mRenameCategoryLabelMap.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Map.Entry<Integer, String> entry = iterator.next();
-                Integer categoryId = entry.getKey();
-                String newLabel = entry.getValue();
-                mRxCategory.updateLabel(categoryId, newLabel).subscribe(categories -> mHandler.sendEmptyMessage(1));
-            }
+            mRxCategory.refreshCategories()
+                    .subscribe(categories1 -> {
+                        Iterator<Map.Entry<Integer, String>> iterator = mRenameCategoryLabelMap.entrySet().iterator();
+                        while (iterator.hasNext()) {
+                            Map.Entry<Integer, String> entry = iterator.next();
+                            Integer categoryId = entry.getKey();
+                            String newLabel = entry.getValue();
+                            mRxCategory.updateLabel(categoryId, newLabel)
+                                    .subscribe(categories -> mHandler.sendEmptyMessage(1));
+                        }
+                    });
+        } else {
+            mHandler.sendEmptyMessage(MESSAGE_RENAME_NONE);
         }
     }
 
@@ -126,42 +144,70 @@ public class EditCategoryPresenterImpl implements IEditCategoryPresenter, Handle
      */
     private void deleteCategories() {
         if (mDeleteCategoryIdList.size() > 0) {
-            for (int id : mDeleteCategoryIdList) {
-                mRxCategory.findByCategoryId(id)
-                        .subscribe(category -> {
-                            boolean isCheck = category.isCheck();
-                            mRxCategory.delete(id).subscribe(categories1 -> mHandler.sendEmptyMessage(1));
-                            if (isCheck) {//如果是menu中当前选中的这个
-                                mRxCategory.getAllCategories()
-                                        .subscribe(categories -> {
-                                            if (categories.size() > 0) {
-                                                for (Category category1 : categories) {
-                                                    category1.setCheck(false);
-                                                }
-                                                categories.get(0).setCheck(true);
-                                                mRxCategory.updateCategory(categories.get(0)).subscribe();
-                                            } else {
-                                                //todo 当所有的都没有了怎么办
-                                            }
-                                        });
-                            }
-                        });
-            }
+            mRxCategory.refreshCategories()
+                    .subscribe(categories -> {
+                        for (int id : mDeleteCategoryIdList) {
+                            mRxCategory.delete(id).subscribe(categories2 -> mHandler.sendEmptyMessage(1));
+                        }
+                    });
+        } else {
+            mHandler.sendEmptyMessage(MESSAGE_DELETE_NONE);
         }
     }
 
 
     @Override
     public boolean handleMessage(Message msg) {
-        mCurrentMessage++;
-        if (mCurrentMessage == 1 + mRenameCategoryLabelMap.size() + mDeleteCategoryIdList.size()) {
-            mEditCategoryView.hideProgressBar();
-            mEditCategoryView.finishActivity();
-            if (mDeleteCategoryIdList.size() > 0) {
-                EventBus.getDefault().post(new CategoryDeleteEvent());
-            } else {
-                EventBus.getDefault().post(new CategoryEditEvent());
-            }
+        switch (msg.what) {
+            case MESSAGE_RENAME_NONE:
+                deleteCategories();
+                return false;
+            case MESSAGE_DELETE_NONE:
+                sortCategories();
+                return false;
+            case MESSAGE_FINISH:
+                if (mDeleteCategoryIdList.size() > 0) {
+                    EventBus.getDefault().post(new CategoryDeleteEvent());
+                } else {
+                    EventBus.getDefault().post(new CategoryEditEvent());
+                }
+                mEditCategoryView.hideProgressBar();
+                mEditCategoryView.finishActivity();
+                return false;
+            default:
+                mCurrentMessage++;
+                break;
+        }
+        if (mCurrentMessage == mRenameCategoryLabelMap.size()) {
+            deleteCategories();
+        } else if (mCurrentMessage == mRenameCategoryLabelMap.size() + mDeleteCategoryIdList.size()) {
+            sortCategories();
+        } else if (mCurrentMessage == mRenameCategoryLabelMap.size() + mDeleteCategoryIdList.size() + 1) {
+            mRxCategory.getAllCategories()
+                    .subscribe(new Subscriber<List<Category>>() {
+                        @Override
+                        public void onCompleted() {
+                            mHandler.sendEmptyMessage(MESSAGE_FINISH);
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                        }
+
+                        @Override
+                        public void onNext(List<Category> categories) {
+                            //todo 删除图片,删除PhotoNote
+                            boolean checked = false;
+                            for (Category category : categories) {
+                                checked |= category.isCheck();
+                            }
+                            if (!checked && categories.size() > 0) {
+                                categories.get(0).setCheck(true);
+                                mRxCategory.updateCategory(categories.get(0)).subscribe();
+                            }
+                            //todo 当所有的都没有了怎么办
+                        }
+                    });
         }
         return false;
     }

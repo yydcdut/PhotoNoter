@@ -251,11 +251,11 @@ public class AlbumPresenterImpl implements IAlbumPresenter {
                         mRxCategory.saveCategory(newCategoryLabel, 0, totalNumber, true)
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(categories1 -> {
-                                    EventBus.getDefault().post(new CategoryCreateEvent());
                                     boolean success = false;
                                     for (Category category : categories1) {
                                         if (category.getLabel().equals(newCategoryLabel)) {
                                             mAlbumView.changeActivityListMenuCategoryChecked(category);
+                                            EventBus.getDefault().post(new CategoryCreateEvent());
                                             success = true;
                                             break;
                                         }
