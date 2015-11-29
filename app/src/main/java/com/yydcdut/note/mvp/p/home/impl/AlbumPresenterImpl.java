@@ -154,7 +154,9 @@ public class AlbumPresenterImpl implements IAlbumPresenter {
         mCategoryId = categoryId;
         mRxPhotoNote.findByCategoryId(mCategoryId, mAlbumSortKind)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(photoNoteList -> mAlbumView.updateData(photoNoteList));
+                .subscribe(photoNoteList -> {
+                    mAlbumView.updateData(photoNoteList);
+                });
     }
 
     @Override
@@ -198,7 +200,11 @@ public class AlbumPresenterImpl implements IAlbumPresenter {
                     })
                     .subscribe(integer -> {
                         mRxCategory.updateChangeCategory(mCategoryId, toCategoryId, integer)
-                                .subscribe(categories -> EventBus.getDefault().post(new CategoryMoveEvent()));
+                                .subscribe(categories -> {
+                                    mRxPhotoNote.refreshByCategoryId(mCategoryId, ComparatorFactory.FACTORY_NOT_SORT).subscribe();
+                                    mRxPhotoNote.refreshByCategoryId(toCategoryId, ComparatorFactory.FACTORY_NOT_SORT).subscribe();
+                                    EventBus.getDefault().post(new CategoryMoveEvent());
+                                });
                     });
         }
     }
