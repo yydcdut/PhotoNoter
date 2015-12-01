@@ -22,6 +22,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by yuyidong on 15/11/27.
  * FIXME: 测试的时候把 subscribeOn() 注释掉
+ * todo: 有关涉及到的mCache的重构，contact() merge()
  */
 public class RxPhotoNote {
     private Map<Integer, List<PhotoNote>> mCache;

@@ -19,6 +19,7 @@ import rx.schedulers.Schedulers;
 
 /**
  * Created by yuyidong on 15/11/26.
+ * todo: 有关涉及到的mCache的重构，contact() merge()
  */
 public class RxCategory {
     private List<Category> mCache;
