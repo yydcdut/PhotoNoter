@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.PhoneUtils;
-import com.yydcdut.note.utils.YLog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,6 +29,7 @@ import javax.inject.Singleton;
 
 /**
  * Created by yuyidong on 15/11/3.
+ * todo 这个其实不用全局变量的
  */
 public class FeedbackModel {
     private LocalStorageUtils mLocalStorageUtils;
@@ -40,7 +40,6 @@ public class FeedbackModel {
     public FeedbackModel(@ContextLife("Application") Context context, LocalStorageUtils localStorageUtils) {
         mLocalStorageUtils = localStorageUtils;
         mContext = context;
-        YLog.i("yuyidong", "FeedbackModel   --->" + this.toString());
     }
 
     public synchronized Map sendFeedback(String feedback_id, String content) {
@@ -49,7 +48,7 @@ public class FeedbackModel {
         }
         JSONObject json = null;
         try {
-            JSONObject totalInfoJson = getdeviceInfo(mContext);
+            JSONObject totalInfoJson = getDeviceInfo(mContext);
             totalInfoJson.put("content", content);
             totalInfoJson.put("feedback_id", feedback_id);
             totalInfoJson.put("reply_id", System.currentTimeMillis() + "");
@@ -133,30 +132,30 @@ public class FeedbackModel {
         }
     }
 
-    public JSONObject getdeviceInfo(Context var0) {
+    public JSONObject getDeviceInfo(Context context) {
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("device_id", PhoneUtils.f(var0));
+            jsonObject.put("device_id", PhoneUtils.getDeiceId(context));
             jsonObject.put("device_model", Build.MODEL);
-            jsonObject.put("appkey", PhoneUtils.p(var0));
-            jsonObject.put("channel", PhoneUtils.t(var0));
-            jsonObject.put("app_version", PhoneUtils.d(var0));
-            jsonObject.put("version_code", PhoneUtils.c(var0));
+            jsonObject.put("appkey", PhoneUtils.getUmengAppKey(context));
+            jsonObject.put("channel", PhoneUtils.getChannel(context));
+            jsonObject.put("app_version", PhoneUtils.getVersion(context));
+            jsonObject.put("version_code", PhoneUtils.getVersionCode(context));
             jsonObject.put("sdk_type", "Android");
             jsonObject.put("sdk_version", "5.4.0.20150727");
             jsonObject.put("os", "Android");
             jsonObject.put("os_version", Build.VERSION.RELEASE);
-            jsonObject.put("country", PhoneUtils.o(var0)[0]);
-            jsonObject.put("language", PhoneUtils.o(var0)[1]);
-            jsonObject.put("timezone", PhoneUtils.n(var0));
-            jsonObject.put("resolution", PhoneUtils.r(var0));
-            jsonObject.put("access", PhoneUtils.j(var0)[0]);
-            jsonObject.put("access_subtype", PhoneUtils.j(var0)[1]);
-            jsonObject.put("carrier", PhoneUtils.h(var0));
-            jsonObject.put("cpu", PhoneUtils.a());
-            jsonObject.put("package", PhoneUtils.u(var0));
+            jsonObject.put("country", PhoneUtils.getLocaleInfo(context)[0]);
+            jsonObject.put("language", PhoneUtils.getLocaleInfo(context)[1]);
+            jsonObject.put("timezone", PhoneUtils.getTimeZone(context));
+            jsonObject.put("resolution", PhoneUtils.getScreenWidthAndHeight(context));
+            jsonObject.put("access", PhoneUtils.getNetworkState(context)[0]);
+            jsonObject.put("access_subtype", PhoneUtils.getNetworkState(context)[1]);
+            jsonObject.put("carrier", PhoneUtils.getMobileOperator(context));
+            jsonObject.put("cpu", PhoneUtils.getCpu());
+            jsonObject.put("package", PhoneUtils.getPackageName(context));
             jsonObject.put("uid", mLocalStorageUtils.getUmengUid());
-            jsonObject.put("mac", PhoneUtils.q(var0));
+            jsonObject.put("mac", PhoneUtils.getMacAddress(context));
             jsonObject.put("protocol_version", "2.0");
             return jsonObject;
         } catch (Exception var3) {
@@ -167,7 +166,7 @@ public class FeedbackModel {
 
     private String getUmengUID() {
         try {
-            JSONObject deviceInfo = getdeviceInfo(mContext);
+            JSONObject deviceInfo = getDeviceInfo(mContext);
             StringBuilder sb = new StringBuilder("http://fb.umeng.com/api/v2/user/getuid");
             sb.append("?");
             Iterator iterator = deviceInfo.keys();
