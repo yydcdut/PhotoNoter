@@ -31,6 +31,7 @@ import javax.inject.Singleton;
  * Created by yuyidong on 15/11/3.
  * todo 这个其实不用全局变量的
  */
+@Deprecated
 public class FeedbackModel {
     private LocalStorageUtils mLocalStorageUtils;
     private Context mContext;

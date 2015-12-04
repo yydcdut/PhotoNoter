@@ -9,6 +9,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -16,6 +17,9 @@ import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
 import com.yydcdut.note.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -355,5 +359,33 @@ public class PhoneUtils {
     public static String getPackageName(Context var0) {
         return var0.getPackageName();
     }
+
+    public static JSONObject getDeviceInfo(Context context) throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("device_id", getDeiceId(context));
+        jsonObject.put("device_model", Build.MODEL);
+        jsonObject.put("appkey", getUmengAppKey(context));
+        jsonObject.put("channel", getChannel(context));
+        jsonObject.put("app_version", getVersion(context));
+        jsonObject.put("version_code", getVersionCode(context));
+        jsonObject.put("sdk_type", "Android");
+        jsonObject.put("sdk_version", "5.4.0.20150727");
+        jsonObject.put("os", "Android");
+        jsonObject.put("os_version", Build.VERSION.RELEASE);
+        jsonObject.put("country", getLocaleInfo(context)[0]);
+        jsonObject.put("language", getLocaleInfo(context)[1]);
+        jsonObject.put("timezone", getTimeZone(context));
+        jsonObject.put("resolution", getScreenWidthAndHeight(context));
+        jsonObject.put("access", getNetworkState(context)[0]);
+        jsonObject.put("access_subtype", getNetworkState(context)[1]);
+        jsonObject.put("carrier", getMobileOperator(context));
+        jsonObject.put("cpu", getCpu());
+        jsonObject.put("package", getPackageName(context));
+//        jsonObject.put("uid", mLocalStorageUtils.getUmengUid());
+        jsonObject.put("mac", getMacAddress(context));
+        jsonObject.put("protocol_version", "2.0");
+        return jsonObject;
+    }
+
 
 }
