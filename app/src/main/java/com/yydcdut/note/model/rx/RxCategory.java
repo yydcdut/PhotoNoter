@@ -5,8 +5,7 @@ import android.content.Context;
 import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.dao.CategoryDB;
-import com.yydcdut.note.model.rx.exception.LabelExistException;
-import com.yydcdut.note.model.rx.exception.NotExistCategoryException;
+import com.yydcdut.note.model.rx.exception.RxException;
 
 import java.util.List;
 
@@ -92,7 +91,7 @@ public class RxCategory {
                             @Override
                             public void onCompleted() {
                                 if (mInTimes == 0) {
-                                    subscriber.onError(new NotExistCategoryException("找不到这个ID的Category"));
+                                    subscriber.onError(new RxException("找不到这个ID的Category"));
                                 }
                             }
 
@@ -137,7 +136,7 @@ public class RxCategory {
                 boolean exist = checkLabelExist(label);
                 if (exist && mInTimes == 0) {
                     //在没有mInTimes的时候，这里也会执行，不知道为啥.......
-                    subscriber.onError(new LabelExistException("这个Label已经有了"));
+                    subscriber.onError(new RxException("这个Label已经有了"));
                 } else {
                     mInTimes++;
                     long id = mCategoryDB.save(label, photosNumber, sort, /* isCheck */true);
