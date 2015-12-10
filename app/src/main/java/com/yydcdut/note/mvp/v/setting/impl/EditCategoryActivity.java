@@ -36,7 +36,7 @@ import butterknife.ButterKnife;
  * Created by yuyidong on 15/10/13.
  */
 public class EditCategoryActivity extends BaseActivity implements IEditCategoryView, SlideAndDragListView.OnDragListener,
-        SlideAndDragListView.OnSlideListener, SlideAndDragListView.OnMenuItemClickListener {
+        SlideAndDragListView.OnSlideListener, SlideAndDragListView.OnMenuItemClickListener, SlideAndDragListView.OnItemDeleteListener {
 
     @Bind(R.id.lv_edit_category)
     SlideAndDragListView mListView;
@@ -101,6 +101,7 @@ public class EditCategoryActivity extends BaseActivity implements IEditCategoryV
         mListView.setAdapter(mCategoryAdapter);
         mListView.setOnSlideListener(this);
         mListView.setOnMenuItemClickListener(this);
+        mListView.setOnItemDeleteListener(this);
     }
 
     @Override
@@ -129,16 +130,15 @@ public class EditCategoryActivity extends BaseActivity implements IEditCategoryV
     }
 
     @Override
-    public boolean onMenuItemClick(View v, int itemPosition, int buttonPosition, int direction) {
+    public int onMenuItemClick(View v, int itemPosition, int buttonPosition, int direction) {
         switch (direction) {
             case MenuItem.DIRECTION_LEFT:
-                mEditCategoryPresenter.deleteCategory(itemPosition);
-                return true;
+                return Menu.ITEM_DELETE_FROM_BOTTOM_TO_TOP;
             case MenuItem.DIRECTION_RIGHT:
                 showRenameDialog(itemPosition);
-                return true;
+                return Menu.ITEM_SCROLL_BACK;
         }
-        return false;
+        return Menu.ITEM_NOTHING;
     }
 
     @Override
@@ -210,5 +210,10 @@ public class EditCategoryActivity extends BaseActivity implements IEditCategoryV
     protected void onDestroy() {
         super.onDestroy();
         mEditCategoryPresenter.detachView();
+    }
+
+    @Override
+    public void onItemDelete(View view, int i) {
+        mEditCategoryPresenter.deleteCategory(i);
     }
 }
