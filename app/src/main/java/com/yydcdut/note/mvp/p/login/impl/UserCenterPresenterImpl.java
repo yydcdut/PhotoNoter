@@ -172,12 +172,12 @@ public class UserCenterPresenterImpl implements IUserCenterPresenter {
     public void finish() {
         mRxUser.isLoginQQ()
                 .subscribe(aBoolean -> {
-                    if (mInitState[0] == aBoolean) {
+                    if (mInitState[0] != aBoolean) {
                         mUserCenterView.finishActivityWithResult(RESULT_DATA_USER);
                     } else {
                         mRxUser.isLoginEvernote()
                                 .subscribe(aBoolean1 -> {
-                                    if (mInitState[1] == aBoolean) {
+                                    if (mInitState[1] != aBoolean) {
                                         mUserCenterView.finishActivityWithResult(RESULT_DATA_USER);
                                     } else {
                                         mUserCenterView.finishActivityWithResult(-1);
