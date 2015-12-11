@@ -1,7 +1,6 @@
 package com.yydcdut.note.mvp.p.home.impl;
 
 import com.yydcdut.note.bean.Category;
-import com.yydcdut.note.bean.IUser;
 import com.yydcdut.note.bus.CategoryCreateEvent;
 import com.yydcdut.note.bus.CategoryDeleteEvent;
 import com.yydcdut.note.bus.CategoryEditEvent;
@@ -13,6 +12,7 @@ import com.yydcdut.note.model.UserCenter;
 import com.yydcdut.note.model.compare.ComparatorFactory;
 import com.yydcdut.note.model.rx.RxCategory;
 import com.yydcdut.note.model.rx.RxPhotoNote;
+import com.yydcdut.note.model.rx.RxUser;
 import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.home.IHomePresenter;
 import com.yydcdut.note.mvp.v.home.IHomeView;
@@ -36,15 +36,17 @@ public class HomePresenterImpl implements IHomePresenter {
 
     private RxCategory mRxCategory;
     private RxPhotoNote mRxPhotoNote;
+    private RxUser mRxUser;
 
     private UserCenter mUserCenter;
 
     @Inject
     public HomePresenterImpl(RxCategory rxCategory, RxPhotoNote rxPhotoNote,
-                             UserCenter userCenter) {
+                             UserCenter userCenter, RxUser rxUser) {
         mRxCategory = rxCategory;
         mRxPhotoNote = rxPhotoNote;
         mUserCenter = userCenter;
+        mRxUser = rxUser;
     }
 
     @Override
@@ -123,11 +125,15 @@ public class HomePresenterImpl implements IHomePresenter {
     public void drawerUserClick(int which) {
         switch (which) {
             case USER_ONE:
-                if (mUserCenter.isLoginQQ()) {
-                    mHomeView.jump2UserCenterActivity();
-                } else {
-                    mHomeView.jump2LoginActivity();
-                }
+                mRxUser.isLoginQQ()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(aBoolean -> {
+                            if (aBoolean) {
+                                mHomeView.jump2UserCenterActivity();
+                            } else {
+                                mHomeView.jump2LoginActivity();
+                            }
+                        });
                 break;
             case USER_TWO:
                 if (mUserCenter.isLoginEvernote()) {
@@ -146,12 +152,17 @@ public class HomePresenterImpl implements IHomePresenter {
 
     @Override
     public void updateQQInfo() {
-        if (mUserCenter.isLoginQQ()) {
-            IUser qqUser = mUserCenter.getQQ();
-            mHomeView.updateQQInfo(true, qqUser.getName(), qqUser.getImagePath());
-        } else {
-            mHomeView.updateQQInfo(false, null, null);
-        }
+        mRxUser.isLoginQQ()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aBoolean -> {
+                    if (aBoolean) {
+                        mRxUser.getQQ()
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(iUser -> mHomeView.updateQQInfo(true, iUser.getName(), iUser.getImagePath()));
+                    } else {
+                        mHomeView.updateQQInfo(false, null, null);
+                    }
+                });
     }
 
     @Override

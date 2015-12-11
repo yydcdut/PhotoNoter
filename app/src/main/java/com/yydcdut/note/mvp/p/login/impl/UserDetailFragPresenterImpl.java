@@ -2,10 +2,7 @@ package com.yydcdut.note.mvp.p.login.impl;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Message;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -19,11 +16,11 @@ import com.yydcdut.note.model.UserCenter;
 import com.yydcdut.note.model.rx.RxCategory;
 import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.model.rx.RxSandBox;
+import com.yydcdut.note.model.rx.RxUser;
 import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.login.IUserDetailFragPresenter;
 import com.yydcdut.note.mvp.v.login.IUserDetailFragView;
 import com.yydcdut.note.utils.FilePathUtils;
-import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.NetworkUtils;
 import com.yydcdut.note.utils.ThreadExecutorPool;
@@ -33,11 +30,14 @@ import java.text.DecimalFormat;
 
 import javax.inject.Inject;
 
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+
 /**
  * Created by yuyidong on 15/11/16.
  * todo 应该拆分
  */
-public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter, Handler.Callback {
+public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter {
     private IUserDetailFragView mUserDetailFragView;
     private Activity mActivity;
     private Context mContext;
@@ -45,12 +45,12 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter, Ha
     private RxPhotoNote mRxPhotoNote;
     private RxCategory mRxCategory;
     private RxSandBox mRxSandBox;
+    private RxUser mRxUser;
     private LocalStorageUtils mLocalStorageUtils;
     private ThreadExecutorPool mThreadExecutorPool;
 
     private static final int MESSAGE_LOGIN_QQ_OK = 1;
     private static final int MESSAGE_LOGIN_QQ_FAILED = 3;
-    private Handler mHandler;
 
     private LocationClient mLocationClient;
 
@@ -61,7 +61,8 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter, Ha
     public UserDetailFragPresenterImpl(Activity activity, @ContextLife("Activity") Context context,
                                        UserCenter userCenter, RxSandBox rxSandBox,
                                        RxCategory rxCategory, RxPhotoNote rxPhotoNote,
-                                       LocalStorageUtils localStorageUtils, ThreadExecutorPool threadExecutorPool) {
+                                       LocalStorageUtils localStorageUtils, ThreadExecutorPool threadExecutorPool,
+                                       RxUser rxUser) {
         mActivity = activity;
         mContext = context;
         mUserCenter = userCenter;
@@ -70,7 +71,7 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter, Ha
         mRxSandBox = rxSandBox;
         mLocalStorageUtils = localStorageUtils;
         mThreadExecutorPool = threadExecutorPool;
-        mHandler = new Handler(this);
+        mRxUser = rxUser;
     }
 
     @Override
@@ -117,12 +118,37 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter, Ha
 
     @Override
     public void loginOrOutQQ() {
-        if (mUserCenter.isLoginQQ()) {
-            mUserCenter.logoutQQ();
-            mUserDetailFragView.logoutQQ();
-        } else {
-            mUserCenter.doLoginQQ(mActivity, mLoginQQListener);
-        }
+        mRxUser.isLoginQQ()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aBoolean -> {
+                    if (aBoolean) {
+                        mRxUser.logoutQQ()
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(aBoolean1 -> mUserDetailFragView.logoutQQ());
+                    } else {
+                        mRxUser.loginQQ(mActivity)
+                                .doOnSubscribe(() -> mUserDetailFragView.showProgressBar())
+                                .subscribeOn(AndroidSchedulers.mainThread())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Subscriber<IUser>() {
+                                    @Override
+                                    public void onCompleted() {
+                                        mUserDetailFragView.hideProgressBar();
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        mUserDetailFragView.showSnakebar(mContext.getResources().getString(R.string.toast_fail));
+                                    }
+
+                                    @Override
+                                    public void onNext(IUser iUser) {
+                                        mUserDetailFragView.showQQ(iUser.getName(), iUser.getImagePath());
+                                        mUserDetailFragView.showSnakebar(mContext.getResources().getString(R.string.toast_success));
+                                    }
+                                });
+                    }
+                });
     }
 
     @Override
@@ -136,11 +162,21 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter, Ha
     }
 
     private String getQQName() {
-        if (mUserCenter.isLoginQQ()) {
-            return mUserCenter.getQQ().getName();
-        } else {
-            return mContext.getResources().getString(R.string.not_login);
-        }
+//        mRxUser.isLoginQQ()
+//                .subscribe(aBoolean -> {
+//                    if (aBoolean){
+//                        mRxUser.getQQ()
+//                                .observeOn(AndroidSchedulers.mainThread())
+//                                .subscribe(iUser -> iUser.getName());
+//                    }
+//                })
+
+//        if (mUserCenter.isLoginQQ()) {
+//            return mUserCenter.getQQ().getName();
+//        } else {
+//            return mContext.getResources().getString(R.string.not_login);
+//        }
+        return null;
     }
 
     private String getEvernoteName() {
@@ -243,43 +279,5 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter, Ha
         }
     }
 
-    private UserCenter.OnLoginQQListener mLoginQQListener = new UserCenter.OnLoginQQListener() {
-        @Override
-        public void onComplete(final String openid, final String accessToken, final String name, final String image) {
-            mUserDetailFragView.showProgressBar();
-            mThreadExecutorPool.getExecutorPool().execute(new Runnable() {
-                @Override
-                public void run() {
-                    if (mUserCenter.LoginQQ(openid, accessToken, name, image)) {
-                        Bitmap bitmap = ImageLoaderManager.loadImageSync(image);
-                        FilePathUtils.saveImage(FilePathUtils.getQQImagePath(), bitmap);
-                        mHandler.sendEmptyMessage(MESSAGE_LOGIN_QQ_OK);
-                    }
-                }
-            });
-        }
 
-        @Override
-        public void onError() {
-            mHandler.sendEmptyMessage(MESSAGE_LOGIN_QQ_FAILED);
-        }
-
-        @Override
-        public void onCancel() {
-            mHandler.sendEmptyMessage(MESSAGE_LOGIN_QQ_FAILED);
-        }
-    };
-
-    @Override
-    public boolean handleMessage(Message msg) {
-        switch (msg.what) {
-            case MESSAGE_LOGIN_QQ_OK:
-                IUser qqUser = mUserCenter.getQQ();
-                mUserDetailFragView.hideProgressBar();
-                mUserDetailFragView.showQQ(qqUser.getName(), qqUser.getImagePath());
-                mUserDetailFragView.showSnakebar(mContext.getResources().getString(R.string.toast_success));
-                break;
-        }
-        return false;
-    }
 }

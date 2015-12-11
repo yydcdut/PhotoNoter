@@ -3,7 +3,6 @@ package com.yydcdut.note.model;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.text.TextUtils;
 
 import com.evernote.client.android.EvernoteSession;
 import com.evernote.edam.error.EDAMSystemException;
@@ -16,16 +15,11 @@ import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 import com.yydcdut.note.BuildConfig;
-import com.yydcdut.note.bean.IUser;
-import com.yydcdut.note.bean.QQUser;
-import com.yydcdut.note.utils.FilePathUtils;
-import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.ThreadExecutorPool;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.Locale;
 import java.util.concurrent.Callable;
@@ -44,12 +38,6 @@ public class UserCenter {
 
     private static final String NAME = "User";
 
-    private static final String Q_OPEN_ID = "q_open_id";
-    private static final String Q_OPEN_ID_DEFAULT = "";
-
-    private static final String Q_ACCESS_TOKEN = "q_access_token";
-    private static final String Q_ACCESS_TOKEN_DEFAULT = "";
-
     private static final String Q_NAME = "q_name";
     private static final String Q_NAME_DEFAULT = "";
 
@@ -58,7 +46,7 @@ public class UserCenter {
 
     private SharedPreferences mSharedPreferences;
 
-    private IUser mQQUser = null;
+    //    private IUser mQQUser = null;
     private User mEvernoteUser = null;
     private Future<User> mEvernoteFuture = null;
 
@@ -83,10 +71,10 @@ public class UserCenter {
         if (isLoginEvernote()) {
             LoginEvernote();
         }
-        if (isLoginQQ() && !new File(FilePathUtils.getQQImagePath()).exists()) {
-            FilePathUtils.saveImage(FilePathUtils.getQQImagePath(),
-                    ImageLoaderManager.loadImageSync(getQQ().getNetImagePath()));
-        }
+//        if (isLoginQQ() && !new File(FilePathUtils.getQQImagePath()).exists()) {
+//            FilePathUtils.saveImage(FilePathUtils.getQQImagePath(),
+//                    ImageLoaderManager.loadImageSync(getQQ().getNetImagePath()));
+//        }
     }
 
     private void initUser() {
@@ -101,44 +89,40 @@ public class UserCenter {
     }
 
 
-    public boolean isLoginQQ() {
-        String openId = mSharedPreferences.getString(Q_OPEN_ID, Q_OPEN_ID_DEFAULT);
-        String accessToken = mSharedPreferences.getString(Q_ACCESS_TOKEN, Q_ACCESS_TOKEN_DEFAULT);
-        String name = mSharedPreferences.getString(Q_NAME, Q_NAME_DEFAULT);
-        String netImagePath = mSharedPreferences.getString(Q_NET_IMAGE_PATH, Q_NET_IMAGE_PATH_DEFAULT);
-        if (TextUtils.isEmpty(openId) || TextUtils.isEmpty(accessToken) || TextUtils.isEmpty(name) || TextUtils.isEmpty(netImagePath)) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    public boolean LoginQQ(String openId, String accessToken, String name, final String netImagePath) {
-        if (TextUtils.isEmpty(openId) || TextUtils.isEmpty(accessToken) || TextUtils.isEmpty(name) || TextUtils.isEmpty(netImagePath)) {
-            return false;
-        }
-        mQQUser = null;
-        SharedPreferences.Editor editor = mSharedPreferences.edit();
-        editor.putString(Q_OPEN_ID, openId);
-        editor.putString(Q_ACCESS_TOKEN, accessToken);
-        editor.putString(Q_NAME, name);
-        editor.putString(Q_NET_IMAGE_PATH, netImagePath);
-        editor.commit();
-        return true;
-    }
-
-    public void doLoginQQ(Activity activity, OnLoginQQListener listener) {
-        if (mTencent == null) {
-            mTencent = Tencent.createInstance(BuildConfig.TENCENT_KEY, activity.getApplicationContext());
-        }
-        if (mQQActivity != null) {
-            mQQActivity.clear();
-            mQQActivity = null;
-        }
-        mQQActivity = new WeakReference<>(activity);
-
-        mTencent.login(mQQActivity.get(), "all", new BaseUiListener(listener));
-    }
+//    public boolean isLoginQQ() {
+//        String name = mSharedPreferences.getString(Q_NAME, Q_NAME_DEFAULT);
+//        String netImagePath = mSharedPreferences.getString(Q_NET_IMAGE_PATH, Q_NET_IMAGE_PATH_DEFAULT);
+//        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(netImagePath)) {
+//            return false;
+//        } else {
+//            return true;
+//        }
+//    }
+//
+//    public boolean LoginQQ(String openId, String accessToken, String name, final String netImagePath) {
+//        if (TextUtils.isEmpty(openId) || TextUtils.isEmpty(accessToken) || TextUtils.isEmpty(name) || TextUtils.isEmpty(netImagePath)) {
+//            return false;
+//        }
+//        mQQUser = null;
+//        SharedPreferences.Editor editor = mSharedPreferences.edit();
+//        editor.putString(Q_NAME, name);
+//        editor.putString(Q_NET_IMAGE_PATH, netImagePath);
+//        editor.commit();
+//        return true;
+//    }
+//
+//    public void doLoginQQ(Activity activity, OnLoginQQListener listener) {
+//        if (mTencent == null) {
+//            mTencent = Tencent.createInstance(BuildConfig.TENCENT_KEY, activity.getApplicationContext());
+//        }
+//        if (mQQActivity != null) {
+//            mQQActivity.clear();
+//            mQQActivity = null;
+//        }
+//        mQQActivity = new WeakReference<>(activity);
+//
+//        mTencent.login(mQQActivity.get(), "all", new BaseUiListener(listener));
+//    }
 
     /**
      * 当自定义的监听器实现IUiListener接口后，必须要实现接口的三个方法，
@@ -253,29 +237,25 @@ public class UserCenter {
         }
     }
 
-    public IUser getQQ() {
-        if (mQQUser == null) {
-            String openId = mSharedPreferences.getString(Q_OPEN_ID, Q_OPEN_ID_DEFAULT);
-            String accessToken = mSharedPreferences.getString(Q_ACCESS_TOKEN, Q_ACCESS_TOKEN_DEFAULT);
-            String name = mSharedPreferences.getString(Q_NAME, Q_NAME_DEFAULT);
-            String netImagePath = mSharedPreferences.getString(Q_NET_IMAGE_PATH, Q_NET_IMAGE_PATH_DEFAULT);
-            if (TextUtils.isEmpty(openId) || TextUtils.isEmpty(accessToken) || TextUtils.isEmpty(name) || TextUtils.isEmpty(netImagePath)) {
-                return null;
-            } else {
-                mQQUser = new QQUser(openId, accessToken, name, netImagePath);
-            }
-        }
-        return mQQUser;
-    }
-
-    public void logoutQQ() {
-        SharedPreferences.Editor editor = mSharedPreferences.edit();
-        editor.putString(Q_OPEN_ID, NULL);
-        editor.putString(Q_ACCESS_TOKEN, NULL);
-        editor.putString(Q_NAME, NULL);
-        editor.putString(Q_NET_IMAGE_PATH, NULL);
-        editor.commit();
-    }
+//    public IUser getQQ() {
+//        if (mQQUser == null) {
+//            String name = mSharedPreferences.getString(Q_NAME, Q_NAME_DEFAULT);
+//            String netImagePath = mSharedPreferences.getString(Q_NET_IMAGE_PATH, Q_NET_IMAGE_PATH_DEFAULT);
+//            if (TextUtils.isEmpty(name) || TextUtils.isEmpty(netImagePath)) {
+//                return null;
+//            } else {
+//                mQQUser = new QQUser(name, netImagePath);
+//            }
+//        }
+//        return mQQUser;
+//    }
+//
+//    public void logoutQQ() {
+//        SharedPreferences.Editor editor = mSharedPreferences.edit();
+//        editor.putString(Q_NAME, NULL);
+//        editor.putString(Q_NET_IMAGE_PATH, NULL);
+//        editor.commit();
+//    }
 
     public boolean isLoginEvernote() {
         return EvernoteSession.getInstance().isLoggedIn();

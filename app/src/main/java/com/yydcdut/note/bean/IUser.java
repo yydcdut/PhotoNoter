@@ -10,9 +10,4 @@ public interface IUser extends IObject {
     String getNetImagePath();
 
     String getImagePath();
-
-    String getOpenId();
-
-    String getAccessToken();
-
 }

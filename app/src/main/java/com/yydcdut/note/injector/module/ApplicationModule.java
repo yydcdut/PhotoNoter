@@ -8,6 +8,7 @@ import com.yydcdut.note.model.UserCenter;
 import com.yydcdut.note.model.rx.RxCategory;
 import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.model.rx.RxSandBox;
+import com.yydcdut.note.model.rx.RxUser;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.ThreadExecutorPool;
 
@@ -26,6 +27,7 @@ public class ApplicationModule {
     private RxPhotoNote mRxPhotoNote;
     private RxSandBox mRxSandBox;
     private UserCenter mUserCenter;
+    private RxUser mRxUser;
     private LocalStorageUtils mLocalStorageUtils;
     private ThreadExecutorPool mThreadExecutorPool;
 
@@ -37,6 +39,7 @@ public class ApplicationModule {
         mRxSandBox = new RxSandBox(mApplication.getApplicationContext());
         mRxPhotoNote = new RxPhotoNote(mApplication.getApplicationContext());
         mRxCategory = new RxCategory(mApplication.getApplicationContext());
+        mRxUser = new RxUser(mApplication.getApplicationContext());
     }
 
     @Provides
@@ -68,6 +71,12 @@ public class ApplicationModule {
     @Singleton
     public UserCenter provideUserCenter() {
         return mUserCenter;
+    }
+
+    @Provides
+    @Singleton
+    public RxUser provideRxUser() {
+        return mRxUser;
     }
 
     @Provides

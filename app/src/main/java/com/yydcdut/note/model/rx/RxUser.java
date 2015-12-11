@@ -1,0 +1,342 @@
+package com.yydcdut.note.model.rx;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.text.TextUtils;
+
+import com.evernote.client.android.EvernoteSession;
+import com.tencent.connect.UserInfo;
+import com.tencent.connect.auth.QQToken;
+import com.tencent.tauth.IUiListener;
+import com.tencent.tauth.Tencent;
+import com.tencent.tauth.UiError;
+import com.yydcdut.note.BuildConfig;
+import com.yydcdut.note.bean.IUser;
+import com.yydcdut.note.bean.QQUser;
+import com.yydcdut.note.injector.ContextLife;
+import com.yydcdut.note.model.rx.exception.RxException;
+import com.yydcdut.note.utils.FilePathUtils;
+import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.lang.ref.WeakReference;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import rx.Observable;
+import rx.Subscriber;
+import rx.schedulers.Schedulers;
+
+/**
+ * Created by yuyidong on 15/12/4.
+ */
+public class RxUser {
+    private static final EvernoteSession.EvernoteService EVERNOTE_SERVICE = EvernoteSession.EvernoteService.PRODUCTION;
+    private static final boolean SUPPORT_APP_LINKED_NOTEBOOKS = true;
+
+    private static final String NULL = "";
+
+    private static final String NAME = "User";
+
+    private static final String Q_NAME = "q_name";
+    private static final String EVERNOTE_NAME = "evernote_name";
+    private static final String NAME_DEFAULT = "";
+
+    private static final String Q_NET_IMAGE_PATH = "q_net_image_id";
+    private static final String Q_NET_IMAGE_PATH_DEFAULT = "";
+
+    private SharedPreferences mSharedPreferences;
+
+    private IUser mQQUser = null;
+    private Context mContext;
+
+
+    private WeakReference<Activity> mQQActivity;
+    private WeakReference<Activity> mEvernoteActivity;
+    private Tencent mTencent;
+
+    @Singleton
+    @Inject
+    public RxUser(@ContextLife("Application") Context context) {
+        mContext = context;
+        mSharedPreferences = mContext.getSharedPreferences(NAME, Context.MODE_PRIVATE);
+//        initUser();
+//        if (isLoginEvernote()) {
+//            LoginEvernote();
+//        }
+//        saveQQNetImage().subscribe();
+    }
+
+
+    /**
+     * 保存QQ的Image
+     *
+     * @return
+     */
+    private Observable<Boolean> saveQQNetImage() {
+        return Observable.create(new Observable.OnSubscribe<Boolean>() {
+            @Override
+            public void call(Subscriber<? super Boolean> subscriber) {
+                if (isLoginQQQQ() && !new File(FilePathUtils.getQQImagePath()).exists()) {
+                    FilePathUtils.saveImage(FilePathUtils.getQQImagePath(),
+                            ImageLoaderManager.loadImageSync(getQQQQ().getNetImagePath()));
+                    subscriber.onNext(true);
+                    subscriber.onCompleted();
+                } else {
+                    subscriber.onNext(true);
+                    subscriber.onCompleted();
+                }
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<Boolean> isLoginQQ() {
+        return Observable.create(new Observable.OnSubscribe<Boolean>() {
+            @Override
+            public void call(Subscriber<? super Boolean> subscriber) {
+                String name = mSharedPreferences.getString(Q_NAME, NAME_DEFAULT);
+                String netImagePath = mSharedPreferences.getString(Q_NET_IMAGE_PATH, Q_NET_IMAGE_PATH_DEFAULT);
+                if (TextUtils.isEmpty(name) || TextUtils.isEmpty(netImagePath)) {
+                    subscriber.onNext(false);
+                } else {
+                    subscriber.onNext(true);
+                }
+                subscriber.onCompleted();
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<Boolean> LoginQQ(String name, String netImagePath) {
+        return Observable.create(new Observable.OnSubscribe<Boolean>() {
+            @Override
+            public void call(Subscriber<? super Boolean> subscriber) {
+                if (TextUtils.isEmpty(name) || TextUtils.isEmpty(netImagePath)) {
+                    subscriber.onError(new RxException("数据有空！"));
+                } else {
+                    SharedPreferences.Editor editor = mSharedPreferences.edit();
+                    editor.putString(Q_NAME, name);
+                    editor.putString(Q_NET_IMAGE_PATH, netImagePath);
+                    editor.commit();
+                    FilePathUtils.saveImage(FilePathUtils.getQQImagePath(),
+                            ImageLoaderManager.loadImageSync(getQQQQ().getNetImagePath()));
+                    subscriber.onNext(true);
+                }
+                subscriber.onCompleted();
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<IUser> getQQ() {
+        return Observable.create(new Observable.OnSubscribe<IUser>() {
+            @Override
+            public void call(Subscriber<? super IUser> subscriber) {
+                if (mQQUser == null) {
+                    String name = mSharedPreferences.getString(Q_NAME, NAME_DEFAULT);
+                    String netImagePath = mSharedPreferences.getString(Q_NET_IMAGE_PATH, Q_NET_IMAGE_PATH_DEFAULT);
+                    if (TextUtils.isEmpty(name) || TextUtils.isEmpty(netImagePath)) {
+                        subscriber.onError(new RxException("没有登录！！！"));
+                    } else {
+                        mQQUser = new QQUser(name, netImagePath);
+                        subscriber.onNext(mQQUser);
+                    }
+                    subscriber.onCompleted();
+                }
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<Boolean> logoutQQ() {
+        return Observable.create(new Observable.OnSubscribe<Boolean>() {
+            @Override
+            public void call(Subscriber<? super Boolean> subscriber) {
+                SharedPreferences.Editor editor = mSharedPreferences.edit();
+                editor.putString(Q_NAME, NULL);
+                editor.putString(Q_NET_IMAGE_PATH, NULL);
+                editor.commit();
+                subscriber.onNext(true);
+                subscriber.onCompleted();
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<IUser> loginQQ(Activity activity) {
+        return Observable.create(new Observable.OnSubscribe<UserInfo>() {
+            @Override
+            public void call(Subscriber<? super UserInfo> subscriber) {
+                if (mTencent == null) {
+                    mTencent = Tencent.createInstance(BuildConfig.TENCENT_KEY, mContext);
+                }
+                if (mQQActivity != null) {
+                    mQQActivity.clear();
+                    mQQActivity = null;
+                }
+                mQQActivity = new WeakReference<>(activity);
+                mTencent.login(mQQActivity.get(), "all", new BaseUiListener(subscriber));
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .lift(new Observable.Operator<IUser, UserInfo>() {
+                    @Override
+                    public Subscriber<? super UserInfo> call(Subscriber<? super IUser> subscriber) {
+                        return new Subscriber<UserInfo>() {
+                            @Override
+                            public void onCompleted() {
+                                subscriber.onCompleted();
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                subscriber.onError(e);
+                            }
+
+                            @Override
+                            public void onNext(UserInfo userInfo) {
+                                userInfo.getUserInfo(new UserInfoUiListener(subscriber));
+                            }
+                        };
+                    }
+                })
+                .map(iUser -> {
+                    FilePathUtils.saveImage(FilePathUtils.getQQImagePath(),
+                            ImageLoaderManager.loadImageSync(getQQQQ().getNetImagePath()));
+                    return iUser;
+                });
+    }
+
+    private IUser getQQQQ() {
+        if (mQQUser == null) {
+            String name = mSharedPreferences.getString(Q_NAME, NAME_DEFAULT);
+            String netImagePath = mSharedPreferences.getString(Q_NET_IMAGE_PATH, Q_NET_IMAGE_PATH_DEFAULT);
+            if (TextUtils.isEmpty(name) || TextUtils.isEmpty(netImagePath)) {
+                return null;
+            } else {
+                mQQUser = new QQUser(name, netImagePath);
+            }
+        }
+        return mQQUser;
+    }
+
+    private boolean isLoginQQQQ() {
+        String name = mSharedPreferences.getString(Q_NAME, NAME_DEFAULT);
+        String netImagePath = mSharedPreferences.getString(Q_NET_IMAGE_PATH, Q_NET_IMAGE_PATH_DEFAULT);
+        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(netImagePath)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * 当自定义的监听器实现IUiListener接口后，必须要实现接口的三个方法，
+     * onComplete  onCancel onError
+     * 分别表示第三方登录成功，取消 ，错误。
+     */
+    private class BaseUiListener implements IUiListener {
+        private Subscriber<? super UserInfo> mSubscriber;
+
+        public BaseUiListener(Subscriber<? super UserInfo> subscriber) {
+            mSubscriber = subscriber;
+        }
+
+        public void onCancel() {
+            mSubscriber.onError(new RxException("取消登录"));
+            mSubscriber.onCompleted();
+        }
+
+        /*
+            {
+                "access_token": "15D69FFB81BC403D9DB3DFACCF2FDDFF",
+	            "authority_cost": 2490,
+	            "expires_in": 7776000,
+	            "login_cost": 775,
+	            "msg": "",
+	            "openid": "563559BEF3E2F97B693A6F88308F8D21",
+	            "pay_token": "0E13A21128EAFB5E39048E5DE9478AD4",
+	            "pf": "desktop_m_qq-10000144-android-2002-",
+	            "pfkey": "11157020df5d6a8ebeaa150e2a7c68ce",
+	            "query_authority_cost": 788,
+	            "ret": 0
+            }
+        */
+        public void onComplete(Object response) {
+            /*
+              到此已经获得OpenID以及其他你想获得的内容了
+              QQ登录成功了，我们还想获取一些QQ的基本信息，比如昵称，头像
+              sdk给我们提供了一个类UserInfo，这个类中封装了QQ用户的一些信息，我么可以通过这个类拿到这些信息
+             */
+            QQToken qqToken = mTencent.getQQToken();
+            UserInfo info = new UserInfo(mContext, qqToken);
+            mSubscriber.onNext(info);
+        }
+
+        @Override
+        public void onError(UiError uiError) {
+            mSubscriber.onError(new RxException(uiError.errorMessage));
+            mSubscriber.onCompleted();
+        }
+    }
+
+    private class UserInfoUiListener implements IUiListener {
+        private Subscriber<? super IUser> mSubscriber;
+
+        public UserInfoUiListener(Subscriber<? super IUser> subscriber) {
+            mSubscriber = subscriber;
+        }
+
+        /*
+                         {
+                            "city": "成都",
+                            "figureurl": "http://qzapp.qlogo.cn/qzapp/1104732115/563559BEF3E2F97B693A6F88308F8D21/30",
+                            "figureurl_1": "http://qzapp.qlogo.cn/qzapp/1104732115/563559BEF3E2F97B693A6F88308F8D21/50",
+                            "figureurl_2": "http://qzapp.qlogo.cn/qzapp/1104732115/563559BEF3E2F97B693A6F88308F8D21/100",
+                            "figureurl_qq_1": "http://q.qlogo.cn/qqapp/1104732115/563559BEF3E2F97B693A6F88308F8D21/40",
+                            "figureurl_qq_2": "http://q.qlogo.cn/qqapp/1104732115/563559BEF3E2F97B693A6F88308F8D21/100",
+                            "gender": "男",
+                            "is_lost": 0,
+                            "is_yellow_vip": "0",
+                            "is_yellow_year_vip": "0",
+                            "level": "0",
+                            "msg": "",
+                            "nickname": "生命短暂，快乐至上。",
+                            "province": "四川",
+                            "ret": 0,
+                            "vip": "0",
+                            "yellow_vip_level": "0"
+                           }
+                        */
+        public void onComplete(final Object response) {
+
+            JSONObject json = (JSONObject) response;
+            String name = null;
+            String image = null;
+            try {
+                name = json.getString("nickname");
+                image = json.getString("figureurl_qq_2");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            SharedPreferences.Editor editor = mSharedPreferences.edit();
+            editor.putString(Q_NAME, name);
+            editor.putString(Q_NET_IMAGE_PATH, image);
+            editor.commit();
+            mQQUser = new QQUser(name, image);
+            mSubscriber.onNext(mQQUser);
+            mSubscriber.onCompleted();
+        }
+
+        public void onCancel() {
+            mSubscriber.onError(new RxException("取消登录"));
+            mSubscriber.onCompleted();
+        }
+
+        public void onError(UiError arg0) {
+            mSubscriber.onError(new RxException(arg0.errorMessage));
+            mSubscriber.onCompleted();
+        }
+    }
+}

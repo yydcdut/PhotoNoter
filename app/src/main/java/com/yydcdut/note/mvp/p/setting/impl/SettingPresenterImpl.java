@@ -6,6 +6,7 @@ import com.yydcdut.note.R;
 import com.yydcdut.note.camera.param.Size;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.UserCenter;
+import com.yydcdut.note.model.rx.RxUser;
 import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.setting.ISettingPresenter;
 import com.yydcdut.note.mvp.v.setting.ISettingView;
@@ -19,6 +20,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import rx.android.schedulers.AndroidSchedulers;
+
 /**
  * Created by yuyidong on 15/11/13.
  */
@@ -28,15 +31,17 @@ public class SettingPresenterImpl implements ISettingPresenter {
     private Context mContext;
     private LocalStorageUtils mLocalStorageUtils;
     private UserCenter mUserCenter;
+    private RxUser mRxUser;
 
     private static final boolean SUPPORT_CAMERA_5_0 = false;
 
     @Inject
     public SettingPresenterImpl(@ContextLife("Activity") Context context, LocalStorageUtils localStorageUtils,
-                                UserCenter userCenter) {
+                                UserCenter userCenter, RxUser rxUser) {
         mContext = context;
         mLocalStorageUtils = localStorageUtils;
         mUserCenter = userCenter;
+        mRxUser = rxUser;
     }
 
     @Override
@@ -50,11 +55,17 @@ public class SettingPresenterImpl implements ISettingPresenter {
         mSettingView.initAboutSetting();
 
         setStatusBarClickable();
-        boolean isQQLogin = mUserCenter.isLoginQQ();
-        if (isQQLogin) {
-            mSettingView.initQQ(true, mUserCenter.getQQ().getName(),
-                    mUserCenter.getQQ().getImagePath());
-        }
+
+        mRxUser.isLoginQQ()
+                .subscribe(aBoolean -> {
+                    if (aBoolean) {
+                        mRxUser.getQQ()
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(iUser -> mSettingView.initQQ(true,
+                                        iUser.getName(), iUser.getImagePath()));
+                    }
+                });
+
         boolean isEvernoteLogin = mUserCenter.isLoginEvernote();
         if (isEvernoteLogin) {
             mSettingView.initEvernote(true, mUserCenter.getEvernote().getUsername());
