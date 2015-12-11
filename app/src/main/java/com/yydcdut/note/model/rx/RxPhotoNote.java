@@ -224,6 +224,17 @@ public class RxPhotoNote {
             @Override
             public void call(Subscriber<? super Integer> subscriber) {
                 subscriber.onNext(mPhotoNoteDB.getAllNumber());
+                subscriber.onCompleted();
+            }
+        });
+    }
+
+    public Observable<Integer> getWordsNumber() {
+        return Observable.create(new Observable.OnSubscribe<Integer>() {
+            @Override
+            public void call(Subscriber<? super Integer> subscriber) {
+                subscriber.onNext(mPhotoNoteDB.getWordsNumber());
+                subscriber.onCompleted();
             }
         });
     }

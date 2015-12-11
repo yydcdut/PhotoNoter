@@ -9,8 +9,10 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.yydcdut.note.R;
-import com.yydcdut.note.bean.IUser;
+import com.yydcdut.note.bean.Category;
+import com.yydcdut.note.bean.user.IUser;
 import com.yydcdut.note.injector.ContextLife;
+import com.yydcdut.note.model.compare.ComparatorFactory;
 import com.yydcdut.note.model.rx.RxCategory;
 import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.model.rx.RxSandBox;
@@ -71,13 +73,52 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter {
                 mUserDetailFragView.initUserDetail(getLocation(), getUseAge(), getPhone(), getAndroid(), calculateStorage());
                 break;
             case 1:
-//                mUserDetailFragView.initUserImages(mPhotoNoteDBModel.findByCategoryId(
-//                        mCategoryDBModel.findAll().get(0).getId(), ComparatorFactory.FACTORY_NOT_SORT));
+                mRxCategory.getAllCategories()
+                        .subscribe(categories -> {
+                            Category category = categories.get(0);
+                            mRxPhotoNote.findByCategoryId(category.getId(), ComparatorFactory.FACTORY_NOT_SORT)
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(photoNoteList -> {
+                                        mUserDetailFragView.initUserImages(photoNoteList);
+                                    });
+                        });
                 break;
             case 2:
-//                mUserDetailFragView.initUserInfo(mUserCenter.isLoginQQ(), getQQName(),
-//                        mUserCenter.isLoginEvernote(), getEvernoteName(), getFolderStorage(),
-//                        getNotesNumber(), getSandboxNumber(), getWordNumber(), getCloud());
+                mUserDetailFragView.addView();
+                mRxUser.isLoginQQ()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(aBoolean -> {
+                            if (aBoolean) {
+                                mRxUser.getQQ()
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe(iUser -> mUserDetailFragView.addQQView(true, iUser.getName()));
+                            } else {
+                                mUserDetailFragView.addQQView(aBoolean, mContext.getResources().getString(R.string.not_login));
+                            }
+                        });
+                mRxUser.isLoginEvernote()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(aBoolean -> {
+                            if (aBoolean) {
+                                mRxUser.getEvernote()
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe(iUser -> mUserDetailFragView.addEvernoteView(true, iUser.getName()));
+                            } else {
+                                mUserDetailFragView.addEvernoteView(false, mContext.getResources().getString(R.string.not_login));
+                            }
+                        });
+                mUserDetailFragView.addUseStorageView(getFolderStorage());
+                mRxPhotoNote.getAllPhotoNotesNumber()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(integer -> mUserDetailFragView.addNoteNumberView(integer + ""));
+                mRxSandBox.getNumber()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(integer -> mUserDetailFragView.addSandBoxNumber(integer + ""));
+                mRxPhotoNote.getWordsNumber()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(integer -> mUserDetailFragView.addWordNumber(integer + ""));
+                mUserDetailFragView.addCloud(getCloud());
+
                 break;
         }
     }
@@ -152,37 +193,6 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter {
                 });
     }
 
-    private String getQQName() {
-//        mRxUser.isLoginQQ()
-//                .subscribe(aBoolean -> {
-//                    if (aBoolean){
-//                        mRxUser.getQQ()
-//                                .observeOn(AndroidSchedulers.mainThread())
-//                                .subscribe(iUser -> iUser.getName());
-//                    }
-//                })
-
-//        if (mUserCenter.isLoginQQ()) {
-//            return mUserCenter.getQQ().getName();
-//        } else {
-//            return mContext.getResources().getString(R.string.not_login);
-//        }
-        return null;
-    }
-
-//    private String getEvernoteName() {
-//        if (mUserCenter.isLoginEvernote()) {
-//            User user = mUserCenter.getEvernote();
-//            if (user == null) {
-//                return mContext.getResources().getString(R.string.user_failed);
-//            } else {
-//                return user.getName();
-//            }
-//        } else {
-//            return mContext.getResources().getString(R.string.not_login);
-//        }
-//    }
-
     private String getFolderStorage() {
         long storage = FilePathUtils.getFolderStorage();
         if (storage == -1) {
@@ -197,14 +207,6 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter {
             }
         }
     }
-
-//    private String getNotesNumber() {
-//        return mPhotoNoteDBModel.getAllNumber() + "";
-//    }
-//
-//    private String getSandboxNumber() {
-//        return mSandBoxDBModel.getAllNumber() + "";
-//    }
 
     private String getWordNumber() {
         return mContext.getResources().getString(R.string.uc_unkown);

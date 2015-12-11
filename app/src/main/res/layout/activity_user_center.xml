@@ -26,8 +26,7 @@
                     android:id="@+id/img_user"
                     android:layout_width="96dip"
                     android:layout_height="96dip"
-                    android:layout_centerHorizontal="true"
-                    android:src="@drawable/bg_user_background"/>
+                    android:layout_centerHorizontal="true"/>
 
                 <ImageView
                     android:id="@+id/img_user_two"

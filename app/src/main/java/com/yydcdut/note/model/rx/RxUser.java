@@ -3,6 +3,7 @@ package com.yydcdut.note.model.rx;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.text.TextUtils;
 
 import com.evernote.client.android.EvernoteSession;
@@ -16,9 +17,9 @@ import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 import com.yydcdut.note.BuildConfig;
-import com.yydcdut.note.bean.EvernoteUser;
-import com.yydcdut.note.bean.IUser;
-import com.yydcdut.note.bean.QQUser;
+import com.yydcdut.note.bean.user.EvernoteUser;
+import com.yydcdut.note.bean.user.IUser;
+import com.yydcdut.note.bean.user.QQUser;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.rx.exception.RxException;
 import com.yydcdut.note.utils.FilePathUtils;
@@ -116,6 +117,7 @@ public class RxUser {
                 editor.putString(Q_NAME, NULL);
                 editor.putString(Q_NET_IMAGE_PATH, NULL);
                 editor.commit();
+                mQQUser = null;
                 subscriber.onNext(true);
                 subscriber.onCompleted();
             }
@@ -160,8 +162,8 @@ public class RxUser {
                     }
                 })
                 .map(iUser -> {
-                    FilePathUtils.saveImage(FilePathUtils.getQQImagePath(),
-                            ImageLoaderManager.loadImageSync(getQQQQ().getNetImagePath()));
+                    Bitmap bitmap = ImageLoaderManager.loadImageSync(getQQQQ().getNetImagePath());
+                    FilePathUtils.saveImage(FilePathUtils.getQQImagePath(), bitmap);
                     return iUser;
                 });
     }
@@ -340,6 +342,7 @@ public class RxUser {
                 if (mEvernoteSession.isLoggedIn()) {
                     mEvernoteSession.logOut();
                 }
+                mEvernoteUser = null;
                 subscriber.onNext(true);
                 subscriber.onCompleted();
             }

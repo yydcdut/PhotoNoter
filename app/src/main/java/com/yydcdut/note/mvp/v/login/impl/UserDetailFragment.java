@@ -131,10 +131,26 @@ public class UserDetailFragment extends BaseFragment implements IUserDetailFragV
     }
 
     @Override
-    public void initUserInfo(boolean isQQLogin, String QQName, boolean isEvernoteLogin,
-                             String evernoteName, String useStorage, String noteNumber,
-                             String sandboxNumber, String wordNumber, String cloud) {
+    public void addView() {
         View qqView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail_image, null);
+        mLinearLayout.addView(qqView, 0);
+        View evernoteView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail_image, null);
+        mLinearLayout.addView(evernoteView, 1);
+        View folderView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail_text, null);
+        mLinearLayout.addView(folderView, 2);
+        View noteView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail_text, null);
+        mLinearLayout.addView(noteView, 3);
+        View sandboxView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail_text, null);
+        mLinearLayout.addView(sandboxView, 4);
+        View wordView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail_text, null);
+        mLinearLayout.addView(wordView, 5);
+        View cloudView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail_text, null);
+        mLinearLayout.addView(cloudView, 6);
+    }
+
+    @Override
+    public void addQQView(boolean isQQLogin, String QQName) {
+        View qqView = mLinearLayout.getChildAt(0);
         ((ImageView) qqView.findViewById(R.id.img_item_icon)).setImageResource(R.drawable.ic_person_info_qq);
         if (isQQLogin) {
             ((TextView) qqView.findViewById(R.id.txt_item_column)).setText(QQName);
@@ -145,9 +161,11 @@ public class UserDetailFragment extends BaseFragment implements IUserDetailFragV
         }
         qqView.findViewById(R.id.img_item_user).setOnClickListener(this);
         qqView.findViewById(R.id.img_item_user).setTag(TAG_QQ);
-        mLinearLayout.addView(qqView);
+    }
 
-        View evernoteView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail_image, null);
+    @Override
+    public void addEvernoteView(boolean isEvernoteLogin, String evernoteName) {
+        View evernoteView = mLinearLayout.getChildAt(1);
         ((ImageView) evernoteView.findViewById(R.id.img_item_icon)).setImageResource(R.drawable.ic_evernote_fab);
         if (isEvernoteLogin) {
             ((TextView) evernoteView.findViewById(R.id.txt_item_column)).setText(evernoteName);
@@ -158,37 +176,46 @@ public class UserDetailFragment extends BaseFragment implements IUserDetailFragV
         }
         evernoteView.findViewById(R.id.img_item_user).setOnClickListener(this);
         evernoteView.findViewById(R.id.img_item_user).setTag(TAG_EVERNOTE);
-        mLinearLayout.addView(evernoteView);
+    }
 
-        View folderView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail_text, null);
+    @Override
+    public void addUseStorageView(String useStorage) {
+        View folderView = mLinearLayout.getChildAt(2);
         ((ImageView) folderView.findViewById(R.id.img_item_icon)).setImageResource(R.drawable.ic_folder_open_white_24dp);
         ((TextView) folderView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.uc_folder));
         ((TextView) folderView.findViewById(R.id.txt_item_user)).setText(useStorage);
-        mLinearLayout.addView(folderView);
+    }
 
-        View noteView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail_text, null);
+    @Override
+    public void addNoteNumberView(String noteNumber) {
+        View noteView = mLinearLayout.getChildAt(3);
         ((ImageView) noteView.findViewById(R.id.img_item_icon)).setImageResource(R.drawable.ic_content_paste_white_24dp);
         ((TextView) noteView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.uc_notes));
         ((TextView) noteView.findViewById(R.id.txt_item_user)).setText(noteNumber);
-        mLinearLayout.addView(noteView);
+    }
 
-        View sandboxView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail_text, null);
+    @Override
+    public void addSandBoxNumber(String sandboxNumber) {
+        View sandboxView = mLinearLayout.getChildAt(4);
         ((ImageView) sandboxView.findViewById(R.id.img_item_icon)).setImageResource(R.drawable.ic_crop_original_white_24dp);
         ((TextView) sandboxView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.uc_sanbox));
         ((TextView) sandboxView.findViewById(R.id.txt_item_user)).setText(sandboxNumber);
-        mLinearLayout.addView(sandboxView);
+    }
 
-        View wordView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail_text, null);
+    @Override
+    public void addWordNumber(String wordNumber) {
+        View wordView = mLinearLayout.getChildAt(5);
         ((ImageView) wordView.findViewById(R.id.img_item_icon)).setImageResource(R.drawable.ic_text_format_white_24dp);
         ((TextView) wordView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.uc_words));
         ((TextView) wordView.findViewById(R.id.txt_item_user)).setText(wordNumber);
-        mLinearLayout.addView(wordView);
+    }
 
-        View cloudView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail_text, null);
+    @Override
+    public void addCloud(String cloud) {
+        View cloudView = mLinearLayout.getChildAt(6);
         ((ImageView) cloudView.findViewById(R.id.img_item_icon)).setImageResource(R.drawable.ic_cloud_circle_white_24dp);
         ((TextView) cloudView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.uc_cloud));
         ((TextView) cloudView.findViewById(R.id.txt_item_user)).setText(cloud);
-        mLinearLayout.addView(cloudView);
     }
 
     @Override

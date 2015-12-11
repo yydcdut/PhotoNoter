@@ -165,4 +165,17 @@ public class PhotoNoteDB extends AbsNotesDBModel {
         return number;
     }
 
+    public synchronized int getWordsNumber() {
+        int number = 0;
+        SQLiteDatabase db = mNotesSQLite.getReadableDatabase();
+        String sql = "select SUM(LENGTH(title))+SUM(LENGTH(content)) from photonote;";
+        Cursor cursor = db.rawQuery(sql, null);
+        while (cursor.moveToNext()) {
+            number = cursor.getInt(0);
+        }
+        cursor.close();
+        db.close();
+        return number;
+    }
+
 }

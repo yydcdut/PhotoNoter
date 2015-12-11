@@ -1,7 +1,6 @@
-package com.yydcdut.note.bean;
+package com.yydcdut.note.bean.user;
 
 import com.yydcdut.note.utils.FilePathUtils;
-import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 
 import java.io.File;
 
@@ -30,8 +29,9 @@ public class QQUser implements IUser {
         if (new File(FilePathUtils.getQQImagePath()).exists()) {
             return "file://" + FilePathUtils.getQQImagePath();
         } else {
-            FilePathUtils.saveImage(FilePathUtils.getQQImagePath(),
-                    ImageLoaderManager.loadImageSync(getNetImagePath()));
+            //todo 这个发个post出去
+//            FilePathUtils.saveImage(FilePathUtils.getQQImagePath(),
+//                    ImageLoaderManager.loadImageSync(getNetImagePath()));
             return getNetImagePath();
         }
     }

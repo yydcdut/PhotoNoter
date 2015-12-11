@@ -15,9 +15,21 @@ public interface IUserDetailFragView extends IView {
 
     void initUserImages(List<PhotoNote> list);
 
-    void initUserInfo(boolean isQQLogin, String QQName, boolean isEvernoteLogin,
-                      String evernoteName, String useStorage, String noteNumber,
-                      String sandboxNumber, String wordNumber, String cloud);
+    void addView();
+
+    void addQQView(boolean isQQLogin, String QQName);
+
+    void addEvernoteView(boolean isEvernoteLogin, String evernoteName);
+
+    void addUseStorageView(String useStorage);
+
+    void addNoteNumberView(String noteNumber);
+
+    void addSandBoxNumber(String sandboxNumber);
+
+    void addWordNumber(String wordNumber);
+
+    void addCloud(String cloud);
 
     void logoutQQ();
 

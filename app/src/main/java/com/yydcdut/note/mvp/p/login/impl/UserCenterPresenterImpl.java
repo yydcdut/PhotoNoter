@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 
 import com.yydcdut.note.R;
-import com.yydcdut.note.bean.IUser;
+import com.yydcdut.note.bean.user.IUser;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.listener.OnSnackBarActionListener;
 import com.yydcdut.note.model.rx.RxUser;
@@ -27,7 +27,7 @@ public class UserCenterPresenterImpl implements IUserCenterPresenter {
     private Activity mActivity;
 
     private RxUser mRxUser;
-    private final boolean[] mInitState;
+    private boolean[] mInitState;
 
     @Inject
     public UserCenterPresenterImpl(Activity activity, @ContextLife("Activity") Context context, RxUser rxUser) {
@@ -108,7 +108,7 @@ public class UserCenterPresenterImpl implements IUserCenterPresenter {
         mRxUser.isLoginEvernote()
                 .subscribe(aBoolean -> {
                     if (!aBoolean) {
-                        mRxUser.loginEvernote(mActivity);
+                        mRxUser.loginEvernote(mActivity).subscribe();
                     }
                 });
     }
