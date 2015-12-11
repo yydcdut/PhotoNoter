@@ -19,6 +19,7 @@ android {
         buildConfigField "String", "EVERNOTE_CONSUMER_KEY", (project.hasProperty('EVERNOTE_CONSUMER_KEY') ? "\"$EVERNOTE_CONSUMER_KEY\"" : "\"Your consumer key\"")
         buildConfigField "String", "EVERNOTE_CONSUMER_SECRET", (project.hasProperty('EVERNOTE_CONSUMER_SECRET') ? "\"$EVERNOTE_CONSUMER_SECRET\"" : "\"Your consumer secret\"")
         buildConfigField "String", "TENCENT_KEY", (project.hasProperty('TENCENT_KEY') ? "\"$TENCENT_KEY\"" : "\"TENCENT_KEY\"")
+        buildConfigField "String", "SPEECH_ID", (project.hasProperty('SPEECH_ID') ? "\"$SPEECH_ID\"" : "\"SPEECH_ID\"")
     }
 
     compileOptions {

@@ -61,7 +61,7 @@ public class NoteApplication extends Application {
             PGEditImageLoader.initImageLoader(this);
             PGEditSDK.instance().initSDK(this);
             /* 语音 */
-            SpeechUtility.createUtility(this, "appid=" + "55cc5db3");
+            SpeechUtility.createUtility(this, "appid=" + BuildConfig.SPEECH_ID);
         }
 
         //打点
@@ -91,7 +91,7 @@ public class NoteApplication extends Application {
         ActivityManager mActivityManager = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningAppProcessInfo appProcess : mActivityManager.getRunningAppProcesses()) {
             if (pid == appProcess.pid) {
-                if (appProcess.processName.equals("com.yydcdut.note:cameraphots") ||
+                if (appProcess.processName.equals("com.yydcdut.note:cameraphotos") ||
                         appProcess.processName.equals("com.yydcdut.note:remote") ||
                         appProcess.processName.equals("com.yydcdut.note:makephotos")) {
                     return true;

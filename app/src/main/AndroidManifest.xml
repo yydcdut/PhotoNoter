@@ -79,7 +79,7 @@
         <service android:name=".service.InitService"/>
         <service
             android:name=".service.CameraService"
-            android:process=":cameraphots"/>
+            android:process=":cameraphotos"/>
         <service android:name=".service.CheckService"/>
         <service
             android:name=".service.SandBoxService"
@@ -159,7 +159,7 @@
         <!-- ************ Baidu Begin ************ -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="pjFyNkykpYu1bIqYkQFGRnbx"/>
+            android:value="Mx338srYEciirSHk6xKMrAlm"/>
         <!-- release Mx338srYEciirSHk6xKMrAlm -->
         <!-- debug pjFyNkykpYu1bIqYkQFGRnbx -->
         <service
