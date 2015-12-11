@@ -6,12 +6,17 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.evernote.client.android.EvernoteSession;
+import com.evernote.edam.error.EDAMSystemException;
+import com.evernote.edam.error.EDAMUserException;
+import com.evernote.edam.type.User;
+import com.evernote.thrift.TException;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.auth.QQToken;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 import com.yydcdut.note.BuildConfig;
+import com.yydcdut.note.bean.EvernoteUser;
 import com.yydcdut.note.bean.IUser;
 import com.yydcdut.note.bean.QQUser;
 import com.yydcdut.note.injector.ContextLife;
@@ -22,8 +27,8 @@ import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.lang.ref.WeakReference;
+import java.util.Locale;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -53,46 +58,19 @@ public class RxUser {
     private SharedPreferences mSharedPreferences;
 
     private IUser mQQUser = null;
+    private IUser mEvernoteUser = null;
     private Context mContext;
-
 
     private WeakReference<Activity> mQQActivity;
     private WeakReference<Activity> mEvernoteActivity;
     private Tencent mTencent;
+    private EvernoteSession mEvernoteSession;
 
     @Singleton
     @Inject
     public RxUser(@ContextLife("Application") Context context) {
         mContext = context;
         mSharedPreferences = mContext.getSharedPreferences(NAME, Context.MODE_PRIVATE);
-//        initUser();
-//        if (isLoginEvernote()) {
-//            LoginEvernote();
-//        }
-//        saveQQNetImage().subscribe();
-    }
-
-
-    /**
-     * 保存QQ的Image
-     *
-     * @return
-     */
-    private Observable<Boolean> saveQQNetImage() {
-        return Observable.create(new Observable.OnSubscribe<Boolean>() {
-            @Override
-            public void call(Subscriber<? super Boolean> subscriber) {
-                if (isLoginQQQQ() && !new File(FilePathUtils.getQQImagePath()).exists()) {
-                    FilePathUtils.saveImage(FilePathUtils.getQQImagePath(),
-                            ImageLoaderManager.loadImageSync(getQQQQ().getNetImagePath()));
-                    subscriber.onNext(true);
-                    subscriber.onCompleted();
-                } else {
-                    subscriber.onNext(true);
-                    subscriber.onCompleted();
-                }
-            }
-        }).subscribeOn(Schedulers.io());
     }
 
     public Observable<Boolean> isLoginQQ() {
@@ -111,26 +89,6 @@ public class RxUser {
         }).subscribeOn(Schedulers.io());
     }
 
-    public Observable<Boolean> LoginQQ(String name, String netImagePath) {
-        return Observable.create(new Observable.OnSubscribe<Boolean>() {
-            @Override
-            public void call(Subscriber<? super Boolean> subscriber) {
-                if (TextUtils.isEmpty(name) || TextUtils.isEmpty(netImagePath)) {
-                    subscriber.onError(new RxException("数据有空！"));
-                } else {
-                    SharedPreferences.Editor editor = mSharedPreferences.edit();
-                    editor.putString(Q_NAME, name);
-                    editor.putString(Q_NET_IMAGE_PATH, netImagePath);
-                    editor.commit();
-                    FilePathUtils.saveImage(FilePathUtils.getQQImagePath(),
-                            ImageLoaderManager.loadImageSync(getQQQQ().getNetImagePath()));
-                    subscriber.onNext(true);
-                }
-                subscriber.onCompleted();
-            }
-        }).subscribeOn(Schedulers.io());
-    }
-
     public Observable<IUser> getQQ() {
         return Observable.create(new Observable.OnSubscribe<IUser>() {
             @Override
@@ -142,8 +100,8 @@ public class RxUser {
                         subscriber.onError(new RxException("没有登录！！！"));
                     } else {
                         mQQUser = new QQUser(name, netImagePath);
-                        subscriber.onNext(mQQUser);
                     }
+                    subscriber.onNext(mQQUser);
                     subscriber.onCompleted();
                 }
             }
@@ -165,17 +123,17 @@ public class RxUser {
     }
 
     public Observable<IUser> loginQQ(Activity activity) {
+        if (mQQActivity != null) {
+            mQQActivity.clear();
+            mQQActivity = null;
+        }
+        mQQActivity = new WeakReference<>(activity);
         return Observable.create(new Observable.OnSubscribe<UserInfo>() {
             @Override
             public void call(Subscriber<? super UserInfo> subscriber) {
                 if (mTencent == null) {
                     mTencent = Tencent.createInstance(BuildConfig.TENCENT_KEY, mContext);
                 }
-                if (mQQActivity != null) {
-                    mQQActivity.clear();
-                    mQQActivity = null;
-                }
-                mQQActivity = new WeakReference<>(activity);
                 mTencent.login(mQQActivity.get(), "all", new BaseUiListener(subscriber));
             }
         })
@@ -219,16 +177,6 @@ public class RxUser {
             }
         }
         return mQQUser;
-    }
-
-    private boolean isLoginQQQQ() {
-        String name = mSharedPreferences.getString(Q_NAME, NAME_DEFAULT);
-        String netImagePath = mSharedPreferences.getString(Q_NET_IMAGE_PATH, Q_NET_IMAGE_PATH_DEFAULT);
-        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(netImagePath)) {
-            return false;
-        } else {
-            return true;
-        }
     }
 
     /**
@@ -338,5 +286,118 @@ public class RxUser {
             mSubscriber.onError(new RxException(arg0.errorMessage));
             mSubscriber.onCompleted();
         }
+    }
+
+    public Observable<Boolean> isLoginEvernote() {
+        return Observable.create(new Observable.OnSubscribe<Boolean>() {
+            @Override
+            public void call(Subscriber<? super Boolean> subscriber) {
+                String name = mSharedPreferences.getString(EVERNOTE_NAME, NAME_DEFAULT);
+                if (TextUtils.isEmpty(name)) {
+                    subscriber.onNext(false);
+                } else {
+                    subscriber.onNext(true);
+                }
+                subscriber.onCompleted();
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<IUser> getEvernote() {
+        return Observable.create(new Observable.OnSubscribe<IUser>() {
+            @Override
+            public void call(Subscriber<? super IUser> subscriber) {
+                if (mEvernoteUser == null) {
+                    String name = mSharedPreferences.getString(EVERNOTE_NAME, NAME_DEFAULT);
+                    if (TextUtils.isEmpty(name)) {
+                        subscriber.onError(new RxException("没有登录！！！"));
+                    } else {
+                        mEvernoteUser = new EvernoteUser(name);
+                    }
+                }
+                subscriber.onNext(mEvernoteUser);
+                subscriber.onCompleted();
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<Boolean> logoutEvernote() {
+        return Observable.create(new Observable.OnSubscribe<Boolean>() {
+            @Override
+            public void call(Subscriber<? super Boolean> subscriber) {
+                SharedPreferences.Editor editor = mSharedPreferences.edit();
+                editor.putString(EVERNOTE_NAME, NULL);
+                editor.commit();
+                if (mEvernoteSession == null) {
+                    mEvernoteSession = new EvernoteSession.Builder(mContext)
+                            .setLocale(Locale.SIMPLIFIED_CHINESE)
+                            .setEvernoteService(EVERNOTE_SERVICE)
+                            .setSupportAppLinkedNotebooks(SUPPORT_APP_LINKED_NOTEBOOKS)
+                            .setForceAuthenticationInThirdPartyApp(true)
+                            .build(BuildConfig.EVERNOTE_CONSUMER_KEY, BuildConfig.EVERNOTE_CONSUMER_SECRET)
+                            .asSingleton();
+                }
+                if (mEvernoteSession.isLoggedIn()) {
+                    mEvernoteSession.logOut();
+                }
+                subscriber.onNext(true);
+                subscriber.onCompleted();
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<Boolean> loginEvernote(Activity activity) {
+        if (mEvernoteActivity != null) {
+            mEvernoteActivity.clear();
+            mEvernoteActivity = null;
+        }
+        mEvernoteActivity = new WeakReference<>(activity);
+        return Observable.create(new Observable.OnSubscribe<Boolean>() {
+            @Override
+            public void call(Subscriber<? super Boolean> subscriber) {
+                if (mEvernoteSession == null) {
+                    mEvernoteSession = new EvernoteSession.Builder(mContext)
+                            .setLocale(Locale.SIMPLIFIED_CHINESE)
+                            .setEvernoteService(EVERNOTE_SERVICE)
+                            .setSupportAppLinkedNotebooks(SUPPORT_APP_LINKED_NOTEBOOKS)
+                            .setForceAuthenticationInThirdPartyApp(true)
+                            .build(BuildConfig.EVERNOTE_CONSUMER_KEY, BuildConfig.EVERNOTE_CONSUMER_SECRET)
+                            .asSingleton();
+                }
+                mEvernoteSession.authenticate(mEvernoteActivity.get());
+                subscriber.onNext(true);
+                subscriber.onCompleted();
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<IUser> saveEvernote() {
+        return Observable.create(new Observable.OnSubscribe<IUser>() {
+            @Override
+            public void call(Subscriber<? super IUser> subscriber) {
+                if (mEvernoteSession.isLoggedIn()) {
+                    try {
+                        User user = mEvernoteSession.getEvernoteClientFactory().getUserStoreClient().getUser();
+                        mEvernoteUser = new EvernoteUser(user.getUsername());
+                        SharedPreferences.Editor editor = mSharedPreferences.edit();
+                        editor.putString(EVERNOTE_NAME, mEvernoteUser.getName());
+                        editor.commit();
+                        subscriber.onNext(mEvernoteUser);
+                    } catch (EDAMUserException e) {
+                        e.printStackTrace();
+                        subscriber.onError(e);
+                    } catch (EDAMSystemException e) {
+                        e.printStackTrace();
+                        subscriber.onError(e);
+                    } catch (TException e) {
+                        e.printStackTrace();
+                        subscriber.onError(e);
+                    }
+                } else {
+                    subscriber.onError(new RxException("没有登录"));
+                }
+                subscriber.onCompleted();
+            }
+        }).subscribeOn(Schedulers.io());
     }
 }

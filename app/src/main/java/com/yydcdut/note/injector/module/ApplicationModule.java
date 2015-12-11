@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.injector.ContextLife;
-import com.yydcdut.note.model.UserCenter;
 import com.yydcdut.note.model.rx.RxCategory;
 import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.model.rx.RxSandBox;
@@ -26,7 +25,6 @@ public class ApplicationModule {
     private RxCategory mRxCategory;
     private RxPhotoNote mRxPhotoNote;
     private RxSandBox mRxSandBox;
-    private UserCenter mUserCenter;
     private RxUser mRxUser;
     private LocalStorageUtils mLocalStorageUtils;
     private ThreadExecutorPool mThreadExecutorPool;
@@ -35,7 +33,6 @@ public class ApplicationModule {
         mApplication = application;
         mThreadExecutorPool = new ThreadExecutorPool();
         mLocalStorageUtils = new LocalStorageUtils(mApplication.getApplicationContext());
-        mUserCenter = new UserCenter(mApplication.getApplicationContext(), mThreadExecutorPool);
         mRxSandBox = new RxSandBox(mApplication.getApplicationContext());
         mRxPhotoNote = new RxPhotoNote(mApplication.getApplicationContext());
         mRxCategory = new RxCategory(mApplication.getApplicationContext());
@@ -65,12 +62,6 @@ public class ApplicationModule {
     @Singleton
     public RxSandBox provideRxSandBox() {
         return mRxSandBox;
-    }
-
-    @Provides
-    @Singleton
-    public UserCenter provideUserCenter() {
-        return mUserCenter;
     }
 
     @Provides

@@ -5,7 +5,6 @@ import android.content.Context;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.injector.PerService;
 import com.yydcdut.note.injector.module.ServiceModule;
-import com.yydcdut.note.model.UserCenter;
 import com.yydcdut.note.model.rx.RxCategory;
 import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.model.rx.RxSandBox;
@@ -36,8 +35,6 @@ public interface ServiceComponent {
     RxPhotoNote getRxPhotoNote();
 
     RxSandBox getRxSandBox();
-
-    UserCenter getUserCenter();
 
     LocalStorageUtils getLocalStorageUtils();
 

@@ -6,7 +6,6 @@ import android.content.Context;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.injector.PerActivity;
 import com.yydcdut.note.injector.module.ActivityModule;
-import com.yydcdut.note.model.UserCenter;
 import com.yydcdut.note.model.rx.RxCategory;
 import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.model.rx.RxSandBox;
@@ -47,8 +46,6 @@ public interface ActivityComponent {
     RxPhotoNote getRxPhotoNote();
 
     RxSandBox getRxSandBox();
-
-    UserCenter getUserCenter();
 
     LocalStorageUtils getLocalStorageUtils();
 

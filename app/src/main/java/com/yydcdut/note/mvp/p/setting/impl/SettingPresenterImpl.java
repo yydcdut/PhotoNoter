@@ -5,7 +5,6 @@ import android.content.Context;
 import com.yydcdut.note.R;
 import com.yydcdut.note.camera.param.Size;
 import com.yydcdut.note.injector.ContextLife;
-import com.yydcdut.note.model.UserCenter;
 import com.yydcdut.note.model.rx.RxUser;
 import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.setting.ISettingPresenter;
@@ -30,17 +29,14 @@ public class SettingPresenterImpl implements ISettingPresenter {
 
     private Context mContext;
     private LocalStorageUtils mLocalStorageUtils;
-    private UserCenter mUserCenter;
     private RxUser mRxUser;
 
     private static final boolean SUPPORT_CAMERA_5_0 = false;
 
     @Inject
-    public SettingPresenterImpl(@ContextLife("Activity") Context context, LocalStorageUtils localStorageUtils,
-                                UserCenter userCenter, RxUser rxUser) {
+    public SettingPresenterImpl(@ContextLife("Activity") Context context, LocalStorageUtils localStorageUtils, RxUser rxUser) {
         mContext = context;
         mLocalStorageUtils = localStorageUtils;
-        mUserCenter = userCenter;
         mRxUser = rxUser;
     }
 
@@ -65,12 +61,14 @@ public class SettingPresenterImpl implements ISettingPresenter {
                                         iUser.getName(), iUser.getImagePath()));
                     }
                 });
-
-        boolean isEvernoteLogin = mUserCenter.isLoginEvernote();
-        if (isEvernoteLogin) {
-            mSettingView.initEvernote(true, mUserCenter.getEvernote().getUsername());
-        }
-
+        mRxUser.isLoginEvernote()
+                .subscribe(aBoolean -> {
+                    if (aBoolean) {
+                        mRxUser.getEvernote()
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(iUser -> mSettingView.initEvernote(true, iUser.getName()));
+                    }
+                });
     }
 
     @Override

@@ -3,7 +3,6 @@ package com.yydcdut.note.mvp.p.note.impl;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 
 import com.evernote.client.android.EvernoteSession;
@@ -28,8 +27,8 @@ import com.iflytek.cloud.SpeechRecognizer;
 import com.yydcdut.note.R;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.listener.OnSnackBarActionListener;
-import com.yydcdut.note.model.UserCenter;
 import com.yydcdut.note.model.rx.RxPhotoNote;
+import com.yydcdut.note.model.rx.RxUser;
 import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.note.IEditTextPresenter;
 import com.yydcdut.note.mvp.v.note.IEditTextView;
@@ -52,16 +51,15 @@ import java.util.List;
 import javax.inject.Inject;
 
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
 
 /**
  * Created by yuyidong on 15/11/15.
  */
-public class EditTextPresenterImpl implements IEditTextPresenter, Handler.Callback {
+public class EditTextPresenterImpl implements IEditTextPresenter {
     private static final String TAG = EditTextPresenterImpl.class.getSimpleName();
     private Context mContext;
     private RxPhotoNote mRxPhotoNote;
-    private UserCenter mUserCenter;
+    private RxUser mRxUser;
     private IEditTextView mEditTextView;
     /* 数据 */
     private int mCategoryId;
@@ -69,8 +67,6 @@ public class EditTextPresenterImpl implements IEditTextPresenter, Handler.Callba
     private int mComparator;
 
     private Handler mHandler;
-    private static final int MSG_SUCCESS = 1;
-    private static final int MSG_NOT_SUCCESS = 2;
 
     /* 语音听写 */
     // 语音听写对象
@@ -88,11 +84,11 @@ public class EditTextPresenterImpl implements IEditTextPresenter, Handler.Callba
 
     @Inject
     public EditTextPresenterImpl(@ContextLife("Activity") Context context, RxPhotoNote rxPhotoNote,
-                                 UserCenter userCenter) {
+                                 RxUser rxUser) {
         mRxPhotoNote = rxPhotoNote;
-        mUserCenter = userCenter;
-        mHandler = new Handler(this);
+        mHandler = new Handler();
         mContext = context;
+        mRxUser = rxUser;
         mIatResults = new LinkedHashMap<>();
     }
 
@@ -129,23 +125,27 @@ public class EditTextPresenterImpl implements IEditTextPresenter, Handler.Callba
 
     @Override
     public void update2Evernote() {
-        if (mUserCenter.isLoginEvernote()) {
-            mRxPhotoNote.findByCategoryId(mCategoryId, mComparator)
-                    .map(photoNoteList -> photoNoteList.get(mPosition))
-                    .doOnSubscribe(new Action0() {//todo // FIXME: 15/11/29 lambda
-                        @Override
-                        public void call() {
-                            mEditTextView.showProgressBar();
-                        }
-                    })
-                    .subscribeOn(AndroidSchedulers.mainThread())
-                    .subscribe(photoNote -> {
-                        boolean isSuccess = doUpdate2Evernote(photoNote.getBigPhotoPathWithoutFile(), photoNote.getPhotoName());
-                        mHandler.sendEmptyMessage(isSuccess ? MSG_SUCCESS : MSG_NOT_SUCCESS);
-                    });
-        } else {
-            mEditTextView.showSnakeBar(mContext.getResources().getString(R.string.not_login));
-        }
+        mRxUser.isLoginEvernote()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aBoolean -> {
+                    if (aBoolean) {
+                        mRxPhotoNote.findByCategoryId(mCategoryId, mComparator)
+                                .map(photoNoteList -> photoNoteList.get(mPosition))
+                                .doOnSubscribe(() -> mEditTextView.showProgressBar())
+                                .map(photoNote1 -> doUpdate2Evernote(photoNote1.getBigPhotoPathWithoutFile(), photoNote1.getPhotoName()))
+                                .subscribeOn(AndroidSchedulers.mainThread())
+                                .subscribe(aBoolean1 -> {
+                                    if (aBoolean1) {
+                                        mEditTextView.showSnakeBar(mContext.getResources().getString(R.string.toast_success));
+                                    } else {
+                                        mEditTextView.showSnakeBar(mContext.getResources().getString(R.string.toast_fail));
+                                    }
+                                    mEditTextView.hideProgressBar();
+                                });
+                    } else {
+                        mEditTextView.showSnakeBar(mContext.getResources().getString(R.string.not_login));
+                    }
+                });
     }
 
     @Override
@@ -331,21 +331,6 @@ public class EditTextPresenterImpl implements IEditTextPresenter, Handler.Callba
             mIat.cancel();
             mIat.destroy();
         }
-    }
-
-
-    @Override
-    public boolean handleMessage(Message msg) {
-        switch (msg.what) {
-            case MSG_NOT_SUCCESS:
-                mEditTextView.showSnakeBar(mContext.getResources().getString(R.string.toast_fail));
-                break;
-            case MSG_SUCCESS:
-                mEditTextView.showSnakeBar(mContext.getResources().getString(R.string.toast_success));
-                break;
-        }
-        mEditTextView.hideProgressBar();
-        return false;
     }
 
     private boolean doUpdate2Evernote(String bigPhotoPathWithoutFile, String photoName) {

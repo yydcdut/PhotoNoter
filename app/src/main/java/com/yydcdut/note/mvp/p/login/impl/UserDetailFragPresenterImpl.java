@@ -8,11 +8,9 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
-import com.evernote.edam.type.User;
 import com.yydcdut.note.R;
 import com.yydcdut.note.bean.IUser;
 import com.yydcdut.note.injector.ContextLife;
-import com.yydcdut.note.model.UserCenter;
 import com.yydcdut.note.model.rx.RxCategory;
 import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.model.rx.RxSandBox;
@@ -23,7 +21,6 @@ import com.yydcdut.note.mvp.v.login.IUserDetailFragView;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.NetworkUtils;
-import com.yydcdut.note.utils.ThreadExecutorPool;
 import com.yydcdut.note.utils.TimeDecoder;
 
 import java.text.DecimalFormat;
@@ -41,16 +38,11 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter {
     private IUserDetailFragView mUserDetailFragView;
     private Activity mActivity;
     private Context mContext;
-    private UserCenter mUserCenter;
     private RxPhotoNote mRxPhotoNote;
     private RxCategory mRxCategory;
     private RxSandBox mRxSandBox;
     private RxUser mRxUser;
     private LocalStorageUtils mLocalStorageUtils;
-    private ThreadExecutorPool mThreadExecutorPool;
-
-    private static final int MESSAGE_LOGIN_QQ_OK = 1;
-    private static final int MESSAGE_LOGIN_QQ_FAILED = 3;
 
     private LocationClient mLocationClient;
 
@@ -58,19 +50,15 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter {
     private String mLocation;
 
     @Inject
-    public UserDetailFragPresenterImpl(Activity activity, @ContextLife("Activity") Context context,
-                                       UserCenter userCenter, RxSandBox rxSandBox,
-                                       RxCategory rxCategory, RxPhotoNote rxPhotoNote,
-                                       LocalStorageUtils localStorageUtils, ThreadExecutorPool threadExecutorPool,
-                                       RxUser rxUser) {
+    public UserDetailFragPresenterImpl(Activity activity, @ContextLife("Activity") Context context, RxSandBox rxSandBox,
+                                       RxCategory rxCategory, RxPhotoNote rxPhotoNote, RxUser rxUser,
+                                       LocalStorageUtils localStorageUtils) {
         mActivity = activity;
         mContext = context;
-        mUserCenter = userCenter;
         mRxCategory = rxCategory;
         mRxPhotoNote = rxPhotoNote;
         mRxSandBox = rxSandBox;
         mLocalStorageUtils = localStorageUtils;
-        mThreadExecutorPool = threadExecutorPool;
         mRxUser = rxUser;
     }
 
@@ -153,12 +141,15 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter {
 
     @Override
     public void loginOrOutEvernote() {
-        if (mUserCenter.isLoginEvernote()) {
-            mUserCenter.logoutEvernote();
-            mUserDetailFragView.logoutEvernote();
-        } else {
-            mUserCenter.doLoginEvernote(mActivity);
-        }
+        mRxUser.isLoginEvernote()
+                .subscribe(aBoolean -> {
+                    if (aBoolean) {
+                        mRxUser.logoutEvernote().subscribe();
+                        mUserDetailFragView.logoutEvernote();
+                    } else {
+                        mRxUser.loginEvernote(mActivity);
+                    }
+                });
     }
 
     private String getQQName() {
@@ -179,18 +170,18 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter {
         return null;
     }
 
-    private String getEvernoteName() {
-        if (mUserCenter.isLoginEvernote()) {
-            User user = mUserCenter.getEvernote();
-            if (user == null) {
-                return mContext.getResources().getString(R.string.user_failed);
-            } else {
-                return user.getName();
-            }
-        } else {
-            return mContext.getResources().getString(R.string.not_login);
-        }
-    }
+//    private String getEvernoteName() {
+//        if (mUserCenter.isLoginEvernote()) {
+//            User user = mUserCenter.getEvernote();
+//            if (user == null) {
+//                return mContext.getResources().getString(R.string.user_failed);
+//            } else {
+//                return user.getName();
+//            }
+//        } else {
+//            return mContext.getResources().getString(R.string.not_login);
+//        }
+//    }
 
     private String getFolderStorage() {
         long storage = FilePathUtils.getFolderStorage();

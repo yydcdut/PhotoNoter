@@ -8,7 +8,6 @@ import com.yydcdut.note.bus.CategoryMoveEvent;
 import com.yydcdut.note.bus.CategoryUpdateEvent;
 import com.yydcdut.note.bus.PhotoNoteCreateEvent;
 import com.yydcdut.note.bus.PhotoNoteDeleteEvent;
-import com.yydcdut.note.model.UserCenter;
 import com.yydcdut.note.model.compare.ComparatorFactory;
 import com.yydcdut.note.model.rx.RxCategory;
 import com.yydcdut.note.model.rx.RxPhotoNote;
@@ -38,14 +37,10 @@ public class HomePresenterImpl implements IHomePresenter {
     private RxPhotoNote mRxPhotoNote;
     private RxUser mRxUser;
 
-    private UserCenter mUserCenter;
-
     @Inject
-    public HomePresenterImpl(RxCategory rxCategory, RxPhotoNote rxPhotoNote,
-                             UserCenter userCenter, RxUser rxUser) {
+    public HomePresenterImpl(RxCategory rxCategory, RxPhotoNote rxPhotoNote, RxUser rxUser) {
         mRxCategory = rxCategory;
         mRxPhotoNote = rxPhotoNote;
-        mUserCenter = userCenter;
         mRxUser = rxUser;
     }
 
@@ -136,11 +131,15 @@ public class HomePresenterImpl implements IHomePresenter {
                         });
                 break;
             case USER_TWO:
-                if (mUserCenter.isLoginEvernote()) {
-                    mHomeView.jump2UserCenterActivity();
-                } else {
-                    mHomeView.jump2LoginActivity();
-                }
+                mRxUser.isLoginEvernote()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(aBoolean -> {
+                            if (aBoolean) {
+                                mHomeView.jump2UserCenterActivity();
+                            } else {
+                                mHomeView.jump2LoginActivity();
+                            }
+                        });
                 break;
         }
     }
@@ -167,11 +166,16 @@ public class HomePresenterImpl implements IHomePresenter {
 
     @Override
     public void updateEvernoteInfo() {
-        if (mUserCenter.isLoginEvernote()) {
-            mHomeView.updateEvernoteInfo(true);
-        } else {
-            mHomeView.updateEvernoteInfo(false);
-        }
+        mRxUser.isLoginEvernote()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aBoolean -> {
+                    if (aBoolean) {
+                        mHomeView.updateEvernoteInfo(true);
+                    } else {
+                        mHomeView.updateEvernoteInfo(false);
+                    }
+                });
+
     }
 
     @Override
