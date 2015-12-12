@@ -64,9 +64,10 @@ public class DetailActivity extends BaseActivity implements IDetailView,
     private float mLastTimePositionOffset = -1;
 
     private float mNoteBeginHeight = 0;
-    private float mMapBeginHeight = 0;
-    private float mTimeBeginHeight = 0;
+    private float mTimesBeginHeight = 0;
     private float mExifBeginHeight = 0;
+    private float mMapBeginHeight = 0;
+
 
     private DetailPagerAdapter mDetailPagerAdapter;
     @Bind(R.id.vp_detail)
@@ -138,18 +139,22 @@ public class DetailActivity extends BaseActivity implements IDetailView,
         mMapView.getLayoutParams().height = (int) (containerHeight - getResources().getDimension(R.dimen.detail_control));
     }
 
+
     private void calculateHeight() {
         View view1 = findViewById(R.id.txt_detail_content_title);
         View view2 = findViewById(R.id.txt_detail_content);
-        mNoteBeginHeight = 0;
         int noteHeight = view1.getHeight() + view2.getHeight();
-        mMapBeginHeight = mNoteBeginHeight + noteHeight + getResources().getDimension(R.dimen.activity_horizontal_margin) / 2;
-        int containerHeight = findViewById(R.id.layout_detail_scroll_container).getHeight();
-        int mapHeight = (int) (containerHeight - getResources().getDimension(R.dimen.detail_control));
-        mTimeBeginHeight = mMapBeginHeight + mapHeight + getResources().getDimension(R.dimen.activity_horizontal_margin);
+        if (noteHeight == 0) {
+            return;
+        }
+        mNoteBeginHeight = 0;
+        mTimesBeginHeight = mNoteBeginHeight + noteHeight + getResources().getDimension(R.dimen.activity_horizontal_margin) / 2;
         View view3 = findViewById(R.id.layout_detail_time);
         int timeHeight = view3.getHeight();
-        mExifBeginHeight = mTimeBeginHeight + timeHeight + getResources().getDimension(R.dimen.activity_horizontal_margin);
+        mExifBeginHeight = mTimesBeginHeight + timeHeight + getResources().getDimension(R.dimen.activity_horizontal_margin);
+        View view4 = findViewById(R.id.txt_detail_exif);
+        int exifHeight = view4.getHeight();
+        mMapBeginHeight = mExifBeginHeight + exifHeight + getResources().getDimension(R.dimen.activity_horizontal_margin) / 2;
     }
 
     @Override
@@ -353,11 +358,11 @@ public class DetailActivity extends BaseActivity implements IDetailView,
 
     @Override
     public void onScrollChanged(int x, int y, int oldx, int oldy) {
-        if (y < (int) mMapBeginHeight) {
+        if (y < (int) mTimesBeginHeight) {
             setTitlePosition(R.id.txt_detail_1);
-        } else if (y <= (int) mTimeBeginHeight) {
-            setTitlePosition(R.id.txt_detail_2);
         } else if (y <= (int) mExifBeginHeight) {
+            setTitlePosition(R.id.txt_detail_2);
+        } else if (y <= (int) mMapBeginHeight) {
             setTitlePosition(R.id.txt_detail_3);
         } else {
             setTitlePosition(R.id.txt_detail_4);
@@ -371,17 +376,17 @@ public class DetailActivity extends BaseActivity implements IDetailView,
 
     @OnClick(R.id.txt_detail_2)
     public void clickTextDetail2(View v) {
-        mScrollView.smoothScrollTo(0, (int) mMapBeginHeight + 2);
+        mScrollView.smoothScrollTo(0, (int) mTimesBeginHeight + 2);
     }
 
     @OnClick(R.id.txt_detail_3)
     public void clickTextDetail3(View v) {
-        mScrollView.smoothScrollTo(0, (int) mTimeBeginHeight + 2);
+        mScrollView.smoothScrollTo(0, (int) mExifBeginHeight + 2);
     }
 
     @OnClick(R.id.txt_detail_4)
     public void clickTextDetail4(View v) {
-        mScrollView.smoothScrollTo(0, (int) mExifBeginHeight + 2);
+        mScrollView.smoothScrollTo(0, (int) mMapBeginHeight + 2);
     }
 
     @OnClick(R.id.fab_edit)

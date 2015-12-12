@@ -66,7 +66,7 @@
                         android:layout_height="50dip"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="@string/detail_gps"
+                        android:text="@string/detail_date"
                         android:textColor="@color/txt_LightSlateGray"/>
 
                     <TextView
@@ -75,7 +75,7 @@
                         android:layout_height="50dip"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="@string/detail_date"
+                        android:text="@string/detail_exif"
                         android:textColor="@color/txt_LightSlateGray"/>
 
                     <TextView
@@ -84,7 +84,7 @@
                         android:layout_height="50dip"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="@string/detail_exif"
+                        android:text="@string/detail_gps"
                         android:textColor="@color/txt_LightSlateGray"/>
 
                     <View
@@ -200,19 +200,6 @@
                             android:layout_margin="8dip"
                             android:background="#22ffffff"/>
 
-                        <com.baidu.mapapi.map.MapView
-                            android:id="@+id/bmapView"
-                            android:layout_width="fill_parent"
-                            android:layout_height="300dip"
-                            android:clickable="false"/>
-
-                        <View
-                            android:id="@+id/view_seperate2"
-                            android:layout_width="fill_parent"
-                            android:layout_height="1dip"
-                            android:layout_margin="8dip"
-                            android:background="#22ffffff"/>
-
                         <LinearLayout
                             android:id="@+id/layout_detail_time"
                             android:layout_width="fill_parent"
@@ -269,7 +256,7 @@
                         </LinearLayout>
 
                         <View
-                            android:id="@+id/view_seperate3"
+                            android:id="@+id/view_seperate2"
                             android:layout_width="fill_parent"
                             android:layout_height="1dip"
                             android:layout_margin="8dip"
@@ -281,8 +268,22 @@
                             android:layout_height="wrap_content"
                             android:paddingLeft="@dimen/activity_margin_small"
                             android:paddingRight="@dimen/activity_margin_small"
+                            android:text="\n \n \n \n \n \n \n \n \n \n \n \n \n \n"
                             android:textColor="@color/txt_LightSlateGray"
                             android:textSize="@dimen/txt_small"/>
+
+                        <View
+                            android:id="@+id/view_seperate3"
+                            android:layout_width="fill_parent"
+                            android:layout_height="1dip"
+                            android:layout_margin="8dip"
+                            android:background="#22ffffff"/>
+
+                        <com.baidu.mapapi.map.MapView
+                            android:id="@+id/bmapView"
+                            android:layout_width="fill_parent"
+                            android:layout_height="300dip"
+                            android:clickable="false"/>
 
                     </LinearLayout>
                 </com.yydcdut.note.view.ObservableScrollView>
