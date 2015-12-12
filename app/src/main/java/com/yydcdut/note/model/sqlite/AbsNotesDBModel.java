@@ -1,8 +1,6 @@
-package com.yydcdut.note.model;
+package com.yydcdut.note.model.sqlite;
 
 import android.content.Context;
-
-import com.yydcdut.note.model.sqlite.NotesSQLite;
 
 /**
  * Created by yuyidong on 15/10/15.

@@ -146,7 +146,6 @@ public class UserCenterPresenterImpl implements IUserCenterPresenter {
                 .subscribe(new Subscriber<IUser>() {
                     @Override
                     public void onCompleted() {
-
                     }
 
                     @Override

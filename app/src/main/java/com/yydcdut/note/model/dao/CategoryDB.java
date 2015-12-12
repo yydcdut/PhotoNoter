@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.yydcdut.note.bean.Category;
-import com.yydcdut.note.model.AbsNotesDBModel;
+import com.yydcdut.note.model.sqlite.AbsNotesDBModel;
 import com.yydcdut.note.model.sqlite.NotesSQLite;
 
 import java.util.ArrayList;
