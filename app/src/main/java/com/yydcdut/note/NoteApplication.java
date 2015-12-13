@@ -3,7 +3,7 @@ package com.yydcdut.note;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
+import android.support.multidex.MultiDex;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.iflytek.cloud.SpeechUtility;
@@ -13,17 +13,11 @@ import com.umeng.analytics.MobclickAgent;
 import com.yydcdut.note.injector.component.ApplicationComponent;
 import com.yydcdut.note.injector.component.DaggerApplicationComponent;
 import com.yydcdut.note.injector.module.ApplicationModule;
-import com.yydcdut.note.service.CheckService;
 import com.yydcdut.note.utils.Evi;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.YLog;
 
-import java.io.File;
-
-import rx.Observable;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 import us.pinguo.edit.sdk.PGEditImageLoader;
 import us.pinguo.edit.sdk.base.PGEditSDK;
 
@@ -36,11 +30,11 @@ public class NoteApplication extends Application {
 
     private ApplicationComponent mApplicationComponent;
 
-//    @Override
-//    protected void attachBaseContext(Context base) {
-//        super.attachBaseContext(base);
-//        MultiDex.install(this);
-//    }
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
 
     @Override
     public void onCreate() {
@@ -113,27 +107,27 @@ public class NoteApplication extends Application {
 
     private void checkDisks() {
         if (!mApplicationComponent.getLocalStorageUtils().isFirstTime()) {
-            Observable.from(new File(FilePathUtils.getPath()).listFiles())
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(Schedulers.computation())
-                    .filter(file1 -> !file1.isDirectory())
-                    .filter(file -> file.getName().toLowerCase().endsWith(".jpg") ||
-                            file.getName().toLowerCase().endsWith(".png") ||
-                            file.getName().toLowerCase().endsWith(".jpeg"))
-                    .count()
-                    .subscribe(fileNumber -> {
-                        mApplicationComponent.getRxSandBox()
-                                .getNumber()
-                                .subscribe(new Action1<Integer>() {
-                                    @Override
-                                    public void call(Integer dbNumber) {
-                                        if (fileNumber != dbNumber) {
-                                            Intent checkIntent = new Intent(getApplicationContext(), CheckService.class);
-                                            startService(checkIntent);
-                                        }
-                                    }
-                                });
-                    });
+//            Observable.from(new File(FilePathUtils.getPath()).listFiles())
+//                    .subscribeOn(Schedulers.io())
+//                    .observeOn(Schedulers.computation())
+//                    .filter(file1 -> !file1.isDirectory())
+//                    .filter(file -> file.getName().toLowerCase().endsWith(".jpg") ||
+//                            file.getName().toLowerCase().endsWith(".png") ||
+//                            file.getName().toLowerCase().endsWith(".jpeg"))
+//                    .count()
+//                    .subscribe(fileNumber -> {
+//                        mApplicationComponent.getRxSandBox()
+//                                .getNumber()
+//                                .subscribe(new Action1<Integer>() {
+//                                    @Override
+//                                    public void call(Integer dbNumber) {
+//                                        if (fileNumber != dbNumber) {
+//                                            Intent checkIntent = new Intent(getApplicationContext(), CheckService.class);
+//                                            startService(checkIntent);
+//                                        }
+//                                    }
+//                                });
+//                    });
         }
     }
 
