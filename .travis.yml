@@ -9,9 +9,6 @@ android:
       - android-23
       - extra
 
-install:
-  - ./gradlew assembleRelease --info
-
 before_script:
   - chmod +x gradlew
 
