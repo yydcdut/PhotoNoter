@@ -34,7 +34,7 @@ android {
     lintOptions {
 //        preDexLibraries = false
         checkReleaseBuilds false
-        abortOnError false
+//        abortOnError false
     }
 
     signingConfigs {
