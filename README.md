@@ -1,6 +1,8 @@
 # PhotoNoter
 
-Material Design风格的开源照片笔记。 
+Material Design风格的开源照片笔记。
+
+ [![GitHub release](https://img.shields.io/github/release/yydcdut/PhotoNoter.svg)](https://github.com/yydcdut/PhotoNoter/releases)   <a href="https://www.apache.org/licenses/LICENSE-2.0.html">  <img src="https://camo.githubusercontent.com/8cb994f6c4a156c623fe057fccd7fb7d7d2e8c9b/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6c6963656e73652d417061636865253230322d3445423142412e737667" alt="License" data-canonical-src="https://img.shields.io/badge/license-Apache%202-4EB1BA.svg" style="max-width:100%;"></a>
 
 下载：
 
@@ -19,7 +21,7 @@ Material Design风格的开源照片笔记。
 如果编译不过，错误日志是：
 
 > Error:A problem was found with the configuration of task ':app:packagexxxxDebug'.
-> 
+>
 > File ‘/xxxxxxxxxx/debug.keystore' specified for property 'signingConfig.storeFile' does not exist.
 
 将{$projectName}/app/build.gradle中的下面代码删除
@@ -51,7 +53,7 @@ debug{
 5. 图片处理，这是一个老生常谈的了。但是在App中，发现很多这方面的问题我还没有解决。比如红米1s后置摄像头800W，那么拍一张图是3M左右，但是Camera的照片的0度是我们正常手机视角的90度。那么我们需要把这个3M的图片给翻转过来，又不想失分辨率，诶，java臣妾做不到啊！那么现在的解决办法是不去拍摄800W像素的，拍大概400-500W像素的不会OOM的。
 6. 沙盒。每次拍完照都是先把数据放到沙盒数据库中，然后再到服务中去作图，做完的话再从数据库中删除掉。作图的Service是和Camera那个Activity绑定的(bind方式)，当不再拍照的时候就退出了Service，然后回到相册界面的时候会去判断沙盒数据库中是否有没有做完的图，没有做完的话另外启一个进程的Service继续作图。
 7. activity退出和进入的动画。这块弄了很久，主要是想模仿Android5.0的那种，但是有些界面做出来超级卡。
-8. 一些UI的动画，比如 “ 意见反馈”、 “ 语音输入” 这里面的动画。 
+8. 一些UI的动画，比如 “ 意见反馈”、 “ 语音输入” 这里面的动画。
 9. 主题设置，沉浸式状态栏（5.0）。
 10. 切换主题。
 11. 可以滑动item和可以拖放item的ListView（<a href="https://github.com/yydcdut/SlideAndDragListView">SlideAndDragListView</a>）。
