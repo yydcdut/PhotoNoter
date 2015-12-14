@@ -18,9 +18,9 @@ android {
         }
     }
 
-//    lintOptions {
-//        abortOnError false
-//    }
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
