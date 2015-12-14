@@ -2,7 +2,7 @@
 
 Material Design风格的开源照片笔记。
 
- [![GitHub release](https://img.shields.io/github/release/yydcdut/PhotoNoter.svg)](https://github.com/yydcdut/PhotoNoter/releases)   <a href="https://www.apache.org/licenses/LICENSE-2.0.html">  <img src="https://camo.githubusercontent.com/8cb994f6c4a156c623fe057fccd7fb7d7d2e8c9b/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6c6963656e73652d417061636865253230322d3445423142412e737667" alt="License" data-canonical-src="https://img.shields.io/badge/license-Apache%202-4EB1BA.svg" style="max-width:100%;"></a>
+ [![GitHub release](https://img.shields.io/github/release/yydcdut/PhotoNoter.svg)](https://github.com/yydcdut/PhotoNoter/releases)   [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
 下载：
 
