@@ -16,7 +16,6 @@ import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.YLog;
 
 import us.pinguo.edit.sdk.PGEditImageLoader;
-import us.pinguo.edit.sdk.base.PGEditSDK;
 
 /**
  * Created by yyd on 15-3-29.
@@ -45,12 +44,9 @@ public class NoteApplication extends Application {
         FilePathUtils.initEnvironment(this);
         Evi.init(this);
         if (!isFromOtherProgress()) {
-            checkDisks();
-
             initBaiduSdk();
              /* Camera360 */
             PGEditImageLoader.initImageLoader(this);
-            PGEditSDK.instance().initSDK(this);
 
         }
 
@@ -99,32 +95,6 @@ public class NoteApplication extends Application {
 
     public ApplicationComponent getApplicationComponent() {
         return mApplicationComponent;
-    }
-
-    private void checkDisks() {
-        if (!mApplicationComponent.getLocalStorageUtils().isFirstTime()) {
-//            Observable.from(new File(FilePathUtils.getPath()).listFiles())
-//                    .subscribeOn(Schedulers.io())
-//                    .observeOn(Schedulers.computation())
-//                    .filter(file1 -> !file1.isDirectory())
-//                    .filter(file -> file.getName().toLowerCase().endsWith(".jpg") ||
-//                            file.getName().toLowerCase().endsWith(".png") ||
-//                            file.getName().toLowerCase().endsWith(".jpeg"))
-//                    .count()
-//                    .subscribe(fileNumber -> {
-//                        mApplicationComponent.getRxSandBox()
-//                                .getNumber()
-//                                .subscribe(new Action1<Integer>() {
-//                                    @Override
-//                                    public void call(Integer dbNumber) {
-//                                        if (fileNumber != dbNumber) {
-//                                            Intent checkIntent = new Intent(getApplicationContext(), CheckService.class);
-//                                            startService(checkIntent);
-//                                        }
-//                                    }
-//                                });
-//                    });
-        }
     }
 
 }

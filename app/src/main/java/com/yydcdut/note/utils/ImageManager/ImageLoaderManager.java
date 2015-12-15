@@ -37,5 +37,9 @@ public class ImageLoaderManager {
         return ImageLoader.getInstance().loadImageSync(uri);
     }
 
+    public static void clearMemoryCache() {
+        ImageLoader.getInstance().clearMemoryCache();
+    }
+
 
 }

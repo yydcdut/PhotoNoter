@@ -159,7 +159,7 @@
         <!-- ************ Baidu Begin ************ -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="Mx338srYEciirSHk6xKMrAlm"/>
+            android:value="pjFyNkykpYu1bIqYkQFGRnbx"/>
         <!-- release Mx338srYEciirSHk6xKMrAlm -->
         <!-- debug pjFyNkykpYu1bIqYkQFGRnbx -->
         <service

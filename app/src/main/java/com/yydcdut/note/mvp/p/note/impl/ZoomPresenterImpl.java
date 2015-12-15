@@ -1,5 +1,6 @@
 package com.yydcdut.note.mvp.p.note.impl;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -18,7 +19,6 @@ import com.yydcdut.note.utils.UiHelper;
 import javax.inject.Inject;
 
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
 
 /**
  * Created by yuyidong on 15/11/15.
@@ -65,6 +65,10 @@ public class ZoomPresenterImpl implements IZoomPresenter {
 
     @Override
     public void jump2PGEditActivity() {
+        int memoryClass = ((ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
+        if (memoryClass <= 48) {
+            ImageLoaderManager.clearMemoryCache();
+        }
         mRxPhotoNote.findByCategoryId(mCategoryId, mComparator)
                 .map(photoNoteList -> photoNoteList.get(mPosition))
                 .observeOn(AndroidSchedulers.mainThread())
@@ -91,20 +95,14 @@ public class ZoomPresenterImpl implements IZoomPresenter {
     public void saveSmallImage(final Bitmap thumbNail) {
         mRxPhotoNote.findByCategoryId(mCategoryId, mComparator)
                 .map(photoNoteList -> photoNoteList.get(mPosition))
-                .doOnSubscribe(new Action0() {//todo // FIXME: 15/11/29 lambda
-                    @Override
-                    public void call() {
-                        mZoomView.showProgressBar();
-                    }
-                })
+                .doOnSubscribe(() -> mZoomView.showProgressBar())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(photoNote -> {
                     FilePathUtils.saveSmallPhotoFromSDK(photoNote.getPhotoName(), thumbNail);
-
                     photoNote.setPaletteColor(UiHelper.getPaletteColor(ImageLoaderManager.loadImageSync(photoNote.getBigPhotoPathWithFile())));
-                    mRxPhotoNote.savePhotoNote(photoNote)
+                    mRxPhotoNote.updatePhotoNote(photoNote)
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(photoNote1 -> {
+                            .subscribe(photoNoteList -> {
                                 sendBroadcast();
                                 mZoomView.hideProgressBar();
                                 mIsChanged = true;
