@@ -24,6 +24,8 @@ import com.iflytek.cloud.RecognizerResult;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechRecognizer;
+import com.iflytek.cloud.SpeechUtility;
+import com.yydcdut.note.BuildConfig;
 import com.yydcdut.note.R;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.listener.OnSnackBarActionListener;
@@ -90,6 +92,8 @@ public class EditTextPresenterImpl implements IEditTextPresenter {
         mContext = context;
         mRxUser = rxUser;
         mIatResults = new LinkedHashMap<>();
+        /* 语音 */
+        SpeechUtility.createUtility(context, "appid=" + BuildConfig.SPEECH_ID);
     }
 
     @Override
@@ -334,6 +338,7 @@ public class EditTextPresenterImpl implements IEditTextPresenter {
     }
 
     private boolean doUpdate2Evernote(String bigPhotoPathWithoutFile, String photoName) {
+        mRxUser.initEvernoteSession();
         boolean isSuccess = true;
         try {
             EvernoteNoteStoreClient noteStoreClient = EvernoteSession.getInstance().getEvernoteClientFactory().getNoteStoreClient();

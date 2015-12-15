@@ -7,8 +7,16 @@ import android.graphics.Bitmap;
 import android.text.TextUtils;
 
 import com.evernote.client.android.EvernoteSession;
+import com.evernote.client.android.EvernoteUtil;
+import com.evernote.client.android.asyncclient.EvernoteNoteStoreClient;
+import com.evernote.client.conn.mobile.FileData;
+import com.evernote.edam.error.EDAMNotFoundException;
 import com.evernote.edam.error.EDAMSystemException;
 import com.evernote.edam.error.EDAMUserException;
+import com.evernote.edam.type.Note;
+import com.evernote.edam.type.Notebook;
+import com.evernote.edam.type.Resource;
+import com.evernote.edam.type.ResourceAttributes;
 import com.evernote.edam.type.User;
 import com.evernote.thrift.TException;
 import com.tencent.connect.UserInfo;
@@ -17,6 +25,7 @@ import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 import com.yydcdut.note.BuildConfig;
+import com.yydcdut.note.R;
 import com.yydcdut.note.bean.user.EvernoteUser;
 import com.yydcdut.note.bean.user.IUser;
 import com.yydcdut.note.bean.user.QQUser;
@@ -28,7 +37,14 @@ import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.ref.WeakReference;
+import java.util.List;
 import java.util.Locale;
 
 import javax.inject.Inject;
@@ -402,5 +418,172 @@ public class RxUser {
                 subscriber.onCompleted();
             }
         }).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<Boolean> updateNote2Evernote(String bigPhotoPathWithoutFile, String photoName, String noteTitle, String noteContent) {
+        return Observable.create(new Observable.OnSubscribe<List<Notebook>>() {
+            @Override
+            public void call(Subscriber<? super List<Notebook>> subscriber) {
+                if (mEvernoteSession == null) {
+                    mEvernoteSession = new EvernoteSession.Builder(mContext)
+                            .setLocale(Locale.SIMPLIFIED_CHINESE)
+                            .setEvernoteService(EVERNOTE_SERVICE)
+                            .setSupportAppLinkedNotebooks(SUPPORT_APP_LINKED_NOTEBOOKS)
+                            .setForceAuthenticationInThirdPartyApp(true)
+                            .build(BuildConfig.EVERNOTE_CONSUMER_KEY, BuildConfig.EVERNOTE_CONSUMER_SECRET)
+                            .asSingleton();
+                }
+                EvernoteNoteStoreClient noteStoreClient = mEvernoteSession.getEvernoteClientFactory().getNoteStoreClient();
+                try {
+                    List<Notebook> notebookList = noteStoreClient.listNotebooks();
+                    subscriber.onNext(notebookList);
+                } catch (EDAMUserException e) {
+                    e.printStackTrace();
+                    subscriber.onError(e);
+                } catch (EDAMSystemException e) {
+                    e.printStackTrace();
+                    subscriber.onError(e);
+                } catch (TException e) {
+                    e.printStackTrace();
+                    subscriber.onError(e);
+                }
+                subscriber.onCompleted();
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .flatMap(notebooks -> Observable.from(notebooks))
+                .filter(notebook -> notebook.getName().equals(mContext.getResources().getString(R.string.app_name)))
+                .lift(new Observable.Operator<String, Notebook>() {
+                    @Override
+                    public Subscriber<? super Notebook> call(Subscriber<? super String> subscriber) {
+                        return new Subscriber<Notebook>() {
+                            private int mInTimes = 0;
+
+                            @Override
+                            public void onCompleted() {
+                                if (mInTimes == 0) {
+                                    Notebook notebook = new Notebook();
+                                    notebook.setName(mContext.getResources().getString(R.string.app_name));
+                                    EvernoteNoteStoreClient noteStoreClient = mEvernoteSession.getEvernoteClientFactory().getNoteStoreClient();
+                                    try {
+                                        Notebook appNoteBook = noteStoreClient.createNotebook(notebook);
+                                        subscriber.onNext(appNoteBook.getGuid());
+                                    } catch (EDAMUserException e) {
+                                        e.printStackTrace();
+                                        subscriber.onError(e);
+                                    } catch (EDAMSystemException e) {
+                                        e.printStackTrace();
+                                        subscriber.onError(e);
+                                    } catch (TException e) {
+                                        e.printStackTrace();
+                                        subscriber.onError(e);
+                                    }
+                                }
+                                subscriber.onCompleted();
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+
+                            @Override
+                            public void onNext(Notebook notebook) {
+                                mInTimes++;
+                                subscriber.onNext(notebook.getGuid());
+                            }
+                        };
+                    }
+                })
+                .map(s -> {
+                    Note note = new Note();
+                    note.setNotebookGuid(s);
+                    return note;
+                })
+                .lift(new Observable.Operator<Boolean, Note>() {
+                    @Override
+                    public Subscriber<? super Note> call(Subscriber<? super Boolean> subscriber) {
+                        return new Subscriber<Note>() {
+                            @Override
+                            public void onCompleted() {
+                                subscriber.onCompleted();
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                subscriber.onError(e);
+                            }
+
+                            @Override
+                            public void onNext(Note note) {
+                                note.setTitle(noteTitle);
+                                InputStream in = null;
+                                // Hash the data in the image file. The hash is used to reference the file in the ENML note content.
+                                try {
+                                    in = new BufferedInputStream(new FileInputStream(bigPhotoPathWithoutFile));
+                                    FileData data = new FileData(EvernoteUtil.hash(in), new File(bigPhotoPathWithoutFile));
+                                    ResourceAttributes attributes = new ResourceAttributes();
+                                    attributes.setFileName(photoName);
+
+                                    // Create a new Resource
+                                    Resource resource = new Resource();
+                                    resource.setData(data);
+                                    resource.setMime("image/jpeg");
+                                    resource.setAttributes(attributes);
+
+                                    note.addToResources(resource);
+                                    // Set the note's ENML content
+                                    String content = EvernoteUtil.NOTE_PREFIX
+                                            + noteContent
+                                            + EvernoteUtil.createEnMediaTag(resource)
+                                            + EvernoteUtil.NOTE_SUFFIX;
+
+                                    note.setContent(content);
+                                    EvernoteNoteStoreClient noteStoreClient = mEvernoteSession.getEvernoteClientFactory().getNoteStoreClient();
+                                    noteStoreClient.createNote(note);
+                                } catch (FileNotFoundException e) {
+                                    e.printStackTrace();
+                                    subscriber.onError(e);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                    subscriber.onError(e);
+                                } catch (EDAMNotFoundException e) {
+                                    e.printStackTrace();
+                                    subscriber.onError(e);
+                                } catch (TException e) {
+                                    e.printStackTrace();
+                                    subscriber.onError(e);
+                                } catch (EDAMUserException e) {
+                                    e.printStackTrace();
+                                    subscriber.onError(e);
+                                } catch (EDAMSystemException e) {
+                                    e.printStackTrace();
+                                    subscriber.onError(e);
+                                } finally {
+                                    if (in != null) {
+                                        try {
+                                            in.close();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                                subscriber.onNext(true);
+                            }
+                        };
+                    }
+                });
+    }
+
+    public void initEvernoteSession() {
+        if (mEvernoteSession == null) {
+            mEvernoteSession = new EvernoteSession.Builder(mContext)
+                    .setLocale(Locale.SIMPLIFIED_CHINESE)
+                    .setEvernoteService(EVERNOTE_SERVICE)
+                    .setSupportAppLinkedNotebooks(SUPPORT_APP_LINKED_NOTEBOOKS)
+                    .setForceAuthenticationInThirdPartyApp(true)
+                    .build(BuildConfig.EVERNOTE_CONSUMER_KEY, BuildConfig.EVERNOTE_CONSUMER_SECRET)
+                    .asSingleton();
+        }
     }
 }

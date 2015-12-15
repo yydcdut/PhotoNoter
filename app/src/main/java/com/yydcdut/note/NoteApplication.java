@@ -6,9 +6,6 @@ import android.content.Context;
 import android.support.multidex.MultiDex;
 
 import com.baidu.mapapi.SDKInitializer;
-import com.iflytek.cloud.SpeechUtility;
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
 import com.umeng.analytics.MobclickAgent;
 import com.yydcdut.note.injector.component.ApplicationComponent;
 import com.yydcdut.note.injector.component.DaggerApplicationComponent;
@@ -26,7 +23,7 @@ import us.pinguo.edit.sdk.base.PGEditSDK;
  */
 public class NoteApplication extends Application {
     private static final String TAG = NoteApplication.class.getSimpleName();
-    private RefWatcher mRefWatcher;
+//    private RefWatcher mRefWatcher;
 
     private ApplicationComponent mApplicationComponent;
 
@@ -42,7 +39,7 @@ public class NoteApplication extends Application {
 
         initComponent();
 
-        mRefWatcher = LeakCanary.install(this);
+//        mRefWatcher = LeakCanary.install(this);
 
         initImageLoader();
         FilePathUtils.initEnvironment(this);
@@ -54,8 +51,7 @@ public class NoteApplication extends Application {
              /* Camera360 */
             PGEditImageLoader.initImageLoader(this);
             PGEditSDK.instance().initSDK(this);
-            /* 语音 */
-            SpeechUtility.createUtility(this, "appid=" + BuildConfig.SPEECH_ID);
+
         }
 
         //打点
