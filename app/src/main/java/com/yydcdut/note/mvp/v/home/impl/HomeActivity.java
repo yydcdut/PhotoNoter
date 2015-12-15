@@ -27,6 +27,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baidu.mapapi.SDKInitializer;
 import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.CategoryAdapter;
@@ -108,6 +109,12 @@ public class HomeActivity extends BaseActivity implements IHomeView, View.OnClic
                 mHomePresenter.setCategoryId(categoryId);
             }
         }
+        //todo fixme:放延时里面去初始化
+        initBaiduSdk();
+    }
+
+    private void initBaiduSdk() {
+        SDKInitializer.initialize(this.getApplication());
     }
 
     @Override

@@ -1,11 +1,9 @@
 package com.yydcdut.note;
 
-import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 
-import com.baidu.mapapi.SDKInitializer;
 import com.umeng.analytics.MobclickAgent;
 import com.yydcdut.note.injector.component.ApplicationComponent;
 import com.yydcdut.note.injector.component.DaggerApplicationComponent;
@@ -43,12 +41,7 @@ public class NoteApplication extends Application {
         initImageLoader();
         FilePathUtils.initEnvironment(this);
         Evi.init(this);
-        if (!isFromOtherProgress()) {
-            initBaiduSdk();
-             /* Camera360 */
-            PGEditImageLoader.initImageLoader(this);
-
-        }
+        PGEditImageLoader.initImageLoader(this);
 
         //打点
         MobclickAgent.setDebugMode(BuildConfig.LOG_DEBUG);
@@ -66,25 +59,6 @@ public class NoteApplication extends Application {
      */
     private void initImageLoader() {
         ImageLoaderManager.init(getApplicationContext());
-    }
-
-    private void initBaiduSdk() {
-        SDKInitializer.initialize(this);
-    }
-
-    private boolean isFromOtherProgress() {
-        int pid = android.os.Process.myPid();
-        ActivityManager mActivityManager = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningAppProcessInfo appProcess : mActivityManager.getRunningAppProcesses()) {
-            if (pid == appProcess.pid) {
-                if (appProcess.processName.equals("com.yydcdut.note:cameraphotos") ||
-                        appProcess.processName.equals("com.yydcdut.note:remote") ||
-                        appProcess.processName.equals("com.yydcdut.note:makephotos")) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     private void initComponent() {
