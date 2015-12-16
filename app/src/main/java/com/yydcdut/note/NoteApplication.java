@@ -119,7 +119,7 @@ public class NoteApplication extends Application {
     }
 
     private void doInstallBeforeLollipop() {
-        //满足3个条件，1.第一次安装开启，2.主进程，3.API<21(因为21之后ART的速度比dialvk快接近10倍(毕竟5.0之后的手机性能也要好很多))
+        //满足3个条件，1.第一次安装开启，2.主进程，3.API<21(因为21之后ART的速度比dalvik快接近10倍(毕竟5.0之后的手机性能也要好很多))
         if (isAppFirstInstall() && !isDexProcessOrOtherProcesses() && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             try {
                 createTempFile();
