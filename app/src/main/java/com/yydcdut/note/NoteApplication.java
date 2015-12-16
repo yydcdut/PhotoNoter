@@ -5,9 +5,12 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Environment;
 import android.support.multidex.MultiDex;
 
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
 import com.umeng.analytics.MobclickAgent;
 import com.yydcdut.note.injector.component.ApplicationComponent;
 import com.yydcdut.note.injector.component.DaggerApplicationComponent;
@@ -27,7 +30,7 @@ import us.pinguo.edit.sdk.PGEditImageLoader;
  */
 public class NoteApplication extends Application {
     private static final String TAG = NoteApplication.class.getSimpleName();
-//    private RefWatcher mRefWatcher;
+    private RefWatcher mRefWatcher;
 
     private ApplicationComponent mApplicationComponent;
 
@@ -38,32 +41,8 @@ public class NoteApplication extends Application {
         if (isDexProcess()) {
             return;
         }
-        YLog.wtf("loadDex", "install begin11111");
-        if (isAppFirstInstall() && !isDexProcessOrOtherProcesses()) {
-            try {
-                createTempFile();
-                startDexProcess();
-                while (true) {
-                    if (existTempFile()) {
-                        try {
-                            Thread.sleep(50);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        setAppNoteFirstInstall();
-                        break;
-                    }
-                }
-                MultiDex.install(this);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        YLog.i("yuyidong", "11112222233333");
+        doInstallBeforeLollipop();
         MultiDex.install(this);
-        YLog.i("yuyidong", "33333222221111");
-        YLog.wtf("loadDex", "install finish11111");
     }
 
     @Override
@@ -72,10 +51,9 @@ public class NoteApplication extends Application {
         if (isDexProcess()) {
             return;
         }
-        //// FIXME: 15/12/15 这些类都必须放到第一个dex里面
         initComponent();
 
-//        mRefWatcher = LeakCanary.install(this);
+        mRefWatcher = LeakCanary.install(this);
 
         initImageLoader();
         FilePathUtils.initEnvironment(this);
@@ -138,6 +116,30 @@ public class NoteApplication extends Application {
         Intent intent = new Intent(this, DexActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+    }
+
+    private void doInstallBeforeLollipop() {
+        //满足3个条件，1.第一次安装开启，2.主进程，3.API<21(因为21之后ART的速度比dialvk快接近10倍(毕竟5.0之后的手机性能也要好很多))
+        if (isAppFirstInstall() && !isDexProcessOrOtherProcesses() && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            try {
+                createTempFile();
+                startDexProcess();
+                while (true) {
+                    if (existTempFile()) {
+                        try {
+                            Thread.sleep(50);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        setAppNoteFirstInstall();
+                        break;
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private boolean isDexProcessOrOtherProcesses() {

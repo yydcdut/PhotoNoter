@@ -83,9 +83,10 @@ public class SplashActivity extends BaseActivity implements ISplashView {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onStop() {
+        super.onStop();
         mSplashPresenter.onActivityPause();
+
     }
 
     @Override
