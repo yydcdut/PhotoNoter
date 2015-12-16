@@ -9,4 +9,6 @@ public interface ISplashView extends IView {
     void jump2Introduce();
 
     void jump2Album();
+
+    boolean isAnimationRunning();
 }

@@ -66,6 +66,10 @@ public class SplashPresenterImpl implements ISplashPresenter, Handler.Callback {
     @Override
     public boolean handleMessage(Message msg) {
         if (msg.what == MESSAGE_WHAT) {
+            if (mSplashView.isAnimationRunning()) {
+                mHandler.sendEmptyMessageDelayed(MESSAGE_WHAT, 500);
+                return false;
+            }
             if (!mLocalStorageUtils.notGotoIntroduce()) {
                 mSplashView.jump2Introduce();
             } else {

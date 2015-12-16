@@ -23,6 +23,7 @@ import javax.inject.Inject;
 public class SplashActivity extends BaseActivity implements ISplashView {
     @Inject
     SplashPresenterImpl mSplashPresenter;
+    private AnimatorSet mAnimatorSet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,15 +57,15 @@ public class SplashActivity extends BaseActivity implements ISplashView {
         View logoView = findViewById(R.id.layout_splash);
         View backgroundView = findViewById(R.id.img_splash_bg);
 
-        AnimatorSet animation = new AnimatorSet();
-        animation.setDuration(2000);
-        animation.playTogether(
+        mAnimatorSet = new AnimatorSet();
+        mAnimatorSet.setDuration(2000);
+        mAnimatorSet.playTogether(
                 ObjectAnimator.ofFloat(logoView, "alpha", 0f, 1f),
                 ObjectAnimator.ofFloat(logoView, "translationY", 300, 0),
                 ObjectAnimator.ofFloat(backgroundView, "scaleX", 1.3f, 1.05f),
                 ObjectAnimator.ofFloat(backgroundView, "scaleY", 1.3f, 1.05f)
         );
-        animation.start();
+        mAnimatorSet.start();
         mSplashPresenter.doingSplash();
     }
 
@@ -80,6 +81,11 @@ public class SplashActivity extends BaseActivity implements ISplashView {
         Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
         startActivity(intent);
         SplashActivity.this.finish();
+    }
+
+    @Override
+    public boolean isAnimationRunning() {
+        return mAnimatorSet.isRunning();
     }
 
     @Override
