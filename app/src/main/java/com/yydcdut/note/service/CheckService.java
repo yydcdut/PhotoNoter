@@ -82,7 +82,7 @@ public class CheckService extends IntentService implements ICheckServiceView {
                                                 deletePhotoAndFiles(photoNote);
                                                 break;
                                             case FilePathUtils.SMALL_PHOTO_NOT_EXIST:
-                                                FilePathUtils.saveSmallPhotoFromBigPhoto(photoNote);
+                                                FilePathUtils.saveSmallPhotoFromBigPhoto(photoNote.getBigPhotoPathWithFile(), photoNote.getPhotoName());
                                                 break;
                                             case FilePathUtils.ALL_EXIST:
                                             default:

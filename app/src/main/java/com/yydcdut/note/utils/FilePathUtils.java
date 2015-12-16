@@ -10,7 +10,6 @@ import android.os.StatFs;
 import android.widget.Toast;
 
 import com.yydcdut.note.R;
-import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 
 import java.io.BufferedOutputStream;
@@ -296,11 +295,12 @@ public class FilePathUtils {
     /**
      * 从大图片地址去保存小图片
      *
-     * @param photoNote
+     * @param bigPhotoPathWithFile
+     * @param photoName
      */
-    public static boolean saveSmallPhotoFromBigPhoto(PhotoNote photoNote) {
-        Bitmap bitmap = ImageLoaderManager.loadImageSync(photoNote.getBigPhotoPathWithFile());
-        return saveSmallPhoto(photoNote.getPhotoName(), bitmap);
+    public static boolean saveSmallPhotoFromBigPhoto(String bigPhotoPathWithFile, String photoName) {
+        Bitmap bitmap = ImageLoaderManager.loadImageSync(bigPhotoPathWithFile);
+        return saveSmallPhoto(photoName, bitmap);
     }
 
     /**

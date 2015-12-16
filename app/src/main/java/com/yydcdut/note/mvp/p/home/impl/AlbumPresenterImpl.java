@@ -289,7 +289,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter {
                     try {
                         FilePathUtils.copyFile(cr.openInputStream(imageUri), photoNote1.getBigPhotoPathWithoutFile());
                         //保存小图
-                        FilePathUtils.saveSmallPhotoFromBigPhoto(photoNote1);
+                        FilePathUtils.saveSmallPhotoFromBigPhoto(photoNote1.getBigPhotoPathWithFile(), photoNote1.getPhotoName());
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
@@ -339,7 +339,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter {
                     try {
                         FilePathUtils.copyFile(FilePathUtils.getTempFilePath(), photoNote1.getBigPhotoPathWithoutFile());
                         //保存小图
-                        FilePathUtils.saveSmallPhotoFromBigPhoto(photoNote);
+                        FilePathUtils.saveSmallPhotoFromBigPhoto(photoNote.getBigPhotoPathWithFile(), photoNote.getPhotoName());
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
