@@ -51,9 +51,10 @@ public class NoteApplication extends Application {
         if (isDexProcess()) {
             return;
         }
-        initComponent();
 
         mRefWatcher = LeakCanary.install(this);
+
+        initComponent();
 
         initImageLoader();
         FilePathUtils.initEnvironment(this);
@@ -69,6 +70,7 @@ public class NoteApplication extends Application {
 //        CrashHandler.getInstance().init(getApplicationContext());
 
         YLog.setDEBUG(BuildConfig.LOG_DEBUG);
+
     }
 
     /**

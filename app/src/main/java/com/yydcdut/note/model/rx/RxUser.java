@@ -178,6 +178,52 @@ public class RxUser {
                     }
                 })
                 .map(iUser -> {
+                    /** todo:
+                     * E/ImageLoader: null
+                     android.os.NetworkOnMainThreadException
+                     at android.os.StrictMode$AndroidBlockGuardPolicy.onNetwork(StrictMode.java:1117)
+                     at java.net.InetAddress.lookupHostByName(InetAddress.java:385)
+                     at java.net.InetAddress.getAllByNameImpl(InetAddress.java:236)
+                     at java.net.InetAddress.getAllByName(InetAddress.java:214)
+                     at libcore.net.http.HttpConnection.<init>(HttpConnection.java:70)
+                     at libcore.net.http.HttpConnection.<init>(HttpConnection.java:50)
+                     at libcore.net.http.HttpConnection$Address.connect(HttpConnection.java:340)
+                     at libcore.net.http.HttpConnectionPool.get(HttpConnectionPool.java:87)
+                     at libcore.net.http.HttpConnection.connect(HttpConnection.java:128)
+                     at libcore.net.http.HttpEngine.openSocketConnection(HttpEngine.java:316)
+                     at libcore.net.http.HttpEngine.connect(HttpEngine.java:311)
+                     at libcore.net.http.HttpEngine.sendSocketRequest(HttpEngine.java:290)
+                     at libcore.net.http.HttpEngine.sendRequest(HttpEngine.java:240)
+                     at libcore.net.http.HttpURLConnectionImpl.getResponse(HttpURLConnectionImpl.java:282)
+                     at libcore.net.http.HttpURLConnectionImpl.getResponseCode(HttpURLConnectionImpl.java:495)
+                     at com.nostra13.universalimageloader.core.download.BaseImageDownloader.getStreamFromNetwork(BaseImageDownloader.java:117)
+                     at com.nostra13.universalimageloader.core.download.BaseImageDownloader.getStream(BaseImageDownloader.java:88)
+                     at com.nostra13.universalimageloader.core.decode.BaseImageDecoder.getImageStream(BaseImageDecoder.java:98)
+                     at com.nostra13.universalimageloader.core.decode.BaseImageDecoder.decode(BaseImageDecoder.java:74)
+                     at com.nostra13.universalimageloader.core.LoadAndDisplayImageTask.decodeImage(LoadAndDisplayImageTask.java:265)
+                     at com.nostra13.universalimageloader.core.LoadAndDisplayImageTask.tryLoadBitmap(LoadAndDisplayImageTask.java:238)
+                     at com.nostra13.universalimageloader.core.LoadAndDisplayImageTask.run(LoadAndDisplayImageTask.java:136)
+                     at com.nostra13.universalimageloader.core.ImageLoader.displayImage(ImageLoader.java:267)
+                     at com.nostra13.universalimageloader.core.ImageLoader.loadImage(ImageLoader.java:483)
+                     at com.nostra13.universalimageloader.core.ImageLoader.loadImage(ImageLoader.java:444)
+                     at com.nostra13.universalimageloader.core.ImageLoader.loadImageSync(ImageLoader.java:557)
+                     at com.nostra13.universalimageloader.core.ImageLoader.loadImageSync(ImageLoader.java:498)
+                     at com.yydcdut.note.utils.ImageManager.ImageLoaderManager.loadImageSync(ImageLoaderManager.java:37)
+                     at com.yydcdut.note.model.rx.RxUser.lambda$loginQQ$139(RxUser.java:181)
+                     at com.yydcdut.note.model.rx.RxUser.access$lambda$0(RxUser.java)
+                     at com.yydcdut.note.model.rx.RxUser$$Lambda$1.call(Unknown Source)
+                     at rx.internal.operators.OperatorMap$1.onNext(OperatorMap.java:55)
+                     at com.yydcdut.note.model.rx.RxUser$UserInfoUiListener.onComplete(RxUser.java:294)
+                     at com.tencent.connect.common.BaseApi$TempRequestListener$1.handleMessage(ProGuard:426)
+                     at android.os.Handler.dispatchMessage(Handler.java:99)
+                     at android.os.Looper.loop(Looper.java:137)
+                     at android.app.ActivityThread.main(ActivityThread.java:5039)
+                     at java.lang.reflect.Method.invokeNative(Native Method)
+                     at java.lang.reflect.Method.invoke(Method.java:511)
+                     at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:833)
+                     at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:600)
+                     at dalvik.system.NativeStart.main(Native Method)
+                     */
                     Bitmap bitmap = ImageLoaderManager.loadImageSync(getQQQQ().getNetImagePath());
                     FilePathUtils.saveImage(FilePathUtils.getQQImagePath(), bitmap);
                     return iUser;

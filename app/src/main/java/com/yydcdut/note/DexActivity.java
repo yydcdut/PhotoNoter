@@ -35,7 +35,7 @@ public class DexActivity extends Activity implements Handler.Callback, Runnable 
 
     private int mCurrent = 0;
     private String[] mFiles = new String[]{"gif/1.jpg", "gif/2.jpg", "gif/3.jpg", "gif/4.jpg", "gif/5.jpg",
-            "gif/6.jpg", "gif/7.jpg", "gif/8.jpg", "gif/9.jpg", "10.jpg", "gif/11.jpg", "gif/12.jpg",
+            "gif/6.jpg", "gif/7.jpg", "gif/8.jpg", "gif/9.jpg", "gif/10.jpg", "gif/11.jpg", "gif/12.jpg",
             "gif/13.jpg", "gif/14.jpg", "gif/15.jpg", "gif/16.jpg", "gif/17.jpg", "gif/18.jpg",
             "gif/19.jpg", "gif/20.jpg", "gif/21.jpg", "gif/22.jpg", "gif/23.jpg", "gif/24.jpg",
             "gif/25.jpg", "gif/26.jpg", "gif/27.jpg", "gif/28.jpg", "gif/29.jpg", "gif/30.jpg",
