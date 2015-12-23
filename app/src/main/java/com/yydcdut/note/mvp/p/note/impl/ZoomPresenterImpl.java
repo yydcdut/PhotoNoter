@@ -1,5 +1,6 @@
 package com.yydcdut.note.mvp.p.note.impl;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +20,7 @@ import com.yydcdut.note.utils.UiHelper;
 import javax.inject.Inject;
 
 import rx.android.schedulers.AndroidSchedulers;
+import us.pinguo.edit.sdk.base.PGEditSDK;
 
 /**
  * Created by yuyidong on 15/11/15.
@@ -26,6 +28,7 @@ import rx.android.schedulers.AndroidSchedulers;
 public class ZoomPresenterImpl implements IZoomPresenter {
     private Context mContext;
     private RxPhotoNote mRxPhotoNote;
+    private Activity mActivity;
     /* 数据 */
     private int mPosition;
     private int mComparator;
@@ -37,9 +40,11 @@ public class ZoomPresenterImpl implements IZoomPresenter {
     private boolean mIsChanged = false;
 
     @Inject
-    public ZoomPresenterImpl(@ContextLife("Activity") Context context, RxPhotoNote rxPhotoNote) {
+    public ZoomPresenterImpl(@ContextLife("Activity") Context context, Activity activity,
+                             RxPhotoNote rxPhotoNote) {
         mContext = context;
         mRxPhotoNote = rxPhotoNote;
+        mActivity = activity;
     }
 
     @Override
@@ -49,6 +54,7 @@ public class ZoomPresenterImpl implements IZoomPresenter {
                 .map(photoNoteList -> photoNoteList.get(mPosition))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(photoNote -> mZoomView.showImage(photoNote.getBigPhotoPathWithFile()));
+        PGEditSDK.instance().initSDK(mActivity.getApplication());
     }
 
     @Override

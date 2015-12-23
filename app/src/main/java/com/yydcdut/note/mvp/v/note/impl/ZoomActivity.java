@@ -70,8 +70,6 @@ public class ZoomActivity extends BaseActivity implements IZoomView {
         bundle.putInt(Const.COMPARATOR_FACTORY, comparator);
         intent.putExtras(bundle);
         fragment.startActivityForResult(intent, REQUEST_NOTHING);
-        //todo // FIXME: 15/12/15 临时暂时的办法
-        PGEditSDK.instance().initSDK(fragment.getActivity().getApplication());
     }
 
     @Override
