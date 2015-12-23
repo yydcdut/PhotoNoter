@@ -1,5 +1,8 @@
 package com.yydcdut.note.mvp.p.home.impl;
 
+import android.app.Activity;
+
+import com.baidu.mapapi.SDKInitializer;
 import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.bus.CategoryCreateEvent;
 import com.yydcdut.note.bus.CategoryDeleteEvent;
@@ -38,20 +41,27 @@ public class HomePresenterImpl implements IHomePresenter {
     private RxPhotoNote mRxPhotoNote;
     private RxUser mRxUser;
     private LocalStorageUtils mLocalStorageUtils;
+    private Activity mActivity;
 
     @Inject
-    public HomePresenterImpl(RxCategory rxCategory, RxPhotoNote rxPhotoNote, RxUser rxUser,
+    public HomePresenterImpl(Activity activity, RxCategory rxCategory, RxPhotoNote rxPhotoNote, RxUser rxUser,
                              LocalStorageUtils localStorageUtils) {
         mRxCategory = rxCategory;
         mRxPhotoNote = rxPhotoNote;
         mRxUser = rxUser;
         mLocalStorageUtils = localStorageUtils;
+        mActivity = activity;
     }
 
     @Override
     public void attachView(IView iView) {
         mHomeView = (IHomeView) iView;
         EventBus.getDefault().register(this);
+        initBaiduSdk();
+    }
+
+    private void initBaiduSdk() {
+        SDKInitializer.initialize(mActivity.getApplication());
     }
 
     @Override
@@ -299,32 +309,4 @@ public class HomePresenterImpl implements IHomePresenter {
                             });
                 });
     }
-
-    //todo
-    private void checkDisks() {
-        if (!mLocalStorageUtils.isFirstTime()) {
-//            Observable.from(new File(FilePathUtils.getPath()).listFiles())
-//                    .subscribeOn(Schedulers.io())
-//                    .observeOn(Schedulers.computation())
-//                    .filter(file1 -> !file1.isDirectory())
-//                    .filter(file -> file.getName().toLowerCase().endsWith(".jpg") ||
-//                            file.getName().toLowerCase().endsWith(".png") ||
-//                            file.getName().toLowerCase().endsWith(".jpeg"))
-//                    .count()
-//                    .subscribe(fileNumber -> {
-//                        mApplicationComponent.getRxSandBox()
-//                                .getNumber()
-//                                .subscribe(new Action1<Integer>() {
-//                                    @Override
-//                                    public void call(Integer dbNumber) {
-//                                        if (fileNumber != dbNumber) {
-//                                            Intent checkIntent = new Intent(getApplicationContext(), CheckService.class);
-//                                            startService(checkIntent);
-//                                        }
-//                                    }
-//                                });
-//                    });
-        }
-    }
-
 }
