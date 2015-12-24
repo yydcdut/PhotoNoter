@@ -395,4 +395,9 @@ public class AlbumPresenterImpl implements IAlbumPresenter {
         }
         return true;
     }
+
+    @Override
+    public int calculateGridNumber() {
+        return mLocalStorageUtils.getAlbumItemNumber();
+    }
 }

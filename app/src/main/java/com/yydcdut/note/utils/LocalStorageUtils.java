@@ -104,6 +104,9 @@ public class LocalStorageUtils {
     private static final String UMENG_UID = "umeng_uid";
     private static final String UMENG_UID_DEFAULT = "umeng_uid_default";
 
+    private static final String ALBUM_ITEM_NUMBER = "album_item_number";
+    private static final int ALBUM_ITEM_NUMBER_DEFAULT = 3;
+
     private static SharedPreferences mSharedPreferences;
 
     //    @Inject
@@ -723,5 +726,13 @@ public class LocalStorageUtils {
 
     public void setUmengUid(String uid) {
         mSharedPreferences.edit().putString(UMENG_UID, uid).commit();
+    }
+
+    public int getAlbumItemNumber() {
+        return mSharedPreferences.getInt(ALBUM_ITEM_NUMBER, ALBUM_ITEM_NUMBER_DEFAULT);
+    }
+
+    public void setAlbumItemNumber(int number) {
+        mSharedPreferences.edit().putInt(ALBUM_ITEM_NUMBER, number).commit();
     }
 }

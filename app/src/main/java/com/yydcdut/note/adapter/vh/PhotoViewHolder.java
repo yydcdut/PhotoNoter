@@ -19,13 +19,15 @@ public class PhotoViewHolder extends RecyclerView.ViewHolder implements View.OnC
     @Bind(R.id.img_item_album)
     public GridItemImageView imageView;
     @Bind(R.id.layout_item_album_check)
-    public View checkLayout;
+    public GridItemImageView checkLayout;
 
-    public PhotoViewHolder(View itemView, OnItemClickListener onItemClickListener, OnItemLongClickListener onItemLongClickListener) {
+    public PhotoViewHolder(View itemView, int size, OnItemClickListener onItemClickListener, OnItemLongClickListener onItemLongClickListener) {
         super(itemView);
         ButterKnife.bind(this, itemView);
         itemView.setOnLongClickListener(this);
         itemView.setOnClickListener(this);
+        imageView.setSize(size);
+        checkLayout.setSize(size);
         mOnItemClickListener = onItemClickListener;
         mOnItemLongClickListener = onItemLongClickListener;
     }

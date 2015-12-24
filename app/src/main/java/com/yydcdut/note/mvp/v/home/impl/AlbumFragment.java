@@ -564,9 +564,10 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
 
     @Override
     public void setAdapter(List<PhotoNote> photoNoteList) {
-        mAdapter = new AlbumAdapter(getContext(), photoNoteList, this, this);
+        int size = Evi.sScreenWidth / mAlbumPresenter.calculateGridNumber();
+        mAdapter = new AlbumAdapter(getContext(), photoNoteList, size, this, this);
         mRecyclerView.setAdapter(mAdapter);
-        mGridLayoutManager = new GridLayoutManager(getContext(), 3);
+        mGridLayoutManager = new GridLayoutManager(getContext(), mAlbumPresenter.calculateGridNumber());
         mRecyclerView.setLayoutManager(mGridLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
     }

@@ -18,15 +18,17 @@ import java.util.List;
  */
 public class AlbumAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
     private Context mContext;
+    private int mSize;
     private List<PhotoNote> mPhotoNoteList;
 
     private PhotoViewHolder.OnItemClickListener mOnItemClickListener;
     private PhotoViewHolder.OnItemLongClickListener mOnItemLongClickListener;
 
-    public AlbumAdapter(Context context, List<PhotoNote> photoNoteList,
+    public AlbumAdapter(Context context, List<PhotoNote> photoNoteList, int size,
                         PhotoViewHolder.OnItemClickListener onItemClickListener,
                         PhotoViewHolder.OnItemLongClickListener onItemLongClickListener) {
         mContext = context;
+        mSize = size;
         mPhotoNoteList = photoNoteList;
         mOnItemClickListener = onItemClickListener;
         mOnItemLongClickListener = onItemLongClickListener;
@@ -35,7 +37,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
     @Override
     public PhotoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_album, parent, false);
-        return new PhotoViewHolder(view, mOnItemClickListener, mOnItemLongClickListener);
+        return new PhotoViewHolder(view, mSize, mOnItemClickListener, mOnItemLongClickListener);
     }
 
     @Override

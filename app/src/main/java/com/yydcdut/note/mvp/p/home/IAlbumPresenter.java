@@ -42,4 +42,6 @@ public interface IAlbumPresenter extends IPresenter {
     void jump2Camera();
 
     boolean checkStorageEnough();
+
+    int calculateGridNumber();
 }

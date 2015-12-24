@@ -15,6 +15,7 @@ import com.yydcdut.note.model.rx.RxCategory;
 import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.service.IInitServicePresenter;
+import com.yydcdut.note.utils.Evi;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.LocalStorageUtils;
@@ -60,6 +61,19 @@ public class InitServicePresenterImpl implements IInitServicePresenter {
         mLocalStorageUtils = localStorageUtils;
         mThreadExecutorPool = threadExecutorPool;
         initLooper();
+        int screenWidth = Evi.sScreenWidth;
+        int num = 2;
+        if (screenWidth <= 480) {
+            num = 2;
+        } else if (screenWidth <= 720) {
+            num = 3;
+        } else if (screenWidth <= 1080) {
+            num = 4;
+        } else {
+            num = 5;
+        }
+        mLocalStorageUtils.setAlbumItemNumber(num);
+
     }
 
     /**
@@ -100,10 +114,6 @@ public class InitServicePresenterImpl implements IInitServicePresenter {
     public boolean isFinish() {
         int number = mNumber.get();
         if (number == QUITE) {
-//            Intent intent = new Intent();
-//            intent.setAction(Const.BROADCAST_PHOTONOTE_UPDATE);
-//            intent.putExtra(Const.TARGET_BROADCAST_SERVICE, true);
-//            sendBroadcast(intent);
             return true;
         } else {
             return false;
