@@ -6,12 +6,12 @@ import android.content.Context;
 import com.yydcdut.note.R;
 import com.yydcdut.note.bean.user.IUser;
 import com.yydcdut.note.injector.ContextLife;
-import com.yydcdut.note.listener.OnSnackBarActionListener;
 import com.yydcdut.note.model.rx.RxUser;
 import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.login.IUserCenterPresenter;
 import com.yydcdut.note.mvp.v.login.IUserCenterView;
 import com.yydcdut.note.utils.NetworkUtils;
+import com.yydcdut.note.view.fab2.snack.OnSnackBarActionListener;
 
 import javax.inject.Inject;
 

@@ -26,7 +26,6 @@ import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.injector.component.DaggerActivityComponent;
 import com.yydcdut.note.injector.module.ActivityModule;
-import com.yydcdut.note.listener.OnSnackBarActionListener;
 import com.yydcdut.note.mvp.p.note.impl.EditTextPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.note.IEditTextView;
@@ -37,6 +36,7 @@ import com.yydcdut.note.view.KeyBoardResizeFrameLayout;
 import com.yydcdut.note.view.RevealView;
 import com.yydcdut.note.view.VoiceRippleView;
 import com.yydcdut.note.view.fab2.FloatingMenuLayout;
+import com.yydcdut.note.view.fab2.snack.OnSnackBarActionListener;
 import com.yydcdut.note.view.fab2.snack.SnackHelper;
 
 import javax.inject.Inject;

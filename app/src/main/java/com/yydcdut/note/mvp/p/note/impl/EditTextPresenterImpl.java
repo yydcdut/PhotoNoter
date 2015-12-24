@@ -28,13 +28,13 @@ import com.iflytek.cloud.SpeechUtility;
 import com.yydcdut.note.BuildConfig;
 import com.yydcdut.note.R;
 import com.yydcdut.note.injector.ContextLife;
-import com.yydcdut.note.listener.OnSnackBarActionListener;
 import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.model.rx.RxUser;
 import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.note.IEditTextPresenter;
 import com.yydcdut.note.mvp.v.note.IEditTextView;
 import com.yydcdut.note.utils.YLog;
+import com.yydcdut.note.view.fab2.snack.OnSnackBarActionListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;

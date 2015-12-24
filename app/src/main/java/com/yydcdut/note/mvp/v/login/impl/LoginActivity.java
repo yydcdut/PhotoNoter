@@ -11,12 +11,12 @@ import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.injector.component.DaggerActivityComponent;
 import com.yydcdut.note.injector.module.ActivityModule;
-import com.yydcdut.note.listener.OnSnackBarActionListener;
 import com.yydcdut.note.mvp.p.login.impl.LoginPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.login.ILoginView;
 import com.yydcdut.note.utils.LollipopCompat;
 import com.yydcdut.note.view.CircleProgressBarLayout;
+import com.yydcdut.note.view.fab2.snack.OnSnackBarActionListener;
 
 import javax.inject.Inject;
 
