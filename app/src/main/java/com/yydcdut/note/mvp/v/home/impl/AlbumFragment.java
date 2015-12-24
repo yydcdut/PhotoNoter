@@ -1,5 +1,6 @@
 package com.yydcdut.note.mvp.v.home.impl;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -22,6 +23,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -34,7 +38,6 @@ import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.camera.controller.CameraActivity;
 import com.yydcdut.note.injector.component.DaggerFragmentComponent;
 import com.yydcdut.note.injector.module.FragmentModule;
-import com.yydcdut.note.listener.FloatingScrollHideListener;
 import com.yydcdut.note.mvp.p.home.impl.AlbumPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseFragment;
 import com.yydcdut.note.mvp.v.home.IAlbumView;
@@ -95,8 +98,6 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
 
     /* 是不是选择模式 */
     private boolean mIsMenuSelectMode = false;
-    /* ScrollView滑动监听器 */
-    private FloatingScrollHideListener mFloatingScrollHideListener;
     /* menu的item */
     private MenuItem mSortMenuItem;
     private MenuItem mTrashMenuItem;
@@ -436,9 +437,6 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
      * Layout的RevaelView
      */
     private void closeLayoutRevealColorView() {
-        if (mFloatingScrollHideListener != null && mFloatingScrollHideListener.isHide()) {
-            mFloatingScrollHideListener.show();
-        }
         Point p = getLocationInView(mLayoutRevealView, mFloatingView);
         mLayoutRevealView.hide(p.x, p.y, Color.TRANSPARENT, Const.RADIUS, Const.DURATION, null);
         mIsLayoutRevealOpen = false;
@@ -570,6 +568,7 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
         mGridLayoutManager = new GridLayoutManager(getContext(), mAlbumPresenter.calculateGridNumber());
         mRecyclerView.setLayoutManager(mGridLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.addOnScrollListener(mScrollListener);
     }
 
     @Override
@@ -660,4 +659,132 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         startActivityForResult(intent, INTENT_REQUEST_CAMERA);
     }
+
+    private RecyclerView.OnScrollListener mScrollListener = new RecyclerView.OnScrollListener() {
+        private static final int SATISFIED_HIDE_TIMES = 3;
+        private int mTime = 0;
+
+        private static final int STATE_SHOWED = 0;
+        private static final int STATE_HIDING = 1;
+        private static final int STATE_HIDED = 2;
+        private static final int STATE_SHOWING = 3;
+        private int mCurrentState = STATE_SHOWED;
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            if (dy > 2) {
+                mTime++;
+                if (mTime >= SATISFIED_HIDE_TIMES && mCurrentState == STATE_SHOWED) {
+                    doHide();
+                    mTime = 0;
+                }
+            } else if (dy < 0 && mCurrentState == STATE_HIDED) {
+                mTime = 0;
+                doShow();
+            }
+        }
+
+        private void doHide() {
+            final int height = mFloatingActionsMenu.getHeight();
+            if (height == 0) {
+                final ViewTreeObserver vto = mFloatingActionsMenu.getViewTreeObserver();
+                if (vto.isAlive()) {
+                    vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                        @Override
+                        public boolean onPreDraw() {
+                            // Sometimes is not the same we used to know
+                            final ViewTreeObserver currentVto = mFloatingActionsMenu.getViewTreeObserver();
+                            if (currentVto.isAlive()) {
+                                currentVto.removeOnPreDrawListener(this);
+                            }
+                            doHide();
+                            return true;
+                        }
+                    });
+                    return;
+                }
+            }
+            int marginBottom = 0;
+            final ViewGroup.LayoutParams layoutParams = mFloatingActionsMenu.getLayoutParams();
+            if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
+                marginBottom = ((ViewGroup.MarginLayoutParams) layoutParams).bottomMargin;
+            }
+            final int translationY = height + marginBottom;
+            mFloatingActionsMenu.animate()
+                    .setInterpolator(new AccelerateDecelerateInterpolator())
+                    .setDuration(1000)
+                    .translationY(translationY)
+                    .setListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+                            mCurrentState = STATE_HIDING;
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            mCurrentState = STATE_HIDED;
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {
+
+                        }
+                    });
+        }
+
+        private void doShow() {
+            final int height = mFloatingActionsMenu.getHeight();
+            if (height == 0) {
+                final ViewTreeObserver vto = mFloatingActionsMenu.getViewTreeObserver();
+                if (vto.isAlive()) {
+                    vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                        @Override
+                        public boolean onPreDraw() {
+                            // Sometimes is not the same we used to know
+                            final ViewTreeObserver currentVto = mFloatingActionsMenu.getViewTreeObserver();
+                            if (currentVto.isAlive()) {
+                                currentVto.removeOnPreDrawListener(this);
+                            }
+                            doShow();
+                            return true;
+                        }
+                    });
+                    return;
+                }
+            }
+            final int translationY = 0;
+            mFloatingActionsMenu.animate()
+                    .setInterpolator(new AccelerateDecelerateInterpolator())
+                    .setDuration(500)
+                    .translationY(translationY)
+                    .setListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+                            mCurrentState = STATE_SHOWING;
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            mCurrentState = STATE_SHOWED;
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {
+
+                        }
+                    });
+        }
+
+    };
 }
