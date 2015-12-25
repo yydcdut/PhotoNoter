@@ -8,7 +8,7 @@ import android.widget.FrameLayout;
  * Created by yuyidong on 15/10/30.
  */
 public class KeyBoardResizeFrameLayout extends FrameLayout {
-    private OnkeyboardShowListener mChangedListener;
+    private OnKeyBoardShowListener mChangedListener;
 
     public KeyBoardResizeFrameLayout(Context context) {
         super(context);
@@ -39,11 +39,11 @@ public class KeyBoardResizeFrameLayout extends FrameLayout {
         }
     }
 
-    public void setOnKeyboardShowListener(OnkeyboardShowListener listener) {
+    public void setOnKeyboardShowListener(OnKeyBoardShowListener listener) {
         mChangedListener = listener;
     }
 
-    public interface OnkeyboardShowListener {
+    public interface OnKeyBoardShowListener {
         void onKeyboardShow();
 
         void onKeyboardHide();

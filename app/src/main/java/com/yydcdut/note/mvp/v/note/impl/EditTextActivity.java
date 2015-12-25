@@ -50,7 +50,7 @@ import us.pinguo.edit.sdk.base.widget.AnimationAdapter;
  * Created by yyd on 15-4-8.
  */
 public class EditTextActivity extends BaseActivity implements IEditTextView, View.OnClickListener,
-        KeyBoardResizeFrameLayout.OnkeyboardShowListener, FloatingMenuLayout.OnFloatingActionsMenuUpdateListener {
+        KeyBoardResizeFrameLayout.OnKeyBoardShowListener, FloatingMenuLayout.OnFloatingActionsMenuUpdateListener {
     private static final String TAG = EditTextActivity.class.getSimpleName();
     /* title是否显示出来? */
     private boolean mIsEditTextShow = true;
