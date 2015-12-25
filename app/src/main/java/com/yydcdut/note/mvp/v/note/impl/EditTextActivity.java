@@ -1,6 +1,5 @@
 package com.yydcdut.note.mvp.v.note.impl;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -106,25 +105,6 @@ public class EditTextActivity extends BaseActivity implements IEditTextView, Vie
                 .applicationComponent(((NoteApplication) getApplication()).getApplicationComponent())
                 .build();
         mActivityComponent.inject(this);
-    }
-
-    /**
-     * 启动Activity
-     *
-     * @param activity
-     * @param categoryId
-     * @param photoNotePosition
-     * @param comparator
-     */
-    public static void startActivityForResult(Activity activity, int categoryId, int photoNotePosition, int comparator) {
-        Intent intent = new Intent(activity, EditTextActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putInt(Const.CATEGORY_ID_4_PHOTNOTES, categoryId);
-        bundle.putInt(Const.PHOTO_POSITION, photoNotePosition);
-        bundle.putInt(Const.COMPARATOR_FACTORY, comparator);
-        intent.putExtras(bundle);
-        activity.startActivityForResult(intent, REQUEST_NOTHING);
-        activity.overridePendingTransition(R.anim.activity_no_animation, R.anim.activity_no_animation);
     }
 
     @Override

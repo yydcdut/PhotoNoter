@@ -101,8 +101,8 @@ public class ZoomPresenterImpl implements IZoomPresenter {
     public void refreshImage() {
         mRxPhotoNote.findByCategoryId(mCategoryId, mComparator)
                 .map(photoNoteList -> photoNoteList.get(mPosition))
-                .map(photoNote -> getBitmap(photoNote.getBigPhotoPathWithoutFile(),
-                        getOrientation(photoNote.getBigPhotoPathWithoutFile())))
+                .map(photoNote1 -> getBitmap(photoNote1.getBigPhotoPathWithoutFile(),
+                        getOrientation(photoNote1.getBigPhotoPathWithoutFile())))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(bitmap -> mZoomView.showImage(bitmap));
     }
@@ -172,6 +172,9 @@ public class ZoomPresenterImpl implements IZoomPresenter {
         }
         options.inSampleSize = scale;
         Bitmap bitmap = BitmapFactory.decodeFile(path, options);
+        if (orientation == ExifInterface.ORIENTATION_NORMAL) {
+            return bitmap;
+        }
         float rotate = 0;
         boolean isMirror = false;
         switch (orientation) {
@@ -217,4 +220,5 @@ public class ZoomPresenterImpl implements IZoomPresenter {
         }
         return orientation;
     }
+
 }

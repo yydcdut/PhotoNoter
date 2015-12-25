@@ -486,7 +486,14 @@ public class DetailActivity extends BaseActivity implements IDetailView,
 
     @Override
     public void jump2EditTextActivity(int categoryId, int position, int comparator) {
-        EditTextActivity.startActivityForResult(DetailActivity.this, categoryId, position, comparator);
+        Intent intent = new Intent(this, EditTextActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt(Const.CATEGORY_ID_4_PHOTNOTES, categoryId);
+        bundle.putInt(Const.PHOTO_POSITION, position);
+        bundle.putInt(Const.COMPARATOR_FACTORY, comparator);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, REQUEST_NOTHING);
+        overridePendingTransition(R.anim.activity_no_animation, R.anim.activity_no_animation);
     }
 
     @Override
