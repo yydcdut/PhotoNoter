@@ -65,15 +65,7 @@ debug{
 
 # 更新版本说明
 
-## 1.2.2-Beta
-
-* 重构成RxJava形式
-* 相册界面屏幕适配
-* 异步加载Dex
-
-## 更多
-
-
+<a href="https://github.com/yydcdut/PhotoNoter/blob/master/CHANGELOG.md">ChangeLog</a>
 
 # 致谢
 
