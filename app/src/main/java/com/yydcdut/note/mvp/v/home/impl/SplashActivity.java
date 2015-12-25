@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.injector.component.DaggerActivityComponent;
@@ -33,6 +34,7 @@ public class SplashActivity extends BaseActivity implements ISplashView {
                 .build();
         mActivityComponent.inject(this);
         mSplashPresenter.attachView(this);
+        Fresco.initialize(getApplication());
         mSplashPresenter.isWannaCloseSplash();
         super.onCreate(savedInstanceState);
     }

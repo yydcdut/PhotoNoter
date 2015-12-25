@@ -2,6 +2,7 @@ package com.yydcdut.note.mvp.v.note.impl;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -23,7 +24,6 @@ import com.yydcdut.note.mvp.p.note.impl.ZoomPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.note.IZoomView;
 import com.yydcdut.note.utils.Const;
-import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.view.CircleProgressBarLayout;
 import com.yydcdut.note.view.ZoomImageView;
 
@@ -219,8 +219,9 @@ public class ZoomActivity extends BaseActivity implements IZoomView {
     }
 
     @Override
-    public void showImage(String path) {
-        ImageLoaderManager.displayImage(path, mImage);
+    public void showImage(Bitmap bitmap) {
+        mImage.setImageBitmap(bitmap);
+
     }
 
     @Override
@@ -243,4 +244,5 @@ public class ZoomActivity extends BaseActivity implements IZoomView {
     public void showSnackBar(String massage) {
         Snackbar.make(findViewById(R.id.layout_zoom), massage, Snackbar.LENGTH_SHORT).show();
     }
+
 }

@@ -2,7 +2,6 @@ package com.yydcdut.note.mvp.p.service.impl;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.os.Handler;
 import android.os.Message;
@@ -19,7 +18,6 @@ import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.TimeDecoder;
 import com.yydcdut.note.utils.UiHelper;
-import com.yydcdut.note.utils.YLog;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -81,65 +79,39 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter, Ha
             return;
         }
         Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-        Bitmap newBitmap;
-        Matrix matrix = new Matrix();
-        if (sandPhoto.getCameraId().equals(Const.CAMERA_BACK)) {
-            matrix.setRotate(90f);
-        } else {
-            matrix.setRotate(270f);
-            if (sandPhoto.isMirror()) {
-                matrix.preScale(-1.0f, 1.0f);
-            }
-        }
-        //裁图需要的
-        int beginWidth = 0;
-        int beginHeight = 0;
-        int width;
-        int height;
-        if (sandPhoto.getRatio() == Const.CAMERA_SANDBOX_PHOTO_RATIO_1_1) {
-            width = bitmap.getHeight();
-            height = bitmap.getHeight();
-            beginWidth = bitmap.getWidth() - bitmap.getHeight();
-        } else {
-            width = bitmap.getWidth();
-            height = bitmap.getHeight();
-        }
-        try {
-            newBitmap = Bitmap.createBitmap(bitmap, beginWidth, beginHeight, width, height, matrix, true);
-        } catch (Exception e) {
-            YLog.e("yuyidong", "maybe oom--->" + e.getMessage());
-            return;
-        }
-        bitmap.recycle();
-        bitmap = null;
-        System.gc();
         String fileName = TimeDecoder.getTime4Photo(sandPhoto.getTime()) + ".jpg";
-
-        if (FilePathUtils.savePhoto(fileName, newBitmap)) {
-            FilePathUtils.saveSmallPhoto(fileName, newBitmap);
+        if (FilePathUtils.savePhoto(fileName, bitmap)) {
+            FilePathUtils.saveSmallPhoto(fileName, bitmap);
         }
-
         PhotoNote photoNote = new PhotoNote(fileName, sandPhoto.getTime(), sandPhoto.getTime(), "", "",
                 sandPhoto.getTime(), sandPhoto.getTime(), sandPhoto.getCategoryId());
-        photoNote.setPaletteColor(UiHelper.getPaletteColor(newBitmap));
+        photoNote.setPaletteColor(UiHelper.getPaletteColor(bitmap));
         mRxPhotoNote.savePhotoNote(photoNote)
                 .subscribe(photoNote1 -> {
-                    System.gc();
                     try {
-                        setExif(photoNote, sandPhoto.getSandExif());
+                        setExif(photoNote, sandPhoto.getSandExif(), sandPhoto.getCameraId(), sandPhoto.isMirror());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                     deleteFromDBAndSDCard(sandPhoto);
                 });
-        newBitmap.recycle();
-        newBitmap = null;
+        bitmap.recycle();
         System.gc();
     }
 
-    private void setExif(PhotoNote photoNote, SandExif sandExif) throws IOException {
+    private void setExif(PhotoNote photoNote, SandExif sandExif, String cameraId, boolean isMirror) throws IOException {
         ExifInterface exif = new ExifInterface(photoNote.getBigPhotoPathWithoutFile());
-        exif.setAttribute(ExifInterface.TAG_ORIENTATION, String.valueOf(sandExif.getOrientation()));
+        if (cameraId.equals(Const.CAMERA_BACK)) {
+            exif.setAttribute(ExifInterface.TAG_ORIENTATION, String.valueOf(ExifInterface.ORIENTATION_ROTATE_90));
+        } else {
+            if (!isMirror) {
+                exif.setAttribute(ExifInterface.TAG_ORIENTATION, String.valueOf(ExifInterface.ORIENTATION_ROTATE_270));
+            } else {
+                exif.setAttribute(ExifInterface.TAG_ORIENTATION, String.valueOf(ExifInterface.ORIENTATION_ROTATE_270
+                        | ExifInterface.ORIENTATION_FLIP_HORIZONTAL));
+            }
+        }
+        exif.setAttribute(ExifInterface.TAG_ORIENTATION, String.valueOf(ExifInterface.ORIENTATION_ROTATE_90));
         exif.setAttribute(ExifInterface.TAG_GPS_LATITUDE, sandExif.getLatitude());
         exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE, sandExif.getLontitude());
         exif.setAttribute(ExifInterface.TAG_WHITE_BALANCE, String.valueOf(sandExif.getWhiteBalance()));
@@ -149,6 +121,10 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter, Ha
         exif.setAttribute(ExifInterface.TAG_MAKE, sandExif.getMake());
         exif.setAttribute(ExifInterface.TAG_MODEL, sandExif.getModel());
         exif.saveAttributes();
+
+        ExifInterface exif2 = new ExifInterface(photoNote.getSmallPhotoPathWithoutFile());
+        exif2.setAttribute(ExifInterface.TAG_ORIENTATION, String.valueOf(ExifInterface.ORIENTATION_ROTATE_90));
+        exif2.saveAttributes();
     }
 
     private byte[] getDataFromFile(String fileName, int size) {

@@ -5,6 +5,9 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 
 import com.yydcdut.note.R;
 import com.yydcdut.note.injector.ContextLife;
@@ -13,9 +16,12 @@ import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.note.IZoomPresenter;
 import com.yydcdut.note.mvp.v.note.IZoomView;
 import com.yydcdut.note.utils.Const;
+import com.yydcdut.note.utils.Evi;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.UiHelper;
+
+import java.io.IOException;
 
 import javax.inject.Inject;
 
@@ -52,8 +58,10 @@ public class ZoomPresenterImpl implements IZoomPresenter {
         mZoomView = (IZoomView) iView;
         mRxPhotoNote.findByCategoryId(mCategoryId, mComparator)
                 .map(photoNoteList -> photoNoteList.get(mPosition))
+                .map(photoNote1 -> getBitmap(photoNote1.getBigPhotoPathWithoutFile(),
+                        getOrientation(photoNote1.getBigPhotoPathWithoutFile())))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(photoNote -> mZoomView.showImage(photoNote.getBigPhotoPathWithFile()));
+                .subscribe(bitmap -> mZoomView.showImage(bitmap));
         PGEditSDK.instance().initSDK(mActivity.getApplication());
     }
 
@@ -93,8 +101,10 @@ public class ZoomPresenterImpl implements IZoomPresenter {
     public void refreshImage() {
         mRxPhotoNote.findByCategoryId(mCategoryId, mComparator)
                 .map(photoNoteList -> photoNoteList.get(mPosition))
+                .map(photoNote -> getBitmap(photoNote.getBigPhotoPathWithoutFile(),
+                        getOrientation(photoNote.getBigPhotoPathWithoutFile())))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(photoNote -> mZoomView.showImage(photoNote.getBigPhotoPathWithFile()));
+                .subscribe(bitmap -> mZoomView.showImage(bitmap));
     }
 
     @Override
@@ -126,5 +136,85 @@ public class ZoomPresenterImpl implements IZoomPresenter {
         intent.setAction(Const.BROADCAST_PHOTONOTE_UPDATE);
         intent.putExtra(Const.TARGET_BROADCAST_PHOTO, true);
         mContext.sendBroadcast(intent);
+    }
+
+    private Bitmap getBitmap(String path, int orientation) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        int screenWidth = Evi.sScreenWidth;
+        int screenHeight = Evi.sScreenHeight;
+        int[] size = FilePathUtils.getPictureSize(path);
+        int width = -1;
+        int height = -1;
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+            case ExifInterface.ORIENTATION_ROTATE_270:
+            case ExifInterface.ORIENTATION_FLIP_HORIZONTAL | ExifInterface.ORIENTATION_ROTATE_270://前置+镜像
+                width = size[1];
+                height = size[0];
+                break;
+            default:
+                width = size[0];
+                height = size[1];
+                break;
+        }
+        int scaleX = width / screenWidth;
+        int scaleY = height / screenHeight;
+        int scale = 1;
+        if (scaleX > scaleY && scaleY >= 1) {
+            scale = scaleX;
+        }
+
+        if (scaleY > scaleX && scaleX >= 1) {
+            scale = scaleY;
+        }
+        if (scale == 1 && (width > screenWidth || height > screenHeight)) {
+            scale = 2;
+        }
+        options.inSampleSize = scale;
+        Bitmap bitmap = BitmapFactory.decodeFile(path, options);
+        float rotate = 0;
+        boolean isMirror = false;
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                rotate = 90f;
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                rotate = 180f;
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                rotate = 270f;
+                break;
+            case ExifInterface.ORIENTATION_FLIP_HORIZONTAL:
+            case ExifInterface.ORIENTATION_FLIP_HORIZONTAL | ExifInterface.ORIENTATION_ROTATE_270://前置+镜像
+                isMirror = true;
+                break;
+            default:
+                rotate = 0f;
+                isMirror = false;
+                break;
+        }
+        Matrix matrix = new Matrix();
+        matrix.setRotate(rotate);
+        if (isMirror) {
+            matrix.preScale(-1.0f, 1.0f);
+        }
+        Bitmap newBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        bitmap.recycle();
+        bitmap = null;
+        System.gc();
+        return newBitmap;
+
+    }
+
+    private int getOrientation(String path) {
+        int orientation = 0;
+        ExifInterface exif = null;
+        try {
+            exif = new ExifInterface(path);
+            orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return orientation;
     }
 }

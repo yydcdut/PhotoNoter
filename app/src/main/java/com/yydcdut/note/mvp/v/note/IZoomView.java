@@ -1,5 +1,7 @@
 package com.yydcdut.note.mvp.v.note;
 
+import android.graphics.Bitmap;
+
 import com.yydcdut.note.mvp.IView;
 
 /**
@@ -11,7 +13,7 @@ public interface IZoomView extends IView {
 
     void hideProgressBar();
 
-    void showImage(String path);
+    void showImage(Bitmap bitmap);
 
     void jump2PGEditActivity(String path);
 

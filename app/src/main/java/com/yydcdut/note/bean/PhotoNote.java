@@ -89,11 +89,11 @@ public class PhotoNote implements IObject {
     }
 
     public String getSmallPhotoPathWithFile() {
-        return "file:/" + FilePathUtils.getSmallPath() + photoName;
+        return "file://" + FilePathUtils.getSmallPath() + photoName;
     }
 
     public String getBigPhotoPathWithFile() {
-        return "file:/" + FilePathUtils.getPath() + photoName;
+        return "file://" + FilePathUtils.getPath() + photoName;
     }
 
     public String getSmallPhotoPathWithoutFile() {
