@@ -19,7 +19,7 @@ import com.yydcdut.note.injector.module.ActivityModule;
 import com.yydcdut.note.mvp.p.setting.impl.EditCategoryPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.setting.IEditCategoryView;
-import com.yydcdut.note.utils.LollipopCompat;
+import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.view.CircleProgressBarLayout;
 import com.yydcdut.sdlv.Menu;
 import com.yydcdut.sdlv.MenuItem;
@@ -79,7 +79,7 @@ public class EditCategoryActivity extends BaseActivity implements IEditCategoryV
         toolbar.setTitle(getResources().getString(R.string.edit_category));
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_check_white_24dp);
-        LollipopCompat.setElevation(toolbar, getResources().getDimension(R.dimen.ui_elevation));
+        AppCompat.setElevation(toolbar, getResources().getDimension(R.dimen.ui_elevation));
     }
 
     private void initListView() {

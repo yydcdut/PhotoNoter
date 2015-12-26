@@ -15,7 +15,7 @@ import com.yydcdut.note.mvp.p.setting.IFeedbackPresenter;
 import com.yydcdut.note.mvp.p.setting.impl.AboutAppPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.setting.IAboutAppView;
-import com.yydcdut.note.utils.LollipopCompat;
+import com.yydcdut.note.utils.AppCompat;
 
 import javax.inject.Inject;
 
@@ -60,7 +60,7 @@ public class AboutAppActivity extends BaseActivity implements IAboutAppView {
         toolbar.setTitle(getResources().getString(R.string.about_setting));
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        LollipopCompat.setElevation(toolbar, getResources().getDimension(R.dimen.ui_elevation));
+        AppCompat.setElevation(toolbar, getResources().getDimension(R.dimen.ui_elevation));
     }
 
     @Override

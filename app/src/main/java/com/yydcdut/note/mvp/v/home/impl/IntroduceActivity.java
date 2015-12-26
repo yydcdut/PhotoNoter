@@ -19,7 +19,7 @@ import com.yydcdut.note.mvp.p.home.impl.IntroducePresenterImpl;
 import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.home.IIntroduceView;
 import com.yydcdut.note.service.InitService;
-import com.yydcdut.note.utils.LollipopCompat;
+import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.view.CircleProgressBarLayout;
 
 import javax.inject.Inject;
@@ -51,7 +51,7 @@ public class IntroduceActivity extends BaseActivity implements IIntroduceView {
 
     @Override
     public int setContentView() {
-        LollipopCompat.setFullWindow(getWindow());
+        AppCompat.setFullWindow(getWindow());
         return R.layout.activity_introduce;
     }
 

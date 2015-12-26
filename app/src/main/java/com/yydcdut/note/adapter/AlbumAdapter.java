@@ -1,6 +1,8 @@
 package com.yydcdut.note.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +12,7 @@ import android.view.ViewGroup;
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.vh.PhotoViewHolder;
 import com.yydcdut.note.bean.PhotoNote;
+import com.yydcdut.note.utils.AppCompat;
 
 import java.util.List;
 
@@ -47,6 +50,10 @@ public class AlbumAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
             holder.checkLayout.setVisibility(View.INVISIBLE);
         }
         holder.imageView.setImageURI(Uri.parse(photoNote.getSmallPhotoPathWithFile()));
+
+        int color = photoNote.getPaletteColor();
+        AppCompat.setBackgroundDrawable(holder.checkLayout,
+                new ColorDrawable(Color.argb(0x70, Color.red(color), Color.green(color), Color.blue(color))));
     }
 
     @Override

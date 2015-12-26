@@ -39,9 +39,9 @@ import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.home.IHomeView;
 import com.yydcdut.note.mvp.v.login.impl.LoginActivity;
 import com.yydcdut.note.mvp.v.login.impl.UserCenterActivity;
+import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
-import com.yydcdut.note.utils.LollipopCompat;
 import com.yydcdut.note.view.RoundedImageView;
 
 import java.util.List;
@@ -121,7 +121,7 @@ public class HomeActivity extends BaseActivity implements IHomeView, View.OnClic
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        if (LollipopCompat.AFTER_LOLLIPOP) {
+        if (AppCompat.AFTER_LOLLIPOP) {
             try {
                 TypedArray typedArray = this.getTheme().obtainStyledAttributes(new int[]{android.R.attr.colorPrimaryDark});
                 mDrawerLayout.setStatusBarBackground(typedArray.getResourceId(0, 0));
@@ -130,7 +130,7 @@ public class HomeActivity extends BaseActivity implements IHomeView, View.OnClic
             }
 
         }
-        LollipopCompat.setElevation(toolbar, getResources().getDimension(R.dimen.ui_elevation));
+        AppCompat.setElevation(toolbar, getResources().getDimension(R.dimen.ui_elevation));
 
         mDrawerToggle = new ActionBarDrawerToggleCompat(this, mDrawerLayout, toolbar);
         mDrawerLayout.setDrawerListener(mDrawerToggle);

@@ -2,7 +2,6 @@ package com.yydcdut.note.adapter.vh;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.yydcdut.note.R;
@@ -20,7 +19,7 @@ public class PhotoViewHolder extends RecyclerView.ViewHolder implements View.OnC
     @Bind(R.id.img_item_album)
     public SimpleDraweeView imageView;
     @Bind(R.id.layout_item_album_check)
-    public ImageView checkLayout;
+    public View checkLayout;
 
     public PhotoViewHolder(View itemView, OnItemClickListener onItemClickListener, OnItemLongClickListener onItemLongClickListener) {
         super(itemView);

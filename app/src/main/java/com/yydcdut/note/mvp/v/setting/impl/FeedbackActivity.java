@@ -23,8 +23,8 @@ import com.yydcdut.note.injector.module.ActivityModule;
 import com.yydcdut.note.mvp.p.setting.impl.FeedbackPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.setting.IFeedbackView;
+import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.Const;
-import com.yydcdut.note.utils.LollipopCompat;
 import com.yydcdut.note.view.CircleProgressBarLayout;
 import com.yydcdut.note.view.RevealView;
 
@@ -88,7 +88,7 @@ public class FeedbackActivity extends BaseActivity implements IFeedbackView {
     private void initToolBarUI() {
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        LollipopCompat.setElevation(mToolbar, getResources().getDimension(R.dimen.ui_elevation));
+        AppCompat.setElevation(mToolbar, getResources().getDimension(R.dimen.ui_elevation));
     }
 
     private void initProgressBar() {

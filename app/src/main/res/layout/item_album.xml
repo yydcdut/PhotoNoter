@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:fresco="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="1dip">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="1dip">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/img_item_album"
@@ -15,10 +16,9 @@
     <ImageView
         android:id="@+id/layout_item_album_check"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:background="#77000000"
-        android:scaleType="center"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
         android:src="@drawable/ic_check_white_24dp"/>
-
 </RelativeLayout>

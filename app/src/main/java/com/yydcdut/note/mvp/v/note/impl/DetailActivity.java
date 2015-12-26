@@ -24,8 +24,8 @@ import com.yydcdut.note.injector.module.ActivityModule;
 import com.yydcdut.note.mvp.p.note.impl.DetailPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.note.IDetailView;
+import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.Const;
-import com.yydcdut.note.utils.LollipopCompat;
 import com.yydcdut.note.view.FontTextView;
 import com.yydcdut.note.view.ObservableScrollView;
 import com.yydcdut.note.view.RevealView;
@@ -106,7 +106,7 @@ public class DetailActivity extends BaseActivity implements IDetailView,
 
     @Override
     public int setContentView() {
-        if (LollipopCompat.AFTER_LOLLIPOP) {
+        if (AppCompat.AFTER_LOLLIPOP) {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
                     | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION | 128);
@@ -184,7 +184,7 @@ public class DetailActivity extends BaseActivity implements IDetailView,
         toolbar.setBackgroundColor(Color.TRANSPARENT);
         toolbar.setTitle(" ");
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        if (LollipopCompat.AFTER_LOLLIPOP) {
+        if (AppCompat.AFTER_LOLLIPOP) {
             int size = getStatusBarSize();
             FrameLayout.LayoutParams relativeLayout = (FrameLayout.LayoutParams) toolbar.getLayoutParams();
             relativeLayout.setMargins(0, size, 0, 0);

@@ -11,8 +11,8 @@ import com.yydcdut.note.camera.model.camera.CameraModel;
 import com.yydcdut.note.camera.param.Size;
 import com.yydcdut.note.camera.view.AutoFitSurfaceView;
 import com.yydcdut.note.model.compare.SizeComparator;
+import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.Const;
-import com.yydcdut.note.utils.LollipopCompat;
 
 import java.util.Collections;
 import java.util.List;
@@ -40,7 +40,7 @@ public class AdjustCamera extends AppCompatActivity implements SurfaceHolder.Cal
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LollipopCompat.setFullWindow(getWindow());
+        AppCompat.setFullWindow(getWindow());
         setContentView(R.layout.activity_adjust_camera);
 
         mScreenWidth = getResources().getDisplayMetrics().widthPixels;

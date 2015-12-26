@@ -9,9 +9,9 @@ import com.yydcdut.note.model.rx.RxUser;
 import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.setting.ISettingPresenter;
 import com.yydcdut.note.mvp.v.setting.ISettingView;
+import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.LocalStorageUtils;
-import com.yydcdut.note.utils.LollipopCompat;
 
 import org.json.JSONException;
 
@@ -103,7 +103,7 @@ public class SettingPresenterImpl implements ISettingPresenter {
                 break;
             case ISettingPresenter.TAG_CAMERA2:
                 boolean use = mLocalStorageUtils.getCameraSystem();
-                if ((!LollipopCompat.AFTER_LOLLIPOP || !SUPPORT_CAMERA_5_0) && !use) {
+                if ((!AppCompat.AFTER_LOLLIPOP || !SUPPORT_CAMERA_5_0) && !use) {
                     mSettingView.showSnackbar(mContext.getString(R.string.toast_not_support));
                     return;
                 }
@@ -237,7 +237,7 @@ public class SettingPresenterImpl implements ISettingPresenter {
     }
 
     private void setStatusBarClickable() {
-        if (!LollipopCompat.AFTER_LOLLIPOP) {
+        if (!AppCompat.AFTER_LOLLIPOP) {
             mSettingView.setStatusBarClickable(false);
         } else {
             mSettingView.setStatusBarClickable(true);

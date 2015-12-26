@@ -14,7 +14,7 @@ import com.yydcdut.note.injector.module.ActivityModule;
 import com.yydcdut.note.mvp.p.home.impl.SplashPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.home.ISplashView;
-import com.yydcdut.note.utils.LollipopCompat;
+import com.yydcdut.note.utils.AppCompat;
 
 import javax.inject.Inject;
 
@@ -46,7 +46,7 @@ public class SplashActivity extends BaseActivity implements ISplashView {
 
     @Override
     public int setContentView() {
-        LollipopCompat.setFullWindow(getWindow());
+        AppCompat.setFullWindow(getWindow());
         return R.layout.activity_splash;
     }
 

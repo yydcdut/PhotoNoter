@@ -32,9 +32,9 @@ import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.home.impl.HomeActivity;
 import com.yydcdut.note.mvp.v.setting.ISettingView;
 import com.yydcdut.note.utils.ActivityCollector;
+import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
-import com.yydcdut.note.utils.LollipopCompat;
 import com.yydcdut.note.view.ColorChooserDialog;
 import com.yydcdut.note.view.RoundedImageView;
 
@@ -103,7 +103,7 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
         setSupportActionBar(toolbar);
         toolbar.setTitle(getResources().getString(R.string.app_setting));
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        LollipopCompat.setElevation(toolbar, getResources().getDimension(R.dimen.ui_elevation));
+        AppCompat.setElevation(toolbar, getResources().getDimension(R.dimen.ui_elevation));
     }
 
     @Override

@@ -25,9 +25,9 @@ import com.yydcdut.note.camera.view.IsoView;
 import com.yydcdut.note.camera.view.MenuLayout;
 import com.yydcdut.note.camera.view.callback.OnLayoutItemClickListener;
 import com.yydcdut.note.model.compare.SizeComparator;
+import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.LocalStorageUtils;
-import com.yydcdut.note.utils.LollipopCompat;
 
 import org.json.JSONException;
 
@@ -94,7 +94,7 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
         mLocalStorageUtils = LocalStorageUtils.getInstance(getApplicationContext());
         Bundle bundle = getIntent().getExtras();
         mCategoryId = bundle.getInt(Const.CATEGORY_ID_4_PHOTNOTES);
-        LollipopCompat.setFullWindow(getWindow());
+        AppCompat.setFullWindow(getWindow());
         setContentView(R.layout.activity_camera);
         initData();
         initUIAndListener();

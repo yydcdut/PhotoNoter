@@ -23,8 +23,8 @@ import com.yydcdut.note.injector.module.ActivityModule;
 import com.yydcdut.note.mvp.p.login.impl.UserCenterPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.login.IUserCenterView;
+import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
-import com.yydcdut.note.utils.LollipopCompat;
 import com.yydcdut.note.view.CircleProgressBarLayout;
 import com.yydcdut.note.view.RoundedImageView;
 import com.yydcdut.note.view.UserCenterArrowView;
@@ -93,7 +93,7 @@ public class UserCenterActivity extends BaseActivity implements IUserCenterView 
     public void initUiAndListener() {
         ButterKnife.bind(this);
         mUserCenterPresenter.attachView(this);
-        if (LollipopCompat.AFTER_LOLLIPOP) {
+        if (AppCompat.AFTER_LOLLIPOP) {
             findViewById(R.id.layout_status).setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
         }
         initToolBarUI();

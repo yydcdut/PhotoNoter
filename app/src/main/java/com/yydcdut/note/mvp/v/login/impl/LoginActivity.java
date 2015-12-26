@@ -14,7 +14,7 @@ import com.yydcdut.note.injector.module.ActivityModule;
 import com.yydcdut.note.mvp.p.login.impl.LoginPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.login.ILoginView;
-import com.yydcdut.note.utils.LollipopCompat;
+import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.view.CircleProgressBarLayout;
 import com.yydcdut.note.view.fab2.snack.OnSnackBarActionListener;
 
@@ -67,7 +67,7 @@ public class LoginActivity extends BaseActivity implements ILoginView {
         toolbar.setTitle(getResources().getString(R.string.app_login));
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        LollipopCompat.setElevation(toolbar, getResources().getDimension(R.dimen.ui_elevation));
+        AppCompat.setElevation(toolbar, getResources().getDimension(R.dimen.ui_elevation));
     }
 
     @Override

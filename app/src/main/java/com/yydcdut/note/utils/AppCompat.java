@@ -1,6 +1,7 @@
 package com.yydcdut.note.utils;
 
 import android.annotation.TargetApi;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.view.View;
 import android.view.Window;
@@ -9,8 +10,15 @@ import android.view.WindowManager;
 /**
  * Created by yuyidong on 15/10/14.
  */
-@TargetApi(Build.VERSION_CODES.LOLLIPOP)
-public class LollipopCompat {
+public class AppCompat {
+
+    public static void setBackgroundDrawable(View view, Drawable drawable) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            view.setBackground(drawable);
+        } else {
+            view.setBackgroundDrawable(drawable);
+        }
+    }
 
     /**
      * 5.0之后的SDK
@@ -21,6 +29,7 @@ public class LollipopCompat {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static void setElevation(View view, float elevation) {
         if (AFTER_LOLLIPOP) {
             view.setElevation(elevation);
@@ -28,7 +37,7 @@ public class LollipopCompat {
     }
 
     public static void setFullWindow(Window window) {
-        if (LollipopCompat.AFTER_LOLLIPOP) {
+        if (AppCompat.AFTER_LOLLIPOP) {
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
                     | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION | 128);
         } else {

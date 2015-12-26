@@ -18,7 +18,7 @@ import com.yydcdut.note.injector.component.DaggerActivityComponent;
 import com.yydcdut.note.injector.module.ActivityModule;
 import com.yydcdut.note.mvp.p.ThemePresenter;
 import com.yydcdut.note.utils.ActivityCollector;
-import com.yydcdut.note.utils.LollipopCompat;
+import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.ThemeHelper;
 
 import java.lang.reflect.Field;
@@ -43,7 +43,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IThemeVi
     @Override
     public void setActivityTheme(int index) {
         super.setTheme(ThemeHelper.THEME.get(index).getStyle());
-        if (LollipopCompat.AFTER_LOLLIPOP) {
+        if (AppCompat.AFTER_LOLLIPOP) {
             getWindow().setNavigationBarColor(getResources().getColor(ThemeHelper.THEME.get(index).getColorPrimary()));
         }
     }
@@ -72,7 +72,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IThemeVi
      * @return
      */
     public boolean setWindowStatusBar(boolean wannaSet) {
-        if (LollipopCompat.AFTER_LOLLIPOP && wannaSet) {
+        if (AppCompat.AFTER_LOLLIPOP && wannaSet) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             return true;
         }
