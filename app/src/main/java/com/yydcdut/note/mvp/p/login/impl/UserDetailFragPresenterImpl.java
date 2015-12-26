@@ -9,10 +9,8 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.yydcdut.note.R;
-import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.bean.user.IUser;
 import com.yydcdut.note.injector.ContextLife;
-import com.yydcdut.note.model.compare.ComparatorFactory;
 import com.yydcdut.note.model.rx.RxCategory;
 import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.model.rx.RxSandBox;
@@ -34,7 +32,6 @@ import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by yuyidong on 15/11/16.
- * todo 应该拆分
  */
 public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter {
     private IUserDetailFragView mUserDetailFragView;
@@ -73,17 +70,6 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter {
                 mUserDetailFragView.initUserDetail(getLocation(), getUseAge(), getPhone(), getAndroid(), calculateStorage());
                 break;
             case 1:
-                mRxCategory.getAllCategories()
-                        .subscribe(categories -> {
-                            Category category = categories.get(0);
-                            mRxPhotoNote.findByCategoryId(category.getId(), ComparatorFactory.FACTORY_NOT_SORT)
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(photoNoteList -> {
-                                        mUserDetailFragView.initUserImages(photoNoteList);
-                                    });
-                        });
-                break;
-            case 2:
                 mUserDetailFragView.addView();
                 mRxUser.isLoginQQ()
                         .observeOn(AndroidSchedulers.mainThread())

@@ -22,9 +22,9 @@ com/yydcdut/note/DexActivity$BitmapCallable.class
 com/yydcdut/note/DexActivity$LoadDexTask.class
 
 us/pinguo/edit/sdk/PGEditImageLoader.class
-com.umeng.analytics/MobclickAgentJSInterface.smali
-com.umeng.analytics/MobclickAgentJSInterface$a.smali
-com.umeng.analytics/MobclickAgent.smali
+com/umeng/analytics/MobclickAgentJSInterface.class
+com/umeng/analytics/MobclickAgentJSInterface$a.class
+com/umeng/analytics/MobclickAgent.class
 
 com/yydcdut/note/injector/component/ActivityComponent.class
 com/yydcdut/note/injector/component/ApplicationComponent.class

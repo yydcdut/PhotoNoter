@@ -94,7 +94,7 @@ public class UserCenterActivity extends BaseActivity implements IUserCenterView 
         ButterKnife.bind(this);
         mUserCenterPresenter.attachView(this);
         if (AppCompat.AFTER_LOLLIPOP) {
-            findViewById(R.id.layout_status).setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
+            findViewById(R.id.layout_status).setBackgroundColor(AppCompat.getColor(android.R.color.darker_gray, this));
         }
         initToolBarUI();
         initOtherViewAndData();
@@ -102,19 +102,17 @@ public class UserCenterActivity extends BaseActivity implements IUserCenterView 
     }
 
     private void initOtherViewAndData() {
-        mColorArray = new int[]{getResources().getColor(R.color.green_colorPrimary),
-                getResources().getColor(R.color.blue_colorPrimary),
-                getResources().getColor(R.color.amber_colorPrimary)};
-        mScrollWidth = getResources().getDimension(R.dimen.dimen_36dip) + getResources().getDimension(R.dimen.dimen_24dip);
+        mColorArray = new int[]{AppCompat.getColor(R.color.blue_colorPrimary, this),
+                AppCompat.getColor(R.color.amber_colorPrimary, this)};
+        mScrollWidth = getResources().getDimension(R.dimen.dimen_24dip) * 3 / 2;
         mUserCenterArrowView.setColorAndMarginWidth(mColorArray[0], (int) -mScrollWidth);
-        mUserCenterArrowView.setColorAndMarginWidth(getResources().getColor(R.color.green_colorPrimary), (int) -mScrollWidth);
     }
 
     private void initToolBarUI() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(getResources().getString(R.string.personal_page));
-        toolbar.setTitleTextColor(getResources().getColor(R.color.txt_gray));
-        toolbar.setBackgroundColor(getResources().getColor(android.R.color.white));
+        toolbar.setTitleTextColor(AppCompat.getColor(R.color.txt_gray, this));
+        toolbar.setBackgroundColor(AppCompat.getColor(android.R.color.white, this));
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_gray_24dp);
         toolbar.setOnMenuItemClickListener(onToolBarMenuItemClick);
@@ -169,17 +167,10 @@ public class UserCenterActivity extends BaseActivity implements IUserCenterView 
         }
     }
 
-    @OnClick(R.id.img_user_image)
-    public void clickUserImage(View v) {
-        if (mViewPager.getCurrentItem() != 1) {
-            mViewPager.setCurrentItem(1, true);
-        }
-    }
-
     @OnClick(R.id.img_user_person)
     public void clickUserPerson(View v) {
-        if (mViewPager.getCurrentItem() != 2) {
-            mViewPager.setCurrentItem(2, true);
+        if (mViewPager.getCurrentItem() != 1) {
+            mViewPager.setCurrentItem(1, true);
         }
     }
 
@@ -209,8 +200,8 @@ public class UserCenterActivity extends BaseActivity implements IUserCenterView 
                 mIntention = positionOffset - mLastTimePositionOffset >= 0 ? INTENTION_RIGHT : INTENTION_LEFT;
             }
         } else if (mIntention == INTENTION_RIGHT && positionOffset < 0.99) {//right
-            if (position >= 2) {
-                position = 1;
+            if (position >= 1) {
+                return;
             }
             int r2 = Color.red(mColorArray[position + 1]);
             int r1 = Color.red(mColorArray[position]);
@@ -226,10 +217,10 @@ public class UserCenterActivity extends BaseActivity implements IUserCenterView 
             int newB = (int) (b1 - deltaB * positionOffset);
             int newColor = Color.rgb(newR, newG, newB);
             mBackgroundImage.setBackgroundColor(newColor);
-            mUserCenterArrowView.setColorAndMarginWidth(newColor, (int) (mScrollWidth * positionOffset + position * mScrollWidth - mScrollWidth));
+            mUserCenterArrowView.setColorAndMarginWidth(newColor, (int) (mScrollWidth * positionOffset * 2 - mScrollWidth));
         } else if (mIntention == INTENTION_LEFT && positionOffset > 0.01) {//left
             if (position < 0) {
-                position = 0;
+                return;
             }
             int r0 = Color.red(mColorArray[position]);
             int r1 = Color.red(mColorArray[position + 1]);
@@ -245,7 +236,8 @@ public class UserCenterActivity extends BaseActivity implements IUserCenterView 
             int newB = (int) (b1 - deltaB * (1 - positionOffset));
             int newColor = Color.rgb(newR, newG, newB);
             mBackgroundImage.setBackgroundColor(newColor);
-            mUserCenterArrowView.setColorAndMarginWidth(newColor, (int) ((position + 1) * mScrollWidth - (mScrollWidth * (1 - positionOffset)) - mScrollWidth));
+            mUserCenterArrowView.setColorAndMarginWidth(newColor, (int) ((mScrollWidth * positionOffset) * 2 - mScrollWidth))
+            ;
         }
         if (positionOffset < 0.01 || positionOffset > 0.99) {
             //重新计算方向

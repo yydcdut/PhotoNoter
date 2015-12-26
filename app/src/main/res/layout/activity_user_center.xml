@@ -44,7 +44,7 @@
                     android:layout_below="@+id/img_user"
                     android:layout_marginTop="@dimen/dimen_12dip"
                     android:gravity="center"
-                    android:text="1111111"
+                    android:text=""
                     android:textColor="@color/txt_gray"
                     android:textSize="@dimen/txt_big"/>
             </RelativeLayout>
@@ -65,21 +65,15 @@
                         android:id="@+id/img_user_detail"
                         android:layout_width="@dimen/dimen_24dip"
                         android:layout_height="@dimen/dimen_24dip"
+                        android:layout_marginRight="@dimen/dimen_24dip"
                         android:src="@drawable/ic_storage_gray_24dp"/>
-
-                    <ImageView
-                        android:id="@+id/img_user_image"
-                        android:layout_width="@dimen/dimen_24dip"
-                        android:layout_height="@dimen/dimen_24dip"
-                        android:layout_marginLeft="@dimen/dimen_36dip"
-                        android:layout_marginRight="@dimen/dimen_36dip"
-                        android:src="@drawable/ic_collections_gray_24dp"/>
 
                     <ImageView
                         android:id="@+id/img_user_person"
                         android:layout_width="@dimen/dimen_24dip"
                         android:layout_height="@dimen/dimen_24dip"
-                        android:layout_marginBottom="2dip"
+                        android:layout_marginBottom="3dp"
+                        android:layout_marginLeft="@dimen/dimen_24dip"
                         android:src="@drawable/ic_contacts_gray_24dp"/>
                 </LinearLayout>
 
@@ -93,7 +87,7 @@
                     android:id="@+id/layout_user_vp_bg"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:background="@color/green_colorPrimary">
+                    android:background="@color/blue_colorPrimary">
 
                     <android.support.v4.view.ViewPager
                         android:id="@+id/vp_user"

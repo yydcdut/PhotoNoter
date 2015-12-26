@@ -1,6 +1,7 @@
 package com.yydcdut.note.utils;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.view.View;
@@ -11,6 +12,14 @@ import android.view.WindowManager;
  * Created by yuyidong on 15/10/14.
  */
 public class AppCompat {
+
+    public static int getColor(int id, Activity activity) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return activity.getResources().getColor(id);
+        } else {
+            return activity.getResources().getColor(id, activity.getTheme());
+        }
+    }
 
     public static void setBackgroundDrawable(View view, Drawable drawable) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
