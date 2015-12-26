@@ -8,7 +8,6 @@ import com.yydcdut.note.model.rx.RxCategory;
 import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.model.rx.RxSandBox;
 import com.yydcdut.note.utils.LocalStorageUtils;
-import com.yydcdut.note.utils.ThreadExecutorPool;
 
 import javax.inject.Singleton;
 
@@ -24,8 +23,6 @@ public interface ApplicationComponent {
     Context getContext();
 
     LocalStorageUtils getLocalStorageUtils();
-
-    ThreadExecutorPool getThreadExecutorPool();
 
     RxCategory getRxCategory();
 

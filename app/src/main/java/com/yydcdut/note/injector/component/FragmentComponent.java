@@ -13,7 +13,6 @@ import com.yydcdut.note.mvp.v.home.impl.AlbumFragment;
 import com.yydcdut.note.mvp.v.login.impl.UserDetailFragment;
 import com.yydcdut.note.mvp.v.note.impl.DetailFragment;
 import com.yydcdut.note.utils.LocalStorageUtils;
-import com.yydcdut.note.utils.ThreadExecutorPool;
 
 import dagger.Component;
 
@@ -38,8 +37,6 @@ public interface FragmentComponent {
     RxSandBox getRxSandBox();
 
     LocalStorageUtils getLocalStorageUtils();
-
-    ThreadExecutorPool getThreadExecutorPool();
 
     void inject(AlbumFragment albumFragment);
 

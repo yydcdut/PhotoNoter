@@ -10,8 +10,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
+import android.view.animation.AccelerateDecelerateInterpolator;
 
-import com.yydcdut.note.utils.BakedBezierInterpolator;
 import com.yydcdut.note.utils.UiHelper;
 
 public class RevealColorView extends ViewGroup {
@@ -207,7 +207,7 @@ public class RevealColorView extends ViewGroup {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             animator.withLayer();
         }
-        animator.setInterpolator(BakedBezierInterpolator.getInstance());
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
         return animator;
     }
 

@@ -13,7 +13,6 @@ import com.yydcdut.note.service.CheckService;
 import com.yydcdut.note.service.InitService;
 import com.yydcdut.note.service.SandBoxService;
 import com.yydcdut.note.utils.LocalStorageUtils;
-import com.yydcdut.note.utils.ThreadExecutorPool;
 
 import dagger.Component;
 
@@ -37,8 +36,6 @@ public interface ServiceComponent {
     RxSandBox getRxSandBox();
 
     LocalStorageUtils getLocalStorageUtils();
-
-    ThreadExecutorPool getThreadExecutorPool();
 
     void inject(InitService initService);
 

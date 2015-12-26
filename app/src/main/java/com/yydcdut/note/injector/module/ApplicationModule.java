@@ -9,7 +9,6 @@ import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.model.rx.RxSandBox;
 import com.yydcdut.note.model.rx.RxUser;
 import com.yydcdut.note.utils.LocalStorageUtils;
-import com.yydcdut.note.utils.ThreadExecutorPool;
 
 import javax.inject.Singleton;
 
@@ -27,11 +26,9 @@ public class ApplicationModule {
     private RxSandBox mRxSandBox;
     private RxUser mRxUser;
     private LocalStorageUtils mLocalStorageUtils;
-    private ThreadExecutorPool mThreadExecutorPool;
 
     public ApplicationModule(NoteApplication application) {
         mApplication = application;
-        mThreadExecutorPool = new ThreadExecutorPool();
         mLocalStorageUtils = new LocalStorageUtils(mApplication.getApplicationContext());
         mRxSandBox = new RxSandBox(mApplication.getApplicationContext());
         mRxPhotoNote = new RxPhotoNote(mApplication.getApplicationContext());
@@ -75,11 +72,4 @@ public class ApplicationModule {
     public LocalStorageUtils provideLocalStorageUtils() {
         return mLocalStorageUtils;
     }
-
-    @Provides
-    @Singleton
-    public ThreadExecutorPool provideThreadExecutorPool() {
-        return mThreadExecutorPool;
-    }
-
 }

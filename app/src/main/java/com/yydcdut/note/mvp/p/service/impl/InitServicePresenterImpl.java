@@ -19,7 +19,6 @@ import com.yydcdut.note.utils.Evi;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.LocalStorageUtils;
-import com.yydcdut.note.utils.ThreadExecutorPool;
 import com.yydcdut.note.utils.UiHelper;
 
 import org.json.JSONException;
@@ -47,19 +46,16 @@ public class InitServicePresenterImpl implements IInitServicePresenter {
     private RxPhotoNote mRxPhotoNote;
     private RxCategory mRxCategory;
     private LocalStorageUtils mLocalStorageUtils;
-    private ThreadExecutorPool mThreadExecutorPool;
 
     private long mCategoryId = 1;
 
     @Inject
     public InitServicePresenterImpl(@ContextLife("Service") Context context, RxCategory rxCategory,
-                                    RxPhotoNote rxPhotoNote, LocalStorageUtils localStorageUtils,
-                                    ThreadExecutorPool threadExecutorPool) {
+                                    RxPhotoNote rxPhotoNote, LocalStorageUtils localStorageUtils) {
         mContext = context;
         mRxCategory = rxCategory;
         mRxPhotoNote = rxPhotoNote;
         mLocalStorageUtils = localStorageUtils;
-        mThreadExecutorPool = threadExecutorPool;
         initLooper();
         int screenWidth = Evi.sScreenWidth;
         int num = 2;
@@ -102,12 +98,12 @@ public class InitServicePresenterImpl implements IInitServicePresenter {
 
     @Override
     public void initCamera() {
-        mThreadExecutorPool.getExecutorPool().execute(new Runnable() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 initCameraPictureSize();
             }
-        });
+        }).start();
     }
 
     @Override
@@ -192,7 +188,7 @@ public class InitServicePresenterImpl implements IInitServicePresenter {
     }
 
     private void initDefaultPhotoNote() {
-        mThreadExecutorPool.getExecutorPool().execute(new Runnable() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 String[] outFileName = new String[]{
@@ -273,7 +269,7 @@ public class InitServicePresenterImpl implements IInitServicePresenter {
                 mRxPhotoNote.savePhotoNotes(arrayList)
                         .subscribe(photoNoteList -> mHandler.sendEmptyMessage(ADD));
             }
-        });
+        }).start();
     }
 
 

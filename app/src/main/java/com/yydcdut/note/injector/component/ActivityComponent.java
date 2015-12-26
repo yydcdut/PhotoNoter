@@ -22,7 +22,6 @@ import com.yydcdut.note.mvp.v.setting.impl.EditCategoryActivity;
 import com.yydcdut.note.mvp.v.setting.impl.FeedbackActivity;
 import com.yydcdut.note.mvp.v.setting.impl.SettingActivity;
 import com.yydcdut.note.utils.LocalStorageUtils;
-import com.yydcdut.note.utils.ThreadExecutorPool;
 
 import dagger.Component;
 
@@ -48,8 +47,6 @@ public interface ActivityComponent {
     RxSandBox getRxSandBox();
 
     LocalStorageUtils getLocalStorageUtils();
-
-    ThreadExecutorPool getThreadExecutorPool();
 
     void inject(HomeActivity homeActivity);
 
