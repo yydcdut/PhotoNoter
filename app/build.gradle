@@ -93,7 +93,7 @@ android.applicationVariants.all {
                 if (dex.additionalParameters == null) {
                     dex.additionalParameters = []
                 }
-//                dex.additionalParameters += '--multi-dex'
+                dex.additionalParameters += '--multi-dex'
                 dex.additionalParameters += '--set-max-idx-number=48000'
 //                dex.additionalParameters += "--main-dex-list=$projectDir/multidex.keep".toString()
         }

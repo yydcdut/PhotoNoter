@@ -1,10 +1,12 @@
 package com.yydcdut.note.mvp.v.note.impl;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.injector.component.DaggerFragmentComponent;
@@ -13,8 +15,6 @@ import com.yydcdut.note.mvp.p.note.impl.DetailFragPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseFragment;
 import com.yydcdut.note.mvp.v.note.IDetailFragView;
 import com.yydcdut.note.utils.Const;
-import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
-import com.yydcdut.note.view.AutoFitImageView;
 
 import javax.inject.Inject;
 
@@ -30,7 +30,7 @@ public class DetailFragment extends BaseFragment implements IDetailFragView {
     DetailFragPresenterImpl mDetailFragPresenter;
 
     @Bind(R.id.img_detail)
-    AutoFitImageView mAutoFitImageView;
+    SimpleDraweeView mDraweeView;
 
     public static DetailFragment newInstance() {
         return new DetailFragment();
@@ -90,9 +90,18 @@ public class DetailFragment extends BaseFragment implements IDetailFragView {
     }
 
     @Override
-    public void showImage(int width, int height, String path) {
-        mAutoFitImageView.setAspectRatio(width, height);
-        ImageLoaderManager.displayImage(path, mAutoFitImageView, null);
+    public void showImage(String path) {
+        Uri uri = Uri.parse(path);
+//        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
+//                .setAutoRotateEnabled(true)
+//                .build();
+//        DraweeController controller = Fresco.newDraweeControllerBuilder()
+//                .setOldController(mDraweeView.getController())
+//                .setImageRequest(request)
+//                .setUri(uri)
+//                .build();
+//        mDraweeView.setController(controller);
+        mDraweeView.setImageURI(uri);
     }
 
     @Override

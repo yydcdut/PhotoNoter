@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:fresco="http://schemas.android.com/apk/res-auto"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              android:background="@android:color/transparent">
 
-    <com.yydcdut.note.view.AutoFitImageView
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/img_detail"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:scaleType="fitXY"/>
+        fresco:actualImageScaleType="fitCenter"
+        fresco:fadeDuration="1"/>
 </FrameLayout>

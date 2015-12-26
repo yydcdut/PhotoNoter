@@ -4,7 +4,6 @@ import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.note.IDetailFragPresenter;
 import com.yydcdut.note.mvp.v.note.IDetailFragView;
-import com.yydcdut.note.utils.FilePathUtils;
 
 import javax.inject.Inject;
 
@@ -50,10 +49,7 @@ public class DetailFragPresenterImpl implements IDetailFragPresenter {
         mRxPhotoNote.findByCategoryId(mCategoryId, mComparator)
                 .map(photoNoteList -> photoNoteList.get(mPosition))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(photoNote -> {
-                    int[] size = FilePathUtils.getPictureSize(photoNote.getBigPhotoPathWithoutFile());
-                    mDetailFragView.showImage(size[0], size[1], photoNote.getBigPhotoPathWithFile());
-                });
+                .subscribe(photoNote -> mDetailFragView.showImage(photoNote.getBigPhotoPathWithFile()));
     }
 
     @Override
