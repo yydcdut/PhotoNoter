@@ -172,7 +172,7 @@ public class ZoomPresenterImpl implements IZoomPresenter {
         }
         options.inSampleSize = scale;
         Bitmap bitmap = BitmapFactory.decodeFile(path, options);
-        if (orientation == ExifInterface.ORIENTATION_NORMAL) {
+        if (orientation == ExifInterface.ORIENTATION_NORMAL || orientation == ExifInterface.ORIENTATION_UNDEFINED) {
             return bitmap;
         }
         float rotate = 0;
