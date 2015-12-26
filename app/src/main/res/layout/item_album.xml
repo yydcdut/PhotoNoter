@@ -13,12 +13,18 @@
         fresco:actualImageScaleType="centerCrop"
         fresco:fadeDuration="1"/>
 
-    <ImageView
+
+    <com.yydcdut.note.view.GridItemLayout
         android:id="@+id/layout_item_album_check"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        android:layout_marginLeft="3dp"
-        android:layout_marginRight="3dp"
-        android:src="@drawable/ic_check_white_24dp"/>
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_check_white_24dp"/>
+    </com.yydcdut.note.view.GridItemLayout>
 </RelativeLayout>
