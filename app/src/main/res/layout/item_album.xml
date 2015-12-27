@@ -1,30 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="1dip">
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <com.yydcdut.note.view.GridItemImageView
         android:id="@+id/img_item_album"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        fresco:actualImageScaleType="centerCrop"
-        fresco:fadeDuration="1"/>
+        android:scaleType="centerCrop"/>
 
 
-    <com.yydcdut.note.view.GridItemLayout
+    <com.yydcdut.note.view.GridItemImageView
         android:id="@+id/layout_item_album_check"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-        android:gravity="center">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_check_white_24dp"/>
-    </com.yydcdut.note.view.GridItemLayout>
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_check_white_24dp"/>
 </RelativeLayout>

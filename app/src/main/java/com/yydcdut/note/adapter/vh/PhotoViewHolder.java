@@ -3,8 +3,8 @@ package com.yydcdut.note.adapter.vh;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.yydcdut.note.R;
+import com.yydcdut.note.view.GridItemImageView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -17,16 +17,17 @@ public class PhotoViewHolder extends RecyclerView.ViewHolder implements View.OnC
     private OnItemLongClickListener mOnItemLongClickListener;
 
     @Bind(R.id.img_item_album)
-    public SimpleDraweeView imageView;
+    public GridItemImageView imageView;
     @Bind(R.id.layout_item_album_check)
-    public View checkLayout;
+    public GridItemImageView checkLayout;
 
-    public PhotoViewHolder(View itemView, OnItemClickListener onItemClickListener, OnItemLongClickListener onItemLongClickListener) {
+    public PhotoViewHolder(View itemView, int size, OnItemClickListener onItemClickListener, OnItemLongClickListener onItemLongClickListener) {
         super(itemView);
         ButterKnife.bind(this, itemView);
         itemView.setOnLongClickListener(this);
         itemView.setOnClickListener(this);
-        imageView.setAspectRatio(1f);
+        imageView.setSize(size);
+        checkLayout.setSize(size);
         mOnItemClickListener = onItemClickListener;
         mOnItemLongClickListener = onItemLongClickListener;
     }

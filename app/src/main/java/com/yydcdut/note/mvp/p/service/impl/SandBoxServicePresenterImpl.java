@@ -123,7 +123,16 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter, Ha
         exif.saveAttributes();
 
         ExifInterface exif2 = new ExifInterface(photoNote.getSmallPhotoPathWithoutFile());
-        exif2.setAttribute(ExifInterface.TAG_ORIENTATION, String.valueOf(ExifInterface.ORIENTATION_ROTATE_90));
+        if (cameraId.equals(Const.CAMERA_BACK)) {
+            exif2.setAttribute(ExifInterface.TAG_ORIENTATION, String.valueOf(ExifInterface.ORIENTATION_ROTATE_90));
+        } else {
+            if (!isMirror) {
+                exif2.setAttribute(ExifInterface.TAG_ORIENTATION, String.valueOf(ExifInterface.ORIENTATION_ROTATE_270));
+            } else {
+                exif2.setAttribute(ExifInterface.TAG_ORIENTATION, String.valueOf(ExifInterface.ORIENTATION_ROTATE_270
+                        | ExifInterface.ORIENTATION_FLIP_HORIZONTAL));
+            }
+        }
         exif2.saveAttributes();
     }
 

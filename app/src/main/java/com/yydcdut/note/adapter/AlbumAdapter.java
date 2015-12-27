@@ -3,7 +3,6 @@ package com.yydcdut.note.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +12,7 @@ import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.vh.PhotoViewHolder;
 import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.utils.AppCompat;
+import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 
 import java.util.List;
 
@@ -21,15 +21,17 @@ import java.util.List;
  */
 public class AlbumAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
     private Context mContext;
+    private int mSize;
     private List<PhotoNote> mPhotoNoteList;
 
     private PhotoViewHolder.OnItemClickListener mOnItemClickListener;
     private PhotoViewHolder.OnItemLongClickListener mOnItemLongClickListener;
 
-    public AlbumAdapter(Context context, List<PhotoNote> photoNoteList,
+    public AlbumAdapter(Context context, List<PhotoNote> photoNoteList, int size,
                         PhotoViewHolder.OnItemClickListener onItemClickListener,
                         PhotoViewHolder.OnItemLongClickListener onItemLongClickListener) {
         mContext = context;
+        mSize = size;
         mPhotoNoteList = photoNoteList;
         mOnItemClickListener = onItemClickListener;
         mOnItemLongClickListener = onItemLongClickListener;
@@ -38,7 +40,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
     @Override
     public PhotoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_album, parent, false);
-        return new PhotoViewHolder(view, mOnItemClickListener, mOnItemLongClickListener);
+        return new PhotoViewHolder(view, mSize, mOnItemClickListener, mOnItemLongClickListener);
     }
 
     @Override
@@ -49,8 +51,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
         } else {
             holder.checkLayout.setVisibility(View.INVISIBLE);
         }
-        holder.imageView.setImageURI(Uri.parse(photoNote.getSmallPhotoPathWithFile()));
-
+        ImageLoaderManager.displayImage(photoNote.getSmallPhotoPathWithFile(), holder.imageView);
         int color = photoNote.getPaletteColor();
         AppCompat.setBackgroundDrawable(holder.checkLayout,
                 new ColorDrawable(Color.argb(0x70, Color.red(color), Color.green(color), Color.blue(color))));

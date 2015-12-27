@@ -124,7 +124,7 @@ public class DetailPresenterImpl implements IDetailPresenter, OnGetGeoCoderResul
                     int position = mDetailView.getCurrentPosition();
                     PhotoNote photoNote = photoNoteList.get(position);
                     try {
-                        mDetailView.showExif(getExifInfomation(photoNote.getBigPhotoPathWithoutFile()));
+                        mDetailView.showExif(getExifInformation(photoNote.getBigPhotoPathWithoutFile()));
                         gps(photoNote.getBigPhotoPathWithoutFile());
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -195,7 +195,7 @@ public class DetailPresenterImpl implements IDetailPresenter, OnGetGeoCoderResul
                 .location(ptCenter));
     }
 
-    private String getExifInfomation(String path) throws IOException {
+    private String getExifInformation(String path) throws IOException {
         String enter = "\n";
         StringBuilder sb = new StringBuilder();
         ExifInterface exifInterface = new ExifInterface(path);
@@ -204,6 +204,19 @@ public class DetailPresenterImpl implements IDetailPresenter, OnGetGeoCoderResul
                 .append(checkExifData(fDateTime))
                 .append(enter);
         String fOrientation = exifInterface.getAttribute(ExifInterface.TAG_ORIENTATION);
+        if (fOrientation.equals(String.valueOf(ExifInterface.ORIENTATION_NORMAL))) {
+            fOrientation = "0";
+        } else if (fOrientation.equals(String.valueOf(ExifInterface.ORIENTATION_ROTATE_90))) {
+            fOrientation = "90";
+        } else if (fOrientation.equals(String.valueOf(ExifInterface.ORIENTATION_ROTATE_270))) {
+            fOrientation = "270";
+        } else if (fOrientation.equals(String.valueOf(ExifInterface.ORIENTATION_ROTATE_180))) {
+            fOrientation = "180";
+        } else if (fOrientation.equals(String.valueOf(ExifInterface.ORIENTATION_ROTATE_270 | ExifInterface.ORIENTATION_FLIP_HORIZONTAL))) {
+            fOrientation = "270";
+        } else {
+            fOrientation = mContext.getResources().getString(R.string.detail_unknown);
+        }
         sb.append(mContext.getResources().getString(R.string.detail_orientation))
                 .append(fOrientation)
                 .append(enter);

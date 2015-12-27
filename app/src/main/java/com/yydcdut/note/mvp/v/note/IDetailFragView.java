@@ -7,7 +7,7 @@ import com.yydcdut.note.mvp.IView;
  */
 public interface IDetailFragView extends IView {
 
-    void showImage(String path);
+    void showImage(int width, int height, String path);
 
     void jump2ZoomActivity(int categoryId, int position, int comparator);
 

@@ -82,7 +82,7 @@ public class AbsCameraModel implements ICameraModel {
     }
 
     @Override
-    public long capture(boolean sound, int ratio) {
+    public long capture(boolean sound, int ratio, boolean isMirror) {
         return 0l;
     }
 

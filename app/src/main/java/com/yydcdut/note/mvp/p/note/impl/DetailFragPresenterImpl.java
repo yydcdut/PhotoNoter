@@ -1,9 +1,14 @@
 package com.yydcdut.note.mvp.p.note.impl;
 
+import android.media.ExifInterface;
+
 import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.note.IDetailFragPresenter;
 import com.yydcdut.note.mvp.v.note.IDetailFragView;
+import com.yydcdut.note.utils.FilePathUtils;
+
+import java.io.IOException;
 
 import javax.inject.Inject;
 
@@ -49,12 +54,35 @@ public class DetailFragPresenterImpl implements IDetailFragPresenter {
         mRxPhotoNote.findByCategoryId(mCategoryId, mComparator)
                 .map(photoNoteList -> photoNoteList.get(mPosition))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(photoNote -> mDetailFragView.showImage(photoNote.getBigPhotoPathWithFile()));
+                .subscribe(photoNote -> {
+                    int[] size = getSize(photoNote.getBigPhotoPathWithoutFile());
+                    mDetailFragView.showImage(size[0], size[1], photoNote.getBigPhotoPathWithFile());
+                });
     }
 
     @Override
     public void jump2ZoomActivity() {
         mDetailFragView.jump2ZoomActivity(mCategoryId, mPosition, mComparator);
+    }
+
+    private int[] getSize(String path) {
+        int[] size = FilePathUtils.getPictureSize(path);
+        try {
+            ExifInterface exifInterface = new ExifInterface(path);
+            int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                case ExifInterface.ORIENTATION_FLIP_HORIZONTAL | ExifInterface.ORIENTATION_ROTATE_270:
+                    int tmp = size[1];
+                    size[1] = size[0];
+                    size[0] = tmp;
+                    break;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return size;
     }
 
 

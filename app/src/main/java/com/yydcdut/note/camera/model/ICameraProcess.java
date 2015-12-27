@@ -18,6 +18,6 @@ public interface ICameraProcess {
 
     public void closeCamera();
 
-    public long capture(boolean sound, int ratio);
+    public long capture(boolean sound, int ratio, boolean isMirror);
 
 }
