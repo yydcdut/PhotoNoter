@@ -8,14 +8,16 @@
     <com.yydcdut.note.view.GridItemImageView
         android:id="@+id/img_item_album"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:scaleType="centerCrop"/>
 
 
     <com.yydcdut.note.view.GridItemImageView
         android:id="@+id/layout_item_album_check"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
         android:layout_gravity="center"
+        android:scaleType="center"
         android:src="@drawable/ic_check_white_24dp"/>
 </RelativeLayout>
