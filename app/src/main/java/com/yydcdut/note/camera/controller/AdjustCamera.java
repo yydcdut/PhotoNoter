@@ -13,6 +13,9 @@ import com.yydcdut.note.camera.view.AutoFitSurfaceView;
 import com.yydcdut.note.model.compare.SizeComparator;
 import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.Const;
+import com.yydcdut.note.utils.LocalStorageUtils;
+
+import org.json.JSONException;
 
 import java.util.Collections;
 import java.util.List;
@@ -124,11 +127,11 @@ public class AdjustCamera extends AppCompatActivity implements SurfaceHolder.Cal
         Size previewSize = getSuitablePreviewSize(mCameraModel.getSettingModel().getPreviewSizes());
         setPreviewSize(previewSize);
         Size size = null;
-//        try {
-//            size = LocalStorageUtils.getInstance().getPictureSize(mCameraId);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            size = LocalStorageUtils.getInstance(this).getPictureSize(mCameraId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         mCameraModel.getSettingModel().setPictureSize(size.getWidth(), size.getHeight());
         mCameraModel.startPreview();
     }
@@ -149,10 +152,10 @@ public class AdjustCamera extends AppCompatActivity implements SurfaceHolder.Cal
             case R.id.fab_check:
                 switch (mCameraId) {
                     case Const.CAMERA_FRONT:
-//                        LocalStorageUtils.getInstance().setCameraFrontRotation(mCurrentOrientationDegree);
+                        LocalStorageUtils.getInstance(this).setCameraFrontRotation(mCurrentOrientationDegree);
                         break;
                     case Const.CAMERA_BACK:
-//                        LocalStorageUtils.getInstance().setCameraBackRotation(mCurrentOrientationDegree);
+                        LocalStorageUtils.getInstance(this).setCameraBackRotation(mCurrentOrientationDegree);
                         break;
                 }
                 break;
@@ -162,10 +165,10 @@ public class AdjustCamera extends AppCompatActivity implements SurfaceHolder.Cal
                 }
                 if (mCameraId == Const.CAMERA_BACK) {
                     mCameraId = Const.CAMERA_FRONT;
-//                    mCurrentOrientationDegree = LocalStorageUtils.getInstance().getCameraFrontRotation();
+                    mCurrentOrientationDegree = LocalStorageUtils.getInstance(this).getCameraFrontRotation();
                 } else {
                     mCameraId = Const.CAMERA_BACK;
-//                    mCurrentOrientationDegree = LocalStorageUtils.getInstance().getCameraBackRotation();
+                    mCurrentOrientationDegree = LocalStorageUtils.getInstance(this).getCameraBackRotation();
                 }
                 reOpenCamera();
                 break;
