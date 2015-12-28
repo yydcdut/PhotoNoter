@@ -1,7 +1,6 @@
 package com.yydcdut.note.mvp.v.setting.impl;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -104,8 +103,12 @@ public class AboutAppActivity extends BaseActivity implements IAboutAppView {
 
     @Override
     public void updateApk() {
-        Uri uri = Uri.parse("http://a.app.qq.com/o/simple.jsp?pkgname=com.yydcdut.note");
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        //http://www.wandoujia.com/apps/com.yydcdut.note
+        Intent intent = new Intent(this, WebViewActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString(Const.WEBVIEW_TITLE, getResources().getString(R.string.app_name));
+        bundle.putString(Const.WEBVIEW_URL, "http://a.app.qq.com/o/simple.jsp?pkgname=com.yydcdut.note");
+        intent.putExtras(bundle);
         startActivity(intent);
     }
 
