@@ -568,7 +568,8 @@ public class LocalStorageUtils {
      * @return
      */
     public boolean getCameraMirrorOpen() {
-        return mSharedPreferences.getBoolean(CAMERA_MIRROR_OPEN, CAMERA_MIRROR_OPEN_DEFAULT);
+//        return mSharedPreferences.getBoolean(CAMERA_MIRROR_OPEN, CAMERA_MIRROR_OPEN_DEFAULT);
+        return false;
     }
 
     /**

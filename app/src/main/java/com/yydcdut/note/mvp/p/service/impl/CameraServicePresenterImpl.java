@@ -16,7 +16,6 @@ import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.TimeDecoder;
 import com.yydcdut.note.utils.UiHelper;
-import com.yydcdut.note.utils.YLog;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -179,23 +178,19 @@ public class CameraServicePresenterImpl implements ICameraServicePresenter {
         }
     }
 
+    //todo isMirror不好做啊！
     private void setExif(PhotoNote photoNote, SandExif sandExif, String cameraId, boolean isMirror) throws IOException {
         ExifInterface exif = new ExifInterface(photoNote.getBigPhotoPathWithoutFile());
-        YLog.i("yuyidong", "cameraId--->" + cameraId);
         if (cameraId.equals(Const.CAMERA_BACK)) {
-            YLog.i("yuyidong", "TAG_ORIENTATION--->" + "90");
             exif.setAttribute(ExifInterface.TAG_ORIENTATION, String.valueOf(ExifInterface.ORIENTATION_ROTATE_90));
         } else {
             if (!isMirror) {
-                YLog.i("yuyidong", "TAG_ORIENTATION--->" + "270");
                 exif.setAttribute(ExifInterface.TAG_ORIENTATION, String.valueOf(ExifInterface.ORIENTATION_ROTATE_270));
             } else {
-                YLog.i("yuyidong", "TAG_ORIENTATION--->" + "270  270");
                 exif.setAttribute(ExifInterface.TAG_ORIENTATION, String.valueOf(ExifInterface.ORIENTATION_ROTATE_270
                         | ExifInterface.ORIENTATION_FLIP_HORIZONTAL));
             }
         }
-        exif.setAttribute(ExifInterface.TAG_ORIENTATION, String.valueOf(ExifInterface.ORIENTATION_ROTATE_90));
         exif.setAttribute(ExifInterface.TAG_GPS_LATITUDE, sandExif.getLatitude());
         exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE, sandExif.getLontitude());
         exif.setAttribute(ExifInterface.TAG_WHITE_BALANCE, String.valueOf(sandExif.getWhiteBalance()));
@@ -217,7 +212,6 @@ public class CameraServicePresenterImpl implements ICameraServicePresenter {
                         | ExifInterface.ORIENTATION_FLIP_HORIZONTAL));
             }
         }
-        exif2.setAttribute(ExifInterface.TAG_ORIENTATION, String.valueOf(ExifInterface.ORIENTATION_ROTATE_90));
         exif2.saveAttributes();
     }
 

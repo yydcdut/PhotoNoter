@@ -131,12 +131,13 @@ public class SettingPresenterImpl implements ISettingPresenter {
                 mSettingView.setCheckBoxState(ISettingPresenter.TAG_CAMERA_SAVE, !isSave);
                 break;
             case ISettingPresenter.TAG_CAMERA_MIRROR:
-                if (mLocalStorageUtils.getCameraSystem()) {
-                    break;
-                }
-                boolean open = mLocalStorageUtils.getCameraMirrorOpen();
-                mLocalStorageUtils.setCameraMirrorOpen(!open);
-                mSettingView.setCheckBoxState(ISettingPresenter.TAG_CAMERA_MIRROR, !open);
+//                if (mLocalStorageUtils.getCameraSystem()) {
+//                    break;
+//                }
+//                boolean open = mLocalStorageUtils.getCameraMirrorOpen();
+//                mLocalStorageUtils.setCameraMirrorOpen(!open);
+//                mSettingView.setCheckBoxState(ISettingPresenter.TAG_CAMERA_MIRROR, !open);
+                mSettingView.showSnackbar(mContext.getString(R.string.toast_not_support));
                 break;
             case ISettingPresenter.TAG_SYNC_AUTO:
             case ISettingPresenter.TAG_SYNC_WIFI:

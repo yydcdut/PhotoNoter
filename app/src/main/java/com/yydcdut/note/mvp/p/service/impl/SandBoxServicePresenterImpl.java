@@ -99,19 +99,14 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter, Ha
         System.gc();
     }
 
+    //todo isMirror不好做啊！
     private void setExif(PhotoNote photoNote, SandExif sandExif, String cameraId, boolean isMirror) throws IOException {
         ExifInterface exif = new ExifInterface(photoNote.getBigPhotoPathWithoutFile());
         if (cameraId.equals(Const.CAMERA_BACK)) {
             exif.setAttribute(ExifInterface.TAG_ORIENTATION, String.valueOf(ExifInterface.ORIENTATION_ROTATE_90));
         } else {
-            if (!isMirror) {
-                exif.setAttribute(ExifInterface.TAG_ORIENTATION, String.valueOf(ExifInterface.ORIENTATION_ROTATE_270));
-            } else {
-                exif.setAttribute(ExifInterface.TAG_ORIENTATION, String.valueOf(ExifInterface.ORIENTATION_ROTATE_270
-                        | ExifInterface.ORIENTATION_FLIP_HORIZONTAL));
-            }
+            exif.setAttribute(ExifInterface.TAG_ORIENTATION, String.valueOf(ExifInterface.ORIENTATION_ROTATE_270));
         }
-        exif.setAttribute(ExifInterface.TAG_ORIENTATION, String.valueOf(ExifInterface.ORIENTATION_ROTATE_90));
         exif.setAttribute(ExifInterface.TAG_GPS_LATITUDE, sandExif.getLatitude());
         exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE, sandExif.getLontitude());
         exif.setAttribute(ExifInterface.TAG_WHITE_BALANCE, String.valueOf(sandExif.getWhiteBalance()));
@@ -126,12 +121,7 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter, Ha
         if (cameraId.equals(Const.CAMERA_BACK)) {
             exif2.setAttribute(ExifInterface.TAG_ORIENTATION, String.valueOf(ExifInterface.ORIENTATION_ROTATE_90));
         } else {
-            if (!isMirror) {
-                exif2.setAttribute(ExifInterface.TAG_ORIENTATION, String.valueOf(ExifInterface.ORIENTATION_ROTATE_270));
-            } else {
-                exif2.setAttribute(ExifInterface.TAG_ORIENTATION, String.valueOf(ExifInterface.ORIENTATION_ROTATE_270
-                        | ExifInterface.ORIENTATION_FLIP_HORIZONTAL));
-            }
+            exif2.setAttribute(ExifInterface.TAG_ORIENTATION, String.valueOf(ExifInterface.ORIENTATION_ROTATE_270));
         }
         exif2.saveAttributes();
     }

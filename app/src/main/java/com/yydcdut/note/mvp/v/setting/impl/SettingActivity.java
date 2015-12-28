@@ -273,9 +273,9 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
         setData(viewMirror, R.drawable.ic_compare_gray_24dp, R.string.camera_mirror);
         initLocalData(viewMirror, mSettingPresenter.getCameraMirrorOpen());
         linearLayout.addView(viewMirror);
-        if (cameraNumbers < 2) {
+//        if (cameraNumbers < 2) {
             ((TextView) viewMirror.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
-        }
+//        }
 
         final View viewFix = getItemView();
         setClick(viewFix);
@@ -327,22 +327,22 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
 //            ((TextView) mViewMap.get(ISettingPresenter.TAG_CAMERA2).findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
             ((TextView) mViewMap.get(ISettingPresenter.TAG_CAMERA_SIZE).findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
             ((TextView) mViewMap.get(ISettingPresenter.TAG_CAMERA_SAVE).findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
-            ((TextView) mViewMap.get(ISettingPresenter.TAG_CAMERA_MIRROR).findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
+//            ((TextView) mViewMap.get(ISettingPresenter.TAG_CAMERA_MIRROR).findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
             ((TextView) mViewMap.get(ISettingPresenter.TAG_CAMERA_FIX).findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
         } else {
 //            ((TextView) mViewMap.get(ISettingPresenter.TAG_CAMERA2).findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_gray));
             ((TextView) mViewMap.get(ISettingPresenter.TAG_CAMERA_SIZE).findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_gray));
             ((TextView) mViewMap.get(ISettingPresenter.TAG_CAMERA_SAVE).findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_gray));
-            ((TextView) mViewMap.get(ISettingPresenter.TAG_CAMERA_MIRROR).findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_gray));
+//            ((TextView) mViewMap.get(ISettingPresenter.TAG_CAMERA_MIRROR).findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_gray));
             ((TextView) mViewMap.get(ISettingPresenter.TAG_CAMERA_FIX).findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_gray));
-            if (cameraNumbers < 2) {
-                ((TextView) mViewMap.get(ISettingPresenter.TAG_CAMERA_MIRROR).findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
-            }
+//            if (cameraNumbers < 2) {
+//                ((TextView) mViewMap.get(ISettingPresenter.TAG_CAMERA_MIRROR).findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
+//            }
         }
     }
 
     @Override
-    public void initSyncSetting(boolean sysnAuto, boolean wifi) {
+    public void initSyncSetting(boolean syncAuto, boolean wifi) {
         //cardView
         View cardView = LayoutInflater.from(this).inflate(R.layout.item_setting_card, null);
         LinearLayout linearLayout = (LinearLayout) cardView.findViewById(R.id.layout_setting_linear);
@@ -358,10 +358,10 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
         setClick(viewAuto);
         setTag(viewAuto, ISettingPresenter.TAG_SYNC_AUTO);
         setData(viewAuto, R.drawable.ic_cloud_circle_grey_24dp, R.string.sync_auto);
-        initLocalData(viewAuto, sysnAuto);
+        initLocalData(viewAuto, syncAuto);
         linearLayout.addView(viewAuto);
         TextView textView1 = (TextView) viewAuto.findViewById(R.id.txt_setting);
-        textView1.setTextColor(getResources().getColor(R.color.txt_alpha_gray));
+        textView1.setTextColor(AppCompat.getColor(R.color.txt_alpha_gray, this));
 
         View viewWifi = getItemCheckView();
         setClick(viewWifi);
@@ -371,7 +371,7 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
         cancelDivider(viewWifi);
         linearLayout.addView(viewWifi);
         TextView textView2 = (TextView) viewWifi.findViewById(R.id.txt_setting);
-        textView2.setTextColor(getResources().getColor(R.color.txt_alpha_gray));
+        textView2.setTextColor(AppCompat.getColor(R.color.txt_alpha_gray, this));
 
     }
 
