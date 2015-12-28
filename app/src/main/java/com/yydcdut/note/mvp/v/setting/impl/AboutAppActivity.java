@@ -2,6 +2,7 @@ package com.yydcdut.note.mvp.v.setting.impl;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,8 +15,10 @@ import com.yydcdut.note.injector.module.ActivityModule;
 import com.yydcdut.note.mvp.p.setting.IFeedbackPresenter;
 import com.yydcdut.note.mvp.p.setting.impl.AboutAppPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseActivity;
+import com.yydcdut.note.mvp.v.WebViewActivity;
 import com.yydcdut.note.mvp.v.setting.IAboutAppView;
 import com.yydcdut.note.utils.AppCompat;
+import com.yydcdut.note.utils.Const;
 
 import javax.inject.Inject;
 
@@ -124,8 +127,11 @@ public class AboutAppActivity extends BaseActivity implements IAboutAppView {
 
     @Override
     public void viewGitHub() {
-        Uri url = Uri.parse("https://github.com/yydcdut/PhotoNoter");
-        Intent intent = new Intent(Intent.ACTION_VIEW, url);
+        Intent intent = new Intent(this, WebViewActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString(Const.WEBVIEW_TITLE, "Github");
+        bundle.putString(Const.WEBVIEW_URL, "https://github.com/yydcdut/PhotoNoter");
+        intent.putExtras(bundle);
         startActivity(intent);
     }
 }

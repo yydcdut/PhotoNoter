@@ -144,4 +144,11 @@
         <item name="android:progressDrawable">@drawable/progress_bar_storage</item>
         <item name="android:minHeight">10.0dip</item>
     </style>
+
+    <style name="progressBarBlue" parent="@android:style/Widget.ProgressBar.Horizontal">
+        <item name="android:maxHeight">4.0dip</item>
+        <item name="android:indeterminateDrawable">@drawable/progress_bar_h5</item>
+        <item name="android:progressDrawable">@drawable/progress_bar_h5</item>
+        <item name="android:minHeight">4.0dip</item>
+    </style>
 </resources>

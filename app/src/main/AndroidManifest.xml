@@ -83,6 +83,10 @@
             android:name=".mvp.v.setting.impl.FeedbackActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.Blue"/>
+        <activity
+            android:name=".mvp.v.WebViewActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar.Blue"/>
 
         <service android:name=".service.InitService"/>
         <service

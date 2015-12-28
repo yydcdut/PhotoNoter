@@ -9,6 +9,9 @@ public interface Const {
     String CATEGORY_ID_4_PHOTNOTES = "categoryId4PhotoNotes";
     String COMPARATOR_FACTORY = "camparator";
     String USER_DETAIL_TYPE = "user_detail_type";
+
+    String WEBVIEW_URL = "webview_url";
+    String WEBVIEW_TITLE = "webview_title";
     /* 动画 */
     int DURATION = 1000;
     int DURATION_ACTIVITY = 2000;
