@@ -4,13 +4,14 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-    <include layout="@layout/layout_toolbar_light"/>
+    <include
+        layout="@layout/layout_toolbar_light"/>
 
     <WebView
         android:id="@+id/web"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar">
+        android:layout_below="@+id/appbar">
     </WebView>
 
     <ProgressBar
@@ -18,7 +19,6 @@
         style="@style/progressBarBlue"
         android:layout_width="match_parent"
         android:layout_height="4dp"
-        android:layout_below="@+id/toolbar"
+        android:layout_below="@+id/appbar"
         android:max="100"/>
-
 </RelativeLayout>

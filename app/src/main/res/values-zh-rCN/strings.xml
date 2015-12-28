@@ -196,7 +196,7 @@
     <string name="about_update">检查更新</string>
     <string name="about_share">推荐给好友</string>
     <string name="about_share_content">我正在使用 照片笔记 App，十分好用。下载：http://a.app.qq.com/o/simple.jsp?pkgname=com.yydcdut.note</string>
-    <string name="general"></string>
+    <string name="general">通用</string>
     <string name="detail_location">位置信息不可用</string>
 
     <!-- User Center-->
@@ -212,5 +212,10 @@
     <string name="uc_sanbox">沙盒照片数量</string>
     <string name="uc_notes">笔记数量</string>
     <string name="uc_words">总字数</string>
+    <string name="zoom_big">放大</string>
+    <string name="zoom_small">缩小</string>
+    <string name="refresh">刷新</string>
+    <string name="uc_no_sdcard">没有SD卡@</string>
+    <string name="copy_url">复制链接</string>
 
 </resources>

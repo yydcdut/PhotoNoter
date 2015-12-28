@@ -89,7 +89,10 @@
     <string name="backup">Update</string>
     <string name="effect">Effect</string>
     <string name="edit">Edit</string>
-
+    <string name="zoom_big">Zoom In</string>
+    <string name="zoom_small">Zoom Out</string>
+    <string name="refresh">Refresh</string>
+    <string name="copy_url">Copy Url</string>
 
     <!-- drawer -->
     <string name="drawer_open">Open drawer navigation</string>

@@ -1,7 +1,10 @@
 package com.yydcdut.note.mvp.v;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebSettings;
@@ -25,6 +28,8 @@ public class WebViewActivity extends BaseActivity {
     @Bind(R.id.pb_webview)
     ProgressBar mProgressBar;
 
+    private WebSettings mWebSettings;
+
     @Override
     public boolean setStatusBar() {
         return true;
@@ -45,10 +50,14 @@ public class WebViewActivity extends BaseActivity {
         ButterKnife.bind(this);
         Bundle bundle = getIntent().getExtras();
         initToolBarUI(bundle.getString(Const.WEBVIEW_TITLE));
-        WebSettings settings = mWebView.getSettings();
-        settings.setJavaScriptEnabled(true);
-        settings.setUseWideViewPort(true);
-        settings.setLoadWithOverviewMode(true);
+        mWebSettings = mWebView.getSettings();
+        mWebSettings.setJavaScriptEnabled(true);
+        mWebSettings.setUseWideViewPort(true);
+        mWebSettings.setSupportZoom(true);
+        mWebSettings.setBuiltInZoomControls(true);
+        mWebSettings.setDisplayZoomControls(false);
+        mWebSettings.setUseWideViewPort(true);
+        mWebSettings.setLoadWithOverviewMode(true);
         mWebView.setWebChromeClient(new WebChromeClient());
         mWebView.setWebViewClient(new WebViewClient());
         mWebView.loadUrl(bundle.getString(Const.WEBVIEW_URL));
@@ -60,6 +69,13 @@ public class WebViewActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         AppCompat.setElevation(toolbar, getResources().getDimension(R.dimen.ui_elevation));
+        toolbar.setOnMenuItemClickListener(onToolBarMenuItemClick);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_webview, menu);
+        return true;
     }
 
     @Override
@@ -71,6 +87,23 @@ public class WebViewActivity extends BaseActivity {
         }
         return true;
     }
+
+    private Toolbar.OnMenuItemClickListener onToolBarMenuItemClick = new Toolbar.OnMenuItemClickListener() {
+        @Override
+        public boolean onMenuItemClick(MenuItem menuItem) {
+            switch (menuItem.getItemId()) {
+                case R.id.menu_refresh:
+                    String url = mWebView.getUrl();
+                    mWebView.loadUrl(url);
+                    break;
+                case R.id.menu_copy_url:
+                    String url2 = mWebView.getUrl();
+                    copy2ClipBoard(url2);
+                    break;
+            }
+            return true;
+        }
+    };
 
     public class WebChromeClient extends android.webkit.WebChromeClient {
         @Override
@@ -103,5 +136,13 @@ public class WebViewActivity extends BaseActivity {
         } else {
             super.onBackPressed();
         }
+    }
+
+    private void copy2ClipBoard(String string) {
+        ClipboardManager cbm = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        ClipData.Item item = new ClipData.Item(string);
+        ClipData clipData = cbm.getPrimaryClip();
+        clipData.addItem(item);
+        cbm.setPrimaryClip(clipData);
     }
 }
