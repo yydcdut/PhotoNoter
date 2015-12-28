@@ -8,13 +8,6 @@ Material Design风格的开源照片笔记。
 
 - <a href="http://www.wandoujia.com/apps/com.yydcdut.note">豌豆荚</a>
 - <a href="http://android.myapp.com/myapp/detail.htm?apkName=com.yydcdut.note">应用宝</a>
-- <a href="http://app.flyme.cn/apps/public/detail?package_name=com.yydcdut.note">Flyme</a>
-- <a href="http://shouji.baidu.com/software/item?docid=8071412&from=as">百度</a>
-- <a href="http://apk.91.com/Soft/Android/com.yydcdut.note-6.html">91</a>
-- <a href="http://apk.hiapk.com/appinfo/com.yydcdut.note/6">安卓市场</a>
-- <a href="http://zhushou.360.cn/detail/index/soft_id/3135353?recrefer=SE_D_%E7%85%A7%E7%89%87%E7%AC%94%E8%AE%B0">360</a>
-
-如果发现bug或者有什么建议，**欢迎在issue里面讨论**！
 
 # 编译
 
