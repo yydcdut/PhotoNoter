@@ -288,17 +288,17 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
 //            ((TextView) cameraView.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
             ((TextView) viewSize.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
             ((TextView) viewSave.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
-            ((TextView) viewMirror.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
+//            ((TextView) viewMirror.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
             ((TextView) viewFix.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
         } else {
 //            ((TextView) cameraView.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_gray));
             ((TextView) viewSize.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_gray));
             ((TextView) viewSave.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_gray));
-            ((TextView) viewMirror.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_gray));
+//            ((TextView) viewMirror.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_gray));
             ((TextView) viewFix.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_gray));
-            if (mSettingPresenter.getCameraNumber() < 2) {
-                ((TextView) viewMirror.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
-            }
+//            if (mSettingPresenter.getCameraNumber() < 2) {
+//                ((TextView) viewMirror.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
+//            }
         }
 
         if (cameraNumbers == 0) {
