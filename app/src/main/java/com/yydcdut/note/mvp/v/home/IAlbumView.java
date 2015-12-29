@@ -38,4 +38,6 @@ public interface IAlbumView extends IView {
     void jump2CameraActivity(int categoryId);
 
     void jump2CameraSystemActivity();
+
+    void setToolBarTitle(String title);
 }

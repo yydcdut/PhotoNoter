@@ -35,6 +35,7 @@ import java.util.TreeMap;
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 
@@ -74,6 +75,15 @@ public class AlbumPresenterImpl implements IAlbumPresenter {
         mRxPhotoNote.findByCategoryId(mCategoryId, mAlbumSortKind)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(photoNoteList -> mAlbumView.setAdapter(photoNoteList));
+        changeTitle();
+    }
+
+    private void changeTitle() {
+        mRxCategory.getAllCategories()
+                .flatMap(categories -> Observable.from(categories))
+                .filter(category -> category.getId() == mCategoryId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(category1 -> mAlbumView.setToolBarTitle(category1.getLabel()));
     }
 
     @Override
@@ -157,6 +167,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter {
                 .subscribe(photoNoteList -> {
                     mAlbumView.updateData(photoNoteList);
                 });
+        changeTitle();
     }
 
     @Override

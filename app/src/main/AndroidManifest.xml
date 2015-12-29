@@ -14,7 +14,7 @@
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.Blue">
+            android:theme="@style/ThemeBlue">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -26,67 +26,67 @@
             android:launchMode="singleTask"
             android:process=":dex"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.Blue"/>
+            android:theme="@style/ThemeBlue"/>
 
         <activity
             android:name=".mvp.v.home.impl.IntroduceActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.Blue"/>
+            android:theme="@style/ThemeBlue"/>
         <activity
             android:name=".mvp.v.home.impl.HomeActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.Blue"/>
+            android:theme="@style/ThemeBlue"/>
         <activity
             android:name=".mvp.v.note.impl.DetailActivity"
             android:label=" "
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.Blue"/>
+            android:theme="@style/ThemeBlue"/>
         <activity
             android:name=".mvp.v.note.impl.EditTextActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.Blue"
+            android:theme="@style/ThemeBlue"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity
             android:name=".mvp.v.note.impl.ZoomActivity"
             android:label=" "
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.Blue"/>
+            android:theme="@style/ThemeBlue"/>
         <activity
             android:name=".mvp.v.login.impl.LoginActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.Blue"/>
+            android:theme="@style/ThemeBlue"/>
         <activity
             android:name=".mvp.v.login.impl.UserCenterActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.Blue"/>
+            android:theme="@style/ThemeBlue"/>
         <activity
             android:name=".mvp.v.setting.impl.SettingActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.Blue"/>
+            android:theme="@style/ThemeBlue"/>
         <activity
             android:name=".mvp.v.setting.impl.EditCategoryActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.Blue"/>
+            android:theme="@style/ThemeBlue"/>
         <activity
             android:name=".mvp.v.setting.impl.AboutAppActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.Blue"/>
+            android:theme="@style/ThemeBlue"/>
         <activity
             android:name=".camera.controller.AdjustCamera"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.Blue"/>
+            android:theme="@style/ThemeBlue"/>
         <activity
             android:name=".camera.controller.CameraActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.Blue"/>
+            android:theme="@style/ThemeBlue"/>
         <activity
             android:name=".mvp.v.setting.impl.FeedbackActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.Blue"/>
+            android:theme="@style/ThemeBlue"/>
         <activity
             android:name=".mvp.v.WebViewActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.Blue"/>
+            android:theme="@style/ThemeBlue"/>
 
         <service android:name=".service.InitService"/>
         <service

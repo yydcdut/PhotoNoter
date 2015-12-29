@@ -144,6 +144,9 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
     @Override
     public void initUI(View view) {
         ButterKnife.bind(this, view);
+        mGridLayoutManager = new GridLayoutManager(getContext(), mAlbumPresenter.calculateGridNumber());
+        mRecyclerView.setLayoutManager(mGridLayoutManager);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mAlbumPresenter.attachView(this);
         mLayoutRevealView = (RevealView) getActivity().findViewById(R.id.reveal_layout);
     }
@@ -563,9 +566,6 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
         int size = Evi.sScreenWidth / mAlbumPresenter.calculateGridNumber();
         mAdapter = new AlbumAdapter(getContext(), photoNoteList, size, this, this);
         mRecyclerView.setAdapter(mAdapter);
-        mGridLayoutManager = new GridLayoutManager(getContext(), mAlbumPresenter.calculateGridNumber());
-        mRecyclerView.setLayoutManager(mGridLayoutManager);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.addOnScrollListener(mScrollListener);
     }
 
@@ -656,6 +656,11 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
         Uri imageUri = Uri.fromFile(new File(FilePathUtils.getTempFilePath()));
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         startActivityForResult(intent, INTENT_REQUEST_CAMERA);
+    }
+
+    @Override
+    public void setToolBarTitle(String title) {
+        ((HomeActivity) getActivity()).changeTitle(title);
     }
 
     private RecyclerView.OnScrollListener mScrollListener = new RecyclerView.OnScrollListener() {

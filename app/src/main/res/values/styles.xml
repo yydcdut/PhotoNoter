@@ -6,17 +6,25 @@
         <item name="android:textColor">@color/fab_white</item>
     </style>
 
+    <!-- Application -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    </style>
+
+    <!-- Activity -->
+    <style name="Theme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowActionModeOverlay">true</item>
+    </style>
+
+    <style name="ActivityTheme" parent="Theme"></style>
+
+    <style name="OtherTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
-    </style>
+    <style name="OtherTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
-
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="OtherTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <style name="note.dialog" parent="Theme.AppCompat.Light.Dialog.Alert">
         <!--<item name="android:windowNoTitle">true</item>-->
@@ -25,15 +33,14 @@
         <!--<item name="android:editTextColor">@color/black</item>-->
     </style>
 
-    <style name="AppTheme.NoActionBar.Blue">
-        <item name="android:windowActionModeOverlay">true</item>
+    <style name="ThemeBlue" parent="ActivityTheme">
         <item name="colorPrimary">@color/blue_colorPrimary</item>
         <item name="colorPrimaryDark">@color/blue_colorPrimaryDark</item>
         <item name="colorAccent">@color/blue_colorPrimaryDark</item>
         <item name="colorControlHighlight">@color/blue_colorPrimary</item>
     </style>
 
-    <style name="AppTheme.NoActionBar.Indigo">
+    <style name="ThemeIndigo" parent="ActivityTheme">
         <item name="colorPrimary">@color/indigo_colorPrimary</item>
         <item name="colorPrimaryDark">@color/indigo_colorPrimaryDark</item>
         <item name="colorAccent">@color/indigo_colorPrimaryDark</item>
@@ -41,98 +48,100 @@
     </style>
 
 
-    <style name="AppTheme.NoActionBar.Cyan">
+    <style name="ThemeCyan">
         <item name="colorPrimary">@color/cyan_colorPrimary</item>
         <item name="colorPrimaryDark">@color/cyan_colorPrimaryDark</item>
         <item name="colorAccent">@color/cyan_colorPrimaryDark</item>
         <item name="colorControlHighlight">@color/cyan_colorPrimary</item>
     </style>
 
-    <style name="AppTheme.NoActionBar.Teal">
+    <style name="ThemeTeal">
+        <item name="android:windowActionModeOverlay">true</item>
         <item name="colorPrimary">@color/teal_colorPrimary</item>
         <item name="colorPrimaryDark">@color/teal_colorPrimaryDark</item>
         <item name="colorAccent">@color/teal_colorPrimaryDark</item>
         <item name="colorControlHighlight">@color/teal_colorPrimary</item>
     </style>
 
-    <style name="AppTheme.NoActionBar.Green">
+    <style name="ThemeGreen">
         <item name="colorPrimary">@color/green_colorPrimary</item>
         <item name="colorPrimaryDark">@color/green_colorPrimaryDark</item>
         <item name="colorAccent">@color/green_colorPrimaryDark</item>
         <item name="colorControlHighlight">@color/green_colorPrimary</item>
     </style>
 
-    <style name="AppTheme.NoActionBar.LightGreen">
+    <style name="ThemeLightGreen">
         <item name="colorPrimary">@color/light_green_colorPrimary</item>
         <item name="colorPrimaryDark">@color/light_green_colorPrimaryDark</item>
         <item name="colorAccent">@color/light_green_colorPrimaryDark</item>
         <item name="colorControlHighlight">@color/light_green_colorPrimary</item>
     </style>
 
-    <style name="AppTheme.NoActionBar.Lime">
+    <style name="ThemeLime">
         <item name="colorPrimary">@color/lime_colorPrimary</item>
         <item name="colorPrimaryDark">@color/lime_colorPrimaryDark</item>
         <item name="colorAccent">@color/lime_colorPrimaryDark</item>
         <item name="colorControlHighlight">@color/lime_colorPrimary</item>
     </style>
 
-    <style name="AppTheme.NoActionBar.Yellow">
+    <style name="ThemeYellow">
+        <item name="android:windowActionModeOverlay">true</item>
         <item name="colorPrimary">@color/yellow_colorPrimary</item>
         <item name="colorPrimaryDark">@color/yellow_colorPrimaryDark</item>
         <item name="colorAccent">@color/yellow_colorPrimaryDark</item>
         <item name="colorControlHighlight">@color/yellow_colorPrimary</item>
     </style>
 
-    <style name="AppTheme.NoActionBar.Amber">
+    <style name="ThemeAmber">
         <item name="colorPrimary">@color/amber_colorPrimary</item>
         <item name="colorPrimaryDark">@color/amber_colorPrimaryDark</item>
         <item name="colorAccent">@color/amber_colorPrimaryDark</item>
         <item name="colorControlHighlight">@color/amber_colorPrimary</item>
     </style>
 
-    <style name="AppTheme.NoActionBar.Orange">
+    <style name="ThemeOrange">
         <item name="colorPrimary">@color/orange_colorPrimary</item>
         <item name="colorPrimaryDark">@color/orange_colorPrimaryDark</item>
         <item name="colorAccent">@color/orange_colorPrimaryDark</item>
         <item name="colorControlHighlight">@color/orange_colorPrimary</item>
     </style>
 
-    <style name="AppTheme.NoActionBar.DeepOrange">
+    <style name="ThemeDeepOrange">
         <item name="colorPrimary">@color/deep_orange_colorPrimary</item>
         <item name="colorPrimaryDark">@color/deep_orange_colorPrimaryDark</item>
         <item name="colorAccent">@color/deep_orange_colorPrimaryDark</item>
         <item name="colorControlHighlight">@color/deep_orange_colorPrimary</item>
     </style>
 
-    <style name="AppTheme.NoActionBar.Red">
+    <style name="ThemeRed">
         <item name="colorPrimary">@color/red_colorPrimary</item>
         <item name="colorPrimaryDark">@color/red_colorPrimaryDark</item>
         <item name="colorAccent">@color/red_colorPrimaryDark</item>
         <item name="colorControlHighlight">@color/red_colorPrimary</item>
     </style>
 
-    <style name="AppTheme.NoActionBar.Purple">
+    <style name="ThemePurple">
         <item name="colorPrimary">@color/purple_colorPrimary</item>
         <item name="colorPrimaryDark">@color/purple_colorPrimaryDark</item>
         <item name="colorAccent">@color/purple_colorPrimaryDark</item>
         <item name="colorControlHighlight">@color/purple_colorPrimary</item>
     </style>
 
-    <style name="AppTheme.NoActionBar.Brown">
+    <style name="ThemeBrown">
         <item name="colorPrimary">@color/brown_colorPrimary</item>
         <item name="colorPrimaryDark">@color/brown_colorPrimaryDark</item>
         <item name="colorAccent">@color/brown_colorPrimaryDark</item>
         <item name="colorControlHighlight">@color/brown_colorPrimary</item>
     </style>
 
-    <style name="AppTheme.NoActionBar.Gray">
+    <style name="ThemeGray">
         <item name="colorPrimary">@color/gray_colorPrimary</item>
         <item name="colorPrimaryDark">@color/gray_colorPrimaryDark</item>
         <item name="colorAccent">@color/gray_colorPrimaryDark</item>
         <item name="colorControlHighlight">@color/gray_colorPrimary</item>
     </style>
 
-    <style name="AppTheme.NoActionBar.BlueGray">
+    <style name="ThemeBlueGray">
         <item name="colorPrimary">@color/blue_gray_colorPrimary</item>
         <item name="colorPrimaryDark">@color/blue_gray_colorPrimaryDark</item>
         <item name="colorAccent">@color/blue_gray_colorPrimaryDark</item>

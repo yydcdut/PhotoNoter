@@ -67,11 +67,13 @@ public class HomeActivity extends BaseActivity implements IHomeView, View.OnClic
     public ProgressBar mCloudUseProgress;
     /* Drawer */
     @Bind(R.id.lv_navigation)
-    public ListView mMenuListView;
+    ListView mMenuListView;
     @Bind(R.id.drawerLayout)
-    public DrawerLayout mDrawerLayout;
+    DrawerLayout mDrawerLayout;
     @Bind(R.id.relativeDrawer)
-    public FrameLayout mRelativeDrawer;//Fragment
+    FrameLayout mRelativeDrawer;//Fragment
+    @Bind(R.id.toolbar)
+    Toolbar mToolbar;
     @Inject
     HomePresenterImpl mHomePresenter;
 
@@ -115,8 +117,7 @@ public class HomeActivity extends BaseActivity implements IHomeView, View.OnClic
         mHomePresenter.attachView(this);
         mMenuListView.setOnItemClickListener(new DrawerItemClickListener());
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
@@ -129,9 +130,9 @@ public class HomeActivity extends BaseActivity implements IHomeView, View.OnClic
             }
 
         }
-        AppCompat.setElevation(toolbar, getResources().getDimension(R.dimen.ui_elevation));
+        AppCompat.setElevation(mToolbar, getResources().getDimension(R.dimen.ui_elevation));
 
-        mDrawerToggle = new ActionBarDrawerToggleCompat(this, mDrawerLayout, toolbar);
+        mDrawerToggle = new ActionBarDrawerToggleCompat(this, mDrawerLayout, mToolbar);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         createUserDefaultHeader();
@@ -142,11 +143,6 @@ public class HomeActivity extends BaseActivity implements IHomeView, View.OnClic
         mUserBackground.setImageDrawable(getResources().getDrawable(R.drawable.bg_user_background));
 
         mHomePresenter.setCheckCategoryPosition();
-    }
-
-    @Override
-    public void startActivityAnimation() {
-
     }
 
     /**
@@ -451,6 +447,11 @@ public class HomeActivity extends BaseActivity implements IHomeView, View.OnClic
     }
 
     public void changeCategoryAfterSaving(Category category) {
+        mToolbar.setTitle(category.getLabel());
         mHomePresenter.changeCategoryAfterSaving(category);
+    }
+
+    public void changeTitle(String title) {
+        mToolbar.setTitle(title);
     }
 }
