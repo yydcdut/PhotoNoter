@@ -21,7 +21,6 @@ import com.yydcdut.note.mvp.v.login.IUserDetailFragView;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.NetworkUtils;
-import com.yydcdut.note.utils.TimeDecoder;
 
 import java.text.DecimalFormat;
 
@@ -231,7 +230,7 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter {
     private String getUseAge() {
         long startTime = mLocalStorageUtils.getStartUsageTime();
         long now = System.currentTimeMillis();
-        return TimeDecoder.calculateDeltaTime(now, startTime) + " " + mContext.getResources().getString(R.string.uc_usage_age_unit);
+        return calculateDeltaTime(now, startTime) + " " + mContext.getResources().getString(R.string.uc_usage_age_unit);
     }
 
     private String getPhone() {
@@ -258,5 +257,15 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter {
         }
     }
 
-
+    /**
+     * 与类关系不大，那么用static的速度要快那么几毫秒
+     *
+     * @param now
+     * @param before
+     * @return
+     */
+    private static String calculateDeltaTime(long now, long before) {
+        long delta = (now - before) / 1000 / 60 / 60 / 24;
+        return (delta + 1) + "";
+    }
 }

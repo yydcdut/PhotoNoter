@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -139,6 +140,9 @@ public class WebViewActivity extends BaseActivity {
     }
 
     private void copy2ClipBoard(String string) {
+        if (TextUtils.isEmpty(string)) {
+            return;
+        }
         ClipboardManager cbm = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
         ClipData.Item item = new ClipData.Item(string);
         ClipData clipData = cbm.getPrimaryClip();

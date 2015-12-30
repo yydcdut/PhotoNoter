@@ -16,8 +16,7 @@ import com.yydcdut.note.mvp.p.service.ISandBoxServicePresenter;
 import com.yydcdut.note.mvp.v.service.ISandBoxServiceView;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
-import com.yydcdut.note.utils.TimeDecoder;
-import com.yydcdut.note.utils.UiHelper;
+import com.yydcdut.note.utils.Utils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -79,13 +78,13 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter, Ha
             return;
         }
         Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-        String fileName = TimeDecoder.getTime4Photo(sandPhoto.getTime()) + ".jpg";
+        String fileName = getTime4Photo(sandPhoto.getTime()) + ".jpg";
         if (FilePathUtils.savePhoto(fileName, bitmap)) {
             FilePathUtils.saveSmallPhoto(fileName, bitmap);
         }
         PhotoNote photoNote = new PhotoNote(fileName, sandPhoto.getTime(), sandPhoto.getTime(), "", "",
                 sandPhoto.getTime(), sandPhoto.getTime(), sandPhoto.getCategoryId());
-        photoNote.setPaletteColor(UiHelper.getPaletteColor(bitmap));
+        photoNote.setPaletteColor(Utils.getPaletteColor(bitmap));
         mRxPhotoNote.savePhotoNote(photoNote)
                 .subscribe(photoNote1 -> {
                     try {
@@ -188,5 +187,18 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter, Ha
         mSandBoxServiceView.stopService();
         mSandBoxServiceView.killProgress();
         return false;
+    }
+
+    /**
+     * 通过时间戳给出固定格式的照片名字
+     *
+     * @param time
+     * @return
+     */
+    private static String getTime4Photo(long time) {
+        String s;
+        java.text.DateFormat format1 = new java.text.SimpleDateFormat("yyyyMMddhhmmss");
+        s = format1.format(time);
+        return s;
     }
 }

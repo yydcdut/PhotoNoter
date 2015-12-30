@@ -29,7 +29,7 @@ import com.yydcdut.note.mvp.p.note.impl.EditTextPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.note.IEditTextView;
 import com.yydcdut.note.utils.Const;
-import com.yydcdut.note.utils.Evi;
+import com.yydcdut.note.utils.Utils;
 import com.yydcdut.note.view.CircleProgressBarLayout;
 import com.yydcdut.note.view.KeyBoardResizeFrameLayout;
 import com.yydcdut.note.view.RevealView;
@@ -280,7 +280,7 @@ public class EditTextActivity extends BaseActivity implements IEditTextView, Vie
     @Override
     public void finishActivityWithAnimation(final boolean saved, final int categoryId, final int position, final int comparator) {
         int actionBarHeight = getActionBarSize();
-        int screenHeight = Evi.sScreenHeight;
+        int screenHeight = Utils.sScreenHeight;
         int contentEditHeight = screenHeight - actionBarHeight * 2;
         AnimatorSet animation = new AnimatorSet();
         animation.setDuration(Const.DURATION_ACTIVITY);

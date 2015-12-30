@@ -15,11 +15,10 @@ import com.yydcdut.note.model.rx.RxCategory;
 import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.service.IInitServicePresenter;
-import com.yydcdut.note.utils.Evi;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.LocalStorageUtils;
-import com.yydcdut.note.utils.UiHelper;
+import com.yydcdut.note.utils.Utils;
 
 import org.json.JSONException;
 
@@ -57,7 +56,7 @@ public class InitServicePresenterImpl implements IInitServicePresenter {
         mRxPhotoNote = rxPhotoNote;
         mLocalStorageUtils = localStorageUtils;
         initLooper();
-        int screenWidth = Evi.sScreenWidth;
+        int screenWidth = Utils.sScreenWidth;
         int num = 2;
         if (screenWidth <= 480) {
             num = 2;
@@ -263,7 +262,7 @@ public class InitServicePresenterImpl implements IInitServicePresenter {
                 for (int i = 0; i < outFileName.length; i++) {
                     PhotoNote photoNote = new PhotoNote(outFileName[i], System.currentTimeMillis(), System.currentTimeMillis(),
                             titles[i], contents[i], System.currentTimeMillis(), System.currentTimeMillis(), (int) mCategoryId);
-                    photoNote.setPaletteColor(UiHelper.getPaletteColor(ImageLoaderManager.loadImageSync(photoNote.getBigPhotoPathWithFile())));
+                    photoNote.setPaletteColor(Utils.getPaletteColor(ImageLoaderManager.loadImageSync(photoNote.getBigPhotoPathWithFile())));
                     arrayList.add(photoNote);
                 }
                 mRxPhotoNote.savePhotoNotes(arrayList)

@@ -24,7 +24,7 @@ import com.yydcdut.note.mvp.v.home.IAlbumView;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.LocalStorageUtils;
-import com.yydcdut.note.utils.UiHelper;
+import com.yydcdut.note.utils.Utils;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -306,7 +306,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    photoNote1.setPaletteColor(UiHelper.getPaletteColor(ImageLoaderManager.loadImageSync(photoNote.getBigPhotoPathWithFile())));
+                    photoNote1.setPaletteColor(Utils.getPaletteColor(ImageLoaderManager.loadImageSync(photoNote.getBigPhotoPathWithFile())));
                     mRxPhotoNote.updatePhotoNote(photoNote1).subscribe();
                     return photoNote1;
                 })
@@ -356,7 +356,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    photoNote1.setPaletteColor(UiHelper.getPaletteColor(ImageLoaderManager.loadImageSync(photoNote.getBigPhotoPathWithFile())));
+                    photoNote1.setPaletteColor(Utils.getPaletteColor(ImageLoaderManager.loadImageSync(photoNote.getBigPhotoPathWithFile())));
                     mRxPhotoNote.updatePhotoNote(photoNote1).subscribe();
                     return photoNote1;
                 })

@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.yydcdut.note.R;
-import com.yydcdut.note.utils.Evi;
+import com.yydcdut.note.utils.Utils;
 
 /**
  * Created by yuyidong on 15/10/23.
@@ -32,7 +32,7 @@ public class UserCenterArrowView extends View {
     public UserCenterArrowView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mWidth = context.getResources().getDimension(R.dimen.dimen_24dip);
-        mScreenWidth = Evi.sScreenWidth;
+        mScreenWidth = Utils.sScreenWidth;
     }
 
     @Override

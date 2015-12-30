@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
-import com.yydcdut.note.utils.UiHelper;
+import com.yydcdut.note.utils.AppCompat;
 
 public class RevealColorView extends ViewGroup {
 
@@ -59,7 +59,7 @@ public class RevealColorView extends ViewGroup {
         //那个圆
         circle = new ShapeDrawable(new OvalShape());
         //设置background进去
-        UiHelper.setBackground(inkView, circle);
+        AppCompat.setBackgroundDrawable(inkView, circle);
         //隐藏
         inkView.setVisibility(View.INVISIBLE);
     }

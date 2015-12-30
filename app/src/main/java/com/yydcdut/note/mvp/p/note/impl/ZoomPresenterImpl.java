@@ -15,7 +15,7 @@ import com.yydcdut.note.mvp.v.note.IZoomView;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
-import com.yydcdut.note.utils.UiHelper;
+import com.yydcdut.note.utils.Utils;
 
 import javax.inject.Inject;
 
@@ -105,7 +105,7 @@ public class ZoomPresenterImpl implements IZoomPresenter {
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(photoNote -> {
                     FilePathUtils.saveSmallPhotoFromSDK(photoNote.getPhotoName(), thumbNail);
-                    photoNote.setPaletteColor(UiHelper.getPaletteColor(ImageLoaderManager.loadImageSync(photoNote.getBigPhotoPathWithFile())));
+                    photoNote.setPaletteColor(Utils.getPaletteColor(ImageLoaderManager.loadImageSync(photoNote.getBigPhotoPathWithFile())));
                     mRxPhotoNote.updatePhotoNote(photoNote)
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(photoNoteList -> {

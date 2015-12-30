@@ -45,8 +45,8 @@ import com.yydcdut.note.mvp.v.note.impl.DetailActivity;
 import com.yydcdut.note.mvp.v.setting.impl.SettingActivity;
 import com.yydcdut.note.service.SandBoxService;
 import com.yydcdut.note.utils.Const;
-import com.yydcdut.note.utils.Evi;
 import com.yydcdut.note.utils.FilePathUtils;
+import com.yydcdut.note.utils.Utils;
 import com.yydcdut.note.view.CircleProgressBarLayout;
 import com.yydcdut.note.view.RevealView;
 import com.yydcdut.note.view.fab.FloatingActionsMenu;
@@ -430,7 +430,7 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
      * @param listener
      */
     private void showLayoutRevealColorView(RevealView.RevealAnimationListener listener) {
-        mLayoutRevealView.reveal(Evi.sScreenWidth, getActionBarSize(), getThemeColor(), Const.RADIUS, Const.DURATION, listener);
+        mLayoutRevealView.reveal(Utils.sScreenWidth, getActionBarSize(), getThemeColor(), Const.RADIUS, Const.DURATION, listener);
         mIsLayoutRevealOpen = true;
     }
 
@@ -563,7 +563,7 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
 
     @Override
     public void setAdapter(List<PhotoNote> photoNoteList) {
-        int size = Evi.sScreenWidth / mAlbumPresenter.calculateGridNumber();
+        int size = Utils.sScreenWidth / mAlbumPresenter.calculateGridNumber();
         mAdapter = new AlbumAdapter(getContext(), photoNoteList, size, this, this);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addOnScrollListener(mScrollListener);

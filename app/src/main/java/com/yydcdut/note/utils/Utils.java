@@ -1,29 +1,24 @@
 package com.yydcdut.note.utils;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.support.v7.graphics.Palette;
-import android.view.View;
 
-public class UiHelper {
+public class Utils {
 
-    @SuppressWarnings("deprecation")
-    public static void setBackground(View view, Drawable d) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            view.setBackground(d);
-        } else {
-            view.setBackgroundDrawable(d);
-        }
-    }
+    /**
+     * 屏幕宽度
+     */
+    public static int sScreenWidth;
+    /**
+     * 屏幕高度
+     */
+    public static int sScreenHeight;
 
-    public static void postInvalidateOnAnimation(View view) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            view.postInvalidateOnAnimation();
-        } else {
-            view.invalidate();
-        }
+    public static void init(Context context) {
+        sScreenWidth = context.getResources().getDisplayMetrics().widthPixels;
+        sScreenHeight = context.getResources().getDisplayMetrics().heightPixels;
     }
 
     public static int getPaletteColor(Bitmap bitmap) {
