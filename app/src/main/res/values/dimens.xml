@@ -95,8 +95,8 @@
     <dimen name="navigation_setting_image">30dip</dimen>
     <dimen name="navigation_setting_height">45dip</dimen>
 
-    <dimen name="focus_length_max">100dip</dimen>
-    <dimen name="focus_length_min">75dip</dimen>
+    <dimen name="focus_length_max">75dip</dimen>
+    <dimen name="focus_length_min">50dip</dimen>
 
     <!-- CardView -->
     <dimen name="card_corner">3dip</dimen>

@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.yydcdut.note.R;
+import com.yydcdut.note.camera.utils.ColorUtils;
 import com.yydcdut.note.camera.view.callback.OnLayoutItemClickListener;
 import com.yydcdut.note.utils.Const;
 
@@ -121,12 +122,12 @@ public class MenuLayout extends RelativeLayout implements OnLayoutItemClickListe
 
     public void setRatio11() {
         mCoverView.setVisibility(VISIBLE);
-        setBg(getResources().getColor(android.R.color.white));
+        setBg(ColorUtils.getDarkPrimaryColor(getContext()));
     }
 
     public void setRatio43() {
         mCoverView.setVisibility(GONE);
-        setBg(getResources().getColor(android.R.color.white));
+        setBg(ColorUtils.getDarkPrimaryColor(getContext()));
     }
 
     public void setRatioFull() {

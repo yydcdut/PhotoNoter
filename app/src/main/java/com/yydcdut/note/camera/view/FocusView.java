@@ -2,7 +2,6 @@ package com.yydcdut.note.camera.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.Handler;
@@ -13,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.yydcdut.note.R;
+import com.yydcdut.note.camera.utils.ColorUtils;
 
 /**
  * Created by yuyidong on 15/8/27.
@@ -68,9 +68,10 @@ public class FocusView extends View {
         super(context, attrs, defStyleAttr);
         initLooper();
         mPaint = new Paint();
-        mPaint.setColor(Color.YELLOW);
+        mPaint.setColor(ColorUtils.getPrimaryColor(getContext()));
         mPaint.setStrokeWidth(3.5f);
         mPaint.setStyle(Paint.Style.STROKE);
+        mPaint.setAntiAlias(true);
     }
 
     private void initLooper() {
@@ -118,21 +119,21 @@ public class FocusView extends View {
 
     private void drawRect(Canvas canvas) {
         //x
-        canvas.drawLine(mX - 20, mY - 20, mX - 10, mY - 20, mPaint);
-        canvas.drawLine(mX + 10, mY - 20, mX + 20, mY - 20, mPaint);
-        canvas.drawLine(mX - 20, mY + 20, mX - 10, mY + 20, mPaint);
-        canvas.drawLine(mX + 10, mY + 20, mX + 20, mY + 20, mPaint);
+        canvas.drawLine(mX - 10, mY - 10, mX - 5, mY - 10, mPaint);
+        canvas.drawLine(mX + 5, mY - 10, mX + 10, mY - 10, mPaint);
+        canvas.drawLine(mX - 10, mY + 10, mX - 5, mY + 10, mPaint);
+        canvas.drawLine(mX + 5, mY + 10, mX + 10, mY + 10, mPaint);
         //y
-        canvas.drawLine(mX - 20, mY - 20, mX - 20, mY - 10, mPaint);
-        canvas.drawLine(mX - 20, mY + 10, mX - 20, mY + 20, mPaint);
-        canvas.drawLine(mX + 20, mY - 20, mX + 20, mY - 10, mPaint);
-        canvas.drawLine(mX + 20, mY + 10, mX + 20, mY + 20, mPaint);
+        canvas.drawLine(mX - 10, mY - 10, mX - 10, mY - 5, mPaint);
+        canvas.drawLine(mX - 10, mY + 5, mX - 10, mY + 10, mPaint);
+        canvas.drawLine(mX + 10, mY - 10, mX + 10, mY - 5, mPaint);
+        canvas.drawLine(mX + 10, mY + 5, mX + 10, mY + 10, mPaint);
         //x
-        canvas.drawLine(mX - mLength / 2, mY, mX - mLength / 2 + 10, mY, mPaint);
-        canvas.drawLine(mX + mLength / 2 - 10, mY, mX + mLength / 2, mY, mPaint);
+        canvas.drawLine(mX - mLength / 2, mY, mX - mLength / 2 + 5, mY, mPaint);
+        canvas.drawLine(mX + mLength / 2 - 5, mY, mX + mLength / 2, mY, mPaint);
         //y
-        canvas.drawLine(mX, mY - mLength / 2, mX, mY - mLength / 2 + 10, mPaint);
-        canvas.drawLine(mX, mY + mLength / 2 - 10, mX, mY + mLength / 2, mPaint);
+        canvas.drawLine(mX, mY - mLength / 2, mX, mY - mLength / 2 + 5, mPaint);
+        canvas.drawLine(mX, mY + mLength / 2 - 5, mX, mY + mLength / 2, mPaint);
     }
 
     /**
@@ -143,7 +144,7 @@ public class FocusView extends View {
             return;
         }
         this.setVisibility(VISIBLE);
-        mPaint.setColor(Color.GREEN);
+        mPaint.setColor(ColorUtils.getDarkPrimaryColor(getContext()));
         invalidate();
         mHandler.sendEmptyMessageDelayed(IMAGE_DISAPPEAR_GOOD, 400);
     }
@@ -188,7 +189,7 @@ public class FocusView extends View {
         if (mHandler.hasMessages(IMAGE_DISAPPEAR) || mHandler.hasMessages(IMAGE_DISAPPEAR_GOOD)) {
             return false;
         }
-        mPaint.setColor(Color.YELLOW);
+        mPaint.setColor(ColorUtils.getPrimaryColor(getContext()));
         this.setVisibility(VISIBLE);
         mLength = getContext().getResources().getDimension(R.dimen.focus_length_min);
         mActionState = MotionEvent.ACTION_UP;
@@ -272,4 +273,6 @@ public class FocusView extends View {
     public interface OnTriggerFocusListener {
         void onTriggerFocus(float x, float y);
     }
+
+
 }
