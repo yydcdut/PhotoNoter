@@ -15,9 +15,7 @@ import com.umeng.analytics.MobclickAgent;
 import com.yydcdut.note.injector.component.ApplicationComponent;
 import com.yydcdut.note.injector.component.DaggerApplicationComponent;
 import com.yydcdut.note.injector.module.ApplicationModule;
-import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
-import com.yydcdut.note.utils.Utils;
 import com.yydcdut.note.utils.YLog;
 
 import java.io.File;
@@ -57,8 +55,6 @@ public class NoteApplication extends Application {
         initComponent();
 
         initImageLoader();
-        FilePathUtils.initEnvironment(this);
-        Utils.init(this);
         PGEditImageLoader.initImageLoader(this);
 
         //打点

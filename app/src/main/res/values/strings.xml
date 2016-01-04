@@ -218,4 +218,7 @@
     <string name="uc_sanbox">SandBox Images</string>
     <string name="uc_notes">Notes</string>
     <string name="uc_words">Words</string>
+
+    <!-- Permission -->
+    <string name="permission_title">Permission</string>
 </resources>

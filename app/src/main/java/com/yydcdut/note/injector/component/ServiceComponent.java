@@ -10,7 +10,6 @@ import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.model.rx.RxSandBox;
 import com.yydcdut.note.service.CameraService;
 import com.yydcdut.note.service.CheckService;
-import com.yydcdut.note.service.InitService;
 import com.yydcdut.note.service.SandBoxService;
 import com.yydcdut.note.utils.LocalStorageUtils;
 
@@ -36,8 +35,6 @@ public interface ServiceComponent {
     RxSandBox getRxSandBox();
 
     LocalStorageUtils getLocalStorageUtils();
-
-    void inject(InitService initService);
 
     void inject(CameraService cameraService);
 

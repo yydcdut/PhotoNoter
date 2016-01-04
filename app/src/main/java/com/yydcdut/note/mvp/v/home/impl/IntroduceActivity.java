@@ -1,8 +1,6 @@
 package com.yydcdut.note.mvp.v.home.impl;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,7 +13,6 @@ import com.yydcdut.note.adapter.IntroducePagerAdapter;
 import com.yydcdut.note.mvp.p.home.impl.IntroducePresenterImpl;
 import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.home.IIntroduceView;
-import com.yydcdut.note.service.InitService;
 import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.view.CircleProgressBarLayout;
 
@@ -139,19 +136,8 @@ public class IntroduceActivity extends BaseActivity implements IIntroduceView {
     }
 
     @OnClick(R.id.btn_introduce_start)
-    public void clickfinishActivity(View v) {
+    public void click2FinishActivity(View v) {
         mIntroducePresenter.wannaFinish();
-    }
-
-    @Override
-    public void bindServiceConnection(ServiceConnection serviceConnect) {
-        Intent initIntent = new Intent(this, InitService.class);
-        bindService(initIntent, serviceConnect, Context.BIND_AUTO_CREATE);
-    }
-
-    @Override
-    public void unbindServiceConnection(ServiceConnection serviceConnect) {
-        unbindService(serviceConnect);
     }
 
     @Override

@@ -61,6 +61,37 @@ public class HomePresenterImpl implements IHomePresenter {
     }
 
     private void initBaiduSdk() {
+        /**
+         * 01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err: java.lang.SecurityException: getSubscriberId: Neither user 10067 nor current process has android.permission.READ_PHONE_STATE.
+         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at android.os.Parcel.readException(Parcel.java:1599)
+         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at android.os.Parcel.readException(Parcel.java:1552)
+         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at com.android.internal.telephony.IPhoneSubInfo$Stub$Proxy.getSubscriberIdForSubscriber(IPhoneSubInfo.java:557)
+         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at android.telephony.TelephonyManager.getSubscriberId(TelephonyManager.java:2003)
+         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at android.telephony.TelephonyManager.getSubscriberId(TelephonyManager.java:1984)
+         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at com.baidu.platform.comapi.util.f.e(Unknown Source)
+         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at com.baidu.platform.comapi.util.f.b(Unknown Source)
+         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at com.baidu.platform.comapi.a.c(Unknown Source)
+         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at com.baidu.platform.comapi.c.a(Unknown Source)
+         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at com.baidu.mapapi.SDKInitializer.initialize(Unknown Source)
+         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at com.baidu.mapapi.SDKInitializer.initialize(Unknown Source)
+         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at com.yydcdut.note.mvp.p.home.impl.HomePresenterImpl.initBaiduSdk(HomePresenterImpl.java:64)
+         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at com.yydcdut.note.mvp.p.home.impl.HomePresenterImpl.attachView(HomePresenterImpl.java:60)
+         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at com.yydcdut.note.mvp.v.home.impl.HomeActivity.initUiAndListener(HomeActivity.java:114)
+         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at com.yydcdut.note.mvp.v.BaseActivity.onCreate(BaseActivity.java:137)
+         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at com.yydcdut.note.mvp.v.home.impl.HomeActivity.onCreate(HomeActivity.java:101)
+         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at android.app.Activity.performCreate(Activity.java:6237)
+         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at android.app.Instrumentation.callActivityOnCreate(Instrumentation.java:1107)
+         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:2369)
+         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:2476)
+         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at android.app.ActivityThread.-wrap11(ActivityThread.java)
+         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1344)
+         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at android.os.Handler.dispatchMessage(Handler.java:102)
+         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at android.os.Looper.loop(Looper.java:148)
+         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at android.app.ActivityThread.main(ActivityThread.java:5417)
+         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at java.lang.reflect.Method.invoke(Native Method)
+         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:726)
+
+         */
         SDKInitializer.initialize(mActivity.getApplication());
     }
 

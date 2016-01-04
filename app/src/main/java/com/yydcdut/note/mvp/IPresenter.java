@@ -1,5 +1,7 @@
 package com.yydcdut.note.mvp;
 
+import android.support.annotation.NonNull;
+
 /**
  * Created by yuyidong on 15/11/13.
  */
@@ -18,15 +20,10 @@ public interface IPresenter {
      *
      * @param iView
      */
-    void attachView(IView iView);
+    void attachView(@NonNull IView iView);
 
     /**
      * 释放资源
      */
     void detachView();
-
-    /**
-     * 权限的回调
-     */
-//    void goPermission();
 }

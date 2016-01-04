@@ -1,9 +1,11 @@
 package com.yydcdut.note.mvp.p.home.impl;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.rx.RxSandBox;
@@ -13,8 +15,12 @@ import com.yydcdut.note.mvp.v.home.ISplashView;
 import com.yydcdut.note.service.CheckService;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.LocalStorageUtils;
+import com.yydcdut.note.utils.PermissionUtils;
+import com.yydcdut.note.utils.Utils;
+import com.yydcdut.note.utils.permission.Permission;
 
 import java.io.File;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -25,7 +31,8 @@ import rx.schedulers.Schedulers;
 /**
  * Created by yuyidong on 15/11/18.
  */
-public class SplashPresenterImpl implements ISplashPresenter, Handler.Callback {
+public class SplashPresenterImpl implements ISplashPresenter, Handler.Callback,
+        PermissionUtils.OnPermissionCallBacks {
     private ISplashView mSplashView;
 
     private Handler mHandler;
@@ -34,12 +41,15 @@ public class SplashPresenterImpl implements ISplashPresenter, Handler.Callback {
 
     private LocalStorageUtils mLocalStorageUtils;
     private RxSandBox mRxSandBox;
+    private Activity mActivity;
 
     private Context mContext;
 
     @Inject
-    public SplashPresenterImpl(@ContextLife("Activity") Context context, LocalStorageUtils localStorageUtils, RxSandBox rxSandBox) {
+    public SplashPresenterImpl(@ContextLife("Activity") Context context, Activity activity,
+                               LocalStorageUtils localStorageUtils, RxSandBox rxSandBox) {
         mLocalStorageUtils = localStorageUtils;
+        mActivity = activity;
         mRxSandBox = rxSandBox;
         mContext = context;
     }
@@ -47,9 +57,10 @@ public class SplashPresenterImpl implements ISplashPresenter, Handler.Callback {
     @Override
     public void attachView(IView iView) {
         mSplashView = (ISplashView) iView;
+        Utils.init(mContext);
+        initFiles();
         checkDisks();
     }
-
 
     @Override
     public void onActivityStart() {
@@ -125,5 +136,28 @@ public class SplashPresenterImpl implements ISplashPresenter, Handler.Callback {
                                 });
                     });
         }
+    }
+
+    @Permission(PermissionUtils.CODE_STORAGE)
+    private void initFiles() {
+        if (PermissionUtils.hasPermission4Storage(mContext)) {
+
+        } else {
+            PermissionUtils.requestPermissions(mActivity, "", PermissionUtils.PERMISSION_STORAGE,
+                    PermissionUtils.CODE_STORAGE, null);
+        }
+
+    }
+
+    @Override
+    public void onPermissionsGranted(List<String> permissions) {
+    }
+
+    @Override
+    public void onPermissionsDenied(List<String> permissions) {
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     }
 }

@@ -21,6 +21,7 @@ import com.yydcdut.note.mvp.IPresenter;
 import com.yydcdut.note.mvp.p.ThemePresenter;
 import com.yydcdut.note.utils.ActivityCollector;
 import com.yydcdut.note.utils.AppCompat;
+import com.yydcdut.note.utils.PermissionUtils;
 import com.yydcdut.note.utils.ThemeHelper;
 
 import java.lang.reflect.Field;
@@ -41,6 +42,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IThemeVi
     public static final int REQUEST_NOTHING = 1;
 
     private ThemePresenter mThemePresenter;
+    //不能为null
     protected IPresenter mIPresenter;
 
     @Override
@@ -212,9 +214,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IThemeVi
     protected void onDestroy() {
         super.onDestroy();
         ActivityCollector.removeActivity(this);
-        if (mIPresenter != null) {
-            mIPresenter.detachView();
-        }
+        mIPresenter.detachView();
     }
 
     @Override
@@ -232,6 +232,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IThemeVi
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        mIPresenter.goPermission();
+        PermissionUtils.permissionResult(mIPresenter, permissions, grantResults, requestCode);
     }
 }
