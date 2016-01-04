@@ -50,6 +50,7 @@ public class SplashActivity extends BaseActivity implements ISplashView {
 
     @Override
     public void initInjector() {
+        mIPresenter = mSplashPresenter;
     }
 
     @Override

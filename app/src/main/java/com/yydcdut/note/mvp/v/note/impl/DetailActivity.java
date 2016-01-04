@@ -15,12 +15,9 @@ import android.widget.TextView;
 
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.MapView;
-import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.DetailPagerAdapter;
 import com.yydcdut.note.bean.PhotoNote;
-import com.yydcdut.note.injector.component.DaggerActivityComponent;
-import com.yydcdut.note.injector.module.ActivityModule;
 import com.yydcdut.note.mvp.p.note.impl.DetailPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.note.IDetailView;
@@ -116,11 +113,8 @@ public class DetailActivity extends BaseActivity implements IDetailView,
 
     @Override
     public void initInjector() {
-        mActivityComponent = DaggerActivityComponent.builder()
-                .activityModule(new ActivityModule(this))
-                .applicationComponent(((NoteApplication) getApplication()).getApplicationComponent())
-                .build();
         mActivityComponent.inject(this);
+        mIPresenter = mDetailPresenter;
     }
 
     @Override

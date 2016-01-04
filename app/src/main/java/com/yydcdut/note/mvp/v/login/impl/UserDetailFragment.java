@@ -10,12 +10,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.FrequentImageAdapter;
 import com.yydcdut.note.bean.PhotoNote;
-import com.yydcdut.note.injector.component.DaggerFragmentComponent;
-import com.yydcdut.note.injector.module.FragmentModule;
 import com.yydcdut.note.mvp.p.login.impl.UserDetailFragPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseFragment;
 import com.yydcdut.note.mvp.v.login.IUserDetailFragView;
@@ -62,11 +59,8 @@ public class UserDetailFragment extends BaseFragment implements IUserDetailFragV
 
     @Override
     public void initInjector() {
-        mFragmentComponent = DaggerFragmentComponent.builder()
-                .fragmentModule(new FragmentModule(this))
-                .applicationComponent(((NoteApplication) getActivity().getApplication()).getApplicationComponent())
-                .build();
         mFragmentComponent.inject(this);
+        mIPresenter = mUserDetailFragPresenter;
     }
 
     @Override

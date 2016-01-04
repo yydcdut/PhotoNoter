@@ -19,12 +19,9 @@ import android.widget.TextView;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
-import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.camera.controller.AdjustCamera;
 import com.yydcdut.note.camera.param.Size;
-import com.yydcdut.note.injector.component.DaggerActivityComponent;
-import com.yydcdut.note.injector.module.ActivityModule;
 import com.yydcdut.note.mvp.p.setting.IFeedbackPresenter;
 import com.yydcdut.note.mvp.p.setting.ISettingPresenter;
 import com.yydcdut.note.mvp.p.setting.impl.SettingPresenterImpl;
@@ -83,11 +80,8 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
 
     @Override
     public void initInjector() {
-        mActivityComponent = DaggerActivityComponent.builder()
-                .activityModule(new ActivityModule(this))
-                .applicationComponent(((NoteApplication) getApplication()).getApplicationComponent())
-                .build();
         mActivityComponent.inject(this);
+        mIPresenter = mSettingPresenter;
     }
 
     @Override

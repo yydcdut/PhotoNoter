@@ -3,6 +3,7 @@ package com.yydcdut.note.mvp.v;
 import android.content.res.TypedArray;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import com.yydcdut.note.R;
 import com.yydcdut.note.injector.component.ActivityComponent;
 import com.yydcdut.note.injector.component.DaggerActivityComponent;
 import com.yydcdut.note.injector.module.ActivityModule;
+import com.yydcdut.note.mvp.IPresenter;
 import com.yydcdut.note.mvp.p.ThemePresenter;
 import com.yydcdut.note.utils.ActivityCollector;
 import com.yydcdut.note.utils.AppCompat;
@@ -39,6 +41,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IThemeVi
     public static final int REQUEST_NOTHING = 1;
 
     private ThemePresenter mThemePresenter;
+    protected IPresenter mIPresenter;
 
     @Override
     public void setActivityTheme(int index) {
@@ -79,6 +82,12 @@ public abstract class BaseActivity extends AppCompatActivity implements IThemeVi
         return false;
     }
 
+    /**
+     * 是否让BaseActivity去设置statusBar
+     * 设置成透明或者沉浸状态栏
+     *
+     * @return
+     */
     public abstract boolean setStatusBar();
 
     /**
@@ -88,6 +97,9 @@ public abstract class BaseActivity extends AppCompatActivity implements IThemeVi
      */
     public abstract int setContentView();
 
+    /**
+     * 注入Injector
+     */
     public abstract void initInjector();
 
     /**
@@ -200,6 +212,9 @@ public abstract class BaseActivity extends AppCompatActivity implements IThemeVi
     protected void onDestroy() {
         super.onDestroy();
         ActivityCollector.removeActivity(this);
+        if (mIPresenter != null) {
+            mIPresenter.detachView();
+        }
     }
 
     @Override
@@ -212,5 +227,11 @@ public abstract class BaseActivity extends AppCompatActivity implements IThemeVi
     protected void onPause() {
         super.onPause();
         MobclickAgent.onPause(this);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        mIPresenter.goPermission();
     }
 }

@@ -15,11 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.evernote.client.android.EvernoteSession;
-import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.UserCenterFragmentAdapter;
-import com.yydcdut.note.injector.component.DaggerActivityComponent;
-import com.yydcdut.note.injector.module.ActivityModule;
 import com.yydcdut.note.mvp.p.login.impl.UserCenterPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.login.IUserCenterView;
@@ -82,11 +79,8 @@ public class UserCenterActivity extends BaseActivity implements IUserCenterView 
 
     @Override
     public void initInjector() {
-        mActivityComponent = DaggerActivityComponent.builder()
-                .activityModule(new ActivityModule(this))
-                .applicationComponent(((NoteApplication) getApplication()).getApplicationComponent())
-                .build();
         mActivityComponent.inject(this);
+        mIPresenter = mUserCenterPresenter;
     }
 
     @Override

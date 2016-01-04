@@ -10,12 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
-import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.EditCategoryAdapter;
 import com.yydcdut.note.bean.Category;
-import com.yydcdut.note.injector.component.DaggerActivityComponent;
-import com.yydcdut.note.injector.module.ActivityModule;
 import com.yydcdut.note.mvp.p.setting.impl.EditCategoryPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.setting.IEditCategoryView;
@@ -60,10 +57,6 @@ public class EditCategoryActivity extends BaseActivity implements IEditCategoryV
 
     @Override
     public void initInjector() {
-        mActivityComponent = DaggerActivityComponent.builder()
-                .activityModule(new ActivityModule(this))
-                .applicationComponent(((NoteApplication) getApplication()).getApplicationComponent())
-                .build();
         mActivityComponent.inject(this);
     }
 
@@ -71,6 +64,7 @@ public class EditCategoryActivity extends BaseActivity implements IEditCategoryV
     public void initUiAndListener() {
         ButterKnife.bind(this);
         mEditCategoryPresenter.attachView(this);
+        mIPresenter = mEditCategoryPresenter;
         initToolBarUI();
     }
 
@@ -204,12 +198,6 @@ public class EditCategoryActivity extends BaseActivity implements IEditCategoryV
                 break;
         }
         return true;
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mEditCategoryPresenter.detachView();
     }
 
     @Override

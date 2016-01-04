@@ -27,12 +27,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.CategoryAdapter;
 import com.yydcdut.note.bean.Category;
-import com.yydcdut.note.injector.component.DaggerActivityComponent;
-import com.yydcdut.note.injector.module.ActivityModule;
 import com.yydcdut.note.mvp.p.home.IHomePresenter;
 import com.yydcdut.note.mvp.p.home.impl.HomePresenterImpl;
 import com.yydcdut.note.mvp.v.BaseActivity;
@@ -95,11 +92,8 @@ public class HomeActivity extends BaseActivity implements IHomeView, View.OnClic
 
     @Override
     public void initInjector() {
-        mActivityComponent = DaggerActivityComponent.builder()
-                .activityModule(new ActivityModule(this))
-                .applicationComponent(((NoteApplication) getApplication()).getApplicationComponent())
-                .build();
         mActivityComponent.inject(this);
+        mIPresenter = mHomePresenter;
     }
 
     @Override

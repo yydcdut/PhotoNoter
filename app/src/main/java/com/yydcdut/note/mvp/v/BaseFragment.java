@@ -10,8 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
+import com.yydcdut.note.injector.component.DaggerFragmentComponent;
 import com.yydcdut.note.injector.component.FragmentComponent;
+import com.yydcdut.note.injector.module.FragmentModule;
+import com.yydcdut.note.mvp.IPresenter;
 
 /**
  * Created by yuyidong on 15-3-17.
@@ -26,6 +30,8 @@ public abstract class BaseFragment extends Fragment {
     public static final int RESULT_DATA_EVERNOTE = 5;
 
     public static final int REQUEST_NOTHING = 1;
+
+    protected IPresenter mIPresenter;
 
     /**
      * 得到Activity传进来的值
@@ -80,6 +86,10 @@ public abstract class BaseFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        mFragmentComponent = DaggerFragmentComponent.builder()
+                .fragmentModule(new FragmentModule(this))
+                .applicationComponent(((NoteApplication) getActivity().getApplication()).getApplicationComponent())
+                .build();
         initInjector();
         getBundle(getArguments());
         initUI(view);
@@ -87,20 +97,6 @@ public abstract class BaseFragment extends Fragment {
         initListener(view);
         super.onViewCreated(view, savedInstanceState);
     }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        saveSettingWhenPausing();
-    }
-
-
-    /**
-     * 保存一些设置
-     */
-    public void saveSettingWhenPausing() {
-    }
-
 
     public int getActionBarSize() {
         TypedValue typedValue = new TypedValue();
@@ -142,4 +138,11 @@ public abstract class BaseFragment extends Fragment {
         return new Point(l1[0], l1[1]);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mIPresenter != null) {
+            mIPresenter.detachView();
+        }
+    }
 }

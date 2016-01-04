@@ -29,15 +29,12 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.AlbumAdapter;
 import com.yydcdut.note.adapter.vh.PhotoViewHolder;
 import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.bean.PhotoNote;
-import com.yydcdut.note.camera.controller.CameraActivity;
-import com.yydcdut.note.injector.component.DaggerFragmentComponent;
-import com.yydcdut.note.injector.module.FragmentModule;
+import com.yydcdut.note.camera.controller.CameraActivity2;
 import com.yydcdut.note.mvp.p.home.impl.AlbumPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseFragment;
 import com.yydcdut.note.mvp.v.home.IAlbumView;
@@ -134,11 +131,8 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
 
     @Override
     public void initInjector() {
-        mFragmentComponent = DaggerFragmentComponent.builder()
-                .fragmentModule(new FragmentModule(this))
-                .applicationComponent(((NoteApplication) getActivity().getApplication()).getApplicationComponent())
-                .build();
         mFragmentComponent.inject(this);
+        mIPresenter = mAlbumPresenter;
     }
 
     @Override
@@ -643,7 +637,7 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
 
     @Override
     public void jump2CameraActivity(int categoryId) {
-        Intent intent = new Intent(getContext(), CameraActivity.class);
+        Intent intent = new Intent(getContext(), CameraActivity2.class);
         Bundle bundle = new Bundle();
         bundle.putInt(Const.CATEGORY_ID_4_PHOTNOTES, categoryId);
         intent.putExtras(bundle);

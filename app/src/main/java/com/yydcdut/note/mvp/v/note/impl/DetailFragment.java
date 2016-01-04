@@ -5,10 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
-import com.yydcdut.note.injector.component.DaggerFragmentComponent;
-import com.yydcdut.note.injector.module.FragmentModule;
 import com.yydcdut.note.mvp.p.note.impl.DetailFragPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseFragment;
 import com.yydcdut.note.mvp.v.note.IDetailFragView;
@@ -49,11 +46,8 @@ public class DetailFragment extends BaseFragment implements IDetailFragView {
 
     @Override
     public void initInjector() {
-        mFragmentComponent = DaggerFragmentComponent.builder()
-                .fragmentModule(new FragmentModule(this))
-                .applicationComponent(((NoteApplication) getActivity().getApplication()).getApplicationComponent())
-                .build();
         mFragmentComponent.inject(this);
+        mIPresenter = mDetailFragPresenter;
     }
 
     @Override
