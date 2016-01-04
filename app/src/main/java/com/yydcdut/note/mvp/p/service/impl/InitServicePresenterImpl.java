@@ -2,14 +2,12 @@ package com.yydcdut.note.mvp.p.service.impl;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.hardware.Camera;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yydcdut.note.bean.PhotoNote;
-import com.yydcdut.note.camera.param.Size;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.rx.RxCategory;
 import com.yydcdut.note.model.rx.RxPhotoNote;
@@ -20,13 +18,8 @@ import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.Utils;
 
-import org.json.JSONException;
-
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
@@ -35,7 +28,7 @@ import javax.inject.Inject;
  * Created by yuyidong on 15/11/22.
  */
 public class InitServicePresenterImpl implements IInitServicePresenter {
-    private static final int QUITE = 3;
+    private static final int QUITE = 2;
     private static final int ADD = 1;
     private AtomicInteger mNumber = new AtomicInteger(0);
 
@@ -96,16 +89,6 @@ public class InitServicePresenterImpl implements IInitServicePresenter {
     }
 
     @Override
-    public void initCamera() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                initCameraPictureSize();
-            }
-        }).start();
-    }
-
-    @Override
     public boolean isFinish() {
         int number = mNumber.get();
         if (number == QUITE) {
@@ -113,69 +96,6 @@ public class InitServicePresenterImpl implements IInitServicePresenter {
         } else {
             return false;
         }
-    }
-
-    /**
-     * 初始化相机的拍照尺寸、相机个数
-     */
-    private void initCameraPictureSize() {
-        //暂时用Camera的方法
-        int total = Camera.getNumberOfCameras();
-        mLocalStorageUtils.setCameraNumber(total);
-        int[] cameraIds;
-        if (total == 0) {
-            cameraIds = new int[0];
-        } else if (total == 1) {
-            cameraIds = new int[]{0};
-        } else {
-            cameraIds = new int[]{0, 1};
-        }
-        for (int i = 0; i < cameraIds.length; i++) {
-            try {
-                List<Size> sizeList = getPictureSizeJsonArray(cameraIds[i]);
-                Collections.sort(sizeList, new Comparator<Size>() {
-                    @Override
-                    public int compare(Size lhs, Size rhs) {
-                        return -(lhs.getWidth() * lhs.getHeight() - rhs.getWidth() * rhs.getHeight());
-                    }
-                });
-                mLocalStorageUtils.setPictureSizes(String.valueOf(cameraIds[i]), sizeList);
-                Size suitableSize = sizeList.get(0);
-                mLocalStorageUtils.setPictureSize(String.valueOf(cameraIds[i]), suitableSize);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        mHandler.sendEmptyMessage(ADD);
-    }
-
-    /**
-     * 将List的数据存为JsonArray
-     *
-     * @param cameraId
-     * @return
-     * @throws JSONException todo:当没有获得权限的时候这里会崩
-     *                       java.lang.RuntimeException: Camera is being used after Camera.release() was called
-     *                       at android.hardware.Camera.native_getParameters(Native Method)
-     *                       at android.hardware.Camera.getParameters(Camera.java:3195)
-     *                       at com.yydcdut.note.mvp.p.service.impl.InitServicePresenterImpl.getPictureSizeJsonArray(InitServicePresenterImpl.java:158)
-     *                       at com.yydcdut.note.mvp.p.service.impl.InitServicePresenterImpl.initCameraPictureSize(InitServicePresenterImpl.java:132)
-     *                       at com.yydcdut.note.mvp.p.service.impl.InitServicePresenterImpl.access$100(InitServicePresenterImpl.java:39)
-     *                       at com.yydcdut.note.mvp.p.service.impl.InitServicePresenterImpl$2.run(InitServicePresenterImpl.java:95)
-     *                       at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1112)
-     *                       at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:587)
-     *                       at java.lang.Thread.run(Thread.java:818)
-     */
-    private List<Size> getPictureSizeJsonArray(int cameraId) throws JSONException {
-        Camera camera = Camera.open(cameraId);
-        Camera.Parameters parameters = camera.getParameters();
-        List<Camera.Size> cameraSizeList = parameters.getSupportedPictureSizes();
-        camera.release();
-        List<Size> sizeList = new ArrayList<>();
-        for (Camera.Size size : cameraSizeList) {
-            sizeList.add(Size.parseSize(size));
-        }
-        return sizeList;
     }
 
     /**

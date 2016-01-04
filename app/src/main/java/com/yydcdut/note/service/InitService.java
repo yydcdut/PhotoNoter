@@ -39,6 +39,5 @@ public class InitService extends Service {
                 .build()
                 .inject(this);
         mInitServicePresenter.initContent();
-        mInitServicePresenter.initCamera();
     }
 }

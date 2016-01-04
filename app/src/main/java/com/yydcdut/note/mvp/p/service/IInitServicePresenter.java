@@ -8,7 +8,5 @@ import com.yydcdut.note.mvp.IPresenter;
 public interface IInitServicePresenter extends IPresenter {
     void initContent();
 
-    void initCamera();
-
     boolean isFinish();
 }

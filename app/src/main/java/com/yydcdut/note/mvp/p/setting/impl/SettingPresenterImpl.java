@@ -1,6 +1,7 @@
 package com.yydcdut.note.mvp.p.setting.impl;
 
 import android.content.Context;
+import android.hardware.Camera;
 
 import com.yydcdut.note.R;
 import com.yydcdut.note.camera.param.Size;
@@ -15,6 +16,9 @@ import com.yydcdut.note.utils.LocalStorageUtils;
 
 import org.json.JSONException;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -111,6 +115,11 @@ public class SettingPresenterImpl implements ISettingPresenter {
             case ISettingPresenter.TAG_CAMERA_SIZE:
                 if (mLocalStorageUtils.getCameraSystem()) {
                     break;
+                }
+                try {
+                    initCameraNumberAndPictureSize();
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
                 int numbers = mLocalStorageUtils.getCameraNumber();
                 if (numbers == 2) {
@@ -243,6 +252,62 @@ public class SettingPresenterImpl implements ISettingPresenter {
         } else {
             mSettingView.setStatusBarClickable(true);
         }
+    }
+
+    /**
+     * 初始化相机的拍照尺寸、相机个数
+     */
+    private void initCameraNumberAndPictureSize() throws JSONException {
+        List<Size> initSizeList = mLocalStorageUtils.getPictureSizes(Const.CAMERA_BACK);
+        if (initSizeList != null) {
+            return;
+        }
+        //暂时用Camera的方法
+        int total = Camera.getNumberOfCameras();
+        mLocalStorageUtils.setCameraNumber(total);
+        int[] cameraIds;
+        if (total == 0) {
+            cameraIds = new int[0];
+        } else if (total == 1) {
+            cameraIds = new int[]{0};
+        } else {
+            cameraIds = new int[]{0, 1};
+        }
+        for (int i = 0; i < cameraIds.length; i++) {
+            try {
+                List<Size> sizeList = getPictureSizeJsonArray(cameraIds[i]);
+                Collections.sort(sizeList, new Comparator<Size>() {
+                    @Override
+                    public int compare(Size lhs, Size rhs) {
+                        return -(lhs.getWidth() * lhs.getHeight() - rhs.getWidth() * rhs.getHeight());
+                    }
+                });
+                mLocalStorageUtils.setPictureSizes(String.valueOf(cameraIds[i]), sizeList);
+                Size suitableSize = sizeList.get(0);
+                mLocalStorageUtils.setPictureSize(String.valueOf(cameraIds[i]), suitableSize);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * 将List的数据存为JsonArray
+     *
+     * @param cameraId
+     * @return
+     * @throws JSONException
+     */
+    private List<Size> getPictureSizeJsonArray(int cameraId) throws JSONException {
+        Camera camera = Camera.open(cameraId);
+        Camera.Parameters parameters = camera.getParameters();
+        List<Camera.Size> cameraSizeList = parameters.getSupportedPictureSizes();
+        camera.release();
+        List<Size> sizeList = new ArrayList<>();
+        for (Camera.Size size : cameraSizeList) {
+            sizeList.add(Size.parseSize(size));
+        }
+        return sizeList;
     }
 
 }
