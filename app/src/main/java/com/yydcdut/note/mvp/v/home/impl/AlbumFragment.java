@@ -34,7 +34,7 @@ import com.yydcdut.note.adapter.AlbumAdapter;
 import com.yydcdut.note.adapter.vh.PhotoViewHolder;
 import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.bean.PhotoNote;
-import com.yydcdut.note.camera.controller.CameraActivity2;
+import com.yydcdut.note.camera.controller.CameraActivity;
 import com.yydcdut.note.mvp.p.home.impl.AlbumPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseFragment;
 import com.yydcdut.note.mvp.v.home.IAlbumView;
@@ -637,7 +637,8 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
 
     @Override
     public void jump2CameraActivity(int categoryId) {
-        Intent intent = new Intent(getContext(), CameraActivity2.class);
+//        Intent intent = new Intent(getContext(), CameraActivity2.class);
+        Intent intent = new Intent(getContext(), CameraActivity.class);
         Bundle bundle = new Bundle();
         bundle.putInt(Const.CATEGORY_ID_4_PHOTNOTES, categoryId);
         intent.putExtras(bundle);
