@@ -115,6 +115,7 @@ public class SplashPresenterImpl implements ISplashPresenter, Handler.Callback,
 
     private void checkDisks() {
         if (!mLocalStorageUtils.isFirstTime()) {
+            initFiles();
             Observable.from(new File(FilePathUtils.getPath()).listFiles())
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.computation())
@@ -141,7 +142,7 @@ public class SplashPresenterImpl implements ISplashPresenter, Handler.Callback,
     @Permission(PermissionUtils.CODE_STORAGE)
     private void initFiles() {
         if (PermissionUtils.hasPermission4Storage(mContext)) {
-
+            FilePathUtils.initEnvironment(mContext);
         } else {
             PermissionUtils.requestPermissions(mActivity, "", PermissionUtils.PERMISSION_STORAGE,
                     PermissionUtils.CODE_STORAGE, null);
