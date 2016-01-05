@@ -65,7 +65,7 @@
     <!-- dialog button text -->
     <string name="dialog_btn_ok">Ok</string>
     <string name="dialog_btn_cancel">Cancel</string>
-    <string name="dialog_title_info">Infomation</string>
+    <string name="dialog_title_info">Information</string>
     <string name="dialog_title_new">New</string>
     <string name="dialog_title_move">Move to...</string>
 
@@ -221,15 +221,16 @@
 
     <!-- Permission -->
     <string name="permission_title">Ask for Permission</string>
-    <string name="permission_storage_init">App needs "write and read SD card" permission. When initializing,
-        app will copy 'User Guide Information' to SD card!</string>
-    <string name="permission_storage">App needs "write and read SD card" permission, so that,
+    <string name="permission_storage_init">App needs \"write and read SD card\" permission. When initializing,
+        app will copy \'User Guide Information\' to SD card!</string>
+    <string name="permission_storage">App needs \"write and read SD card\" permission, so that,
         app can write photos into SD card!</string>
-    <string name="permission_camera_init">App needs "Camera" permission, When initializing,
-        app will record the picture sizes of phone's camera!</string>
-    <string name="permission_camera">App needs "Camera" permission, so that, app can take photos!</string>
-    <string name="permission_location">App needs "Location" permission, so that,
-        app will write the longitude and latitude to the photos when capturing!('Location' is powered by Baidu Map)</string>
-    <string name="permission_phone_state">App needs "Phone State" permission. I don't know why, and Baidu Map needs it,so you can understand~!</string>
-    <string name="permission_audio">App needs "Microphone" permission，the function of voice input needs it!</string>
+    <string name="permission_camera_init">App needs \"Camera\" permission, When initializing,
+        app will record the picture sizes of phone\'s camera!</string>
+    <string name="permission_camera">App needs \"Camera\" permission, so that, app can take photos!</string>
+    <string name="permission_location">App needs \"Location\" permission, so that,
+        app will write the longitude and latitude to the photos when capturing!(\'Location\' is powered by Baidu Map)</string>
+    <string name="permission_phone_state">App needs \"Phone State\" permission. I don\'t know why,
+        and Baidu Map needs it, so you must understand now!</string>
+    <string name="permission_audio">App needs \"Microphone\" permission，the function of voice input needs it!</string>
 </resources>
