@@ -1,8 +1,10 @@
 package com.yydcdut.note.mvp.p.note.impl;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.evernote.client.android.EvernoteSession;
@@ -33,7 +35,9 @@ import com.yydcdut.note.model.rx.RxUser;
 import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.note.IEditTextPresenter;
 import com.yydcdut.note.mvp.v.note.IEditTextView;
+import com.yydcdut.note.utils.PermissionUtils;
 import com.yydcdut.note.utils.YLog;
+import com.yydcdut.note.utils.permission.Permission;
 import com.yydcdut.note.view.fab2.snack.OnSnackBarActionListener;
 
 import org.json.JSONArray;
@@ -57,9 +61,10 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by yuyidong on 15/11/15.
  */
-public class EditTextPresenterImpl implements IEditTextPresenter {
+public class EditTextPresenterImpl implements IEditTextPresenter, PermissionUtils.OnPermissionCallBacks {
     private static final String TAG = EditTextPresenterImpl.class.getSimpleName();
     private Context mContext;
+    private Activity mActivity;
     private RxPhotoNote mRxPhotoNote;
     private RxUser mRxUser;
     private IEditTextView mEditTextView;
@@ -85,14 +90,18 @@ public class EditTextPresenterImpl implements IEditTextPresenter {
     private boolean mIsVoiceOpen = false;
 
     @Inject
-    public EditTextPresenterImpl(@ContextLife("Activity") Context context, RxPhotoNote rxPhotoNote,
-                                 RxUser rxUser) {
+    public EditTextPresenterImpl(@ContextLife("Activity") Context context, Activity activity,
+                                 RxPhotoNote rxPhotoNote, RxUser rxUser) {
         mRxPhotoNote = rxPhotoNote;
         mHandler = new Handler();
         mContext = context;
+        mActivity = activity;
         mRxUser = rxUser;
         mIatResults = new LinkedHashMap<>();
-        /* 语音 */
+        /*
+         * 语音
+         * 是一个单例，所以可以这么搞
+         */
         SpeechUtility.createUtility(context, "appid=" + BuildConfig.SPEECH_ID);
     }
 
@@ -160,17 +169,28 @@ public class EditTextPresenterImpl implements IEditTextPresenter {
 
     @Override
     public void startVoice() {
-        mIsVoiceOpen = true;
-        if (mIat == null) {
-            // 使用SpeechRecognizer对象，可根据回调消息自定义界面；
-            mIat = SpeechRecognizer.createRecognizer(mContext, mInitListener);
-        }
-        //todo 如果是title怎么办
-        mContentString = mEditTextView.getNoteContent();
-        setVoiceParam();
-        ret = mIat.startListening(mRecognizerListener);
-        if (ret != ErrorCode.SUCCESS) {
-            YLog.e(TAG, "听写失败,错误码：" + ret);
+        doVoiceInput();
+    }
+
+    @Permission(PermissionUtils.CODE_AUDIO)
+    private void doVoiceInput() {
+        boolean has = PermissionUtils.hasPermission4Audio(mContext);
+        if (has) {
+            mIsVoiceOpen = true;
+            if (mIat == null) {
+                // 使用SpeechRecognizer对象，可根据回调消息自定义界面；
+                mIat = SpeechRecognizer.createRecognizer(mContext, mInitListener);
+            }
+            //todo 如果是title怎么办
+            mContentString = mEditTextView.getNoteContent();
+            setVoiceParam();
+            ret = mIat.startListening(mRecognizerListener);
+            if (ret != ErrorCode.SUCCESS) {
+                YLog.e(TAG, "听写失败,错误码：" + ret);
+            }
+        } else {
+            PermissionUtils.requestPermissions(mActivity, mContext.getString(R.string.permission_audio),
+                    PermissionUtils.PERMISSION_AUDIO, PermissionUtils.CODE_AUDIO, null);
         }
     }
 
@@ -451,5 +471,19 @@ public class EditTextPresenterImpl implements IEditTextPresenter {
         // 设置听写结果是否结果动态修正，为“1”则在听写过程中动态递增地返回结果，否则只在听写结束之后返回最终结果
         // 注：该参数暂时只对在线听写有效
         mIat.setParameter(SpeechConstant.ASR_DWA, "1");
+    }
+
+    @Override
+    public void onPermissionsGranted(List<String> permissions) {
+    }
+
+    @Override
+    public void onPermissionsDenied(List<String> permissions) {
+        PermissionUtils.requestPermissions(mActivity, mContext.getString(R.string.permission_audio),
+                PermissionUtils.PERMISSION_AUDIO, PermissionUtils.CODE_AUDIO, null);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     }
 }
