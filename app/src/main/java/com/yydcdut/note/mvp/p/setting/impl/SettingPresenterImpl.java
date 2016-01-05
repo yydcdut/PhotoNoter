@@ -1,7 +1,9 @@
 package com.yydcdut.note.mvp.p.setting.impl;
 
+import android.app.Activity;
 import android.content.Context;
 import android.hardware.Camera;
+import android.support.annotation.NonNull;
 
 import com.yydcdut.note.R;
 import com.yydcdut.note.camera.param.Size;
@@ -13,6 +15,8 @@ import com.yydcdut.note.mvp.v.setting.ISettingView;
 import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.LocalStorageUtils;
+import com.yydcdut.note.utils.PermissionUtils;
+import com.yydcdut.note.utils.permission.Permission;
 
 import org.json.JSONException;
 
@@ -28,18 +32,21 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by yuyidong on 15/11/13.
  */
-public class SettingPresenterImpl implements ISettingPresenter {
+public class SettingPresenterImpl implements ISettingPresenter, PermissionUtils.OnPermissionCallBacks {
     private ISettingView mSettingView;
 
     private Context mContext;
+    private Activity mActivity;
     private LocalStorageUtils mLocalStorageUtils;
     private RxUser mRxUser;
 
     private static final boolean SUPPORT_CAMERA_5_0 = false;
 
     @Inject
-    public SettingPresenterImpl(@ContextLife("Activity") Context context, LocalStorageUtils localStorageUtils, RxUser rxUser) {
+    public SettingPresenterImpl(@ContextLife("Activity") Context context, Activity activity,
+                                LocalStorageUtils localStorageUtils, RxUser rxUser) {
         mContext = context;
+        mActivity = activity;
         mLocalStorageUtils = localStorageUtils;
         mRxUser = rxUser;
     }
@@ -116,20 +123,7 @@ public class SettingPresenterImpl implements ISettingPresenter {
                 if (mLocalStorageUtils.getCameraSystem()) {
                     break;
                 }
-                try {
-                    initCameraNumberAndPictureSize();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                int numbers = mLocalStorageUtils.getCameraNumber();
-                if (numbers == 2) {
-                    try {
-                        mSettingView.showCameraIdsChooser();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        mSettingView.showSnackbar(mContext.getString(R.string.toast_fail));
-                    }
-                }
+                getPermissionOfCamera();
                 break;
             case ISettingPresenter.TAG_CAMERA_SAVE:
                 if (mLocalStorageUtils.getCameraSystem()) {
@@ -310,4 +304,47 @@ public class SettingPresenterImpl implements ISettingPresenter {
         return sizeList;
     }
 
+    @Permission(PermissionUtils.CODE_CAMERA)
+    private void getPermissionOfCamera() {
+        boolean hasPermission = PermissionUtils.hasPermission4Camera(mContext);
+        if (hasPermission) {
+            try {
+                initCameraNumberAndPictureSize();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            int numbers = mLocalStorageUtils.getCameraNumber();
+            if (numbers == 2) {
+                try {
+                    mSettingView.showCameraIdsChooser();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    mSettingView.showSnackbar(mContext.getString(R.string.toast_fail));
+                }
+            }
+        } else {
+            PermissionUtils.requestPermissionsWithDialog(mActivity, mContext.getString(R.string.permission_camera_init),
+                    PermissionUtils.PERMISSION_CAMERA, PermissionUtils.CODE_CAMERA);
+        }
+    }
+
+    @Override
+    public void onPermissionsGranted(List<String> permissions) {
+    }
+
+    @Override
+    public void onPermissionsDenied(List<String> permissions) {
+        PermissionUtils.requestPermissions(mActivity, mContext.getString(R.string.permission_storage_init),
+                PermissionUtils.PERMISSION_CAMERA, PermissionUtils.CODE_CAMERA, new PermissionUtils.OnRequestPermissionDeniedByUserListener() {
+                    @Override
+                    public void onDenied(int requestCode) {
+                        mSettingView.showSnackbar(mContext.getString(R.string.permission_cancel));
+                    }
+                });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+    }
 }

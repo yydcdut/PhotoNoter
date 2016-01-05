@@ -29,6 +29,7 @@ public class PermissionUtils {
     public static final int CODE_STORAGE = 1;
     public static final int CODE_LOCATION = 2;
     public static final int CODE_AUDIO = 3;
+    public static final int CODE_PHONE_STATE = 4;
 
     public static final String[] PERMISSION_CAMERA = new String[]{
             Manifest.permission.CAMERA
@@ -95,7 +96,7 @@ public class PermissionUtils {
         }
     }
 
-    public static void requestPermissionsFirstTimes(final @NonNull Activity activity, String explanation,
+    public static void requestPermissionsWithDialog(final @NonNull Activity activity, String explanation,
                                                     final String[] permissions, final int code) {
         //explanation
         AlertDialog dialog = new AlertDialog.Builder(activity, R.style.note_dialog)

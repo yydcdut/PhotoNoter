@@ -1,8 +1,12 @@
 package com.yydcdut.note.mvp.p.home.impl;
 
 import android.app.Activity;
+import android.content.Context;
+import android.os.Handler;
+import android.support.annotation.NonNull;
 
 import com.baidu.mapapi.SDKInitializer;
+import com.yydcdut.note.R;
 import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.bus.CategoryCreateEvent;
 import com.yydcdut.note.bus.CategoryDeleteEvent;
@@ -11,6 +15,7 @@ import com.yydcdut.note.bus.CategoryMoveEvent;
 import com.yydcdut.note.bus.CategoryUpdateEvent;
 import com.yydcdut.note.bus.PhotoNoteCreateEvent;
 import com.yydcdut.note.bus.PhotoNoteDeleteEvent;
+import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.compare.ComparatorFactory;
 import com.yydcdut.note.model.rx.RxCategory;
 import com.yydcdut.note.model.rx.RxPhotoNote;
@@ -18,7 +23,10 @@ import com.yydcdut.note.model.rx.RxUser;
 import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.home.IHomePresenter;
 import com.yydcdut.note.mvp.v.home.IHomeView;
-import com.yydcdut.note.utils.LocalStorageUtils;
+import com.yydcdut.note.utils.PermissionUtils;
+import com.yydcdut.note.utils.permission.Permission;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -30,7 +38,7 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by yuyidong on 15/11/19.
  */
-public class HomePresenterImpl implements IHomePresenter {
+public class HomePresenterImpl implements IHomePresenter, PermissionUtils.OnPermissionCallBacks {
     private IHomeView mHomeView;
     /**
      * 当前的category的Id
@@ -40,16 +48,16 @@ public class HomePresenterImpl implements IHomePresenter {
     private RxCategory mRxCategory;
     private RxPhotoNote mRxPhotoNote;
     private RxUser mRxUser;
-    private LocalStorageUtils mLocalStorageUtils;
+    private Context mContext;
     private Activity mActivity;
 
     @Inject
-    public HomePresenterImpl(Activity activity, RxCategory rxCategory, RxPhotoNote rxPhotoNote, RxUser rxUser,
-                             LocalStorageUtils localStorageUtils) {
+    public HomePresenterImpl(@ContextLife("Activity") Context context, Activity activity, RxCategory rxCategory,
+                             RxPhotoNote rxPhotoNote, RxUser rxUser) {
+        mContext = context;
         mRxCategory = rxCategory;
         mRxPhotoNote = rxPhotoNote;
         mRxUser = rxUser;
-        mLocalStorageUtils = localStorageUtils;
         mActivity = activity;
     }
 
@@ -57,42 +65,7 @@ public class HomePresenterImpl implements IHomePresenter {
     public void attachView(IView iView) {
         mHomeView = (IHomeView) iView;
         EventBus.getDefault().register(this);
-        initBaiduSdk();
-    }
-
-    private void initBaiduSdk() {
-        /**
-         * 01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err: java.lang.SecurityException: getSubscriberId: Neither user 10067 nor current process has android.permission.READ_PHONE_STATE.
-         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at android.os.Parcel.readException(Parcel.java:1599)
-         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at android.os.Parcel.readException(Parcel.java:1552)
-         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at com.android.internal.telephony.IPhoneSubInfo$Stub$Proxy.getSubscriberIdForSubscriber(IPhoneSubInfo.java:557)
-         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at android.telephony.TelephonyManager.getSubscriberId(TelephonyManager.java:2003)
-         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at android.telephony.TelephonyManager.getSubscriberId(TelephonyManager.java:1984)
-         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at com.baidu.platform.comapi.util.f.e(Unknown Source)
-         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at com.baidu.platform.comapi.util.f.b(Unknown Source)
-         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at com.baidu.platform.comapi.a.c(Unknown Source)
-         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at com.baidu.platform.comapi.c.a(Unknown Source)
-         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at com.baidu.mapapi.SDKInitializer.initialize(Unknown Source)
-         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at com.baidu.mapapi.SDKInitializer.initialize(Unknown Source)
-         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at com.yydcdut.note.mvp.p.home.impl.HomePresenterImpl.initBaiduSdk(HomePresenterImpl.java:64)
-         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at com.yydcdut.note.mvp.p.home.impl.HomePresenterImpl.attachView(HomePresenterImpl.java:60)
-         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at com.yydcdut.note.mvp.v.home.impl.HomeActivity.initUiAndListener(HomeActivity.java:114)
-         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at com.yydcdut.note.mvp.v.BaseActivity.onCreate(BaseActivity.java:137)
-         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at com.yydcdut.note.mvp.v.home.impl.HomeActivity.onCreate(HomeActivity.java:101)
-         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at android.app.Activity.performCreate(Activity.java:6237)
-         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at android.app.Instrumentation.callActivityOnCreate(Instrumentation.java:1107)
-         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:2369)
-         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:2476)
-         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at android.app.ActivityThread.-wrap11(ActivityThread.java)
-         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1344)
-         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at android.os.Handler.dispatchMessage(Handler.java:102)
-         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at android.os.Looper.loop(Looper.java:148)
-         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at android.app.ActivityThread.main(ActivityThread.java:5417)
-         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at java.lang.reflect.Method.invoke(Native Method)
-         01-04 19:30:50.461 2405-2405/com.yydcdut.note W/System.err:     at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:726)
-
-         */
-        SDKInitializer.initialize(mActivity.getApplication());
+        initDelay();
     }
 
     @Override
@@ -339,5 +312,44 @@ public class HomePresenterImpl implements IHomePresenter {
                                         });
                             });
                 });
+    }
+
+    /**
+     * 因为相册页面的fragment和activity很沉重，速度之慢，所以这些不是特别必须的就稍后初始化
+     */
+    private void initDelay() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                initBaiduMap();
+            }
+        }, 2000);
+    }
+
+    @Permission(PermissionUtils.CODE_PHONE_STATE)
+    private void initBaiduMap() {
+        boolean hasPermission = PermissionUtils.hasPermission4PhoneState(mContext);
+        if (hasPermission) {
+            SDKInitializer.initialize(mActivity.getApplication());
+        } else {
+            PermissionUtils.requestPermissionsWithDialog(mActivity, mContext.getString(R.string.permission_phone_state),
+                    PermissionUtils.PERMISSION_PHONE_STATE, PermissionUtils.CODE_PHONE_STATE);
+        }
+    }
+
+    @Override
+    public void onPermissionsGranted(List<String> permissions) {
+
+    }
+
+    @Override
+    public void onPermissionsDenied(List<String> permissions) {
+        PermissionUtils.requestPermissions(mActivity, mContext.getString(R.string.permission_phone_state),
+                PermissionUtils.PERMISSION_PHONE_STATE, PermissionUtils.CODE_PHONE_STATE, null);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
     }
 }

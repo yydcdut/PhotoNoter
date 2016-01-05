@@ -231,4 +231,5 @@
     <string name="permission_phone_state">App needs \"Phone State\" permission. I don\'t know why,
         and Baidu Map needs it, so you must understand now!</string>
     <string name="permission_audio">App needs \"Microphone\" permission，the function of voice input needs it!</string>
+    <string name="permission_cancel">Why? ヽ( ｀0´)ﾉ</string>
 </resources>

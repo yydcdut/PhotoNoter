@@ -231,7 +231,7 @@ public class IntroducePresenterImpl implements IIntroducePresenter, Handler.Call
                 }
             }).start();
         } else {
-            PermissionUtils.requestPermissionsFirstTimes(mActivity, mContext.getString(R.string.permission_storage_init),
+            PermissionUtils.requestPermissionsWithDialog(mActivity, mContext.getString(R.string.permission_storage_init),
                     PermissionUtils.PERMISSION_STORAGE, PermissionUtils.CODE_STORAGE);
         }
     }
@@ -256,6 +256,10 @@ public class IntroducePresenterImpl implements IIntroducePresenter, Handler.Call
 
     @Override
     public void onPermissionsDenied(List<String> permissions) {
+        if (permissions != null && !permissions.isEmpty()) {
+            PermissionUtils.requestPermissionsWithDialog(mActivity, mContext.getString(R.string.permission_storage_init),
+                    PermissionUtils.PERMISSION_STORAGE, PermissionUtils.CODE_STORAGE);
+        }
     }
 
     @Override

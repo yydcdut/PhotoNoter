@@ -227,4 +227,5 @@
     <string name="permission_location">App需要 定位 权限，拍照时需要将经纬度写入到照片的Exif信息中~！（定位功能由百度地图提供哈）</string>
     <string name="permission_phone_state">App需要 电话状态 权限，我也不知道为什么，百度地图需要的，你懂的~！</string>
     <string name="permission_audio">App需要 麦克风 权限，语音输入时需要将音频权限~！</string>
+    <string name="permission_cancel">为什么不给我权限？ヽ( ｀0´)ﾉ</string>
 </resources>
