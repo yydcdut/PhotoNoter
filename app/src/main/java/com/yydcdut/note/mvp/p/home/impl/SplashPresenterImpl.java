@@ -17,7 +17,6 @@ import com.yydcdut.note.service.CheckService;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.PermissionUtils;
-import com.yydcdut.note.utils.Utils;
 import com.yydcdut.note.utils.permission.Permission;
 
 import java.io.File;
@@ -58,8 +57,6 @@ public class SplashPresenterImpl implements ISplashPresenter, Handler.Callback,
     @Override
     public void attachView(IView iView) {
         mSplashView = (ISplashView) iView;
-        Utils.init(mContext);
-        initFiles();
         checkDisks();
     }
 
