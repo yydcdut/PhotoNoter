@@ -133,7 +133,7 @@
 
     <string name="preference_setting">Preference</string>
     <string name="theme">Theme</string>
-    <string name="floationg_action_button_style">FloatingActionButton Style</string>
+    <string name="floating_action_button_style">FloatingActionButton Style</string>
     <string name="status_bar">Status Bar Style</string>
     <string name="status_bar_immersive">Immersive Mode</string>
     <string name="status_bar_translation">Translucent Bars</string>
@@ -191,11 +191,9 @@
     <string name="toast_sdcard">Please insert the SD card!</string>
     <string name="dialog_crash">We are beating the programmers to fix the BUG!</string>
     <string name="font_choose">Choose Text Font</string>
-    <string name="loginout">Login Out</string>
+    <string name="logout">Log Out</string>
     <string name="unbind_qq">Unbind QQ</string>
-    <string name="unbind_sina">Unbind Sina</string>
     <string name="bind_qq">Bind QQ</string>
-    <string name="bind_sina">Bind Sina</string>
     <string name="not_login">Not logged in..</string>
     <string name="personal_page">Personal Page</string>
     <string name="about_update">Update</string>
@@ -212,10 +210,10 @@
     <string name="uc_android">Android</string>
     <string name="uc_storage">Storage</string>
     <string name="uc_cloud">Cloud</string>
-    <string name="uc_unkown">Unkown</string>
+    <string name="uc_unknown">Unknown</string>
     <string name="uc_no_sdcard">No SDCard</string>
     <string name="uc_folder">Folder Size</string>
-    <string name="uc_sanbox">SandBox Images</string>
+    <string name="uc_sandbox">SandBox Images</string>
     <string name="uc_notes">Notes</string>
     <string name="uc_words">Words</string>
 

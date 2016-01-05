@@ -192,7 +192,7 @@ public class UserDetailFragment extends BaseFragment implements IUserDetailFragV
     public void addSandBoxNumber(String sandboxNumber) {
         View sandboxView = mLinearLayout.getChildAt(4);
         ((ImageView) sandboxView.findViewById(R.id.img_item_icon)).setImageResource(R.drawable.ic_crop_original_white_24dp);
-        ((TextView) sandboxView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.uc_sanbox));
+        ((TextView) sandboxView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.uc_sandbox));
         ((TextView) sandboxView.findViewById(R.id.txt_item_user)).setText(sandboxNumber);
     }
 

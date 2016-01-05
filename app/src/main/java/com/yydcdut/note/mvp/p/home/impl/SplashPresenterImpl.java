@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 
+import com.yydcdut.note.R;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.rx.RxSandBox;
 import com.yydcdut.note.mvp.IView;
@@ -144,8 +145,8 @@ public class SplashPresenterImpl implements ISplashPresenter, Handler.Callback,
         if (PermissionUtils.hasPermission4Storage(mContext)) {
             FilePathUtils.initEnvironment(mContext);
         } else {
-            PermissionUtils.requestPermissions(mActivity, "", PermissionUtils.PERMISSION_STORAGE,
-                    PermissionUtils.CODE_STORAGE, null);
+            PermissionUtils.requestPermissions(mActivity, mContext.getResources().getString(R.string.permission_storage),
+                    PermissionUtils.PERMISSION_STORAGE, PermissionUtils.CODE_STORAGE, null);
         }
 
     }

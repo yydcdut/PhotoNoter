@@ -44,8 +44,11 @@ public class PermissionUtils {
     public static final String[] PERMISSION_AUDIO = new String[]{
             Manifest.permission.RECORD_AUDIO
     };
+    public static final String[] PERMISSION_PHONE_STATE = new String[]{
+            Manifest.permission.READ_PHONE_STATE
+    };
 
-    public static boolean hasPermission4Camera(Context context) {
+    public static boolean hasPermission4Camera(@NonNull Context context) {
         int permissionCheck = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA);
         if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
             return true;
@@ -54,7 +57,7 @@ public class PermissionUtils {
         }
     }
 
-    public static boolean hasPermission4Storage(Context context) {
+    public static boolean hasPermission4Storage(@NonNull Context context) {
         int permission0 = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         int permission1 = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE);
         if (permission0 == PackageManager.PERMISSION_GRANTED && permission1 == PackageManager.PERMISSION_GRANTED) {
@@ -64,7 +67,7 @@ public class PermissionUtils {
         }
     }
 
-    public static boolean hasPermission4Location(Context context) {
+    public static boolean hasPermission4Location(@NonNull Context context) {
         int permission0 = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION);
         int permission1 = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION);
         if (permission0 == PackageManager.PERMISSION_GRANTED && permission1 == PackageManager.PERMISSION_GRANTED) {
@@ -74,13 +77,38 @@ public class PermissionUtils {
         }
     }
 
-    public static boolean hasPermission4Audio(Context context) {
+    public static boolean hasPermission4Audio(@NonNull Context context) {
         int permission = ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO);
         if (permission == PackageManager.PERMISSION_GRANTED) {
             return true;
         } else {
             return false;
         }
+    }
+
+    public static boolean hasPermission4PhoneState(@NonNull Context context) {
+        int permission = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE);
+        if (permission == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static void requestPermissionsFirstTimes(final @NonNull Activity activity, String explanation,
+                                                    final String[] permissions, final int code) {
+        //explanation
+        AlertDialog dialog = new AlertDialog.Builder(activity, R.style.note_dialog)
+                .setTitle(R.string.permission_title)
+                .setMessage(explanation)
+                .setPositiveButton(R.string.dialog_btn_ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ActivityCompat.requestPermissions(activity, permissions, code);
+                    }
+                })
+                .create();
+        dialog.show();
     }
 
     public static void requestPermissions(final @NonNull Activity activity, String explanation, final String[] permissions,
@@ -121,8 +149,8 @@ public class PermissionUtils {
     /**
      * 权限的回调
      */
-    public static void permissionResult(IPresenter iPresenter, @NonNull String[] permissions,
-                                        @NonNull int[] grantResults, int requestCode) {
+    public static void permissionResult(@NonNull IPresenter iPresenter, @NonNull String[] permissions,
+                                        @NonNull int[] grantResults, @NonNull int requestCode) {
         if (!(iPresenter instanceof OnPermissionCallBacks)) {
             throw new IllegalArgumentException("Activity must implement PermissionCallbacks.");
         }
@@ -148,7 +176,7 @@ public class PermissionUtils {
         }
     }
 
-    private static void invokeMethod(IPresenter iPresenter, int requestCode) {
+    private static void invokeMethod(@NonNull IPresenter iPresenter, @NonNull int requestCode) {
         Class clazz = iPresenter.getClass();
         for (Method method : clazz.getDeclaredMethods()) {
             if (method.isAnnotationPresent(Permission.class)) {

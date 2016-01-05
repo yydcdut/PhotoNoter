@@ -9,6 +9,7 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.yydcdut.note.R;
 import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.rx.RxCategory;
@@ -230,8 +231,8 @@ public class IntroducePresenterImpl implements IIntroducePresenter, Handler.Call
                 }
             }).start();
         } else {
-            PermissionUtils.requestPermissions(mActivity, "", PermissionUtils.PERMISSION_STORAGE,
-                    PermissionUtils.CODE_STORAGE, null);
+            PermissionUtils.requestPermissionsFirstTimes(mActivity, mContext.getString(R.string.permission_storage_init),
+                    PermissionUtils.PERMISSION_STORAGE, PermissionUtils.CODE_STORAGE);
         }
     }
 

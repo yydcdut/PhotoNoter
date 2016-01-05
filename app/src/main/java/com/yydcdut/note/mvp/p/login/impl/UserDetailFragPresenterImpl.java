@@ -65,7 +65,7 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter {
         mUserDetailFragView = (IUserDetailFragView) iView;
         switch (mType) {
             case 0:
-                mLocation = mContext.getResources().getString(R.string.uc_unkown);
+                mLocation = mContext.getResources().getString(R.string.uc_unknown);
                 mUserDetailFragView.initUserDetail(getLocation(), getUseAge(), getPhone(), getAndroid(), calculateStorage());
                 break;
             case 1:
@@ -181,7 +181,7 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter {
     private String getFolderStorage() {
         long storage = FilePathUtils.getFolderStorage();
         if (storage == -1) {
-            return mContext.getResources().getString(R.string.uc_unkown);
+            return mContext.getResources().getString(R.string.uc_unknown);
         } else {
             if (storage > 1024) {
                 float storageF = storage / 1024.0f;
@@ -194,11 +194,11 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter {
     }
 
     private String getWordNumber() {
-        return mContext.getResources().getString(R.string.uc_unkown);
+        return mContext.getResources().getString(R.string.uc_unknown);
     }
 
     private String getCloud() {
-        return mContext.getResources().getString(R.string.uc_unkown);
+        return mContext.getResources().getString(R.string.uc_unknown);
     }
 
 

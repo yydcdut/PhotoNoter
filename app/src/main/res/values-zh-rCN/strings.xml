@@ -128,7 +128,7 @@
 
     <string name="preference_setting">偏好设置</string>
     <string name="theme">主题颜色</string>
-    <string name="floationg_action_button_style">悬浮按钮样式</string>
+    <string name="floating_action_button_style">悬浮按钮样式</string>
     <string name="status_bar">状态栏样式</string>
     <string name="status_bar_immersive">沉浸状态栏</string>
     <string name="status_bar_translation">透明状态栏</string>
@@ -184,7 +184,7 @@
     <string name="font_local">系统</string>
     <string name="font_roboto">Roboto</string>
     <string name="font_choose">选择字体</string>
-    <string name="loginout">登出</string>
+    <string name="logout">登出</string>
     <string name="unbind_qq">解绑腾讯QQ</string>
     <string name="unbind_sina">解绑新浪微博</string>
     <string name="bind_qq">绑定腾讯QQ</string>
@@ -207,9 +207,9 @@
     <string name="uc_android">安卓</string>
     <string name="uc_storage">存储</string>
     <string name="uc_cloud">云</string>
-    <string name="uc_unkown">未知</string>
+    <string name="uc_unknown">未知</string>
     <string name="uc_folder">文件夹大小</string>
-    <string name="uc_sanbox">沙盒照片数量</string>
+    <string name="uc_sandbox">沙盒照片数量</string>
     <string name="uc_notes">笔记数量</string>
     <string name="uc_words">总字数</string>
     <string name="zoom_big">放大</string>
