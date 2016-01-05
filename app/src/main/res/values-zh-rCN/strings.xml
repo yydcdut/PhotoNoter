@@ -218,4 +218,13 @@
     <string name="uc_no_sdcard">没有SD卡@</string>
     <string name="copy_url">复制链接</string>
 
+    <!-- Permission -->
+    <string name="permission_title">权限申请</string>
+    <string name="permission_storage_init">App需要 读写SD卡 权限，初始化时需要将用户引导等数据写入到SD卡中~！</string>
+    <string name="permission_storage">App需要 读写SD卡 权限，这样才能将照片存到SD卡中~！</string>
+    <string name="permission_camera_init">App需要 相机 权限，初始化时需要记录相机拍照片尺寸~！</string>
+    <string name="permission_camera">App需要 相机 权限，这样才能拍照~！</string>
+    <string name="permission_location">App需要 定位 权限，拍照时需要将经纬度写入到照片的Exif信息中~！（定位功能由百度地图提供哈）</string>
+    <string name="permission_phone_state">App需要 电话状态 权限，我也不知道为什么，百度地图需要的，你懂的~！</string>
+    <string name="permission_audio">App需要 麦克风 权限，语音输入时需要将音频权限~！</string>
 </resources>
