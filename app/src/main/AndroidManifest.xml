@@ -80,10 +80,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/ThemeBlue"/>
         <activity
-            android:name=".camera.controller.CameraActivity2"
-            android:screenOrientation="portrait"
-            android:theme="@style/ThemeBlue"/>
-        <activity
             android:name=".mvp.v.setting.impl.FeedbackActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ThemeBlue"/>
@@ -92,7 +88,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/ThemeBlue"/>
 
-        <service android:name=".service.InitService"/>
         <service
             android:name=".service.CameraService"
             android:process=":cameraphotos"/>

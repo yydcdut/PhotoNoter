@@ -6,7 +6,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 
 import com.yydcdut.note.R;
 import com.yydcdut.note.camera.view.callback.OnLayoutItemClickListener;
@@ -28,9 +27,9 @@ class MainLayout extends FrameLayout implements View.OnClickListener {
     private int mCurrentSensorDegree = 0;
     private int mCurrentViewDegree = 0;
 
-    private ImageView mCaptureImage;
-    private ImageView mPersonalImage;
-    private ImageView mParamImage;
+    private View mCaptureImage;
+    private View mPersonalImage;
+    private View mParamImage;
 
     private Handler mMainHandler;
 
@@ -57,11 +56,11 @@ class MainLayout extends FrameLayout implements View.OnClickListener {
     protected void onFinishInflate() {
         super.onFinishInflate();
         findViewById(R.id.btn_personal).setOnClickListener(this);
-        findViewById(R.id.btn_capture).setOnClickListener(this);
         findViewById(R.id.btn_params).setOnClickListener(this);
-        mCaptureImage = (ImageView) findViewById(R.id.img_capture);
-        mParamImage = (ImageView) findViewById(R.id.img_params);
-        mPersonalImage = (ImageView) findViewById(R.id.img_personal);
+        mCaptureImage = findViewById(R.id.img_capture);
+        mParamImage = findViewById(R.id.img_params);
+        mPersonalImage = findViewById(R.id.img_personal);
+        mCaptureImage.setOnClickListener(this);
     }
 
     public void setOnLayoutItemClickListener(OnLayoutItemClickListener onLayoutItemClickListener) {
@@ -75,11 +74,11 @@ class MainLayout extends FrameLayout implements View.OnClickListener {
                 case R.id.btn_personal:
                     mOnLayoutItemClickListener.onClick(v, LAYOUT_MAIN_PERSONAL);
                     break;
-                case R.id.btn_capture:
-                    mOnLayoutItemClickListener.onClick(v, Const.LAYOUT_MAIN_CAPTURE);
-                    break;
                 case R.id.btn_params:
                     mOnLayoutItemClickListener.onClick(v, LAYOUT_MAIN_PARAMS);
+                    break;
+                case R.id.img_capture:
+                    mOnLayoutItemClickListener.onClick(v, Const.LAYOUT_MAIN_CAPTURE);
                     break;
             }
         }
