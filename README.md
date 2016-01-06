@@ -54,7 +54,7 @@ debug{
 11. 切换主题。
 12. 可以滑动item和可以拖放item的ListView（<a href="https://github.com/yydcdut/SlideAndDragListView">SlideAndDragListView</a>）。 
 13. RxJava + RxAndroid（RxCategory/RxPhotoNote/RxSandBox/RxFeedBack/RxUser）。
-14. dex分包处理，虽然还还没有达到65536个方法，但是我还是进行了分包处理，我为什么这样做呢？我想把最先用到的几个类和依赖类放到主dex里面，让主dex的大小小一些，这样在第一次启动的时候速度快一些，同时异步去加载第二个dex！异步！异步！异步！重要的事情要说三遍。目前自己去操作dex优化的结果是比系统配置第一个dex的包要小0.1M.....
+14. dex分包处理。第一次开启App的时候 install dex + dexopt 时间很长，所以第一次开启的时候另启进程专门做这个事情，防止主线程因为时间长而发生ANR。至于自己去配置主dex是为了以防自动分包ClassNotFound异常。
 
 # 更新版本说明
 
