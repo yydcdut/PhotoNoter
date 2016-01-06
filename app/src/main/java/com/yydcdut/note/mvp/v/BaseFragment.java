@@ -1,10 +1,11 @@
 package com.yydcdut.note.mvp.v;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.annotation.NonNull;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import com.yydcdut.note.injector.component.DaggerFragmentComponent;
 import com.yydcdut.note.injector.component.FragmentComponent;
 import com.yydcdut.note.injector.module.FragmentModule;
 import com.yydcdut.note.mvp.IPresenter;
+import com.yydcdut.note.utils.PermissionUtils;
 
 /**
  * Created by yuyidong on 15-3-17.
@@ -144,5 +146,11 @@ public abstract class BaseFragment extends Fragment {
         if (mIPresenter != null) {
             mIPresenter.detachView();
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        PermissionUtils.permissionResult(mIPresenter, permissions, grantResults, requestCode);
     }
 }

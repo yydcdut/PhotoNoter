@@ -1,10 +1,10 @@
 package com.yydcdut.note.mvp.v.note.impl;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -60,7 +60,7 @@ public class ZoomActivity extends BaseActivity implements IZoomView {
      * @param comparator
      */
     public static void startActivityForResult(Fragment fragment, int categoryId, int photoNotePosition, int comparator) {
-        Intent intent = new Intent(fragment.getContext(), ZoomActivity.class);
+        Intent intent = new Intent(fragment.getActivity(), ZoomActivity.class);
         Bundle bundle = new Bundle();
         bundle.putInt(Const.CATEGORY_ID_4_PHOTNOTES, categoryId);
         bundle.putInt(Const.PHOTO_POSITION, photoNotePosition);

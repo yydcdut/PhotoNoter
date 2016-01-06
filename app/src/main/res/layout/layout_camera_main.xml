@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/layout_camera_capture"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="150dip"
+    android:background="?attr/colorPrimaryDark"
+    android:orientation="vertical">
+
+    <com.yydcdut.note.view.MaterialRippleLayout
+        android:id="@+id/layout_ripple_capture"
+        android:layout_width="match_parent"
+        android:layout_height="150dip"
+        app:mrl_rippleAlpha="0.2"
+        app:mrl_rippleColor="?attr/colorPrimary"
+        app:mrl_rippleHover="true"
+        app:mrl_rippleOverlay="false">
+
+        <ImageView
+            android:id="@+id/img_capture"
+            android:layout_width="96dip"
+            android:layout_height="96dip"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_camera_normal"/>
+    </com.yydcdut.note.view.MaterialRippleLayout>
+
+    <FrameLayout
+        android:id="@+id/img_fly"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="36dp"
+        android:background="@drawable/bg_circle">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_send_white_24dp"/>
+    </FrameLayout>
+
+
+</RelativeLayout>

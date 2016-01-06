@@ -344,14 +344,16 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
     @OnClick(R.id.fab_camera)
     public void clickFabCamera(View v) {
         mAlbumPresenter.jump2Camera();
-        //过1s自动关闭
+        //过10s自动关闭
         mMainHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mFloatingActionsMenu.collapse(false);
-                hideAlbumRevealColorView(getLocationInView(mAlbumRevealView, mFloatingView));
+                if (mFloatingActionsMenu.isExpanded()) {
+                    mFloatingActionsMenu.collapse(false);
+                    hideAlbumRevealColorView(getLocationInView(mAlbumRevealView, mFloatingView));
+                }
             }
-        }, 1000);
+        }, 10000);
     }
 
     @OnClick(R.id.fab_local)
@@ -637,7 +639,6 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
 
     @Override
     public void jump2CameraActivity(int categoryId) {
-//        Intent intent = new Intent(getContext(), CameraActivity2.class);
         Intent intent = new Intent(getContext(), CameraActivity.class);
         Bundle bundle = new Bundle();
         bundle.putInt(Const.CATEGORY_ID_4_PHOTNOTES, categoryId);

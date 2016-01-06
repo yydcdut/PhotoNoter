@@ -1,8 +1,8 @@
 package com.yydcdut.note.injector.module;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
-import android.support.v4.app.Fragment;
 
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.injector.PerFragment;
@@ -32,5 +32,11 @@ public class FragmentModule {
     @PerFragment
     public Activity provideActivity() {
         return mFragment.getActivity();
+    }
+
+    @Provides
+    @PerFragment
+    public Fragment provideFragment() {
+        return mFragment;
     }
 }

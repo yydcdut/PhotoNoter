@@ -445,7 +445,7 @@ public class DetailActivity extends BaseActivity implements IDetailView,
 
     @Override
     public void setViewPagerAdapter(List<PhotoNote> list, int position, int comparator) {
-        mDetailPagerAdapter = new DetailPagerAdapter(list, getSupportFragmentManager(), comparator);
+        mDetailPagerAdapter = new DetailPagerAdapter(list, getFragmentManager(), comparator);
         mViewPager.setAdapter(mDetailPagerAdapter);
         mViewPager.setCurrentItem(position);
     }

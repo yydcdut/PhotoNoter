@@ -2,10 +2,12 @@ package com.yydcdut.note.utils;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
+import android.support.v13.app.FragmentCompat;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -102,10 +104,28 @@ public class PermissionUtils {
         AlertDialog dialog = new AlertDialog.Builder(activity, R.style.note_dialog)
                 .setTitle(R.string.permission_title)
                 .setMessage(explanation)
+                .setCancelable(false)
                 .setPositiveButton(R.string.dialog_btn_ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         ActivityCompat.requestPermissions(activity, permissions, code);
+                    }
+                })
+                .create();
+        dialog.show();
+    }
+
+    public static void requestPermissionsWithDialog(final @NonNull Fragment fragment, String explanation,
+                                                    final String[] permissions, final int code) {
+        //explanation
+        AlertDialog dialog = new AlertDialog.Builder(fragment.getActivity(), R.style.note_dialog)
+                .setTitle(R.string.permission_title)
+                .setMessage(explanation)
+                .setCancelable(false)
+                .setPositiveButton(R.string.dialog_btn_ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        FragmentCompat.requestPermissions(fragment, permissions, code);
                     }
                 })
                 .create();
@@ -126,6 +146,7 @@ public class PermissionUtils {
             AlertDialog dialog = new AlertDialog.Builder(activity, R.style.note_dialog)
                     .setTitle(R.string.permission_title)
                     .setMessage(explanation)
+                    .setCancelable(false)
                     .setPositiveButton(R.string.dialog_btn_ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -144,6 +165,42 @@ public class PermissionUtils {
             dialog.show();
         } else {
             ActivityCompat.requestPermissions(activity, permissions, code);
+        }
+    }
+
+    public static void requestPermissions(final @NonNull Fragment fragment, String explanation, final String[] permissions,
+                                          final int code, final OnRequestPermissionDeniedByUserListener listener) {
+        boolean shouldShowRationale = false;
+        for (String permission : permissions) {
+            if (FragmentCompat.shouldShowRequestPermissionRationale(fragment, permission)) {
+                shouldShowRationale = true;
+                break;
+            }
+        }
+        if (shouldShowRationale) {
+            //explanation
+            AlertDialog dialog = new AlertDialog.Builder(fragment.getActivity(), R.style.note_dialog)
+                    .setTitle(R.string.permission_title)
+                    .setMessage(explanation)
+                    .setCancelable(false)
+                    .setPositiveButton(R.string.dialog_btn_ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            FragmentCompat.requestPermissions(fragment, permissions, code);
+                        }
+                    })
+                    .setNegativeButton(R.string.dialog_btn_cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (listener != null) {
+                                listener.onDenied(code);
+                            }
+                        }
+                    })
+                    .create();
+            dialog.show();
+        } else {
+            FragmentCompat.requestPermissions(fragment, permissions, code);
         }
     }
 

@@ -1,9 +1,11 @@
 package com.yydcdut.note.mvp.p.home.impl;
 
+import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.yydcdut.note.R;
@@ -24,11 +26,14 @@ import com.yydcdut.note.mvp.v.home.IAlbumView;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.LocalStorageUtils;
+import com.yydcdut.note.utils.PermissionUtils;
 import com.yydcdut.note.utils.Utils;
+import com.yydcdut.note.utils.permission.Permission;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -42,7 +47,8 @@ import rx.functions.Action0;
 /**
  * Created by yuyidong on 15/11/20.
  */
-public class AlbumPresenterImpl implements IAlbumPresenter {
+public class AlbumPresenterImpl implements IAlbumPresenter, PermissionUtils.OnPermissionCallBacks,
+        PermissionUtils.OnRequestPermissionDeniedByUserListener {
 
     private IAlbumView mAlbumView;
 
@@ -50,18 +56,19 @@ public class AlbumPresenterImpl implements IAlbumPresenter {
     private int mAlbumSortKind;
 
     private Context mContext;
-
+    private Fragment mFragment;
     private LocalStorageUtils mLocalStorageUtils;
     private RxCategory mRxCategory;
     private RxPhotoNote mRxPhotoNote;
     private RxSandBox mRxSandBox;
 
     @Inject
-    public AlbumPresenterImpl(@ContextLife("Activity") Context context, RxCategory rxCategory,
-                              RxPhotoNote rxPhotoNote, RxSandBox rxSandBox,
+    public AlbumPresenterImpl(@ContextLife("Activity") Context context, Fragment fragment,
+                              RxCategory rxCategory, RxPhotoNote rxPhotoNote, RxSandBox rxSandBox,
                               LocalStorageUtils localStorageUtils) {
 
         mContext = context;
+        mFragment = fragment;
         mRxCategory = rxCategory;
         mRxPhotoNote = rxPhotoNote;
         mRxSandBox = rxSandBox;
@@ -394,8 +401,9 @@ public class AlbumPresenterImpl implements IAlbumPresenter {
         if (mLocalStorageUtils.getCameraSystem()) {
             mAlbumView.jump2CameraSystemActivity();
         } else {
-            mAlbumView.jump2CameraActivity(mCategoryId);
+            getCameraPermission();
         }
+
     }
 
     @Override
@@ -411,4 +419,37 @@ public class AlbumPresenterImpl implements IAlbumPresenter {
     public int calculateGridNumber() {
         return mLocalStorageUtils.getAlbumItemNumber();
     }
+
+    @Permission(PermissionUtils.CODE_CAMERA)
+    private void getCameraPermission() {
+        boolean hasPermission = PermissionUtils.hasPermission4Camera(mContext);
+        if (hasPermission) {
+            mAlbumView.jump2CameraActivity(mCategoryId);
+        } else {
+            PermissionUtils.requestPermissions(mFragment, mContext.getString(R.string.permission_camera),
+                    PermissionUtils.PERMISSION_CAMERA, PermissionUtils.CODE_CAMERA, this);
+        }
+    }
+
+    @Override
+    public void onDenied(int requestCode) {
+        PermissionUtils.requestPermissions(mFragment, mContext.getString(R.string.permission_camera),
+                PermissionUtils.PERMISSION_CAMERA, PermissionUtils.CODE_CAMERA, this);
+    }
+
+    @Override
+    public void onPermissionsGranted(List<String> permissions) {
+
+    }
+
+    @Override
+    public void onPermissionsDenied(List<String> permissions) {
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    }
 }
+
+

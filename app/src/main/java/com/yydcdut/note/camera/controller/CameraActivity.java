@@ -1,6 +1,7 @@
 package com.yydcdut.note.camera.controller;
 
 import android.content.Context;
+import android.hardware.Camera;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -31,7 +32,9 @@ import com.yydcdut.note.utils.LocalStorageUtils;
 
 import org.json.JSONException;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -95,6 +98,11 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
         Bundle bundle = getIntent().getExtras();
         mCategoryId = bundle.getInt(Const.CATEGORY_ID_4_PHOTNOTES);
         AppCompat.setFullWindow(getWindow());
+        try {
+            initCameraNumberAndPictureSize();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         setContentView(R.layout.activity_camera);
         initData();
         initUIAndListener();
@@ -428,7 +436,9 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
     @Override
     protected void onPause() {
         super.onPause();
-        mCameraModel.stopPreview();
+        if (mCameraModel != null) {
+            mCameraModel.stopPreview();
+        }
         if (mIsSaving) {
             mLocalStorageUtils.setCameraSaveTimer(mTimerState);
             mLocalStorageUtils.setCameraSaveCameraId(mCameraId);
@@ -445,9 +455,11 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mCameraModel.closeCamera();
-        mCameraModel.onDestroy(CameraActivity.this);
-        destroySensor();
+        if (mCameraModel != null) {
+            mCameraModel.closeCamera();
+            mCameraModel.onDestroy(CameraActivity.this);
+            destroySensor();
+        }
     }
 
     /**
@@ -774,9 +786,8 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
 
         }
     };
+
     //-------------------------  Sensor  -------------------------
-
-
     @Override
     public void onBackPressed() {
         if (mMenuLayout.isOtherLayoutShowing()) {
@@ -785,4 +796,62 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
             super.onBackPressed();
         }
     }
+
+    /**
+     * 初始化相机的拍照尺寸、相机个数
+     */
+    private void initCameraNumberAndPictureSize() throws JSONException {
+        List<Size> initSizeList = mLocalStorageUtils.getPictureSizes(Const.CAMERA_BACK);
+        if (initSizeList != null) {
+            return;
+        }
+        //暂时用Camera的方法
+        int total = Camera.getNumberOfCameras();
+        mLocalStorageUtils.setCameraNumber(total);
+        int[] cameraIds;
+        if (total == 0) {
+            cameraIds = new int[0];
+        } else if (total == 1) {
+            cameraIds = new int[]{0};
+        } else {
+            cameraIds = new int[]{0, 1};
+        }
+        for (int i = 0; i < cameraIds.length; i++) {
+            try {
+                List<Size> sizeList = getPictureSizeJsonArray(cameraIds[i]);
+                Collections.sort(sizeList, new Comparator<Size>() {
+                    @Override
+                    public int compare(Size lhs, Size rhs) {
+                        return -(lhs.getWidth() * lhs.getHeight() - rhs.getWidth() * rhs.getHeight());
+                    }
+                });
+                mLocalStorageUtils.setPictureSizes(String.valueOf(cameraIds[i]), sizeList);
+                Size suitableSize = sizeList.get(0);
+                mLocalStorageUtils.setPictureSize(String.valueOf(cameraIds[i]), suitableSize);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * 打开这个activity的时候去判断
+     * 将List的数据存为JsonArray
+     *
+     * @param cameraId
+     * @return
+     * @throws JSONException
+     */
+    private List<Size> getPictureSizeJsonArray(int cameraId) throws JSONException {
+        Camera camera = Camera.open(cameraId);
+        Camera.Parameters parameters = camera.getParameters();
+        List<Camera.Size> cameraSizeList = parameters.getSupportedPictureSizes();
+        camera.release();
+        List<Size> sizeList = new ArrayList<>();
+        for (Camera.Size size : cameraSizeList) {
+            sizeList.add(Size.parseSize(size));
+        }
+        return sizeList;
+    }
+
 }

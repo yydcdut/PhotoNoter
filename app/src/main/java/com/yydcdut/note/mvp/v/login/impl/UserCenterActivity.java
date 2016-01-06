@@ -3,7 +3,7 @@ package com.yydcdut.note.mvp.v.login.impl;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -113,7 +113,7 @@ public class UserCenterActivity extends BaseActivity implements IUserCenterView 
     }
 
     private void initViewPager() {
-        mPagerAdapter = new UserCenterFragmentAdapter(getSupportFragmentManager());
+        mPagerAdapter = new UserCenterFragmentAdapter(getFragmentManager());
         mViewPager.setAdapter(mPagerAdapter);
     }
 
