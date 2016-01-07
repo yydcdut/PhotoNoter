@@ -321,6 +321,8 @@ public class SettingPresenterImpl implements ISettingPresenter, PermissionUtils.
                     e.printStackTrace();
                     mSettingView.showSnackbar(mContext.getString(R.string.toast_fail));
                 }
+            } else {
+                onCameraIdsSelected(0);
             }
         } else {
             PermissionUtils.requestPermissionsWithDialog(mActivity, mContext.getString(R.string.permission_camera_init),
