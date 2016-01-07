@@ -401,7 +401,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter, PermissionUtils.OnPe
         if (mLocalStorageUtils.getCameraSystem()) {
             mAlbumView.jump2CameraSystemActivity();
         } else {
-            getCameraPermission();
+            getPermissionAndJumpCameraActivity();
         }
 
     }
@@ -421,10 +421,16 @@ public class AlbumPresenterImpl implements IAlbumPresenter, PermissionUtils.OnPe
     }
 
     @Permission(PermissionUtils.CODE_CAMERA)
-    private void getCameraPermission() {
-        boolean hasPermission = PermissionUtils.hasPermission4Camera(mContext);
-        if (hasPermission) {
-            mAlbumView.jump2CameraActivity(mCategoryId);
+    private void getPermissionAndJumpCameraActivity() {
+        boolean hasCameraPermission = PermissionUtils.hasPermission4Camera(mContext);
+        if (hasCameraPermission) {
+            boolean hasLocationPermission = PermissionUtils.hasPermission4Location(mContext);
+            if (hasLocationPermission) {
+                mAlbumView.jump2CameraActivity(mCategoryId);
+            } else {
+                PermissionUtils.requestPermissions(mFragment, mContext.getString(R.string.permission_location),
+                        PermissionUtils.PERMISSION_LOCATION, PermissionUtils.CODE_LOCATION, this);
+            }
         } else {
             PermissionUtils.requestPermissions(mFragment, mContext.getString(R.string.permission_camera),
                     PermissionUtils.PERMISSION_CAMERA, PermissionUtils.CODE_CAMERA, this);
@@ -433,8 +439,13 @@ public class AlbumPresenterImpl implements IAlbumPresenter, PermissionUtils.OnPe
 
     @Override
     public void onDenied(int requestCode) {
-        PermissionUtils.requestPermissions(mFragment, mContext.getString(R.string.permission_camera),
-                PermissionUtils.PERMISSION_CAMERA, PermissionUtils.CODE_CAMERA, this);
+        if (requestCode == PermissionUtils.CODE_CAMERA) {
+            PermissionUtils.requestPermissions(mFragment, mContext.getString(R.string.permission_camera),
+                    PermissionUtils.PERMISSION_CAMERA, PermissionUtils.CODE_CAMERA, this);
+        } else if (requestCode == PermissionUtils.CODE_LOCATION) {
+            PermissionUtils.requestPermissions(mFragment, mContext.getString(R.string.permission_location),
+                    PermissionUtils.PERMISSION_LOCATION, PermissionUtils.CODE_LOCATION, this);
+        }
     }
 
     @Override
@@ -444,7 +455,6 @@ public class AlbumPresenterImpl implements IAlbumPresenter, PermissionUtils.OnPe
 
     @Override
     public void onPermissionsDenied(List<String> permissions) {
-
     }
 
     @Override

@@ -323,7 +323,7 @@ public class HomePresenterImpl implements IHomePresenter, PermissionUtils.OnPerm
             public void run() {
                 initBaiduMap();
             }
-        }, 2000);
+        }, 200);
     }
 
     @Permission(PermissionUtils.CODE_PHONE_STATE)
