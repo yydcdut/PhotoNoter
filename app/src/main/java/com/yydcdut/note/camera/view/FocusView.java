@@ -69,7 +69,7 @@ public class FocusView extends View {
         initLooper();
         mPaint = new Paint();
         mPaint.setColor(Color.YELLOW);
-        mPaint.setStrokeWidth(3.5f);
+        mPaint.setStrokeWidth(2);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setAntiAlias(true);
     }
@@ -94,8 +94,6 @@ public class FocusView extends View {
         super.onDraw(canvas);
 
         canvas.drawArc(calculateRectF(), 0, 360, false, mPaint);
-        drawRect(canvas);
-
         if (mActionState == MotionEvent.ACTION_UP && mLength <= MAX_LENGTH) {
             mLength += 5;
             invalidate();
@@ -104,6 +102,8 @@ public class FocusView extends View {
             if (mLength <= getResources().getDimension(R.dimen.focus_length_min)) {
                 mLength = getResources().getDimension(R.dimen.focus_length_min);
             }
+        } else if (mLength >= MAX_LENGTH) {
+            mLength = MAX_LENGTH;
         }
 
     }
@@ -115,25 +115,6 @@ public class FocusView extends View {
      */
     private RectF calculateRectF() {
         return new RectF(mX - mLength / 2, mY - mLength / 2, mX + mLength / 2, mY + mLength / 2);
-    }
-
-    private void drawRect(Canvas canvas) {
-        //x
-        canvas.drawLine(mX - 10, mY - 10, mX - 5, mY - 10, mPaint);
-        canvas.drawLine(mX + 5, mY - 10, mX + 10, mY - 10, mPaint);
-        canvas.drawLine(mX - 10, mY + 10, mX - 5, mY + 10, mPaint);
-        canvas.drawLine(mX + 5, mY + 10, mX + 10, mY + 10, mPaint);
-        //y
-        canvas.drawLine(mX - 10, mY - 10, mX - 10, mY - 5, mPaint);
-        canvas.drawLine(mX - 10, mY + 5, mX - 10, mY + 10, mPaint);
-        canvas.drawLine(mX + 10, mY - 10, mX + 10, mY - 5, mPaint);
-        canvas.drawLine(mX + 10, mY + 5, mX + 10, mY + 10, mPaint);
-        //x
-        canvas.drawLine(mX - mLength / 2, mY, mX - mLength / 2 + 5, mY, mPaint);
-        canvas.drawLine(mX + mLength / 2 - 5, mY, mX + mLength / 2, mY, mPaint);
-        //y
-        canvas.drawLine(mX, mY - mLength / 2, mX, mY - mLength / 2 + 5, mPaint);
-        canvas.drawLine(mX, mY + mLength / 2 - 5, mX, mY + mLength / 2, mPaint);
     }
 
     /**
