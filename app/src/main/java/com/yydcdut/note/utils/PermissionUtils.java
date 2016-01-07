@@ -28,6 +28,7 @@ public class PermissionUtils {
     private static final String TAG = PermissionUtils.class.getSimpleName();
 
     public static final int CODE_CAMERA = 0;
+    public static final int CODE_ADJUST_CAMERA = -1;
     public static final int CODE_STORAGE = 1;
     public static final int CODE_LOCATION = 2;
     public static final int CODE_AUDIO = 3;

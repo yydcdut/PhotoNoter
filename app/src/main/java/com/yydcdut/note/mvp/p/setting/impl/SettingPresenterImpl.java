@@ -104,7 +104,7 @@ public class SettingPresenterImpl implements ISettingPresenter, PermissionUtils.
                 mSettingView.jump2EditCategoryActivity();
                 break;
             case ISettingPresenter.TAG_CAMERA_FIX:
-                mSettingView.jump2CameraFixActivity();
+                adjustCameraWithPermission();
                 break;
             case ISettingPresenter.TAG_CAMERA_SYSTEM:
                 boolean isSystem = mLocalStorageUtils.getCameraSystem();
@@ -123,7 +123,7 @@ public class SettingPresenterImpl implements ISettingPresenter, PermissionUtils.
                 if (mLocalStorageUtils.getCameraSystem()) {
                     break;
                 }
-                getPermissionOfCamera();
+                getPictureSizeWithPermission();
                 break;
             case ISettingPresenter.TAG_CAMERA_SAVE:
                 if (mLocalStorageUtils.getCameraSystem()) {
@@ -305,7 +305,7 @@ public class SettingPresenterImpl implements ISettingPresenter, PermissionUtils.
     }
 
     @Permission(PermissionUtils.CODE_CAMERA)
-    private void getPermissionOfCamera() {
+    private void getPictureSizeWithPermission() {
         boolean hasPermission = PermissionUtils.hasPermission4Camera(mContext);
         if (hasPermission) {
             try {
@@ -327,6 +327,27 @@ public class SettingPresenterImpl implements ISettingPresenter, PermissionUtils.
         } else {
             PermissionUtils.requestPermissionsWithDialog(mActivity, mContext.getString(R.string.permission_camera_init),
                     PermissionUtils.PERMISSION_CAMERA, PermissionUtils.CODE_CAMERA);
+        }
+    }
+
+    @Permission(PermissionUtils.CODE_ADJUST_CAMERA)
+    private void adjustCameraWithPermission() {
+        boolean hasPermission = PermissionUtils.hasPermission4Camera(mContext);
+        if (hasPermission) {
+            try {
+                initCameraNumberAndPictureSize();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            mSettingView.jump2CameraFixActivity();
+        } else {
+            PermissionUtils.requestPermissions(mActivity, mContext.getString(R.string.permission_camera),
+                    PermissionUtils.PERMISSION_CAMERA, PermissionUtils.CODE_ADJUST_CAMERA, new PermissionUtils.OnRequestPermissionDeniedByUserListener() {
+                        @Override
+                        public void onDenied(int requestCode) {
+                            mSettingView.showSnackbar(mContext.getString(R.string.permission_cancel));
+                        }
+                    });
         }
     }
 
