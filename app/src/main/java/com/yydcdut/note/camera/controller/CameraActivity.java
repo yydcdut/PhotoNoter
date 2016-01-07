@@ -44,9 +44,9 @@ import java.util.List;
  */
 public class CameraActivity extends AppCompatActivity implements SurfaceHolder.Callback,
         OnLayoutItemClickListener, AnimationTextView.OnAnimationTextViewListener,
-        IsoView.OnValueChangedListener, FocusView.OnTriggerFocusListener,
-        FocusView.OnFocusStateChangedListener, GestureView.OnZoomScaleListener,
-        GestureView.OnFocusListener {
+        IsoView.OnValueChangedListener, IsoView.OnIsoViewOnTouchedListener,
+        FocusView.OnTriggerFocusListener, FocusView.OnFocusStateChangedListener,
+        GestureView.OnZoomScaleListener, GestureView.OnFocusListener {
     /* Size */
     private Size mFullSize;
     private Size m43Size;
@@ -175,6 +175,7 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
 
         mIsoView = (IsoView) findViewById(R.id.pb_iso);
         mIsoView.setOnValueChangedListener(this);
+        mIsoView.setOnIsoViewOnTouchedListener(this);
     }
 
     @Override
@@ -529,7 +530,9 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
         mCameraModel.startPreview();
         initUiParams();
     }
+    //-------------------------  parameters  -------------------------
 
+    //-------------------------  Iso  -------------------------
     @Override
     public void onValueChanged(View view, int value) {
         int max = mCameraModel.getSettingModel().getMaxExposureCompensation();
@@ -539,9 +542,13 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
             mCameraModel.getSettingModel().setExposureCompensation(finalValue);
         }
         mExposureCompensation = finalValue;
+    }
+
+    @Override
+    public void onTouched() {
         mFocusImage.delayDisappear();
     }
-    //-------------------------  parameters  -------------------------
+    //-------------------------  Iso  -------------------------
 
 
     //-------------------------  Focus  -------------------------
@@ -598,7 +605,7 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
         if (x <= Utils.sScreenWidth / 2) {
             leftMargin = x + getResources().getDimension(R.dimen.focus_length_max) * 2 / 3;
         } else {
-            leftMargin = x - getResources().getDimension(R.dimen.focus_length_max) * 2 / 3;
+            leftMargin = x - getResources().getDimension(R.dimen.focus_length_max);
         }
         layoutParams.setMargins((int) (leftMargin), (int) (y - isoHeight / 2), 0, 0);
     }
@@ -884,5 +891,6 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
         }
         return sizeList;
     }
+
 
 }

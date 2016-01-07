@@ -36,6 +36,11 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"/>
 
+    <com.yydcdut.note.camera.view.IsoView
+        android:id="@+id/pb_iso"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/iso_height"/>
+
     <com.yydcdut.note.camera.view.MenuLayout
         android:id="@+id/layout_menu"
         android:layout_width="fill_parent"
@@ -69,13 +74,6 @@
             android:layout_alignParentTop="true"
             android:background="@android:color/white"
             android:visibility="gone"/>
-
-        <com.yydcdut.note.camera.view.IsoView
-            android:id="@+id/pb_iso"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/iso_height"/>
-
-
     </com.yydcdut.note.camera.view.MenuLayout>
 
 </RelativeLayout>

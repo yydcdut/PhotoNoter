@@ -121,6 +121,9 @@ public class IsoView extends View {
                 }
                 break;
         }
+        if (mOnIsoViewOnTouchedListener != null) {
+            mOnIsoViewOnTouchedListener.onTouched();
+        }
         return super.onTouchEvent(event);
     }
 
@@ -159,5 +162,15 @@ public class IsoView extends View {
         float percent = ((float) (value)) / mValueMax;
         mDeltaY = mHeight * percent;
         invalidate();
+    }
+
+    private OnIsoViewOnTouchedListener mOnIsoViewOnTouchedListener;
+
+    public void setOnIsoViewOnTouchedListener(OnIsoViewOnTouchedListener onIsoViewOnTouchedListener) {
+        mOnIsoViewOnTouchedListener = onIsoViewOnTouchedListener;
+    }
+
+    public interface OnIsoViewOnTouchedListener {
+        void onTouched();
     }
 }
