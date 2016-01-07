@@ -97,6 +97,8 @@
 
     <dimen name="focus_length_max">75dip</dimen>
     <dimen name="focus_length_min">50dip</dimen>
+    <dimen name="iso_height">150dip</dimen>
+
 
     <!-- CardView -->
     <dimen name="card_corner">3dip</dimen>

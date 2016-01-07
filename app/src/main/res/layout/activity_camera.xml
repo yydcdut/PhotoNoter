@@ -73,11 +73,8 @@
         <com.yydcdut.note.camera.view.IsoView
             android:id="@+id/pb_iso"
             android:layout_width="wrap_content"
-            android:layout_height="200dip"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/view_cover"
-            android:layout_marginRight="5dip"
-            android:layout_marginTop="100dip"/>
+            android:layout_height="@dimen/iso_height"/>
+
 
     </com.yydcdut.note.camera.view.MenuLayout>
 

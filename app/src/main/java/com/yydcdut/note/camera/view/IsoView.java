@@ -29,7 +29,7 @@ public class IsoView extends View {
     /* 德尔塔 */
     private float mDeltaY = -1;
     /* 笔的宽度 */
-    private float mPaintWidth = 2.5f;
+    private float mPaintWidth = 2f;
     /* Scroller */
     private Scroller mScroller;
     /* Bitmap的左上角位置 */

@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.View;
+import android.widget.RelativeLayout;
 
 import com.yydcdut.note.R;
 import com.yydcdut.note.camera.model.AbsCameraModel;
@@ -29,6 +30,7 @@ import com.yydcdut.note.model.compare.SizeComparator;
 import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.LocalStorageUtils;
+import com.yydcdut.note.utils.Utils;
 
 import org.json.JSONException;
 
@@ -43,7 +45,8 @@ import java.util.List;
 public class CameraActivity extends AppCompatActivity implements SurfaceHolder.Callback,
         OnLayoutItemClickListener, AnimationTextView.OnAnimationTextViewListener,
         IsoView.OnValueChangedListener, FocusView.OnTriggerFocusListener,
-        GestureView.OnZoomScaleListener, GestureView.OnFocusListener {
+        FocusView.OnFocusStateChangedListener, GestureView.OnZoomScaleListener,
+        GestureView.OnFocusListener {
     /* Size */
     private Size mFullSize;
     private Size m43Size;
@@ -162,6 +165,7 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
         mFocusImage = (FocusView) findViewById(R.id.img_focus);
         mFocusImage.setVisibility(View.INVISIBLE);
         mFocusImage.setOnTriggerFocusListener(this);
+        mFocusImage.setOnFocusStateChangedListener(this);
         mWindowTextView = (AnimationTextView) findViewById(R.id.txt_timer);
         mWindowTextView.setVisibility(View.INVISIBLE);
         mWindowTextView.setOnAnimationTextViewListener(this);
@@ -535,6 +539,7 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
             mCameraModel.getSettingModel().setExposureCompensation(finalValue);
         }
         mExposureCompensation = finalValue;
+        mFocusImage.delayDisappear();
     }
     //-------------------------  parameters  -------------------------
 
@@ -553,6 +558,7 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
     private void initFocusImage() {
         if (mCameraId.equals(Const.CAMERA_BACK)) {
             mFocusImage.initFocus(mViewWidth, mViewHeight);
+            mIsoView.setVisibility(View.GONE);
         } else {
             mFocusImage.setNotSupport();
         }
@@ -580,6 +586,31 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
             mCameraModel.getFocusModel().triggerFocus((int) x, (int) y);
         }
         return true;
+    }
+
+
+    @Override
+    public void onBeginFocusing(float x, float y) {
+        mIsoView.setVisibility(View.VISIBLE);
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mIsoView.getLayoutParams();
+        float isoHeight = getResources().getDimension(R.dimen.iso_height);
+        float leftMargin;
+        if (x <= Utils.sScreenWidth / 2) {
+            leftMargin = x + getResources().getDimension(R.dimen.focus_length_max) * 2 / 3;
+        } else {
+            leftMargin = x - getResources().getDimension(R.dimen.focus_length_max) * 2 / 3;
+        }
+        layoutParams.setMargins((int) (leftMargin), (int) (y - isoHeight / 2), 0, 0);
+    }
+
+    @Override
+    public void onBeginMoving() {
+        mIsoView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onFocusDisappeared() {
+        mIsoView.setVisibility(View.GONE);
     }
     //-------------------------  Focus  -------------------------
 

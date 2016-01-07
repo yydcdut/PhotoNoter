@@ -56,6 +56,9 @@ public class FocusView extends View {
      */
     private Paint mPaint;
 
+    private int mViewWidth;
+    private int mViewHeight;
+
     public FocusView(Context context) {
         this(context, null);
     }
@@ -96,16 +99,16 @@ public class FocusView extends View {
         canvas.drawArc(calculateRectF(), 0, 360, false, mPaint);
         if (mActionState == MotionEvent.ACTION_UP && mLength <= MAX_LENGTH) {
             mLength += 5;
+            if (mLength >= MAX_LENGTH) {
+                mLength = MAX_LENGTH;
+            }
             invalidate();
         } else if (mActionState == MotionEvent.ACTION_MOVE) {
             mLength -= 2;
             if (mLength <= getResources().getDimension(R.dimen.focus_length_min)) {
                 mLength = getResources().getDimension(R.dimen.focus_length_min);
             }
-        } else if (mLength >= MAX_LENGTH) {
-            mLength = MAX_LENGTH;
         }
-
     }
 
     /**
@@ -118,14 +121,14 @@ public class FocusView extends View {
     }
 
     /**
-     * 聚焦成功--->变绿
+     * 聚焦成功
      */
     private void focusSuccess() {
         if (!mIsSupport) {
             return;
         }
         this.setVisibility(VISIBLE);
-        mPaint.setColor(Color.GREEN);
+        mPaint.setColor(Color.YELLOW);
         invalidate();
         mHandler.sendEmptyMessageDelayed(IMAGE_DISAPPEAR_GOOD, 400);
     }
@@ -149,6 +152,9 @@ public class FocusView extends View {
                     break;
                 case IMAGE_DISAPPEAR_GOOD:
                     stopFocus();
+                    if (mOnFocusStateChangedListener != null) {
+                        mOnFocusStateChangedListener.onFocusDisappeared();
+                    }
                     break;
             }
             return false;
@@ -178,17 +184,17 @@ public class FocusView extends View {
         mY = y;
         invalidate();
         mHandler.sendEmptyMessageDelayed(IMAGE_DISAPPEAR, 1000);
+        if (mOnFocusStateChangedListener != null) {
+            mOnFocusStateChangedListener.onBeginFocusing(x, y);
+        }
         return true;
     }
-
-    private int mViewWidth;
-    private int mViewHeight;
 
     public void initFocus(int viewWidth, int viewHeight) {
         mIsSupport = true;
         mViewWidth = viewWidth;
         mViewHeight = viewHeight;
-        this.setVisibility(VISIBLE);
+        this.setVisibility(INVISIBLE);
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -213,6 +219,9 @@ public class FocusView extends View {
                         mY = event.getY();
                         invalidate();
                         mMoveFollow = true;
+                        if (mOnFocusStateChangedListener != null) {
+                            mOnFocusStateChangedListener.onBeginMoving();
+                        }
                     } else if (mMoveFollow) {
                         mX = event.getX();
                         mY = event.getY();
@@ -242,7 +251,20 @@ public class FocusView extends View {
                 mMoveFollow = false;
                 break;
         }
+    }
 
+    public void delayDisappear() {
+        if (!mIsSupport) {
+            return;
+        }
+        if (mHandler.hasMessages(IMAGE_DISAPPEAR_GOOD)) {
+            mHandler.removeMessages(IMAGE_DISAPPEAR_GOOD);
+            mHandler.sendEmptyMessageDelayed(IMAGE_DISAPPEAR_GOOD, 400);
+        }
+        if (mHandler.hasMessages(IMAGE_DISAPPEAR)) {
+            mHandler.removeMessages(IMAGE_DISAPPEAR);
+            mHandler.sendEmptyMessageDelayed(IMAGE_DISAPPEAR, 400);
+        }
     }
 
     private OnTriggerFocusListener mOnTriggerFocusListener;
@@ -255,5 +277,18 @@ public class FocusView extends View {
         void onTriggerFocus(float x, float y);
     }
 
+    private OnFocusStateChangedListener mOnFocusStateChangedListener;
+
+    public void setOnFocusStateChangedListener(OnFocusStateChangedListener onFocusStateChangedListener) {
+        mOnFocusStateChangedListener = onFocusStateChangedListener;
+    }
+
+    public interface OnFocusStateChangedListener {
+        void onBeginFocusing(float x, float y);
+
+        void onBeginMoving();
+
+        void onFocusDisappeared();
+    }
 
 }
