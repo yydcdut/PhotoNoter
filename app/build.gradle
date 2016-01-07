@@ -54,8 +54,9 @@ android {
             buildConfigField "boolean", "LOG_DEBUG", "false"
         }
         debug {
-//            minifyEnabled true
-//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.cfg'
+            signingConfig signingConfigs.debug
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.cfg'
             buildConfigField "boolean", "LOG_DEBUG", "true"
         }
     }
@@ -94,7 +95,7 @@ android.applicationVariants.all {
                     dex.additionalParameters = []
                 }
                 dex.additionalParameters += '--multi-dex'
-                dex.additionalParameters += '--set-max-idx-number=48000'
+                dex.additionalParameters += '--set-max-idx-number=55000'
 //                dex.additionalParameters += "--main-dex-list=$projectDir/multidex.keep".toString()
         }
 }

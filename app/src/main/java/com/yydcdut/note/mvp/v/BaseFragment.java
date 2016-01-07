@@ -151,6 +151,8 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        PermissionUtils.permissionResult(mIPresenter, permissions, grantResults, requestCode);
+        if (mIPresenter != null) {
+            PermissionUtils.permissionResult(mIPresenter, permissions, grantResults, requestCode);
+        }
     }
 }

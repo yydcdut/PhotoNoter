@@ -214,7 +214,9 @@ public abstract class BaseActivity extends AppCompatActivity implements IThemeVi
     protected void onDestroy() {
         super.onDestroy();
         ActivityCollector.removeActivity(this);
-        mIPresenter.detachView();
+        if (mIPresenter != null) {
+            mIPresenter.detachView();
+        }
     }
 
     @Override
@@ -232,6 +234,8 @@ public abstract class BaseActivity extends AppCompatActivity implements IThemeVi
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        PermissionUtils.permissionResult(mIPresenter, permissions, grantResults, requestCode);
+        if (mIPresenter != null) {
+            PermissionUtils.permissionResult(mIPresenter, permissions, grantResults, requestCode);
+        }
     }
 }
