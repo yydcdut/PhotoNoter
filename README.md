@@ -55,6 +55,7 @@ debug{
 12. 可以滑动item和可以拖放item的ListView（<a href="https://github.com/yydcdut/SlideAndDragListView">SlideAndDragListView</a>）。 
 13. RxJava + RxAndroid（RxCategory/RxPhotoNote/RxSandBox/RxFeedBack/RxUser）。
 14. dex分包处理。第一次开启App的时候 install dex + dexopt 时间很长，所以第一次开启的时候另启进程专门做这个事情，防止主线程因为时间长而发生ANR。至于自己去配置主dex是为了以防自动分包ClassNotFound异常。
+15. Android 6.0 权限适配。
 
 # 更新版本说明
 
