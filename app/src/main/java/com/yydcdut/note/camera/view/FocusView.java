@@ -2,6 +2,7 @@ package com.yydcdut.note.camera.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.Handler;
@@ -12,7 +13,6 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.yydcdut.note.R;
-import com.yydcdut.note.camera.utils.ColorUtils;
 
 /**
  * Created by yuyidong on 15/8/27.
@@ -68,7 +68,7 @@ public class FocusView extends View {
         super(context, attrs, defStyleAttr);
         initLooper();
         mPaint = new Paint();
-        mPaint.setColor(ColorUtils.getPrimaryColor(getContext()));
+        mPaint.setColor(Color.YELLOW);
         mPaint.setStrokeWidth(3.5f);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setAntiAlias(true);
@@ -144,7 +144,7 @@ public class FocusView extends View {
             return;
         }
         this.setVisibility(VISIBLE);
-        mPaint.setColor(ColorUtils.getDarkPrimaryColor(getContext()));
+        mPaint.setColor(Color.GREEN);
         invalidate();
         mHandler.sendEmptyMessageDelayed(IMAGE_DISAPPEAR_GOOD, 400);
     }
@@ -189,7 +189,7 @@ public class FocusView extends View {
         if (mHandler.hasMessages(IMAGE_DISAPPEAR) || mHandler.hasMessages(IMAGE_DISAPPEAR_GOOD)) {
             return false;
         }
-        mPaint.setColor(ColorUtils.getPrimaryColor(getContext()));
+        mPaint.setColor(Color.YELLOW);
         this.setVisibility(VISIBLE);
         mLength = getContext().getResources().getDimension(R.dimen.focus_length_min);
         mActionState = MotionEvent.ACTION_UP;
