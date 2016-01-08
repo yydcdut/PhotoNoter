@@ -2,7 +2,9 @@ package com.yydcdut.note.mvp.v.note.impl;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -27,10 +29,10 @@ import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.note.IDetailView2;
 import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.Const;
-import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.Utils;
 import com.yydcdut.note.view.AutoFitImageView;
 import com.yydcdut.note.view.FontTextView;
+import com.yydcdut.note.view.RevealView;
 
 import java.util.List;
 
@@ -77,9 +79,15 @@ public class DetailActivity2 extends BaseActivity implements IDetailView2,
     View mDateLabelView;
     @Bind(R.id.layout_detail_time)
     View mDateLayoutView;
+    @Bind(R.id.fab_edit)
+    View mFab;
+    @Bind(R.id.reveal)
+    RevealView mRevealView;
 
     private DetailPagerAdapter mDetailPagerAdapter;
     private int mTranslateHeight = 0;
+    private boolean mIsIgnoreBackPress = false;
+    private Handler mAnimationHandler;
 
     @Override
     public boolean setStatusBar() {
@@ -103,12 +111,22 @@ public class DetailActivity2 extends BaseActivity implements IDetailView2,
     @Override
     public void initUiAndListener() {
         ButterKnife.bind(this);
+        calculateFabPosition();
         Bundle bundle = getIntent().getExtras();
         mDetailPresenter.bindData(bundle.getInt(Const.CATEGORY_ID_4_PHOTNOTES), bundle.getInt(Const.PHOTO_POSITION),
                 bundle.getInt(Const.COMPARATOR_FACTORY));
         mDetailPresenter.attachView(this);
         initToolBar();
         initListener();
+        mAnimationHandler = new Handler();
+    }
+
+    private void calculateFabPosition() {
+        if (AppCompat.AFTER_LOLLIPOP && AppCompat.hasNavigationBar(this)) {
+            int height = AppCompat.getNavigationBarHeight(this);
+            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mFab.getLayoutParams();
+            layoutParams.bottomMargin = height;
+        }
     }
 
     private void initToolBar() {
@@ -184,16 +202,6 @@ public class DetailActivity2 extends BaseActivity implements IDetailView2,
             // This page is way off-screen to the right.
             view.setAlpha(0);
         }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_DATA) {
-            Bundle bundle = data.getExtras();
-            mDetailPresenter.updateNote(bundle.getInt(Const.CATEGORY_ID_4_PHOTNOTES),
-                    bundle.getInt(Const.PHOTO_POSITION), bundle.getInt(Const.COMPARATOR_FACTORY));
-        }
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -301,7 +309,19 @@ public class DetailActivity2 extends BaseActivity implements IDetailView2,
         animatorSet.setDuration(400);
         animatorSet.setInterpolator(new OvershootInterpolator());
         animatorSet.start();
+        mAnimationHandler.postDelayed(mUpDelayRunnable, 200);
+
     }
+
+    private Runnable mUpDelayRunnable = new Runnable() {
+        @Override
+        public void run() {
+            Animator animator = ObjectAnimator.ofFloat(mFab, "translationY", mTranslateHeight, 0);
+            animator.setDuration(350);
+            animator.setInterpolator(new OvershootInterpolator());
+            animator.start();
+        }
+    };
 
     @Override
     public void downAnimation() {
@@ -324,7 +344,17 @@ public class DetailActivity2 extends BaseActivity implements IDetailView2,
         animatorSet.setDuration(400);
         animatorSet.setInterpolator(new DecelerateInterpolator());
         animatorSet.start();
+        mAnimationHandler.postDelayed(mDownDelayRunnable, 350);
     }
+
+    private Runnable mDownDelayRunnable = new Runnable() {
+        @Override
+        public void run() {
+            Animator animator = ObjectAnimator.ofFloat(mFab, "translationY", 0, mTranslateHeight);
+            animator.setDuration(400);
+            animator.start();
+        }
+    };
 
     @Override
     public void showPopupMenu() {
@@ -337,12 +367,59 @@ public class DetailActivity2 extends BaseActivity implements IDetailView2,
 
     @Override
     public void showBlurImage(int width, int height, String path) {
+        mAutoFitImageView.setVisibility(View.VISIBLE);
         mAutoFitImageView.setAspectRatio(width, height);
-        ImageLoaderManager.displayImage(path, mAutoFitImageView, null);
+//        ImageLoaderManager.displayImage(path, mAutoFitImageView, null);
     }
 
     @OnClick(R.id.img_blur)
     public void onBlurImageClick(View view) {
         mDetailPresenter.doCardViewAnimation();
+    }
+
+    @OnClick(R.id.fab_edit)
+    public void clickFabEdit(View v) {
+        showRevealColorViewAndStartActivity();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_DATA) {
+            Bundle bundle = data.getExtras();
+            mDetailPresenter.updateNote(bundle.getInt(Const.CATEGORY_ID_4_PHOTNOTES),
+                    bundle.getInt(Const.PHOTO_POSITION), bundle.getInt(Const.COMPARATOR_FACTORY));
+        }
+        closeRevealColorView();
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    /**
+     * 打开RevealColorView并且开启activity
+     */
+    private void showRevealColorViewAndStartActivity() {
+        mIsIgnoreBackPress = true;
+        final Point p = getLocationInView(mRevealView, mFab);
+        mRevealView.reveal(p.x, p.y, getThemeColor(), mFab.getHeight() / 2, Const.DURATION, new RevealView.RevealAnimationListener() {
+
+            @Override
+            public void finish() {
+                mDetailPresenter.jump2EditTextActivity();
+                mIsIgnoreBackPress = false;
+            }
+        });
+    }
+
+    /**
+     * 关闭activity之后的动画或者onActivityResult
+     */
+    public void closeRevealColorView() {
+        mIsIgnoreBackPress = true;
+        final Point p = getLocationInView(mRevealView, mFab);
+        mRevealView.hide(p.x, p.y, Color.TRANSPARENT, Const.RADIUS, Const.DURATION, new RevealView.RevealAnimationListener() {
+            @Override
+            public void finish() {
+                mIsIgnoreBackPress = false;
+            }
+        });
     }
 }

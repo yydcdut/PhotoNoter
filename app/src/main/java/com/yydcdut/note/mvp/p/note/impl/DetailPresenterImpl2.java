@@ -56,6 +56,7 @@ public class DetailPresenterImpl2 implements IDetailPresenter {
                     mIDetailView2.setViewPagerAdapter(photoNoteList, mInitPosition, mComparator);
                     showNote(mInitPosition);
                 });
+        showBlurImage();
     }
 
     @Override
