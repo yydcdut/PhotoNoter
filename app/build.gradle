@@ -49,7 +49,7 @@ android {
         release {
             //使用签名配置
             signingConfig signingConfigs.release
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.cfg'
             buildConfigField "boolean", "LOG_DEBUG", "false"
         }
