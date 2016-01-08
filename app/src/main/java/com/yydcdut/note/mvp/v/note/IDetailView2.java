@@ -1,5 +1,7 @@
 package com.yydcdut.note.mvp.v.note;
 
+import android.support.annotation.DrawableRes;
+
 import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.mvp.IView;
 
@@ -22,6 +24,8 @@ public interface IDetailView2 extends IView {
 
     void jump2EditTextActivity(int categoryId, int position, int comparator);
 
+    void jump2MapActivity(int categoryId, int position, int comparator);
+
     void upAnimation();
 
     void downAnimation();
@@ -29,4 +33,6 @@ public interface IDetailView2 extends IView {
     void showPopupMenu();
 
     void showBlurImage(int width, int height, String path);
+
+    void showFabIcon(@DrawableRes int iconRes);
 }

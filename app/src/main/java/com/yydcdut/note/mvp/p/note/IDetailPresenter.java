@@ -17,6 +17,8 @@ public interface IDetailPresenter extends IPresenter {
 
     void jump2EditTextActivity();
 
+    void jump2MapActivity();
+
     void doCardViewAnimation();
 
     void showMenuIfNotHidden();

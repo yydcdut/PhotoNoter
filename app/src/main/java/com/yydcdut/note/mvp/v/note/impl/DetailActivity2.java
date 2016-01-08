@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.DrawableRes;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -33,6 +34,7 @@ import com.yydcdut.note.utils.Utils;
 import com.yydcdut.note.view.AutoFitImageView;
 import com.yydcdut.note.view.FontTextView;
 import com.yydcdut.note.view.RevealView;
+import com.yydcdut.note.view.fab.FloatingActionButton;
 
 import java.util.List;
 
@@ -80,13 +82,14 @@ public class DetailActivity2 extends BaseActivity implements IDetailView2,
     @Bind(R.id.layout_detail_time)
     View mDateLayoutView;
     @Bind(R.id.fab_edit)
-    View mFab;
+    FloatingActionButton mFab;
     @Bind(R.id.reveal)
     RevealView mRevealView;
 
     private DetailPagerAdapter mDetailPagerAdapter;
     private int mTranslateHeight = 0;
     private boolean mIsIgnoreBackPress = false;
+    private boolean mIsIgnoreClick = false;
     private Handler mAnimationHandler;
 
     @Override
@@ -257,6 +260,18 @@ public class DetailActivity2 extends BaseActivity implements IDetailView2,
         overridePendingTransition(R.anim.activity_no_animation, R.anim.activity_no_animation);
     }
 
+    @Override
+    public void jump2MapActivity(int categoryId, int position, int comparator) {
+        Intent intent = new Intent(this, MapActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt(Const.CATEGORY_ID_4_PHOTNOTES, categoryId);
+        bundle.putInt(Const.PHOTO_POSITION, position);
+        bundle.putInt(Const.COMPARATOR_FACTORY, comparator);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, REQUEST_NOTHING);
+        overridePendingTransition(R.anim.activity_no_animation, R.anim.activity_no_animation);
+    }
+
     @OnPageChange(
             value = R.id.vp_detail,
             callback = OnPageChange.Callback.PAGE_SELECTED
@@ -304,6 +319,13 @@ public class DetailActivity2 extends BaseActivity implements IDetailView2,
             public void onAnimationStart(Animator animation) {
                 super.onAnimationStart(animation);
                 mAutoFitImageView.setVisibility(View.VISIBLE);
+                mIsIgnoreClick = true;
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                mIsIgnoreClick = false;
             }
         });
         animatorSet.setDuration(400);
@@ -339,6 +361,13 @@ public class DetailActivity2 extends BaseActivity implements IDetailView2,
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
                 mAutoFitImageView.setVisibility(View.GONE);
+                mIsIgnoreClick = true;
+            }
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                mIsIgnoreClick = true;
             }
         });
         animatorSet.setDuration(400);
@@ -372,9 +401,16 @@ public class DetailActivity2 extends BaseActivity implements IDetailView2,
 //        ImageLoaderManager.displayImage(path, mAutoFitImageView, null);
     }
 
+    @Override
+    public void showFabIcon(@DrawableRes int iconRes) {
+        mFab.setIcon(iconRes);
+    }
+
     @OnClick(R.id.img_blur)
     public void onBlurImageClick(View view) {
-        mDetailPresenter.doCardViewAnimation();
+        if (!mIsIgnoreClick) {
+            mDetailPresenter.doCardViewAnimation();
+        }
     }
 
     @OnClick(R.id.fab_edit)
@@ -403,7 +439,11 @@ public class DetailActivity2 extends BaseActivity implements IDetailView2,
 
             @Override
             public void finish() {
-                mDetailPresenter.jump2EditTextActivity();
+                if (mTitleLabelView.getVisibility() != View.VISIBLE) {
+                    mDetailPresenter.jump2MapActivity();
+                } else {
+                    mDetailPresenter.jump2EditTextActivity();
+                }
                 mIsIgnoreBackPress = false;
             }
         });
@@ -421,5 +461,12 @@ public class DetailActivity2 extends BaseActivity implements IDetailView2,
                 mIsIgnoreBackPress = false;
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!mIsIgnoreBackPress) {
+            super.onBackPressed();
+        }
     }
 }

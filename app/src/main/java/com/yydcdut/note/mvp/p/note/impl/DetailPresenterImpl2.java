@@ -83,7 +83,7 @@ public class DetailPresenterImpl2 implements IDetailPresenter {
                         e.printStackTrace();
                     }
                 });
-
+        mIDetailView2.showFabIcon(R.drawable.ic_pin_drop_white_24dp);
     }
 
     @Override
@@ -108,6 +108,7 @@ public class DetailPresenterImpl2 implements IDetailPresenter {
                     String editedTime = decodeTimeInDetail(photoNote1.getEditedNoteTime());
                     mIDetailView2.showNote(title, content, createdTime, editedTime);
                 });
+        mIDetailView2.showFabIcon(R.drawable.ic_text_format_white_24dp);
     }
 
     @Override
@@ -120,6 +121,11 @@ public class DetailPresenterImpl2 implements IDetailPresenter {
     @Override
     public void jump2EditTextActivity() {
         mIDetailView2.jump2EditTextActivity(mCategoryId, mIDetailView2.getCurrentPosition(), mComparator);
+    }
+
+    @Override
+    public void jump2MapActivity() {
+        mIDetailView2.jump2MapActivity(mCategoryId, mIDetailView2.getCurrentPosition(), mComparator);
     }
 
     @Override

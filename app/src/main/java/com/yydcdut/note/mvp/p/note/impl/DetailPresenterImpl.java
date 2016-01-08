@@ -171,6 +171,11 @@ public class DetailPresenterImpl implements IDetailPresenter, OnGetGeoCoderResul
     }
 
     @Override
+    public void jump2MapActivity() {
+
+    }
+
+    @Override
     public void doCardViewAnimation() {
 
     }
