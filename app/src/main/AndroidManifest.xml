@@ -42,6 +42,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/ThemeBlue"/>
         <activity
+            android:name=".mvp.v.note.impl.DetailActivity2"
+            android:label=" "
+            android:screenOrientation="portrait"
+            android:theme="@style/ThemeBlue"/>
+        <activity
             android:name=".mvp.v.note.impl.EditTextActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ThemeBlue"

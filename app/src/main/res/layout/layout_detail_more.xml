@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:paddingBottom="12dp"
+              android:paddingLeft="24dp"
+              android:paddingRight="24dp"
+              android:paddingTop="3dp">
+
+    <FrameLayout
+        android:id="@+id/layout_menu"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+        <ImageView
+            android:background="@drawable/bg_circle"
+            android:id="@+id/img_menu"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="right"
+            android:padding="8dp"
+            android:src="@drawable/ic_more_horiz_gray_24dp"/>
+    </FrameLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:overScrollMode="never"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txt_label_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:text="@string/text_title"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="16sp"/>
+
+            <com.yydcdut.note.view.FontTextView
+                android:id="@+id/txt_detail_content_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:layout_marginLeft="@dimen/activity_margin_small"
+                android:layout_marginRight="@dimen/activity_margin_small"
+                android:textColor="@color/txt_black"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/txt_label_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:text="@string/text_content"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="16sp"/>
+
+            <com.yydcdut.note.view.FontTextView
+                android:id="@+id/txt_detail_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:layout_marginLeft="@dimen/activity_margin_small"
+                android:layout_marginRight="@dimen/activity_margin_small"
+                android:textColor="@color/txt_gray"
+                android:textSize="12sp"/>
+
+            <TextView
+                android:id="@+id/txt_label_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:text="@string/detail_date"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="16sp"/>
+
+            <LinearLayout
+                android:id="@+id/layout_detail_time"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/activity_margin_small"
+                android:paddingRight="@dimen/activity_margin_small">
+
+                <LinearLayout
+                    android:id="@+id/layout_detail_create"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Created:"
+                        android:textColor="@color/txt_LightSlateGray"
+                        android:textSize="@dimen/txt_small"/>
+
+                    <TextView
+                        android:id="@+id/txt_detail_create_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:text="三月 26. 2015 at 12:35 上午"
+                        android:textColor="@color/txt_LightSlateGray"
+                        android:textSize="@dimen/txt_small"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_detail_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Edited:"
+                        android:textColor="@color/txt_LightSlateGray"
+                        android:textSize="@dimen/txt_small"/>
+
+                    <TextView
+                        android:id="@+id/txt_detail_edit_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:text="三月 26. 2015 at 12:35 上午"
+                        android:textColor="@color/txt_LightSlateGray"
+                        android:textSize="@dimen/txt_small"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

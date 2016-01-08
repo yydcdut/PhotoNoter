@@ -9,11 +9,15 @@ public interface IDetailPresenter extends IPresenter {
 
     void bindData(int categoryID, int position, int comparator);
 
-    void showExif();
+    void showExif(int position);
 
     void showNote(int position);
 
     void updateNote(int categoryId, int position, int comparator);
 
     void jump2EditTextActivity();
+
+    void doCardViewAnimation();
+
+    void showMenuIfNotHidden();
 }

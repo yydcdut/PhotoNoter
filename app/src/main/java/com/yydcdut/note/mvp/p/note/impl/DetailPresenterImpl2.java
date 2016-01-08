@@ -2,29 +2,15 @@ package com.yydcdut.note.mvp.p.note.impl;
 
 import android.content.Context;
 import android.media.ExifInterface;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import com.baidu.mapapi.map.BaiduMap;
-import com.baidu.mapapi.map.BitmapDescriptorFactory;
-import com.baidu.mapapi.map.MapStatus;
-import com.baidu.mapapi.map.MapStatusUpdate;
-import com.baidu.mapapi.map.MapStatusUpdateFactory;
-import com.baidu.mapapi.map.MarkerOptions;
-import com.baidu.mapapi.map.UiSettings;
-import com.baidu.mapapi.model.LatLng;
-import com.baidu.mapapi.search.core.SearchResult;
-import com.baidu.mapapi.search.geocode.GeoCodeResult;
-import com.baidu.mapapi.search.geocode.GeoCoder;
-import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
-import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
-import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.yydcdut.note.R;
-import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.note.IDetailPresenter;
-import com.yydcdut.note.mvp.v.note.IDetailView;
+import com.yydcdut.note.mvp.v.note.IDetailView2;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.LocalStorageUtils;
 
@@ -36,10 +22,11 @@ import javax.inject.Inject;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
- * Created by yuyidong on 15/11/16.
+ * Created by yuyidong on 16/1/8.
  */
-public class DetailPresenterImpl implements IDetailPresenter, OnGetGeoCoderResultListener {
-    private IDetailView mDetailView;
+public class DetailPresenterImpl2 implements IDetailPresenter {
+    private IDetailView2 mIDetailView2;
+
     private Context mContext;
     private RxPhotoNote mRxPhotoNote;
     private LocalStorageUtils mLocalStorageUtils;
@@ -49,64 +36,30 @@ public class DetailPresenterImpl implements IDetailPresenter, OnGetGeoCoderResul
     private int mComparator;
     private int mInitPosition;
 
-    /* Baidu Map */
-    private BaiduMap mBaiduMap;
-    private UiSettings mUiSettings;
-    private GeoCoder mSearch = null; // 搜索模块，也可去掉地图模块独立使用
+    private boolean mIsCardViewShowing = true;
 
     @Inject
-    public DetailPresenterImpl(@ContextLife("Activity") Context context, RxPhotoNote rxPhotoNote,
-                               LocalStorageUtils localStorageUtils) {
+    public DetailPresenterImpl2(@ContextLife("Activity") Context context, RxPhotoNote rxPhotoNote,
+                                LocalStorageUtils localStorageUtils) {
         mContext = context;
         mRxPhotoNote = rxPhotoNote;
         mLocalStorageUtils = localStorageUtils;
     }
 
     @Override
-    public void attachView(IView iView) {
-        mDetailView = (IDetailView) iView;
-        mDetailView.setFontSystem(mLocalStorageUtils.getSettingFontSystem());
-        initBaiduMap();
+    public void attachView(@NonNull IView iView) {
+        mIDetailView2 = (IDetailView2) iView;
+        mIDetailView2.setFontSystem(mLocalStorageUtils.getSettingFontSystem());
         mRxPhotoNote.findByCategoryId(mCategoryId, mComparator)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(photoNoteList -> {
-                    mDetailView.setViewPagerAdapter(photoNoteList, mInitPosition, mComparator);
+                    mIDetailView2.setViewPagerAdapter(photoNoteList, mInitPosition, mComparator);
                     showNote(mInitPosition);
                 });
-
     }
 
-    private String decodeTimeInDetail(long time) {
-        StringBuilder sb = new StringBuilder();
-        SimpleDateFormat sdfMonth = new SimpleDateFormat("MM");
-        String[] months = mContext.getResources().getStringArray(R.array.detail_time_month);
-        sb.append(months[Integer.parseInt(sdfMonth.format(time)) - 1]);
-        SimpleDateFormat sdfDayAndYear = new SimpleDateFormat(" dd. yyyy ");
-        sb.append(sdfDayAndYear.format(time));
-        sb.append("at");
-        SimpleDateFormat sdfHour = new SimpleDateFormat(" hh:mm:ss a");
-        sb.append(sdfHour.format(time));
-        return sb.toString();
-    }
-
-    private void initBaiduMap() {
-        mBaiduMap = mDetailView.getBaiduMap();
-        //获取地图对象控制器
-        mBaiduMap.setBuildingsEnabled(true);//设置显示楼体
-        mBaiduMap.setMapStatus(MapStatusUpdateFactory.zoomTo(19f));//设置地图状态
-        mUiSettings = mBaiduMap.getUiSettings();
-        mUiSettings.setZoomGesturesEnabled(false);
-        mUiSettings.setScrollGesturesEnabled(false);
-        mUiSettings.setRotateGesturesEnabled(false);
-        mUiSettings.setOverlookingGesturesEnabled(false);
-        mUiSettings.setCompassEnabled(true);
-        mBaiduMap.showMapPoi(true);
-        MapStatus ms = new MapStatus.Builder().overlook(-30).build();
-        MapStatusUpdate u = MapStatusUpdateFactory.newMapStatus(ms);
-        mBaiduMap.animateMapStatus(u, 1000);
-        // 初始化搜索模块
-        mSearch = GeoCoder.newInstance();
-        mSearch.setOnGetGeoCodeResultListener(this);
+    @Override
+    public void detachView() {
     }
 
     @Override
@@ -117,20 +70,19 @@ public class DetailPresenterImpl implements IDetailPresenter, OnGetGeoCoderResul
     }
 
     @Override
-    public void showExif(int initPosition) {
+    public void showExif(int position) {
         mRxPhotoNote.findByCategoryId(mCategoryId, mComparator)
+                .map(photoNoteList -> photoNoteList.get(position))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(photoNoteList -> {
-                    int position = mDetailView.getCurrentPosition();
-                    PhotoNote photoNote = photoNoteList.get(position);
+                .subscribe(photoNote -> {
                     try {
-                        mDetailView.showExif(getExifInformation(photoNote.getBigPhotoPathWithoutFile()));
-                        gps(photoNote.getBigPhotoPathWithoutFile());
+                        String exif = getExifInformation(photoNote.getBigPhotoPathWithoutFile());
+                        mIDetailView2.showExif(exif);
                     } catch (IOException e) {
                         e.printStackTrace();
-                        mDetailView.showExif(mContext.getResources().getString(R.string.toast_fail));
                     }
                 });
+
     }
 
     @Override
@@ -153,8 +105,7 @@ public class DetailPresenterImpl implements IDetailPresenter, OnGetGeoCoderResul
                     }
                     String createdTime = decodeTimeInDetail(photoNote1.getCreatedNoteTime());
                     String editedTime = decodeTimeInDetail(photoNote1.getEditedNoteTime());
-                    mDetailView.showNote(title, content, createdTime, editedTime);
-                    showExif(position);
+                    mIDetailView2.showNote(title, content, createdTime, editedTime);
                 });
     }
 
@@ -167,42 +118,69 @@ public class DetailPresenterImpl implements IDetailPresenter, OnGetGeoCoderResul
 
     @Override
     public void jump2EditTextActivity() {
-        mDetailView.jump2EditTextActivity(mCategoryId, mDetailView.getCurrentPosition(), mComparator);
+        mIDetailView2.jump2EditTextActivity(mCategoryId, mIDetailView2.getCurrentPosition(), mComparator);
     }
 
     @Override
     public void doCardViewAnimation() {
+        if (mIsCardViewShowing) {
+            mIsCardViewShowing = false;
+            mIDetailView2.downAnimation();
+        } else {
+            showBlurImage();
+            mIDetailView2.upAnimation();
+            mIsCardViewShowing = true;
+        }
+    }
 
+    private void showBlurImage() {
+        mRxPhotoNote.findByCategoryId(mCategoryId, mComparator)
+                .map(photoNoteList -> photoNoteList.get(mIDetailView2.getCurrentPosition()))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(photoNote -> {
+                    int[] size = getSize(photoNote.getBigPhotoPathWithoutFile());
+                    mIDetailView2.showBlurImage(size[0], size[1], photoNote.getSmallPhotoPathWithFile());
+                });
     }
 
     @Override
     public void showMenuIfNotHidden() {
-
-    }
-
-    private void gps(String path) throws IOException {
-        ExifInterface exifInterface = new ExifInterface(path);
-        String longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
-        if (longitude != null && !"null".equals(longitude.toLowerCase())) {
-            String[] longitudeSs = longitude.split(",");
-            double longitudesD = 0;
-            longitudesD += Double.parseDouble(longitudeSs[0].split("/")[0]);
-            longitudesD += (((int) (Double.parseDouble(longitudeSs[1].split("/")[0]) * 100)) + Double.parseDouble(longitudeSs[2].split("/")[0]) / 60 / 10000) / 60 / 100;
-
-            String latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
-            String[] latitudeSs = latitude.split(",");
-            double latitudesD = 0;
-            latitudesD += Double.parseDouble(latitudeSs[0].split("/")[0]);
-            latitudesD += (((int) (Double.parseDouble(latitudeSs[1].split("/")[0]) * 100)) + Double.parseDouble(latitudeSs[2].split("/")[0]) / 60 / 10000) / 60 / 100;
-            doGps(latitudesD, longitudesD);
+        if (mIsCardViewShowing) {
+            mIDetailView2.showPopupMenu();
         }
     }
 
-    private void doGps(double lat, double lon) {
-        LatLng ptCenter = new LatLng(lat, lon);
-        // 反Geo搜索
-        mSearch.reverseGeoCode(new ReverseGeoCodeOption()
-                .location(ptCenter));
+    private String decodeTimeInDetail(long time) {
+        StringBuilder sb = new StringBuilder();
+        SimpleDateFormat sdfMonth = new SimpleDateFormat("MM");
+        String[] months = mContext.getResources().getStringArray(R.array.detail_time_month);
+        sb.append(months[Integer.parseInt(sdfMonth.format(time)) - 1]);
+        SimpleDateFormat sdfDayAndYear = new SimpleDateFormat(" dd. yyyy ");
+        sb.append(sdfDayAndYear.format(time));
+        sb.append("at");
+        SimpleDateFormat sdfHour = new SimpleDateFormat(" hh:mm:ss a");
+        sb.append(sdfHour.format(time));
+        return sb.toString();
+    }
+
+    private int[] getSize(String path) {
+        int[] size = FilePathUtils.getPictureSize(path);
+        try {
+            ExifInterface exifInterface = new ExifInterface(path);
+            int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                case ExifInterface.ORIENTATION_FLIP_HORIZONTAL | ExifInterface.ORIENTATION_ROTATE_270:
+                    int tmp = size[1];
+                    size[1] = size[0];
+                    size[0] = tmp;
+                    break;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return size;
     }
 
     private String getExifInformation(String path) throws IOException {
@@ -315,27 +293,5 @@ public class DetailPresenterImpl implements IDetailPresenter, OnGetGeoCoderResul
         } else {
             return data;
         }
-    }
-
-    @Override
-    public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
-
-    }
-
-    @Override
-    public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
-        if (reverseGeoCodeResult == null || reverseGeoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
-            return;
-        }
-        mBaiduMap.clear();
-        mBaiduMap.addOverlay(new MarkerOptions().position(reverseGeoCodeResult.getLocation())
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_gcoding)));
-        mBaiduMap.setMapStatus(MapStatusUpdateFactory.newLatLng(reverseGeoCodeResult
-                .getLocation()));
-    }
-
-    @Override
-    public void detachView() {
-        mSearch.destroy();
     }
 }

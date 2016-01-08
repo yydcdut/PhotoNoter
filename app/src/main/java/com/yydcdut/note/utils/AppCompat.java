@@ -2,11 +2,15 @@ package com.yydcdut.note.utils;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+
+import java.lang.reflect.Method;
 
 /**
  * Created by yuyidong on 15/10/14.
@@ -54,12 +58,43 @@ public class AppCompat {
         }
     }
 
-    public static void setStatuColor(Window window) {
-//        int index = LocalStorageUtils.getInstance().getThemeColor();
-//        if (AFTER_LOLLIPOP) {
-//            window.setStatusBarColor(ThemeHelper.THEME.get(index).getStatusColor());
-//            window.setNavigationBarColor(ThemeHelper.THEME.get(index).getStatusColor());
-//        }
+    public static void setFullWindowWithoutNavigationBar(Window window, Context context) {
+        if (AppCompat.AFTER_LOLLIPOP && hasNavigationBar(context)) {
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        }
+    }
+
+    public static boolean hasNavigationBar(Context context) {
+        boolean hasNavigationBar = false;
+        Resources rs = context.getResources();
+        int id = rs.getIdentifier("config_showNavigationBar", "bool", "android");
+        if (id > 0) {
+            hasNavigationBar = rs.getBoolean(id);
+        }
+        try {
+            Class systemPropertiesClass = Class.forName("android.os.SystemProperties");
+            Method m = systemPropertiesClass.getMethod("get", String.class);
+            String navBarOverride = (String) m.invoke(systemPropertiesClass, "qemu.hw.mainkeys");
+            if ("1".equals(navBarOverride)) {
+                hasNavigationBar = false;
+            } else if ("0".equals(navBarOverride)) {
+                hasNavigationBar = true;
+            }
+        } catch (Exception e) {
+            YLog.wtf("AppCompat", e.getMessage());
+        }
+        return hasNavigationBar;
+    }
+
+    public static int getNavigationBarHeight(Context context) {
+        int navigationBarHeight = 0;
+        Resources rs = context.getResources();
+        int id = rs.getIdentifier("navigation_bar_height", "dimen", "android");
+        if (id > 0 && hasNavigationBar(context)) {
+            navigationBarHeight = rs.getDimensionPixelSize(id);
+        }
+        return navigationBarHeight;
     }
 
 }
