@@ -1,10 +1,12 @@
 package com.yydcdut.note.mvp.p.note.impl;
 
+import android.app.Activity;
 import android.content.Context;
 import android.media.ExifInterface;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import com.baidu.mapapi.SDKInitializer;
 import com.yydcdut.note.R;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.rx.RxPhotoNote;
@@ -13,9 +15,12 @@ import com.yydcdut.note.mvp.p.note.IDetailPresenter;
 import com.yydcdut.note.mvp.v.note.IDetailView;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.LocalStorageUtils;
+import com.yydcdut.note.utils.PermissionUtils;
+import com.yydcdut.note.utils.permission.Permission;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -24,10 +29,12 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by yuyidong on 16/1/8.
  */
-public class DetailPresenterImpl implements IDetailPresenter {
+public class DetailPresenterImpl implements IDetailPresenter,
+        PermissionUtils.OnPermissionCallBacks {
     private IDetailView mIDetailView;
 
     private Context mContext;
+    private Activity mActivity;
     private RxPhotoNote mRxPhotoNote;
     private LocalStorageUtils mLocalStorageUtils;
 
@@ -39,9 +46,10 @@ public class DetailPresenterImpl implements IDetailPresenter {
     private boolean mIsCardViewShowing = true;
 
     @Inject
-    public DetailPresenterImpl(@ContextLife("Activity") Context context, RxPhotoNote rxPhotoNote,
-                               LocalStorageUtils localStorageUtils) {
+    public DetailPresenterImpl(@ContextLife("Activity") Context context, Activity activity,
+                               RxPhotoNote rxPhotoNote, LocalStorageUtils localStorageUtils) {
         mContext = context;
+        mActivity = activity;
         mRxPhotoNote = rxPhotoNote;
         mLocalStorageUtils = localStorageUtils;
     }
@@ -126,7 +134,19 @@ public class DetailPresenterImpl implements IDetailPresenter {
 
     @Override
     public void jump2MapActivity() {
-        mIDetailView.jump2MapActivity(mCategoryId, mIDetailView.getCurrentPosition(), mComparator);
+        checkBaiduMapPermission();
+    }
+
+    @Permission(PermissionUtils.CODE_PHONE_STATE)
+    private void checkBaiduMapPermission() {
+        boolean hasPermission = PermissionUtils.hasPermission4PhoneState(mContext);
+        if (hasPermission) {
+            SDKInitializer.initialize(mActivity.getApplication());
+            mIDetailView.jump2MapActivity(mCategoryId, mIDetailView.getCurrentPosition(), mComparator);
+        } else {
+            PermissionUtils.requestPermissionsWithDialog(mActivity, mContext.getString(R.string.permission_phone_state),
+                    PermissionUtils.PERMISSION_PHONE_STATE, PermissionUtils.CODE_PHONE_STATE);
+        }
     }
 
     @Override
@@ -290,5 +310,20 @@ public class DetailPresenterImpl implements IDetailPresenter {
         } else {
             return data;
         }
+    }
+
+    @Override
+    public void onPermissionsGranted(List<String> permissions) {
+
+    }
+
+    @Override
+    public void onPermissionsDenied(List<String> permissions) {
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
     }
 }

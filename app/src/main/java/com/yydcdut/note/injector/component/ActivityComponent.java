@@ -16,6 +16,7 @@ import com.yydcdut.note.mvp.v.login.impl.LoginActivity;
 import com.yydcdut.note.mvp.v.login.impl.UserCenterActivity;
 import com.yydcdut.note.mvp.v.note.impl.DetailActivity;
 import com.yydcdut.note.mvp.v.note.impl.EditTextActivity;
+import com.yydcdut.note.mvp.v.note.impl.MapActivity;
 import com.yydcdut.note.mvp.v.note.impl.ZoomActivity;
 import com.yydcdut.note.mvp.v.setting.impl.AboutAppActivity;
 import com.yydcdut.note.mvp.v.setting.impl.EditCategoryActivity;
@@ -60,6 +61,8 @@ public interface ActivityComponent {
 
     void inject(DetailActivity detailActivity);
 
+    void inject(MapActivity mapActivity);
+
     void inject(EditTextActivity editTextActivity);
 
     void inject(ZoomActivity zoomActivity);
@@ -71,4 +74,5 @@ public interface ActivityComponent {
     void inject(FeedbackActivity feedbackActivity);
 
     void inject(SettingActivity settingActivity);
+
 }
