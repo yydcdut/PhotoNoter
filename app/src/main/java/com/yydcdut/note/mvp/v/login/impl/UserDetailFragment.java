@@ -2,8 +2,6 @@ package com.yydcdut.note.mvp.v.login.impl;
 
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -11,16 +9,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yydcdut.note.R;
-import com.yydcdut.note.adapter.FrequentImageAdapter;
-import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.mvp.p.login.impl.UserDetailFragPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseFragment;
 import com.yydcdut.note.mvp.v.login.IUserDetailFragView;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.view.CircleProgressBarLayout;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -112,16 +106,6 @@ public class UserDetailFragment extends BaseFragment implements IUserDetailFragV
     @Override
     public void updateLocation(String location) {
         mLocationView.setText(location);
-    }
-
-    @Override
-    public void initUserImages(List<PhotoNote> list) {
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_image, null);
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.rv_item_user_center);
-        recyclerView.setAdapter(new FrequentImageAdapter(getContext(), list));
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
-        recyclerView.setLayoutManager(gridLayoutManager);
-        mLinearLayout.addView(view);
     }
 
     @Override

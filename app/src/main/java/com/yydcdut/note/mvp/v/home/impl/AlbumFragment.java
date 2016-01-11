@@ -38,7 +38,7 @@ import com.yydcdut.note.camera.controller.CameraActivity;
 import com.yydcdut.note.mvp.p.home.impl.AlbumPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseFragment;
 import com.yydcdut.note.mvp.v.home.IAlbumView;
-import com.yydcdut.note.mvp.v.note.impl.DetailActivity2;
+import com.yydcdut.note.mvp.v.note.impl.DetailActivity;
 import com.yydcdut.note.mvp.v.setting.impl.SettingActivity;
 import com.yydcdut.note.service.SandBoxService;
 import com.yydcdut.note.utils.Const;
@@ -574,7 +574,7 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
     @Override
     public void jump2DetailActivity(int categoryId, int position, int comparator) {
 //        Intent intent = new Intent(getContext(), DetailActivity.class);
-        Intent intent = new Intent(getContext(), DetailActivity2.class);
+        Intent intent = new Intent(getContext(), DetailActivity.class);
         Bundle bundle = new Bundle();
         bundle.putInt(Const.CATEGORY_ID_4_PHOTNOTES, categoryId);
         bundle.putInt(Const.PHOTO_POSITION, position);
