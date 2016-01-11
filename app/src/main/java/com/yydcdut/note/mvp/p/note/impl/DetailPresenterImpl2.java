@@ -55,8 +55,8 @@ public class DetailPresenterImpl2 implements IDetailPresenter {
                 .subscribe(photoNoteList -> {
                     mIDetailView2.setViewPagerAdapter(photoNoteList, mInitPosition, mComparator);
                     showNote(mInitPosition);
+                    mIDetailView2.initAnimationView();
                 });
-        showBlurImage();
     }
 
     @Override
@@ -111,6 +111,7 @@ public class DetailPresenterImpl2 implements IDetailPresenter {
         mIDetailView2.showFabIcon(R.drawable.ic_text_format_white_24dp);
     }
 
+
     @Override
     public void updateNote(int categoryId, int position, int comparator) {
         mCategoryId = categoryId;
@@ -134,20 +135,9 @@ public class DetailPresenterImpl2 implements IDetailPresenter {
             mIsCardViewShowing = false;
             mIDetailView2.downAnimation();
         } else {
-            showBlurImage();
             mIDetailView2.upAnimation();
             mIsCardViewShowing = true;
         }
-    }
-
-    private void showBlurImage() {
-        mRxPhotoNote.findByCategoryId(mCategoryId, mComparator)
-                .map(photoNoteList -> photoNoteList.get(mIDetailView2.getCurrentPosition()))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(photoNote -> {
-                    int[] size = getSize(photoNote.getBigPhotoPathWithoutFile());
-                    mIDetailView2.showBlurImage(size[0], size[1], photoNote.getSmallPhotoPathWithFile());
-                });
     }
 
     @Override

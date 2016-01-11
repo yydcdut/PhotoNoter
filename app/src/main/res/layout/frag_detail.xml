@@ -9,4 +9,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"/>
+
+    <com.yydcdut.note.view.AutoFitImageView
+        android:id="@+id/img_blur"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
 </FrameLayout>

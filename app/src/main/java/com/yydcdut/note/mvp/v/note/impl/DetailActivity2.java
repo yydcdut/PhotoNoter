@@ -1,12 +1,8 @@
 package com.yydcdut.note.mvp.v.note.impl;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.DrawableRes;
@@ -34,10 +30,8 @@ import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.note.IDetailView2;
 import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.Const;
-import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
-import com.yydcdut.note.utils.RxImageBlur;
 import com.yydcdut.note.utils.Utils;
-import com.yydcdut.note.view.AutoFitImageView;
+import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.view.FontTextView;
 import com.yydcdut.note.view.RevealView;
 import com.yydcdut.note.view.fab.FloatingActionButton;
@@ -63,6 +57,8 @@ public class DetailActivity2 extends BaseActivity implements IDetailView2,
 
     @Bind(R.id.vp_detail)
     ViewPager mViewPager;
+    @Bind(R.id.view_overlay)
+    View mOverlayView;
     @Bind(R.id.txt_detail_content_title)
     FontTextView mTitleView;/* Content TextView */
     @Bind(R.id.txt_detail_content)
@@ -77,8 +73,6 @@ public class DetailActivity2 extends BaseActivity implements IDetailView2,
     View mMenuLayout;
     @Bind(R.id.card_detail)
     View mCardView;
-    @Bind(R.id.img_blur)
-    AutoFitImageView mAutoFitImageView;
     @Bind(R.id.txt_label_title)
     View mTitleLabelView;
     @Bind(R.id.txt_label_content)
@@ -181,7 +175,11 @@ public class DetailActivity2 extends BaseActivity implements IDetailView2,
         super.onWindowFocusChanged(hasFocus);
         int menuLayoutHeight = mMenuLayout.getHeight();
         int cardViewTop = mCardView.getTop();
-        mTranslateHeight = Utils.sScreenHeight - cardViewTop - menuLayoutHeight;
+        if (AppCompat.AFTER_LOLLIPOP) {
+            mTranslateHeight = Utils.sScreenHeight - cardViewTop - menuLayoutHeight;
+        } else {
+            mTranslateHeight = Utils.sScreenHeight - getStatusBarSize() - cardViewTop - menuLayoutHeight;
+        }
     }
 
     @Override
@@ -255,6 +253,18 @@ public class DetailActivity2 extends BaseActivity implements IDetailView2,
     }
 
     @Override
+    public void initAnimationView() {
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(
+                ObjectAnimator.ofFloat(mViewPager, "scaleX", 1f, 1.1f),
+                ObjectAnimator.ofFloat(mViewPager, "scaleY", 1f, 1.1f)
+        );
+        animatorSet.setDuration(10);
+        animatorSet.start();
+        mOverlayView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
     public void jump2EditTextActivity(int categoryId, int position, int comparator) {
         Intent intent = new Intent(this, EditTextActivity.class);
         Bundle bundle = new Bundle();
@@ -311,27 +321,37 @@ public class DetailActivity2 extends BaseActivity implements IDetailView2,
 
     @Override
     public void upAnimation() {
+        View adapterPositionView = mDetailPagerAdapter.getItemView(mViewPager.getCurrentItem());
+        View blurView;
+        if (adapterPositionView != null) {
+            blurView = adapterPositionView.findViewById(R.id.img_blur);
+        } else {
+            blurView = mOverlayView;
+        }
+        YLog.i("yuyidong", "upAnimation  " + (adapterPositionView != null));
+        final View finalBlurView = blurView;
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.playTogether(
                 ObjectAnimator.ofFloat(mCardView, "translationY", mTranslateHeight, 0),
                 ObjectAnimator.ofFloat(mViewPager, "scaleX", 1f, 1.1f),
                 ObjectAnimator.ofFloat(mViewPager, "scaleY", 1f, 1.1f),
-                ObjectAnimator.ofFloat(mAutoFitImageView, "scaleX", 1f, 1.1f),
-                ObjectAnimator.ofFloat(mAutoFitImageView, "scaleY", 1f, 1.1f),
-                ObjectAnimator.ofFloat(mAutoFitImageView, "alpha", 0f, 1f)
+                ObjectAnimator.ofFloat(finalBlurView, "alpha", 0f, 1f)
         );
         animatorSet.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
                 super.onAnimationStart(animation);
-                mAutoFitImageView.setVisibility(View.VISIBLE);
+                finalBlurView.setVisibility(View.VISIBLE);
+                mOverlayView.setVisibility(View.VISIBLE);
                 mIsIgnoreClick = true;
+                YLog.i("yuyidong", "upAnimation    onAnimationStart");
             }
 
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
                 mIsIgnoreClick = false;
+                YLog.i("yuyidong", "v    onAnimationEnd");
             }
         });
         animatorSet.setDuration(400);
@@ -353,27 +373,37 @@ public class DetailActivity2 extends BaseActivity implements IDetailView2,
 
     @Override
     public void downAnimation() {
+        View adapterPositionView = mDetailPagerAdapter.getItemView(mViewPager.getCurrentItem());
+        View blurView;
+        if (adapterPositionView != null) {
+            blurView = adapterPositionView.findViewById(R.id.img_blur);
+        } else {
+            blurView = mOverlayView;
+        }
+        final View finalBlurView = blurView;
+        YLog.i("yuyidong", "downAnimation  " + (adapterPositionView != null));
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.playTogether(
                 ObjectAnimator.ofFloat(mCardView, "translationY", 0, mTranslateHeight),
                 ObjectAnimator.ofFloat(mViewPager, "scaleX", 1.1f, 1.0f),
                 ObjectAnimator.ofFloat(mViewPager, "scaleY", 1.1f, 1.0f),
-                ObjectAnimator.ofFloat(mAutoFitImageView, "scaleX", 1.1f, 1.0f),
-                ObjectAnimator.ofFloat(mAutoFitImageView, "scaleY", 1.1f, 1.0f),
-                ObjectAnimator.ofFloat(mAutoFitImageView, "alpha", 1f, 0f)
+                ObjectAnimator.ofFloat(finalBlurView, "alpha", 1f, 0f)
         );
         animatorSet.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                mAutoFitImageView.setVisibility(View.GONE);
+                finalBlurView.setVisibility(View.GONE);
+                mOverlayView.setVisibility(View.GONE);
                 mIsIgnoreClick = true;
+                YLog.i("yuyidong", "downAnimation    onAnimationEnd");
             }
 
             @Override
             public void onAnimationStart(Animator animation) {
                 super.onAnimationStart(animation);
                 mIsIgnoreClick = true;
+                YLog.i("yuyidong", "downAnimation    onAnimationStart");
             }
         });
         animatorSet.setDuration(400);
@@ -401,33 +431,12 @@ public class DetailActivity2 extends BaseActivity implements IDetailView2,
     }
 
     @Override
-    public void showBlurImage(int width, int height, String path) {
-        mAutoFitImageView.setVisibility(View.VISIBLE);
-        mAutoFitImageView.setAspectRatio(width, height);
-
-//        ImageLoaderManager.displayImage(path, mAutoFitImageView, null);
-        Bitmap bitmap = ImageLoaderManager.loadImageSync(path);
-
-        float scaleFactor = 8;
-        float radius = 2;
-        Bitmap overlay = Bitmap.createBitmap((int) (bitmap.getWidth() / scaleFactor),
-                (int) (bitmap.getHeight() / scaleFactor), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(overlay);
-        canvas.scale(1 / scaleFactor, 1 / scaleFactor);
-        Paint paint = new Paint();
-        paint.setFlags(Paint.FILTER_BITMAP_FLAG);
-        canvas.drawBitmap(bitmap, 0, 0, paint);
-        overlay = RxImageBlur.doBlur(bitmap, (int) radius);
-        mAutoFitImageView.setImageDrawable(new BitmapDrawable(getResources(), overlay));
-    }
-
-    @Override
     public void showFabIcon(@DrawableRes int iconRes) {
         mFab.setIcon(iconRes);
     }
 
-    @OnClick(R.id.img_blur)
-    public void onBlurImageClick(View view) {
+    @OnClick(R.id.view_overlay)
+    public void clickOverlayView() {
         if (!mIsIgnoreClick) {
             mDetailPresenter.doCardViewAnimation();
         }

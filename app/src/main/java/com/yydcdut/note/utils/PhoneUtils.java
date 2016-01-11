@@ -387,5 +387,45 @@ public class PhoneUtils {
         return jsonObject;
     }
 
+    /**
+     * 获得总内存
+     *
+     * @return
+     */
+    public static long getTotalMem() {
+        long mTotal = 0;
+        String path = "/proc/meminfo";
+        String content = null;
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(path), 8);
+            String line;
+            if ((line = br.readLine()) != null) {
+                content = line;
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        // beginIndex
+        int begin = content.indexOf(':');
+        // endIndex
+        int end = content.indexOf('k');
+        // 截取字符串信息
+
+        content = content.substring(begin + 1, end).trim();
+        mTotal = Integer.parseInt(content);
+        return mTotal / 1024;//单位M
+    }
+
 
 }

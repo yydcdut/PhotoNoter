@@ -22,6 +22,8 @@ public interface IDetailView2 extends IView {
 
     void showExif(String exif);
 
+    void initAnimationView();
+
     void jump2EditTextActivity(int categoryId, int position, int comparator);
 
     void jump2MapActivity(int categoryId, int position, int comparator);
@@ -31,8 +33,6 @@ public interface IDetailView2 extends IView {
     void downAnimation();
 
     void showPopupMenu();
-
-    void showBlurImage(int width, int height, String path);
 
     void showFabIcon(@DrawableRes int iconRes);
 }
