@@ -58,8 +58,8 @@ public class RxImageBlur {
         Paint paint = new Paint();
         paint.setFlags(Paint.FILTER_BITMAP_FLAG);
         canvas.drawBitmap(bitmap, 0, 0, paint);
-        blur(bitmap, mRadius);
-        return bitmap;
+        blur(overlay, mRadius);
+        return overlay;
     }
 
 }
