@@ -1,8 +1,12 @@
 package com.yydcdut.note.mvp.v.note.impl;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.DrawableRes;
@@ -30,6 +34,8 @@ import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.note.IDetailView2;
 import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.Const;
+import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
+import com.yydcdut.note.utils.RxImageBlur;
 import com.yydcdut.note.utils.Utils;
 import com.yydcdut.note.view.AutoFitImageView;
 import com.yydcdut.note.view.FontTextView;
@@ -331,7 +337,7 @@ public class DetailActivity2 extends BaseActivity implements IDetailView2,
         animatorSet.setDuration(400);
         animatorSet.setInterpolator(new OvershootInterpolator());
         animatorSet.start();
-        mAnimationHandler.postDelayed(mUpDelayRunnable, 200);
+        mAnimationHandler.postDelayed(mUpDelayRunnable, 500);
 
     }
 
@@ -398,7 +404,21 @@ public class DetailActivity2 extends BaseActivity implements IDetailView2,
     public void showBlurImage(int width, int height, String path) {
         mAutoFitImageView.setVisibility(View.VISIBLE);
         mAutoFitImageView.setAspectRatio(width, height);
+
 //        ImageLoaderManager.displayImage(path, mAutoFitImageView, null);
+        Bitmap bitmap = ImageLoaderManager.loadImageSync(path);
+
+        float scaleFactor = 8;
+        float radius = 2;
+        Bitmap overlay = Bitmap.createBitmap((int) (bitmap.getWidth() / scaleFactor),
+                (int) (bitmap.getHeight() / scaleFactor), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(overlay);
+        canvas.scale(1 / scaleFactor, 1 / scaleFactor);
+        Paint paint = new Paint();
+        paint.setFlags(Paint.FILTER_BITMAP_FLAG);
+        canvas.drawBitmap(bitmap, 0, 0, paint);
+        overlay = RxImageBlur.doBlur(bitmap, (int) radius);
+        mAutoFitImageView.setImageDrawable(new BitmapDrawable(getResources(), overlay));
     }
 
     @Override

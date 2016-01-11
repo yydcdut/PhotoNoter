@@ -16,10 +16,22 @@ android {
         renderscriptSupportModeEnabled true
         multiDexEnabled true
 
+        ndk {
+            moduleName = "blur"
+            ldLibs "log", "z", "m", "jnigraphics"
+            abiFilters "armeabi", "armeabi-v7a", "arm64-v8a", "x86", "x86_64", "mips", "mips64"
+        }
+
         buildConfigField "String", "EVERNOTE_CONSUMER_KEY", (project.hasProperty('EVERNOTE_CONSUMER_KEY') ? "\"$EVERNOTE_CONSUMER_KEY\"" : "\"Your consumer key\"")
         buildConfigField "String", "EVERNOTE_CONSUMER_SECRET", (project.hasProperty('EVERNOTE_CONSUMER_SECRET') ? "\"$EVERNOTE_CONSUMER_SECRET\"" : "\"Your consumer secret\"")
         buildConfigField "String", "TENCENT_KEY", (project.hasProperty('TENCENT_KEY') ? "\"$TENCENT_KEY\"" : "\"TENCENT_KEY\"")
         buildConfigField "String", "SPEECH_ID", (project.hasProperty('SPEECH_ID') ? "\"$SPEECH_ID\"" : "\"SPEECH_ID\"")
+    }
+
+    tasks.withType(JavaCompile) {
+        //指定编译JDK版本
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     compileOptions {
@@ -85,6 +97,7 @@ android {
         flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
     }
 
+    sourceSets { main { jni.srcDirs = ['src/main/jni'] } }
 }
 
 android.applicationVariants.all {
