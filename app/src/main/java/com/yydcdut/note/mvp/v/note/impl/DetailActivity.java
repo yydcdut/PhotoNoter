@@ -25,9 +25,9 @@ import com.nineoldandroids.animation.ObjectAnimator;
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.DetailPagerAdapter;
 import com.yydcdut.note.bean.PhotoNote;
-import com.yydcdut.note.mvp.p.note.impl.DetailPresenterImpl2;
+import com.yydcdut.note.mvp.p.note.impl.DetailPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseActivity;
-import com.yydcdut.note.mvp.v.note.IDetailView2;
+import com.yydcdut.note.mvp.v.note.IDetailView;
 import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.Utils;
@@ -47,12 +47,12 @@ import butterknife.OnPageChange;
 /**
  * Created by yuyidong on 16/1/8.
  */
-public class DetailActivity extends BaseActivity implements IDetailView2,
+public class DetailActivity extends BaseActivity implements IDetailView,
         ViewPager.PageTransformer, PopupMenu.OnMenuItemClickListener {
     private static final float MIN_SCALE = 0.75f;
 
     @Inject
-    DetailPresenterImpl2 mDetailPresenter;
+    DetailPresenterImpl mDetailPresenter;
 
     @Bind(R.id.vp_detail)
     ViewPager mViewPager;

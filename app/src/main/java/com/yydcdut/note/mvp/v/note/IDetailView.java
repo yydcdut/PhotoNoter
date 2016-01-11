@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by yuyidong on 16/1/8.
  */
-public interface IDetailView2 extends IView {
+public interface IDetailView extends IView {
 
     void setFontSystem(boolean usSystem);
 

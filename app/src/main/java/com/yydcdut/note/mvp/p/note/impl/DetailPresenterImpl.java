@@ -10,7 +10,7 @@ import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.note.IDetailPresenter;
-import com.yydcdut.note.mvp.v.note.IDetailView2;
+import com.yydcdut.note.mvp.v.note.IDetailView;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.LocalStorageUtils;
 
@@ -24,8 +24,8 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by yuyidong on 16/1/8.
  */
-public class DetailPresenterImpl2 implements IDetailPresenter {
-    private IDetailView2 mIDetailView2;
+public class DetailPresenterImpl implements IDetailPresenter {
+    private IDetailView mIDetailView;
 
     private Context mContext;
     private RxPhotoNote mRxPhotoNote;
@@ -39,8 +39,8 @@ public class DetailPresenterImpl2 implements IDetailPresenter {
     private boolean mIsCardViewShowing = true;
 
     @Inject
-    public DetailPresenterImpl2(@ContextLife("Activity") Context context, RxPhotoNote rxPhotoNote,
-                                LocalStorageUtils localStorageUtils) {
+    public DetailPresenterImpl(@ContextLife("Activity") Context context, RxPhotoNote rxPhotoNote,
+                               LocalStorageUtils localStorageUtils) {
         mContext = context;
         mRxPhotoNote = rxPhotoNote;
         mLocalStorageUtils = localStorageUtils;
@@ -48,14 +48,14 @@ public class DetailPresenterImpl2 implements IDetailPresenter {
 
     @Override
     public void attachView(@NonNull IView iView) {
-        mIDetailView2 = (IDetailView2) iView;
-        mIDetailView2.setFontSystem(mLocalStorageUtils.getSettingFontSystem());
+        mIDetailView = (IDetailView) iView;
+        mIDetailView.setFontSystem(mLocalStorageUtils.getSettingFontSystem());
         mRxPhotoNote.findByCategoryId(mCategoryId, mComparator)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(photoNoteList -> {
-                    mIDetailView2.setViewPagerAdapter(photoNoteList, mInitPosition, mComparator);
+                    mIDetailView.setViewPagerAdapter(photoNoteList, mInitPosition, mComparator);
                     showNote(mInitPosition);
-                    mIDetailView2.initAnimationView();
+                    mIDetailView.initAnimationView();
                 });
     }
 
@@ -78,12 +78,12 @@ public class DetailPresenterImpl2 implements IDetailPresenter {
                 .subscribe(photoNote -> {
                     try {
                         String exif = getExifInformation(photoNote.getBigPhotoPathWithoutFile());
-                        mIDetailView2.showExif(exif);
+                        mIDetailView.showExif(exif);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 });
-        mIDetailView2.showFabIcon(R.drawable.ic_pin_drop_white_24dp);
+        mIDetailView.showFabIcon(R.drawable.ic_pin_drop_white_24dp);
     }
 
     @Override
@@ -106,9 +106,9 @@ public class DetailPresenterImpl2 implements IDetailPresenter {
                     }
                     String createdTime = decodeTimeInDetail(photoNote1.getCreatedNoteTime());
                     String editedTime = decodeTimeInDetail(photoNote1.getEditedNoteTime());
-                    mIDetailView2.showNote(title, content, createdTime, editedTime);
+                    mIDetailView.showNote(title, content, createdTime, editedTime);
                 });
-        mIDetailView2.showFabIcon(R.drawable.ic_text_format_white_24dp);
+        mIDetailView.showFabIcon(R.drawable.ic_text_format_white_24dp);
     }
 
 
@@ -121,21 +121,21 @@ public class DetailPresenterImpl2 implements IDetailPresenter {
 
     @Override
     public void jump2EditTextActivity() {
-        mIDetailView2.jump2EditTextActivity(mCategoryId, mIDetailView2.getCurrentPosition(), mComparator);
+        mIDetailView.jump2EditTextActivity(mCategoryId, mIDetailView.getCurrentPosition(), mComparator);
     }
 
     @Override
     public void jump2MapActivity() {
-        mIDetailView2.jump2MapActivity(mCategoryId, mIDetailView2.getCurrentPosition(), mComparator);
+        mIDetailView.jump2MapActivity(mCategoryId, mIDetailView.getCurrentPosition(), mComparator);
     }
 
     @Override
     public void doCardViewAnimation() {
         if (mIsCardViewShowing) {
             mIsCardViewShowing = false;
-            mIDetailView2.downAnimation();
+            mIDetailView.downAnimation();
         } else {
-            mIDetailView2.upAnimation();
+            mIDetailView.upAnimation();
             mIsCardViewShowing = true;
         }
     }
@@ -143,7 +143,7 @@ public class DetailPresenterImpl2 implements IDetailPresenter {
     @Override
     public void showMenuIfNotHidden() {
         if (mIsCardViewShowing) {
-            mIDetailView2.showPopupMenu();
+            mIDetailView.showPopupMenu();
         }
     }
 
