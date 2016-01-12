@@ -119,6 +119,7 @@ public class MapPresenterImpl implements IMapPresenter, OnGetGeoCoderResultListe
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_gcoding)));
         mBaiduMap.setMapStatus(MapStatusUpdateFactory.newLatLng(reverseGeoCodeResult
                 .getLocation()));
+        mIMapView.setToolbarTitle(reverseGeoCodeResult.getAddress());
     }
 
     private void gps(String path) throws IOException {

@@ -9,4 +9,6 @@ import com.yydcdut.note.mvp.IView;
 public interface IMapView extends IView {
 
     BaiduMap getBaiduMap();
+
+    void setToolbarTitle(String title);
 }

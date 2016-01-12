@@ -24,6 +24,8 @@ import butterknife.ButterKnife;
 public class MapActivity extends BaseActivity implements IMapView {
     @Bind(R.id.map)
     MapView mMapView;/* map */
+    @Bind(R.id.toolbar)
+    Toolbar mToolbar;
 
     @Inject
     MapPresenterImpl mMapPresenter;
@@ -56,11 +58,11 @@ public class MapActivity extends BaseActivity implements IMapView {
     }
 
     private void initToolBarUI() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(" ");
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        AppCompat.setElevation(toolbar, getResources().getDimension(R.dimen.ui_elevation));
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar.setTitle(" ");
+        setSupportActionBar(mToolbar);
+        mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        AppCompat.setElevation(mToolbar, getResources().getDimension(R.dimen.ui_elevation));
     }
 
     @Override
@@ -97,6 +99,11 @@ public class MapActivity extends BaseActivity implements IMapView {
     @Override
     public BaiduMap getBaiduMap() {
         return mMapView.getMap();
+    }
+
+    @Override
+    public void setToolbarTitle(String title) {
+        mToolbar.setTitle(title);
     }
 
     @Override
