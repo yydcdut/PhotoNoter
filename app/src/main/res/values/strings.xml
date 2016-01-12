@@ -93,6 +93,7 @@
     <string name="zoom_small">Zoom Out</string>
     <string name="refresh">Refresh</string>
     <string name="copy_url">Copy Url</string>
+    <string name="show_or_hide">Show Or Hide</string>
 
     <!-- drawer -->
     <string name="drawer_open">Open drawer navigation</string>

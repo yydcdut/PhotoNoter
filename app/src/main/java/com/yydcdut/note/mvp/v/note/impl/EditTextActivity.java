@@ -4,17 +4,17 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.support.v4.view.ActionProvider;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.nineoldandroids.animation.Animator;
@@ -31,6 +31,7 @@ import com.yydcdut.note.view.CircleProgressBarLayout;
 import com.yydcdut.note.view.KeyBoardResizeFrameLayout;
 import com.yydcdut.note.view.RevealView;
 import com.yydcdut.note.view.VoiceRippleView;
+import com.yydcdut.note.view.action.ArrowActionProvider;
 import com.yydcdut.note.view.fab2.FloatingMenuLayout;
 import com.yydcdut.note.view.fab2.snack.OnSnackBarActionListener;
 import com.yydcdut.note.view.fab2.snack.SnackHelper;
@@ -46,7 +47,8 @@ import us.pinguo.edit.sdk.base.widget.AnimationAdapter;
  * Created by yyd on 15-4-8.
  */
 public class EditTextActivity extends BaseActivity implements IEditTextView, View.OnClickListener,
-        KeyBoardResizeFrameLayout.OnKeyBoardShowListener, FloatingMenuLayout.OnFloatingActionsMenuUpdateListener {
+        KeyBoardResizeFrameLayout.OnKeyBoardShowListener, FloatingMenuLayout.OnFloatingActionsMenuUpdateListener
+        , ArrowActionProvider.OnActionProviderClickListener {
     private static final String TAG = EditTextActivity.class.getSimpleName();
     /* title是否显示出来? */
     private boolean mIsEditTextShow = true;
@@ -78,7 +80,6 @@ public class EditTextActivity extends BaseActivity implements IEditTextView, Vie
     RevealView mVoiceRevealView;
     @Bind(R.id.view_fab_location)
     View mFabPositionView;
-    ImageView mMenuArrowImage;
 
     @Inject
     EditTextPresenterImpl mEditTextPresenter;
@@ -128,23 +129,15 @@ public class EditTextActivity extends BaseActivity implements IEditTextView, Vie
     private void initToolBar() {
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_check_white_24dp);
+    }
 
-        int actionbarHeight = getActionBarSize();
-        float dimen24dip = getResources().getDimension(R.dimen.dimen_24dip);
-        int margin = (int) ((actionbarHeight - dimen24dip) / 2);
-        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.layout_toolbar);
-
-        ViewGroup.MarginLayoutParams mp = new ViewGroup.MarginLayoutParams((int) dimen24dip, (int) dimen24dip);  //item的宽高
-        mp.setMargins(margin, margin, margin, margin);//分别是margin_top那四个属性
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(mp);
-
-        mMenuArrowImage = new ImageView(this);
-        mMenuArrowImage.setImageResource(R.drawable.ic_keyboard_arrow_down_white_24dp);
-        mMenuArrowImage.setLayoutParams(lp);
-        mMenuArrowImage.setTag(TAG_ARROW);
-        mMenuArrowImage.setOnClickListener(this);
-
-        linearLayout.addView(mMenuArrowImage);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_edit_text, menu);
+        MenuItem item = menu.findItem(R.id.menu_arrow);
+        ArrowActionProvider arrowActionProvider = (ArrowActionProvider) MenuItemCompat.getActionProvider(item);
+        arrowActionProvider.setOnActionProviderClickListener(this);
+        return true;
     }
 
     private void initFloating() {
@@ -184,8 +177,6 @@ public class EditTextActivity extends BaseActivity implements IEditTextView, Vie
         AnimatorSet animation = new AnimatorSet();
         animation.setDuration(Const.DURATION);
         animation.playTogether(
-                ObjectAnimator.ofFloat(mMenuArrowImage, "rotationX", 180f, 0f),
-                ObjectAnimator.ofFloat(mMenuArrowImage, "rotationY", 180f, 0f),
                 ObjectAnimator.ofFloat(mTitleEdit, "alpha", 0f, 1f),
                 ObjectAnimator.ofFloat(mLayoutTitle, "Y", 0f, getActionBarSize())
         );
@@ -196,8 +187,6 @@ public class EditTextActivity extends BaseActivity implements IEditTextView, Vie
         AnimatorSet animation = new AnimatorSet();
         animation.setDuration(Const.DURATION);
         animation.playTogether(
-                ObjectAnimator.ofFloat(mMenuArrowImage, "rotationX", 0f, 180f),
-                ObjectAnimator.ofFloat(mMenuArrowImage, "rotationY", 0f, 180f),
                 ObjectAnimator.ofFloat(mTitleEdit, "alpha", 1f, 0f),
                 ObjectAnimator.ofFloat(mLayoutTitle, "Y", getActionBarSize(), 0f)
         );
@@ -217,21 +206,6 @@ public class EditTextActivity extends BaseActivity implements IEditTextView, Vie
 
     @Override
     public void onClick(View v) {
-        if (v.getTag() instanceof String) {
-            switch ((String) v.getTag()) {
-                case TAG_ARROW:
-                    if (mIsEditTextShow) {
-                        mIsEditTextShow = false;
-                        closeEditTextAnimation();
-                    } else {
-                        mIsEditTextShow = true;
-                        openEditTextAnimation();
-                        mLayoutTitle.setVisibility(View.VISIBLE);
-                    }
-                    break;
-            }
-            return;
-        }
     }
 
     @OnClick(R.id.fab_voice)
@@ -451,5 +425,17 @@ public class EditTextActivity extends BaseActivity implements IEditTextView, Vie
         super.onDestroy();
         mEditTextPresenter.detachView();
         mVoiceRippleView.stopAnimation();
+    }
+
+    @Override
+    public void onActionClick(ActionProvider actionProvider) {
+        if (mIsEditTextShow) {
+            mIsEditTextShow = false;
+            closeEditTextAnimation();
+        } else {
+            mIsEditTextShow = true;
+            openEditTextAnimation();
+            mLayoutTitle.setVisibility(View.VISIBLE);
+        }
     }
 }
