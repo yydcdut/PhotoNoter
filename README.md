@@ -27,6 +27,14 @@ debug{
      }
 ```
 
+
+
+如果编译不过，错误日志是跟NDK有关的：
+
+> 开发环境的ndk版本是android-ndk-r10e
+
+如果还是不行，请将错误日志issues，谢谢！
+
 # 应用截图
 
 ## 动画gif
@@ -56,6 +64,7 @@ debug{
 13. RxJava + RxAndroid（RxCategory/RxPhotoNote/RxSandBox/RxFeedBack/RxUser）。
 14. dex分包处理。第一次开启App的时候 install dex + dexopt 时间很长，所以第一次开启的时候另启进程专门做这个事情，防止主线程因为时间长而发生ANR。至于自己去配置主dex是为了以防自动分包ClassNotFound异常。
 15. Android 6.0 权限适配。
+16. NDK && AIDL。
 
 # 更新版本说明
 
@@ -68,6 +77,14 @@ debug{
 - <a href="https://github.com/yydcdut/SlideAndDragListView">SlideAndDragListView</a>
 - <a href="https://github.com/lsjwzh/MaterialLoadingProgressBar">MaterialLoadingProgressBar</a>
 - <a href="http://sdk.camera360.com/">Camera360 SDK</a>
+- <a href="https://github.com/greenrobot/EventBus">EventBus</a>
+- <a href="https://github.com/JakeWharton/butterknife">ButterKnife</a>
+- <a href="https://github.com/google/dagger">Google Dagger</a>
+- <a href="https://github.com/evernote/evernote-sdk-android">Evernote SDK</a>
+- <a href="https://github.com/ReactiveX/RxJava">RxJava</a>
+- <a href="https://github.com/ReactiveX/RxAndroid">RxAndroid</a>
+- <a href="https://github.com/square/leakcanary">LeakCanary</a>
+- <a href="https://github.com/orfjackal/retrolambda">RetroLambda</a>
 
 # License
 
