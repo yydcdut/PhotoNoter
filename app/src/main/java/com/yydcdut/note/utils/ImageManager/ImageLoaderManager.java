@@ -53,7 +53,7 @@ public class ImageLoaderManager {
     }
 
     public static Bitmap loadImageSync(String uri) {
-        return ImageLoader.getInstance().loadImageSync(uri);
+        return ImageLoader.getInstance().loadImageSync(uri, sOptions);
     }
 
     public static void clearMemoryCache() {
