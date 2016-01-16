@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/layout_zoom"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:color/black">
+<RelativeLayout
+    android:id="@+id/layout_zoom"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
 
-    <com.yydcdut.note.view.ZoomImageView
+    <uk.co.senab.photoview.PhotoView
         android:id="@+id/img_zoom"
+        android:scaleType="fitCenter"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="@color/black"/>
+        android:layout_height="fill_parent"/>
 
     <ImageView
         android:id="@+id/img_zoom_spread"
@@ -29,7 +30,6 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:visibility="gone">
-
     </com.yydcdut.note.view.CircleProgressBarLayout>
 
 </RelativeLayout>

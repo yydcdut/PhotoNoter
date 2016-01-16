@@ -134,6 +134,7 @@ dependencies {
     compile 'io.reactivex:rxjava:1.0.14'
     compile 'de.greenrobot:eventbus:3.0.0-beta1'
     provided 'org.glassfish:javax.annotation:10.0-b28'
+    compile 'com.commit451:PhotoView:1.2.4'
     compile 'com.android.support:multidex:1.0.0'
     compile files('src/libs/umeng-analytics-v5.5.3.jar')
     compile files('src/libs/mta-sdk-1.6.2.jar')

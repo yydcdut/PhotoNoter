@@ -60,4 +60,12 @@ public class ImageLoaderManager {
         ImageLoader.getInstance().clearMemoryCache();
     }
 
+    public static void displayImageWihtoutCache(String uri, ImageView imageView) {
+        ImageLoader.getInstance().displayImage(uri, imageView, new DisplayImageOptions.Builder()
+                .cacheInMemory(false)
+                .considerExifParams(true)
+                .bitmapConfig(Bitmap.Config.ARGB_8888)
+                .build());
+    }
+
 }

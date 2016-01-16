@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
@@ -22,7 +23,6 @@ import com.yydcdut.note.mvp.v.note.IZoomView;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.view.CircleProgressBarLayout;
-import com.yydcdut.note.view.ZoomImageView;
 
 import javax.inject.Inject;
 
@@ -42,7 +42,7 @@ public class ZoomActivity extends BaseActivity implements IZoomView {
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
     @Bind(R.id.img_zoom)
-    ZoomImageView mImage;
+    ImageView mImage;
     @Bind(R.id.img_zoom_spread)
     View mSpreadView;
     @Bind(R.id.layout_progress)
@@ -214,13 +214,12 @@ public class ZoomActivity extends BaseActivity implements IZoomView {
 
     @Override
     public void showImage(String path) {
-        ImageLoaderManager.displayImage(path, mImage);
+        ImageLoaderManager.displayImageWihtoutCache(path, mImage);
     }
 
     @Override
     public void jump2PGEditActivity(String path) {
         PGEditSDK.instance().startEdit(ZoomActivity.this, PGEditActivity.class, path, path);
-
     }
 
     @Override
