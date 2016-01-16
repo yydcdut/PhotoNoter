@@ -2,6 +2,7 @@ package com.yydcdut.note.mvp.v.login.impl;
 
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -76,6 +77,8 @@ public class UserDetailFragment extends BaseFragment implements IUserDetailFragV
         ((TextView) citeView.findViewById(R.id.txt_item_column)).setText(getContext().getResources().getString(R.string.uc_city));
         mLocationView = (TextView) citeView.findViewById(R.id.txt_item_user);
         mLocationView.setText(location);
+        mLocationView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+        mLocationView.setMarqueeRepeatLimit(-1);
         mLinearLayout.addView(citeView);
 
         View usageView = LayoutInflater.from(getContext()).inflate(R.layout.item_user_center_detail_text, null);
