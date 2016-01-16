@@ -3,23 +3,34 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_edit"
-        android:icon="@drawable/ic_edit_white_24dp"
-        android:title="@string/edit"
-        android:visible="false"
-        app:showAsAction="always"/>
-
-    <item
         android:id="@+id/menu_effect"
         android:icon="@drawable/ic_palette_white_24dp"
         android:title="@string/effect"
         app:showAsAction="always"/>
 
     <item
-        android:id="@+id/menu_spread"
-        android:icon="@drawable/ic_unfold_less_white_24dp"
-        android:title="@string/spread"
-        app:showAsAction="always"/>
-
-
+        android:icon="@drawable/ic_rotate_90_degrees_ccw_white_24dp"
+        android:title="@string/rotation"
+        app:showAsAction="always">
+        <menu>
+            <group>
+                <item
+                    android:id="@+id/menu_rotation_90"
+                    android:title="@string/rotation_90"
+                    app:showAsAction="ifRoom|collapseActionView"/>
+                <item
+                    android:id="@+id/menu_rotation_180"
+                    android:title="@string/rotation_180"
+                    app:showAsAction="ifRoom|collapseActionView"/>
+                <item
+                    android:id="@+id/menu_rotation_270"
+                    android:title="@string/rotation_270"
+                    app:showAsAction="ifRoom|collapseActionView"/>
+                <item
+                    android:id="@+id/menu_rotation_0"
+                    android:title="@string/rotation_0"
+                    app:showAsAction="ifRoom|collapseActionView"/>
+            </group>
+        </menu>
+    </item>
 </menu>

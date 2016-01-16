@@ -215,6 +215,11 @@
     <string name="uc_words">总字数</string>
     <string name="zoom_big">放大</string>
     <string name="zoom_small">缩小</string>
+    <string name="rotation">旋转</string>
+    <string name="rotation_90">旋转90度</string>
+    <string name="rotation_180">旋转180度</string>
+    <string name="rotation_270">旋转270度</string>
+    <string name="rotation_0">旋转0度</string>
     <string name="refresh">刷新</string>
     <string name="uc_no_sdcard">没有SD卡@</string>
     <string name="copy_url">复制链接</string>

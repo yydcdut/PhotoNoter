@@ -12,17 +12,6 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"/>
 
-    <ImageView
-        android:id="@+id/img_zoom_spread"
-        android:layout_width="@dimen/dimen_24dip"
-        android:layout_height="@dimen/dimen_24dip"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginRight="@dimen/toolbar_right"
-        android:layout_marginTop="@dimen/toolbar_top"
-        android:src="@drawable/ic_unfold_more_white_24dp"
-        android:visibility="gone"/>
-
     <include layout="@layout/layout_toolbar"/>
 
     <com.yydcdut.note.view.CircleProgressBarLayout

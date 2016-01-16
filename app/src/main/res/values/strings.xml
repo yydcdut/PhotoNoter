@@ -91,6 +91,11 @@
     <string name="edit">Edit</string>
     <string name="zoom_big">Zoom In</string>
     <string name="zoom_small">Zoom Out</string>
+    <string name="rotation">Rotation</string>
+    <string name="rotation_90">Rotate 90°</string>
+    <string name="rotation_180">Rotate 180°</string>
+    <string name="rotation_270">Rotate 270°</string>
+    <string name="rotation_0">Rotate 0°</string>
     <string name="refresh">Refresh</string>
     <string name="copy_url">Copy Url</string>
     <string name="show_or_hide">Show Or Hide</string>

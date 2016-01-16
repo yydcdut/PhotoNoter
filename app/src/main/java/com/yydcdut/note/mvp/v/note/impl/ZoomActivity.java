@@ -8,14 +8,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
 
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.animation.AnimatorListenerAdapter;
-import com.nineoldandroids.animation.AnimatorSet;
-import com.nineoldandroids.animation.ObjectAnimator;
 import com.yydcdut.note.R;
 import com.yydcdut.note.mvp.p.note.impl.ZoomPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseActivity;
@@ -28,7 +22,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
+import uk.co.senab.photoview.PhotoView;
 import us.pinguo.edit.sdk.PGEditActivity;
 import us.pinguo.edit.sdk.base.PGEditResult;
 import us.pinguo.edit.sdk.base.PGEditSDK;
@@ -42,9 +36,7 @@ public class ZoomActivity extends BaseActivity implements IZoomView {
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
     @Bind(R.id.img_zoom)
-    ImageView mImage;
-    @Bind(R.id.img_zoom_spread)
-    View mSpreadView;
+    PhotoView mImage;
     @Bind(R.id.layout_progress)
     CircleProgressBarLayout mProgressLayout;
 
@@ -124,50 +116,25 @@ public class ZoomActivity extends BaseActivity implements IZoomView {
         @Override
         public boolean onMenuItemClick(MenuItem menuItem) {
             switch (menuItem.getItemId()) {
-                case R.id.menu_spread:
-                    hideToolBar();
-                    break;
-                case R.id.menu_edit:
-                    break;
                 case R.id.menu_effect:
                     mZoomPresenter.jump2PGEditActivity();
+                    break;
+                case R.id.menu_rotation_0:
+                    mImage.setRotation(0);
+                    break;
+                case R.id.menu_rotation_90:
+                    mImage.setRotation(90);
+                    break;
+                case R.id.menu_rotation_180:
+                    mImage.setRotation(180);
+                    break;
+                case R.id.menu_rotation_270:
+                    mImage.setRotation(270);
                     break;
             }
             return true;
         }
     };
-
-    private void hideToolBar() {
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playTogether(
-                ObjectAnimator.ofFloat(mToolbar, "translationY", mToolbar.getTranslationY(), -mToolbar.getHeight())
-        );
-        animatorSet.setDuration(100);
-        animatorSet.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                mSpreadView.setVisibility(View.VISIBLE);
-            }
-        });
-        animatorSet.start();
-    }
-
-    private void showToolBar() {
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playTogether(
-                ObjectAnimator.ofFloat(mToolbar, "translationY", mToolbar.getTranslationY(), 0)
-        );
-        animatorSet.setDuration(100);
-        animatorSet.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                super.onAnimationStart(animation);
-                mSpreadView.setVisibility(View.GONE);
-            }
-        });
-        animatorSet.start();
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -190,11 +157,6 @@ public class ZoomActivity extends BaseActivity implements IZoomView {
                 && resultCode == PGEditSDK.PG_EDIT_SDK_RESULT_CODE_NOT_CHANGED) {
             // 照片没有修改
         }
-    }
-
-    @OnClick(R.id.img_zoom_spread)
-    public void click2ShowToolBar(View v) {
-        showToolBar();
     }
 
     @Override
