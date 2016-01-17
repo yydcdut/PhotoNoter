@@ -22,7 +22,7 @@ public class SandBoxDB {
         mSandSQLite = new SandSQLite(context, NAME, null, VERSION);
     }
 
-    public SandPhoto findFirstOne() {
+    public synchronized SandPhoto findFirstOne() {
         SandPhoto sandPhoto = null;
         SQLiteDatabase db = mSandSQLite.getReadableDatabase();
         Cursor cursor = db.query(SandSQLite.TABLE, null, null, null, null, null, null, "0,1");
@@ -63,7 +63,7 @@ public class SandBoxDB {
         return sandPhoto;
     }
 
-    public SandPhoto findById(long _id) {
+    public synchronized SandPhoto findById(long _id) {
         SandPhoto sandPhoto = null;
         SQLiteDatabase db = mSandSQLite.getReadableDatabase();
         Cursor cursor = db.query(SandSQLite.TABLE, null, "_id = ?", new String[]{_id + ""}, null, null, null, null);
@@ -110,7 +110,7 @@ public class SandBoxDB {
      * @param sandPhoto
      * @return
      */
-    public long save(SandPhoto sandPhoto) {
+    public synchronized long save(SandPhoto sandPhoto) {
         SQLiteDatabase db = mSandSQLite.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("data", new byte[]{'a'});
@@ -143,14 +143,14 @@ public class SandBoxDB {
      * @param sandPhoto
      * @return
      */
-    public int delete(SandPhoto sandPhoto) {
+    public synchronized int delete(SandPhoto sandPhoto) {
         SQLiteDatabase db = mSandSQLite.getWritableDatabase();
         int rows = db.delete(SandSQLite.TABLE, "_id = ?", new String[]{sandPhoto.getId() + ""});
         db.close();
         return rows;
     }
 
-    public int getAllNumber() {
+    public synchronized int getAllNumber() {
         int number = 0;
         SQLiteDatabase db = mSandSQLite.getReadableDatabase();
         String sql = "select count(*) from " + SandSQLite.TABLE + ";";
