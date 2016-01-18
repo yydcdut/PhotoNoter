@@ -56,7 +56,7 @@ public class DetailFragPresenterImpl implements IDetailFragPresenter {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(photoNote -> {
                     int[] size = getSize(photoNote.getBigPhotoPathWithoutFile());
-                    mDetailFragView.showImage(size[0], size[1], photoNote.getBigPhotoPathWithFile());
+                    mDetailFragView.showImage(size[0], size[1], photoNote.getSmallPhotoPathWithFile());
                 });
     }
 

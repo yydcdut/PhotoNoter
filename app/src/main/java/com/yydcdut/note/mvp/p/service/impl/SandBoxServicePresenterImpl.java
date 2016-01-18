@@ -82,7 +82,12 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter,
         if (data == null) {
             return;
         }
-        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+        Bitmap bitmap = null;
+        try {
+            bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+        } catch (OutOfMemoryError e) {
+
+        }
         String fileName = getTime4Photo(sandPhoto.getTime()) + ".jpg";
         if (FilePathUtils.savePhoto(fileName, bitmap)) {
             FilePathUtils.saveSmallPhoto(fileName, bitmap);
@@ -174,9 +179,11 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter,
         mRxSandBox.deleteOne(sandPhoto)
                 .subscribe(integer -> {
                     new File(path).delete();
-                    addFirstOneIntoQueue();
+                    mHandler.sendEmptyMessage(0);
+                    if (mCurrentNumber != mTotalSandBoxNumber) {
+                        addFirstOneIntoQueue();
+                    }
                 });
-        mHandler.sendEmptyMessage(0);
     }
 
 
