@@ -43,7 +43,7 @@ public class DetailPresenterImpl implements IDetailPresenter,
     private int mComparator;
     private int mInitPosition;
 
-    private boolean mIsCardViewShowing = true;
+    private boolean mIsCardViewShowing = false;
 
     @Inject
     public DetailPresenterImpl(@ContextLife("Activity") Context context, Activity activity,

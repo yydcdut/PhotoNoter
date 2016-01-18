@@ -31,6 +31,7 @@ import com.yydcdut.note.mvp.v.note.IDetailView;
 import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.Utils;
+import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.view.FontTextView;
 import com.yydcdut.note.view.RevealView;
 import com.yydcdut.note.view.fab.FloatingActionButton;
@@ -172,6 +173,7 @@ public class DetailActivity extends BaseActivity implements IDetailView,
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
+        YLog.i("yuyidong", "1111111");
         int menuLayoutHeight = mMenuLayout.getHeight();
         int cardViewTop = mCardView.getTop();
         if (AppCompat.AFTER_LOLLIPOP) {
@@ -253,14 +255,33 @@ public class DetailActivity extends BaseActivity implements IDetailView,
 
     @Override
     public void initAnimationView() {
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playTogether(
-                ObjectAnimator.ofFloat(mViewPager, "scaleX", 1f, 1.1f),
-                ObjectAnimator.ofFloat(mViewPager, "scaleY", 1f, 1.1f)
-        );
-        animatorSet.setDuration(10);
-        animatorSet.start();
-        mOverlayView.setVisibility(View.VISIBLE);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                AnimatorSet animatorSet = new AnimatorSet();
+                animatorSet.playTogether(
+                        ObjectAnimator.ofFloat(mCardView, "translationY", 0, mTranslateHeight)
+                );
+                animatorSet.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        mOverlayView.setVisibility(View.GONE);
+                        mIsIgnoreClick = true;
+                    }
+
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                        super.onAnimationStart(animation);
+                        mIsIgnoreClick = true;
+                    }
+                });
+                animatorSet.setDuration(400);
+                animatorSet.setInterpolator(new DecelerateInterpolator());
+                animatorSet.start();
+                mAnimationHandler.postDelayed(mDownDelayRunnable, 350);
+            }
+        }, 500);
     }
 
     @Override
