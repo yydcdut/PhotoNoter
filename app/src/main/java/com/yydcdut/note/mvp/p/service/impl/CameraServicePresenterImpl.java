@@ -28,14 +28,14 @@ import javax.inject.Inject;
 
 /**
  * Created by yuyidong on 15/11/22.
+ * * //todo  OOM
  */
 public class CameraServicePresenterImpl implements ICameraServicePresenter {
     private ICameraServiceView mCameraServiceView;
     private Queue<SandPhoto> mQueue = new ArrayBlockingQueue<SandPhoto>(10);
 
     private boolean mGotoStop = false;
-
-    private byte[] object = new byte[1];
+    private byte[] mObject = new byte[1];
 
     private RxPhotoNote mRxPhotoNote;
     private RxSandBox mRxSandBox;
@@ -71,11 +71,11 @@ public class CameraServicePresenterImpl implements ICameraServicePresenter {
         SandPhoto sandPhoto = new SandPhoto(SandPhoto.ID_NULL, time, cameraId, categoryId, isMirror, ratio, fileName, size, sandExif);
         mRxSandBox.saveOne(sandPhoto)
                 .subscribe(sandPhoto1 -> {
-                    synchronized (object) {
+                    synchronized (mObject) {
                         long id = sandPhoto1.getId();
                         sandPhoto.setId(id);
                         mQueue.offer(sandPhoto);
-                        object.notifyAll();
+                        mObject.notifyAll();
                     }
                 });
     }
@@ -90,9 +90,9 @@ public class CameraServicePresenterImpl implements ICameraServicePresenter {
             while (!mGotoStop) {
                 SandPhoto sandPhoto = mQueue.poll();
                 if (sandPhoto == null) {
-                    synchronized (object) {
+                    synchronized (mObject) {
                         try {
-                            object.wait();
+                            mObject.wait();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }

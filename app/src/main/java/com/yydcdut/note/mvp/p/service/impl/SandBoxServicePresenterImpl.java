@@ -23,17 +23,31 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
 
 import javax.inject.Inject;
 
 /**
  * Created by yuyidong on 15/11/22.
+ * //todo  OOM
  */
-public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter, Handler.Callback {
+public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter,
+        Handler.Callback, Runnable {
+    private Queue<SandPhoto> mQueue = new ArrayBlockingQueue<SandPhoto>(10);
+
+    private boolean mGotoStop = false;
+    private byte[] mObject = new byte[1];
+
+    private Handler mHandler;
+
     private ISandBoxServiceView mSandBoxServiceView;
 
     private RxPhotoNote mRxPhotoNote;
     private RxSandBox mRxSandBox;
+
+    private int mTotalSandBoxNumber = 0;
+    private int mCurrentNumber = 0;
 
     @Inject
     public SandBoxServicePresenterImpl(RxSandBox rxSandBox, RxPhotoNote rxPhotoNote) {
@@ -45,24 +59,15 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter, Ha
     public void attachView(IView iView) {
         mSandBoxServiceView = (ISandBoxServiceView) iView;
         mSandBoxServiceView.notification();
-        final Handler handler = new Handler(this);
+        new Thread(this).start();
+        mHandler = new Handler(this);
         mRxSandBox.getNumber()
                 .subscribe(integer -> {
                     if (integer > 0) {
-                        int total = integer;
-                        for (int i = 0; i < total; i++) {
-                            mRxSandBox.findFirstOne()
-                                    .subscribe(sandPhoto1 -> {
-                                        if (sandPhoto1.getSize() == -1 || sandPhoto1.getFileName().equals("X")) {
-                                            deleteFromDBAndSDCard(sandPhoto1);
-                                        } else {
-                                            makePhoto(sandPhoto1);
-                                        }
-                                    });
-                        }
-                        handler.sendEmptyMessage(0);
+                        mTotalSandBoxNumber = integer;
+                        addFirstOneIntoQueue();
                     } else {
-                        handler.sendEmptyMessage(0);
+                        mHandler.sendEmptyMessage(0);
                     }
                 });
     }
@@ -85,15 +90,13 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter, Ha
         PhotoNote photoNote = new PhotoNote(fileName, sandPhoto.getTime(), sandPhoto.getTime(), "", "",
                 sandPhoto.getTime(), sandPhoto.getTime(), sandPhoto.getCategoryId());
         photoNote.setPaletteColor(Utils.getPaletteColor(bitmap));
-        mRxPhotoNote.savePhotoNote(photoNote)
-                .subscribe(photoNote1 -> {
-                    try {
-                        setExif(photoNote, sandPhoto.getSandExif(), sandPhoto.getCameraId(), sandPhoto.isMirror());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    deleteFromDBAndSDCard(sandPhoto);
-                });
+        mRxPhotoNote.savePhotoNote(photoNote).subscribe();
+        try {
+            setExif(photoNote, sandPhoto.getSandExif(), sandPhoto.getCameraId(), sandPhoto.isMirror());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        deleteFromDBAndSDCard(sandPhoto);
         bitmap.recycle();
         System.gc();
     }
@@ -171,7 +174,9 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter, Ha
         mRxSandBox.deleteOne(sandPhoto)
                 .subscribe(integer -> {
                     new File(path).delete();
+                    addFirstOneIntoQueue();
                 });
+        mHandler.sendEmptyMessage(0);
     }
 
 
@@ -182,11 +187,26 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter, Ha
 
     @Override
     public boolean handleMessage(Message msg) {
+        switch (msg.what) {
+            case 0:
+                mCurrentNumber++;
+                if (mCurrentNumber == mTotalSandBoxNumber) {
+                    mGotoStop = true;
+                    finishSandBoxService();
+                }
+                break;
+            default:
+                finishSandBoxService();
+                break;
+        }
+        return false;
+    }
+
+    private void finishSandBoxService() {
         mSandBoxServiceView.sendBroadCast();
         mSandBoxServiceView.cancelNotification();
         mSandBoxServiceView.stopService();
         mSandBoxServiceView.killProgress();
-        return false;
     }
 
     /**
@@ -201,4 +221,38 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter, Ha
         s = format1.format(time);
         return s;
     }
+
+    @Override
+    public void run() {
+        while (!mGotoStop) {
+            SandPhoto sandPhoto = mQueue.poll();
+            if (sandPhoto == null) {
+                synchronized (mObject) {
+                    try {
+                        mObject.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+                if (sandPhoto.getSize() == -1 || sandPhoto.getFileName().equals("X")) {
+                    deleteFromDBAndSDCard(sandPhoto);
+                    return;
+                } else {
+                    makePhoto(sandPhoto);
+                }
+            }
+        }
+    }
+
+    private void addFirstOneIntoQueue() {
+        mRxSandBox.findFirstOne()
+                .subscribe(sandPhoto -> {
+                    mQueue.offer(sandPhoto);
+                    synchronized (mObject) {
+                        mObject.notifyAll();
+                    }
+                });
+    }
+
 }

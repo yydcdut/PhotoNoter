@@ -35,6 +35,7 @@ public class RxSandBox {
             @Override
             public void call(Subscriber<? super SandPhoto> subscriber) {
                 subscriber.onNext(mSandBoxDB.findFirstOne());
+                subscriber.onCompleted();
             }
         }).subscribeOn(Schedulers.io());
     }
