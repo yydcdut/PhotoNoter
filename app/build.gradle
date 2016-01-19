@@ -59,6 +59,7 @@ android {
 
     buildTypes {
         release {
+            shrinkResources true
             //使用签名配置
             signingConfig signingConfigs.release
             minifyEnabled true
