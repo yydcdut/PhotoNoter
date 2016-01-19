@@ -99,7 +99,38 @@ public class WebViewActivity extends BaseActivity {
                     break;
                 case R.id.menu_copy_url:
                     String url2 = mWebView.getUrl();
-                    copy2ClipBoard(url2);
+                    /**
+                     * 01-18 19:44:12.821 11610-11610/com.yydcdut.note E/AndroidRuntime: FATAL EXCEPTION: main
+                     Process: com.yydcdut.note, PID: 11610
+                     java.lang.NullPointerException
+                     at com.yydcdut.note.mvp.v.WebViewActivity.copy2ClipBoard(WebViewActivity.java:149)
+                     at com.yydcdut.note.mvp.v.WebViewActivity.access$000(WebViewActivity.java:25)
+                     at com.yydcdut.note.mvp.v.WebViewActivity$1.onMenuItemClick(WebViewActivity.java:102)
+                     at android.support.v7.widget.Toolbar$1.onMenuItemClick(Toolbar.java:172)
+                     at android.support.v7.widget.ActionMenuView$MenuBuilderCallback.onMenuItemSelected(ActionMenuView.java:760)
+                     at android.support.v7.view.menu.MenuBuilder.dispatchMenuItemSelected(MenuBuilder.java:811)
+                     at android.support.v7.view.menu.MenuItemImpl.invoke(MenuItemImpl.java:152)
+                     at android.support.v7.view.menu.MenuBuilder.performItemAction(MenuBuilder.java:958)
+                     at android.support.v7.view.menu.MenuBuilder.performItemAction(MenuBuilder.java:948)
+                     at android.support.v7.view.menu.MenuPopupHelper.onItemClick(MenuPopupHelper.java:191)
+                     at android.widget.AdapterView.performItemClick(AdapterView.java:299)
+                     at android.widget.AbsListView.performItemClick(AbsListView.java:1154)
+                     at android.widget.AbsListView$PerformClick.run(AbsListView.java:3031)
+                     at android.widget.AbsListView$3.run(AbsListView.java:3915)
+                     at android.os.Handler.handleCallback(Handler.java:808)
+                     at android.os.Handler.dispatchMessage(Handler.java:103)
+                     at android.os.Looper.loop(Looper.java:193)
+                     at android.app.ActivityThread.main(ActivityThread.java:5315)
+                     at java.lang.reflect.Method.invokeNative(Native Method)
+                     at java.lang.reflect.Method.invoke(Method.java:515)
+                     at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:836)
+                     at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:652)
+                     at dalvik.system.NativeStart.main(Native Method)
+                     */
+                    try {
+                        copy2ClipBoard(url2);
+                    } catch (Exception e) {
+                    }
                     break;
             }
             return true;
