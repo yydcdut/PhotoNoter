@@ -145,6 +145,8 @@ dependencies {
     compile files('src/libs/Sunflower.jar')
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3'
+    debugCompile 'com.github.moduth:blockcanary:1.0.0'
+    releaseCompile 'com.github.moduth:blockcanary-no-op:1.0.0'
     compile project(':PG_Edit_SDK')
 }
 

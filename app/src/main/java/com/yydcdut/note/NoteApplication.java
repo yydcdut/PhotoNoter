@@ -9,8 +9,8 @@ import android.os.Build;
 import android.os.Environment;
 import android.support.multidex.MultiDex;
 
+import com.github.moduth.blockcanary.BlockCanary;
 import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
 import com.umeng.analytics.MobclickAgent;
 import com.yydcdut.note.injector.component.ApplicationComponent;
 import com.yydcdut.note.injector.component.DaggerApplicationComponent;
@@ -29,7 +29,6 @@ import us.pinguo.edit.sdk.PGEditImageLoader;
  */
 public class NoteApplication extends Application {
     private static final String TAG = NoteApplication.class.getSimpleName();
-    private RefWatcher mRefWatcher;
 
     private ApplicationComponent mApplicationComponent;
 
@@ -51,7 +50,8 @@ public class NoteApplication extends Application {
             return;
         }
 
-        mRefWatcher = LeakCanary.install(this);
+        LeakCanary.install(this);
+        BlockCanary.install(this, new NoteBlockCanaryContext(this)).start();
 
         initComponent();
         Utils.init(this);
