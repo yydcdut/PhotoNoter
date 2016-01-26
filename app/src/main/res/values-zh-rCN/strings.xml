@@ -187,9 +187,7 @@
     <string name="font_choose">选择字体</string>
     <string name="logout">登出</string>
     <string name="unbind_qq">解绑腾讯QQ</string>
-    <string name="unbind_sina">解绑新浪微博</string>
     <string name="bind_qq">绑定腾讯QQ</string>
-    <string name="bind_sina">绑定新浪微博</string>
     <string name="not_login">未登录..</string>
     <string name="personal_page">个人主页</string>
     <string name="about_github">Github</string>
