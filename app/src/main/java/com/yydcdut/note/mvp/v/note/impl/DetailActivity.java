@@ -31,7 +31,6 @@ import com.yydcdut.note.mvp.v.note.IDetailView;
 import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.Utils;
-import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.view.FontTextView;
 import com.yydcdut.note.view.RevealView;
 import com.yydcdut.note.view.fab.FloatingActionButton;
@@ -173,7 +172,6 @@ public class DetailActivity extends BaseActivity implements IDetailView,
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        YLog.i("yuyidong", "1111111");
         int menuLayoutHeight = mMenuLayout.getHeight();
         int cardViewTop = mCardView.getTop();
         if (AppCompat.AFTER_LOLLIPOP) {
