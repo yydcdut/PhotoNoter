@@ -154,7 +154,6 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
 
     private void initUIAndListener() {
         mAutoFitSurfaceView = (AutoFitSurfaceView) findViewById(R.id.sv_camera);
-        mAutoFitSurfaceView.getHolder().addCallback(this);
 
         mCameraGridView = (CameraGridView) findViewById(R.id.grid_camera);
 
@@ -180,11 +179,12 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        mCameraModel = new CameraModel(getApplicationContext(), holder, mCategoryId);
-        mCameraModel.onCreate(CameraActivity.this);
+        if (mCameraModel == null) {
+            mCameraModel = new CameraModel(getApplicationContext(), holder, mCategoryId);
+            mCameraModel.onCreate(CameraActivity.this);
+        }
         mCameraModel.openCamera(mCameraId, mCameraRotation);
     }
-
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
@@ -434,7 +434,10 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
     protected void onResume() {
         super.onResume();
         if (mCameraModel != null) {
-            mCameraModel.startPreview();
+//            mCameraModel.openCamera(mCameraId, mCameraRotation);
+//            mCameraModel.startPreview();
+        } else {
+            mAutoFitSurfaceView.getHolder().addCallback(this);
         }
     }
 
@@ -443,6 +446,7 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
         super.onPause();
         if (mCameraModel != null) {
             mCameraModel.stopPreview();
+            mCameraModel.closeCamera();
         }
         if (mIsSaving) {
             mLocalStorageUtils.setCameraSaveTimer(mTimerState);

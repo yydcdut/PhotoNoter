@@ -25,11 +25,11 @@ import java.io.IOException;
 public class CameraModel extends AbsCameraModel {
     private static final String TAG = CameraModel.class.getSimpleName();
 
-    private static final int STATE_CAMERA_IDEL = 0;
+    private static final int STATE_CAMERA_IDLE = 0;
     private static final int STATE_CAMERA_OPEN = 1;
     private static final int STATE_CAMERA_PREVIEW_NORMAL = 2;
     private static final int STATE_CAMERA_NO_PREVIEW = 3;
-    private int mCameraState = STATE_CAMERA_IDEL;
+    private int mCameraState = STATE_CAMERA_IDLE;
 
     private Camera mCamera = null;
     private MediaPlayer mShootSound;
@@ -57,20 +57,22 @@ public class CameraModel extends AbsCameraModel {
             YLog.e(TAG, "相机已经开启");
             return;
         }
-        try {
-            int cameraId = 0;
+        if (mCameraState == STATE_CAMERA_IDLE) {
             try {
-                cameraId = Integer.parseInt(id);
-            } catch (Exception e) {
-                //String转int失败,id不是数字
+                int cameraId = 0;
+                try {
+                    cameraId = Integer.parseInt(id);
+                } catch (Exception e) {
+                    //String转int失败,id不是数字
+                }
+                mCurrentCameraId = String.valueOf(cameraId);
+                mCamera = Camera.open(cameraId);
+                setCameraDisplayOrientation(orientation);
+                mCamera.setPreviewDisplay(mSurfaceHolder);
+                mCameraState = STATE_CAMERA_OPEN;
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            mCurrentCameraId = String.valueOf(cameraId);
-            mCamera = Camera.open(cameraId);
-            setCameraDisplayOrientation(orientation);
-            mCamera.setPreviewDisplay(mSurfaceHolder);
-            mCameraState = STATE_CAMERA_OPEN;
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -89,7 +91,7 @@ public class CameraModel extends AbsCameraModel {
             return;
         }
         if (mCurrentCameraId.equals(id) || mCamera == null) {
-            //相同，就不再进行操作,,,没有开启相机，应该调用opencamera
+            //相同，就不再进行操作,,,没有开启相机，应该调用openCamera
             return;
         }
         if (mCameraState == STATE_CAMERA_PREVIEW_NORMAL) {
@@ -100,7 +102,7 @@ public class CameraModel extends AbsCameraModel {
         mCamera = null;
         destroySettingModel();
         destroyFocusModel();
-        mCameraState = STATE_CAMERA_IDEL;
+        mCameraState = STATE_CAMERA_IDLE;
         openCamera(id, orientation);
     }
 
@@ -158,7 +160,7 @@ public class CameraModel extends AbsCameraModel {
         mCamera = null;
         destroySettingModel();
         destroyFocusModel();
-        mCameraState = STATE_CAMERA_IDEL;
+        mCameraState = STATE_CAMERA_IDLE;
     }
 
     @Override
