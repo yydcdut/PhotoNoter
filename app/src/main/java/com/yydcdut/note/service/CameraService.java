@@ -12,6 +12,7 @@ import com.yydcdut.note.injector.module.ServiceModule;
 import com.yydcdut.note.mvp.p.service.impl.CameraServicePresenterImpl;
 import com.yydcdut.note.mvp.v.service.ICameraServiceView;
 import com.yydcdut.note.utils.Const;
+import com.yydcdut.note.utils.YLog;
 
 import javax.inject.Inject;
 
@@ -41,9 +42,20 @@ public class CameraService extends Service implements ICameraServiceView {
     }
 
     @Override
+    public void onRebind(Intent intent) {
+        super.onRebind(intent);
+    }
+
+    @Override
     public boolean onUnbind(Intent intent) {
         mCameraServicePresenter.stopThread();
-        return super.onUnbind(intent);
+        return true;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        YLog.i("yuyidong", "CameraService  onDestroy");
     }
 
     /**
