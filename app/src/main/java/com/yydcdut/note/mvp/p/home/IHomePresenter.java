@@ -32,4 +32,6 @@ public interface IHomePresenter extends IPresenter {
 
     void updateFromBroadcast(boolean broadcast_process, boolean broadcast_service);
 
+    void killCameraService();
+
 }

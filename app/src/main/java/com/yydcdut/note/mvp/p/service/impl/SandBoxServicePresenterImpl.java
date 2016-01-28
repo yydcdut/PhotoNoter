@@ -3,6 +3,8 @@ package com.yydcdut.note.mvp.p.service.impl;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ExifInterface;
+import android.os.Handler;
+import android.os.Message;
 
 import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.bean.SandExif;
@@ -38,6 +40,8 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter {
     private RxPhotoNote mRxPhotoNote;
     private RxSandBox mRxSandBox;
 
+    private Handler mHandler;
+
     @Inject
     public SandBoxServicePresenterImpl(RxSandBox rxSandBox, RxPhotoNote rxPhotoNote) {
         mRxPhotoNote = rxPhotoNote;
@@ -48,12 +52,21 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter {
     public void attachView(IView iView) {
         mSandBoxServiceView = (ISandBoxServiceView) iView;
         mSandBoxServiceView.notification();
+
+        mHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                finishSandBoxService();
+            }
+        };
+
         mRxSandBox.findAll()
                 .flatMap(sandPhotos -> Observable.from(sandPhotos))
                 .subscribe(new Subscriber<SandPhoto>() {
                     @Override
                     public void onCompleted() {
-                        finishSandBoxService();
+                        mHandler.sendEmptyMessageDelayed(0, 4000);
                     }
 
                     @Override

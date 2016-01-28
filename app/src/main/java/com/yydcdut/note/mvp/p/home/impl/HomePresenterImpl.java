@@ -2,6 +2,7 @@ package com.yydcdut.note.mvp.p.home.impl;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 
@@ -23,6 +24,7 @@ import com.yydcdut.note.model.rx.RxUser;
 import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.home.IHomePresenter;
 import com.yydcdut.note.mvp.v.home.IHomeView;
+import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.PermissionUtils;
 import com.yydcdut.note.utils.permission.Permission;
 
@@ -232,6 +234,12 @@ public class HomePresenterImpl implements IHomePresenter, PermissionUtils.OnPerm
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(categories -> mHomeView.updateCategoryList(categories));
         }
+    }
+
+    @Override
+    public void killCameraService() {
+        Intent intent = new Intent(Const.BROADCAST_CAMERA_SERVICE_KILL);
+        mContext.sendBroadcast(intent);
     }
 
     @Subscribe(threadMode = ThreadMode.MainThread)

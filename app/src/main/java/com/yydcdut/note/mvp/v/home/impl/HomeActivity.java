@@ -319,6 +319,7 @@ public class HomeActivity extends BaseActivity implements IHomeView, View.OnClic
                         Toast.makeText(this, "再点击一次退出!", Toast.LENGTH_SHORT).show();
                         mLastBackTime = System.currentTimeMillis();
                     } else {
+                        mHomePresenter.killCameraService();
                         super.onBackPressed();
                     }
                 }

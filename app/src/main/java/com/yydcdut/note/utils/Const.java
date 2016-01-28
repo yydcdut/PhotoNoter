@@ -23,6 +23,7 @@ public interface Const {
     String TARGET_BROADCAST_PROCESS = "target_broadcast_process";//bool
     String TARGET_BROADCAST_PHOTO = "target_broadcast_target";
     String TARGET_BROADCAST_SERVICE = "target_broadcast_target";
+    String BROADCAST_CAMERA_SERVICE_KILL = "com.yydcdut.note.killcameraservice";
 
     /* Camera */
     String CAMERA_SIZE_WIDTH = "width";

@@ -1,7 +1,10 @@
 package com.yydcdut.note.service;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.IBinder;
 import android.os.RemoteException;
 
@@ -12,7 +15,6 @@ import com.yydcdut.note.injector.module.ServiceModule;
 import com.yydcdut.note.mvp.p.service.impl.CameraServicePresenterImpl;
 import com.yydcdut.note.mvp.v.service.ICameraServiceView;
 import com.yydcdut.note.utils.Const;
-import com.yydcdut.note.utils.YLog;
 
 import javax.inject.Inject;
 
@@ -34,6 +36,7 @@ public class CameraService extends Service implements ICameraServiceView {
                 .build()
                 .inject(this);
         mCameraServicePresenter.attachView(this);
+        registerReceiver(mKillSelfReceiver, new IntentFilter(Const.BROADCAST_CAMERA_SERVICE_KILL));
     }
 
     @Override
@@ -54,8 +57,8 @@ public class CameraService extends Service implements ICameraServiceView {
 
     @Override
     public void onDestroy() {
+        unregisterReceiver(mKillSelfReceiver);
         super.onDestroy();
-        YLog.i("yuyidong", "CameraService  onDestroy");
     }
 
     /**
@@ -84,4 +87,16 @@ public class CameraService extends Service implements ICameraServiceView {
         intent.setAction(Const.BROADCAST_PHOTONOTE_UPDATE);
         sendBroadcast(intent);//这里会进行更新处理
     }
+
+    /**
+     * 因为unBind返回的是true
+     * 所以退出程序的是Service不一定关闭了
+     * 所以写个广播来判断
+     */
+    private BroadcastReceiver mKillSelfReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            CameraService.this.stopSelf();
+        }
+    };
 }
