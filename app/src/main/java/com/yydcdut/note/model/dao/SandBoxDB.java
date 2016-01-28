@@ -9,6 +9,9 @@ import com.yydcdut.note.bean.SandExif;
 import com.yydcdut.note.bean.SandPhoto;
 import com.yydcdut.note.model.sqlite.SandSQLite;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by yuyidong on 15/11/27.
  */
@@ -61,6 +64,48 @@ public class SandBoxDB {
         cursor.close();
         db.close();
         return sandPhoto;
+    }
+
+    public synchronized List<SandPhoto> finaAll() {
+        List<SandPhoto> sandPhotoList = new ArrayList<>();
+        SQLiteDatabase db = mSandSQLite.getReadableDatabase();
+        Cursor cursor = db.query(SandSQLite.TABLE, null, null, null, null, null, null, null);
+        while (cursor.moveToNext()) {
+            long id = cursor.getLong(cursor.getColumnIndex("_id"));
+            long time = cursor.getLong(cursor.getColumnIndex("time"));
+            String cameraId = cursor.getString(cursor.getColumnIndex("cameraId"));
+            String categoryIdString = cursor.getString(cursor.getColumnIndex("category"));
+            int categoryId;
+            try {
+                categoryId = Integer.parseInt(categoryIdString);
+            } catch (Exception e) {
+                categoryId = -1;
+            }
+            String isMirrorString = cursor.getString(cursor.getColumnIndex("mirror"));
+            boolean isMirror = isMirrorString.equals("0") ? false : true;
+            int ratio = cursor.getInt(cursor.getColumnIndex("ratio"));
+            String fileName = cursor.getString(cursor.getColumnIndex("fileName"));
+            int size = cursor.getInt(cursor.getColumnIndex("size"));
+
+            int orientation1 = cursor.getInt(cursor.getColumnIndex("orientation_"));
+            String latitude = cursor.getString(cursor.getColumnIndex("latitude_"));
+            String lontitude = cursor.getString(cursor.getColumnIndex("lontitude_"));
+            int whiteBalance = cursor.getInt(cursor.getColumnIndex("whiteBalance_"));
+            int flash = cursor.getInt(cursor.getColumnIndex("flash_"));
+            int imageLength = cursor.getInt(cursor.getColumnIndex("imageLength_"));
+            int imageWidth = cursor.getInt(cursor.getColumnIndex("imageWidth_"));
+            String make = cursor.getString(cursor.getColumnIndex("make_"));
+            String model = cursor.getString(cursor.getColumnIndex("model_"));
+
+            SandExif sandExif = new SandExif(orientation1, latitude, lontitude, whiteBalance, flash,
+                    imageLength, imageWidth, make, model);
+            SandPhoto sandPhoto = new SandPhoto(id, time, cameraId, categoryId, isMirror,
+                    ratio, fileName, size, sandExif);
+            sandPhotoList.add(sandPhoto);
+        }
+        cursor.close();
+        db.close();
+        return sandPhotoList;
     }
 
     public synchronized SandPhoto findById(long _id) {

@@ -3,8 +3,6 @@ package com.yydcdut.note.mvp.p.service.impl;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ExifInterface;
-import android.os.Handler;
-import android.os.Message;
 
 import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.bean.SandExif;
@@ -23,31 +21,22 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Queue;
-import java.util.concurrent.ArrayBlockingQueue;
 
 import javax.inject.Inject;
+
+import rx.Observable;
+import rx.Subscriber;
 
 /**
  * Created by yuyidong on 15/11/22.
  * //todo  OOM
  */
-public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter,
-        Handler.Callback, Runnable {
-    private Queue<SandPhoto> mQueue = new ArrayBlockingQueue<SandPhoto>(10);
-
-    private boolean mGotoStop = false;
-    private byte[] mObject = new byte[1];
-
-    private Handler mHandler;
+public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter {
 
     private ISandBoxServiceView mSandBoxServiceView;
 
     private RxPhotoNote mRxPhotoNote;
     private RxSandBox mRxSandBox;
-
-    private int mTotalSandBoxNumber = 0;
-    private int mCurrentNumber = 0;
 
     @Inject
     public SandBoxServicePresenterImpl(RxSandBox rxSandBox, RxPhotoNote rxPhotoNote) {
@@ -59,15 +48,22 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter,
     public void attachView(IView iView) {
         mSandBoxServiceView = (ISandBoxServiceView) iView;
         mSandBoxServiceView.notification();
-        new Thread(this).start();
-        mHandler = new Handler(this);
-        mRxSandBox.getNumber()
-                .subscribe(integer -> {
-                    if (integer > 0) {
-                        mTotalSandBoxNumber = integer;
-                        addFirstOneIntoQueue();
-                    } else {
-                        mHandler.sendEmptyMessage(0);
+        mRxSandBox.findAll()
+                .flatMap(sandPhotos -> Observable.from(sandPhotos))
+                .subscribe(new Subscriber<SandPhoto>() {
+                    @Override
+                    public void onCompleted() {
+                        finishSandBoxService();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(SandPhoto sandPhoto) {
+                        makePhoto(sandPhoto);
                     }
                 });
     }
@@ -177,36 +173,13 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter,
     private void deleteFromDBAndSDCard(SandPhoto sandPhoto) {
         String path = FilePathUtils.getSandBoxDir() + sandPhoto.getFileName();
         mRxSandBox.deleteOne(sandPhoto)
-                .subscribe(integer -> {
-                    new File(path).delete();
-                    mHandler.sendEmptyMessage(0);
-                    if (mCurrentNumber != mTotalSandBoxNumber) {
-                        addFirstOneIntoQueue();
-                    }
-                });
+                .subscribe(integer -> new File(path).delete());
     }
 
 
     @Override
     public void detachView() {
 
-    }
-
-    @Override
-    public boolean handleMessage(Message msg) {
-        switch (msg.what) {
-            case 0:
-                mCurrentNumber++;
-                if (mCurrentNumber == mTotalSandBoxNumber) {
-                    mGotoStop = true;
-                    finishSandBoxService();
-                }
-                break;
-            default:
-                finishSandBoxService();
-                break;
-        }
-        return false;
     }
 
     private void finishSandBoxService() {
@@ -227,39 +200,6 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter,
         java.text.DateFormat format1 = new java.text.SimpleDateFormat("yyyyMMddhhmmss");
         s = format1.format(time);
         return s;
-    }
-
-    @Override
-    public void run() {
-        while (!mGotoStop) {
-            SandPhoto sandPhoto = mQueue.poll();
-            if (sandPhoto == null) {
-                synchronized (mObject) {
-                    try {
-                        mObject.wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            } else {
-                if (sandPhoto.getSize() == -1 || sandPhoto.getFileName().equals("X")) {
-                    deleteFromDBAndSDCard(sandPhoto);
-                    return;
-                } else {
-                    makePhoto(sandPhoto);
-                }
-            }
-        }
-    }
-
-    private void addFirstOneIntoQueue() {
-        mRxSandBox.findFirstOne()
-                .subscribe(sandPhoto -> {
-                    mQueue.offer(sandPhoto);
-                    synchronized (mObject) {
-                        mObject.notifyAll();
-                    }
-                });
     }
 
 }

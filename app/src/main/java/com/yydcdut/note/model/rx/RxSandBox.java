@@ -6,6 +6,8 @@ import com.yydcdut.note.bean.SandPhoto;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.dao.SandBoxDB;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -35,6 +37,19 @@ public class RxSandBox {
             @Override
             public void call(Subscriber<? super SandPhoto> subscriber) {
                 subscriber.onNext(mSandBoxDB.findFirstOne());
+                subscriber.onCompleted();
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+
+    /**
+     * 找到所有
+     */
+    public Observable<List<SandPhoto>> findAll() {
+        return Observable.create(new Observable.OnSubscribe<List<SandPhoto>>() {
+            @Override
+            public void call(Subscriber<? super List<SandPhoto>> subscriber) {
+                subscriber.onNext(mSandBoxDB.finaAll());
                 subscriber.onCompleted();
             }
         }).subscribeOn(Schedulers.io());
