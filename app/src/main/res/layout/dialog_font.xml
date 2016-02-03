@@ -18,7 +18,7 @@
         android:textColor="@color/dialog_font"
         android:textSize="@dimen/txt_mid"/>
 
-    <com.yydcdut.note.view.FontTextView
+    <com.yydcdut.note.widget.FontTextView
         android:id="@+id/txt_dialog_font_personal"
         android:layout_width="0dip"
         android:layout_height="wrap_content"

@@ -22,7 +22,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dimen_24dip">
 
-                <com.yydcdut.note.view.RoundedImageView
+                <com.yydcdut.note.widget.RoundedImageView
                     android:id="@+id/img_user"
                     android:layout_width="96dip"
                     android:layout_height="96dip"
@@ -77,7 +77,7 @@
                         android:src="@drawable/ic_contacts_gray_24dp"/>
                 </LinearLayout>
 
-                <com.yydcdut.note.view.UserCenterArrowView
+                <com.yydcdut.note.widget.UserCenterArrowView
                     android:id="@+id/view_arrow"
                     android:layout_width="fill_parent"
                     android:layout_height="12dip"
@@ -99,11 +99,11 @@
         </LinearLayout>
     </LinearLayout>
 
-    <com.yydcdut.note.view.CircleProgressBarLayout
+    <com.yydcdut.note.widget.CircleProgressBarLayout
         android:id="@+id/layout_progress"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:visibility="gone">
-    </com.yydcdut.note.view.CircleProgressBarLayout>
+    </com.yydcdut.note.widget.CircleProgressBarLayout>
 
 </FrameLayout>

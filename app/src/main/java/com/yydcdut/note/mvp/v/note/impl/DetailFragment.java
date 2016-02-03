@@ -14,7 +14,7 @@ import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.PhoneUtils;
 import com.yydcdut.note.utils.RxImageBlur;
-import com.yydcdut.note.view.AutoFitImageView;
+import com.yydcdut.note.widget.AutoFitImageView;
 
 import javax.inject.Inject;
 

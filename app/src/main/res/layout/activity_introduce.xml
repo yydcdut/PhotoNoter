@@ -74,12 +74,12 @@
         android:src="@drawable/btn_guide_enter"
         android:visibility="gone"/>
 
-    <com.yydcdut.note.view.CircleProgressBarLayout
+    <com.yydcdut.note.widget.CircleProgressBarLayout
         android:id="@+id/layout_progress"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:visibility="gone">
-    </com.yydcdut.note.view.CircleProgressBarLayout>
+    </com.yydcdut.note.widget.CircleProgressBarLayout>
 
 
 </RelativeLayout>

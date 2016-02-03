@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.yydcdut.note.view.fab.FloatingActionsMenu
+    <com.yydcdut.note.widget.fab.FloatingActionsMenu
         android:id="@+id/fab_main"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -18,7 +18,7 @@
         fab:fab_colorPressed="?attr/colorPrimaryDark"
         fab:fab_labelStyle="@style/menu_labels_style">
 
-        <com.yydcdut.note.view.fab.FloatingActionButton
+        <com.yydcdut.note.widget.fab.FloatingActionButton
             android:id="@+id/fab_camera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -27,7 +27,7 @@
             fab:fab_icon="@drawable/ic_photo_camera_white_24dp"
             fab:fab_title="@string/fab_camera"/>
 
-        <com.yydcdut.note.view.fab.FloatingActionButton
+        <com.yydcdut.note.widget.fab.FloatingActionButton
             android:id="@+id/fab_local"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -35,5 +35,5 @@
             fab:fab_colorPressed="?attr/colorPrimaryDark"
             fab:fab_icon="@drawable/ic_crop_original_white_24dp"
             fab:fab_title="@string/fab_local"/>
-    </com.yydcdut.note.view.fab.FloatingActionsMenu>
+    </com.yydcdut.note.widget.fab.FloatingActionsMenu>
 </FrameLayout>

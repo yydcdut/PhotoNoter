@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.yydcdut.note.R;
 import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.utils.RandomColor;
-import com.yydcdut.note.view.TextDrawable;
+import com.yydcdut.note.widget.TextDrawable;
 
 import java.util.List;
 

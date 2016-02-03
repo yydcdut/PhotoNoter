@@ -11,7 +11,7 @@ import com.yydcdut.note.mvp.IView;
 import com.yydcdut.note.mvp.p.login.IUserCenterPresenter;
 import com.yydcdut.note.mvp.v.login.IUserCenterView;
 import com.yydcdut.note.utils.NetworkUtils;
-import com.yydcdut.note.view.fab2.snack.OnSnackBarActionListener;
+import com.yydcdut.note.widget.fab2.snack.OnSnackBarActionListener;
 
 import javax.inject.Inject;
 

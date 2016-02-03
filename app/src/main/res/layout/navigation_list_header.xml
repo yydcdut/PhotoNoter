@@ -23,7 +23,7 @@
         android:layout_marginTop="25dip"
         android:src="@drawable/ic_evernote_gray"/>
 
-    <com.yydcdut.note.view.RoundedImageView
+    <com.yydcdut.note.widget.RoundedImageView
         android:id="@+id/img_userPhoto"
         android:layout_width="@dimen/userPhoto_layout_width"
         android:layout_height="@dimen/userPhoto_layout_height"

@@ -19,7 +19,7 @@
         android:textColor="?attr/colorPrimary"
         android:textSize="@dimen/txt_mid"/>
 
-    <com.yydcdut.note.view.MaterialRippleLayout
+    <com.yydcdut.note.widget.MaterialRippleLayout
         android:id="@+id/layout_ripple_theme"
         android:layout_width="match_parent"
         android:layout_height="@dimen/setting_height"
@@ -31,9 +31,9 @@
         <include
             android:id="@+id/layout_setting_theme"
             layout="@layout/item_setting"/>
-    </com.yydcdut.note.view.MaterialRippleLayout>
+    </com.yydcdut.note.widget.MaterialRippleLayout>
 
-    <com.yydcdut.note.view.MaterialRippleLayout
+    <com.yydcdut.note.widget.MaterialRippleLayout
         android:id="@+id/layout_ripple_sort"
         android:layout_width="match_parent"
         android:layout_height="@dimen/setting_height"
@@ -45,9 +45,9 @@
         <include
             android:id="@+id/layout_setting_font"
             layout="@layout/item_setting"/>
-    </com.yydcdut.note.view.MaterialRippleLayout>
+    </com.yydcdut.note.widget.MaterialRippleLayout>
 
-    <com.yydcdut.note.view.MaterialRippleLayout
+    <com.yydcdut.note.widget.MaterialRippleLayout
         android:id="@+id/layout_ripple_edit_category"
         android:layout_width="match_parent"
         android:layout_height="@dimen/setting_height"
@@ -59,9 +59,9 @@
         <include
             android:id="@+id/layout_setting_edit_category"
             layout="@layout/item_setting"/>
-    </com.yydcdut.note.view.MaterialRippleLayout>
+    </com.yydcdut.note.widget.MaterialRippleLayout>
 
-    <com.yydcdut.note.view.MaterialRippleLayout
+    <com.yydcdut.note.widget.MaterialRippleLayout
         android:id="@+id/layout_ripple_detail"
         android:layout_width="match_parent"
         android:layout_height="@dimen/setting_height"
@@ -73,7 +73,7 @@
         <include
             android:id="@+id/layout_setting_note_style"
             layout="@layout/item_setting"/>
-    </com.yydcdut.note.view.MaterialRippleLayout>
+    </com.yydcdut.note.widget.MaterialRippleLayout>
 
 
 </LinearLayout>

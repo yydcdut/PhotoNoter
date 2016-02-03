@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.yydcdut.note.R;
-import com.yydcdut.note.view.GridItemImageView;
+import com.yydcdut.note.widget.GridItemImageView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

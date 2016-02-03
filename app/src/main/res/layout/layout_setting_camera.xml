@@ -19,7 +19,7 @@
         android:textColor="?attr/colorPrimary"
         android:textSize="@dimen/txt_mid"/>
 
-    <com.yydcdut.note.view.MaterialRippleLayout
+    <com.yydcdut.note.widget.MaterialRippleLayout
         android:id="@+id/layout_ripple_system_capture"
         android:layout_width="match_parent"
         android:layout_height="@dimen/setting_height"
@@ -31,9 +31,9 @@
         <include
             android:id="@+id/layout_setting_capture"
             layout="@layout/item_setting_check"/>
-    </com.yydcdut.note.view.MaterialRippleLayout>
+    </com.yydcdut.note.widget.MaterialRippleLayout>
 
-    <com.yydcdut.note.view.MaterialRippleLayout
+    <com.yydcdut.note.widget.MaterialRippleLayout
         android:id="@+id/layout_ripple_camera2"
         android:layout_width="match_parent"
         android:layout_height="@dimen/setting_height"
@@ -45,9 +45,9 @@
         <include
             android:id="@+id/layout_setting_camera2"
             layout="@layout/item_setting_check"/>
-    </com.yydcdut.note.view.MaterialRippleLayout>
+    </com.yydcdut.note.widget.MaterialRippleLayout>
 
-    <com.yydcdut.note.view.MaterialRippleLayout
+    <com.yydcdut.note.widget.MaterialRippleLayout
         android:id="@+id/layout_ripple_picturesize"
         android:layout_width="match_parent"
         android:layout_height="@dimen/setting_height"
@@ -59,9 +59,9 @@
         <include
             android:id="@+id/layout_setting_picturesize"
             layout="@layout/item_setting"/>
-    </com.yydcdut.note.view.MaterialRippleLayout>
+    </com.yydcdut.note.widget.MaterialRippleLayout>
 
-    <com.yydcdut.note.view.MaterialRippleLayout
+    <com.yydcdut.note.widget.MaterialRippleLayout
         android:id="@+id/layout_ripple_parameter"
         android:layout_width="match_parent"
         android:layout_height="@dimen/setting_height"
@@ -73,9 +73,9 @@
         <include
             android:id="@+id/layout_setting_parameter"
             layout="@layout/item_setting_check"/>
-    </com.yydcdut.note.view.MaterialRippleLayout>
+    </com.yydcdut.note.widget.MaterialRippleLayout>
 
-    <com.yydcdut.note.view.MaterialRippleLayout
+    <com.yydcdut.note.widget.MaterialRippleLayout
         android:id="@+id/layout_ripple_sound"
         android:layout_width="match_parent"
         android:layout_height="@dimen/setting_height"
@@ -87,6 +87,6 @@
         <include
             android:id="@+id/layout_setting_sound"
             layout="@layout/item_setting_check"/>
-    </com.yydcdut.note.view.MaterialRippleLayout>
+    </com.yydcdut.note.widget.MaterialRippleLayout>
 
 </LinearLayout>

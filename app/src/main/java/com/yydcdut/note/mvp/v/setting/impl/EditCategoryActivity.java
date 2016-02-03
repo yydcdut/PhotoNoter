@@ -17,7 +17,7 @@ import com.yydcdut.note.mvp.p.setting.impl.EditCategoryPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.setting.IEditCategoryView;
 import com.yydcdut.note.utils.AppCompat;
-import com.yydcdut.note.view.CircleProgressBarLayout;
+import com.yydcdut.note.widget.CircleProgressBarLayout;
 import com.yydcdut.sdlv.Menu;
 import com.yydcdut.sdlv.MenuItem;
 import com.yydcdut.sdlv.SlideAndDragListView;

@@ -7,7 +7,7 @@
     android:layout_height="150dip"
     android:background="@android:color/white">
 
-    <com.yydcdut.note.view.MaterialRippleLayout
+    <com.yydcdut.note.widget.MaterialRippleLayout
         android:id="@+id/layout_ripple_capture"
         android:layout_width="match_parent"
         android:layout_height="150dip"
@@ -24,7 +24,7 @@
             android:layout_gravity="center"
             android:src="@drawable/btn_camera_capture"/>
 
-    </com.yydcdut.note.view.MaterialRippleLayout>
+    </com.yydcdut.note.widget.MaterialRippleLayout>
 
     <FrameLayout
         android:id="@+id/btn_personal"

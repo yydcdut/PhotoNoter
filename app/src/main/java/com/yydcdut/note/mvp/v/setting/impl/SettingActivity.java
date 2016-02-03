@@ -32,8 +32,8 @@ import com.yydcdut.note.utils.ActivityCollector;
 import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
-import com.yydcdut.note.view.ColorChooserDialog;
-import com.yydcdut.note.view.RoundedImageView;
+import com.yydcdut.note.widget.ColorChooserDialog;
+import com.yydcdut.note.widget.RoundedImageView;
 
 import org.json.JSONException;
 

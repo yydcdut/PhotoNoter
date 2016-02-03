@@ -44,9 +44,9 @@ import com.yydcdut.note.service.SandBoxService;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.Utils;
-import com.yydcdut.note.view.CircleProgressBarLayout;
-import com.yydcdut.note.view.RevealView;
-import com.yydcdut.note.view.fab.FloatingActionsMenu;
+import com.yydcdut.note.widget.CircleProgressBarLayout;
+import com.yydcdut.note.widget.RevealView;
+import com.yydcdut.note.widget.fab.FloatingActionsMenu;
 
 import java.io.File;
 import java.util.List;

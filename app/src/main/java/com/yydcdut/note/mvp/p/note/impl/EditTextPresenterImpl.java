@@ -38,7 +38,7 @@ import com.yydcdut.note.mvp.v.note.IEditTextView;
 import com.yydcdut.note.utils.PermissionUtils;
 import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.utils.permission.Permission;
-import com.yydcdut.note.view.fab2.snack.OnSnackBarActionListener;
+import com.yydcdut.note.widget.fab2.snack.OnSnackBarActionListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;

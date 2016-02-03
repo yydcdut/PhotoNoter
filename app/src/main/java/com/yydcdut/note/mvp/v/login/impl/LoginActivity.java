@@ -12,8 +12,8 @@ import com.yydcdut.note.mvp.p.login.impl.LoginPresenterImpl;
 import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.login.ILoginView;
 import com.yydcdut.note.utils.AppCompat;
-import com.yydcdut.note.view.CircleProgressBarLayout;
-import com.yydcdut.note.view.fab2.snack.OnSnackBarActionListener;
+import com.yydcdut.note.widget.CircleProgressBarLayout;
+import com.yydcdut.note.widget.fab2.snack.OnSnackBarActionListener;
 
 import javax.inject.Inject;
 

@@ -50,7 +50,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
 
-        <com.yydcdut.note.view.fab.FloatingActionButton
+        <com.yydcdut.note.widget.fab.FloatingActionButton
             android:id="@+id/fab_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -59,15 +59,15 @@
             fab:fab_colorPressed="?attr/colorPrimaryDark"
             fab:fab_icon="@drawable/ic_text_format_white_24dp"/>
 
-        <com.yydcdut.note.view.RevealView
+        <com.yydcdut.note.widget.RevealView
             android:id="@+id/reveal"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             reveal:own_touch="false">
 
-            <com.yydcdut.note.view.RevealColorView
+            <com.yydcdut.note.widget.RevealColorView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
-        </com.yydcdut.note.view.RevealView>
+        </com.yydcdut.note.widget.RevealView>
     </FrameLayout>
 </RelativeLayout>

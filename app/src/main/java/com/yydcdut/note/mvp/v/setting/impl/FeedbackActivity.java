@@ -22,8 +22,8 @@ import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.setting.IFeedbackView;
 import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.Const;
-import com.yydcdut.note.view.CircleProgressBarLayout;
-import com.yydcdut.note.view.RevealView;
+import com.yydcdut.note.widget.CircleProgressBarLayout;
+import com.yydcdut.note.widget.RevealView;
 
 import javax.inject.Inject;
 

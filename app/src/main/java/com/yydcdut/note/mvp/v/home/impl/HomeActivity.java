@@ -38,7 +38,7 @@ import com.yydcdut.note.mvp.v.login.impl.UserCenterActivity;
 import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
-import com.yydcdut.note.view.RoundedImageView;
+import com.yydcdut.note.widget.RoundedImageView;
 
 import java.util.List;
 

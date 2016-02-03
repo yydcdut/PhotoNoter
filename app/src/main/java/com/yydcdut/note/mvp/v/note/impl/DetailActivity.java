@@ -31,9 +31,9 @@ import com.yydcdut.note.mvp.v.note.IDetailView;
 import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.Utils;
-import com.yydcdut.note.view.FontTextView;
-import com.yydcdut.note.view.RevealView;
-import com.yydcdut.note.view.fab.FloatingActionButton;
+import com.yydcdut.note.widget.FontTextView;
+import com.yydcdut.note.widget.RevealView;
+import com.yydcdut.note.widget.fab.FloatingActionButton;
 
 import java.util.List;
 

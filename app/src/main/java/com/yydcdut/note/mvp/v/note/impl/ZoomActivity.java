@@ -16,7 +16,7 @@ import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.note.IZoomView;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
-import com.yydcdut.note.view.CircleProgressBarLayout;
+import com.yydcdut.note.widget.CircleProgressBarLayout;
 
 import javax.inject.Inject;
 

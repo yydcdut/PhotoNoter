@@ -3,7 +3,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/setting_height">
 
-    <com.yydcdut.note.view.RoundedImageView
+    <com.yydcdut.note.widget.RoundedImageView
         android:id="@+id/img_item_setting_logo"
         android:layout_width="@dimen/setting_img"
         android:layout_height="@dimen/setting_img"
@@ -28,7 +28,7 @@
         android:textColor="@color/txt_gray"
         android:textSize="@dimen/txt_mid"/>
 
-    <com.yydcdut.note.view.RoundedImageView
+    <com.yydcdut.note.widget.RoundedImageView
         android:id="@+id/img_item_setting_user"
         android:layout_width="@dimen/dimen_36dip"
         android:layout_height="@dimen/dimen_36dip"

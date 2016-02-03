@@ -28,17 +28,17 @@
                 layout="@layout/navigation_container"/>
         </LinearLayout>
 
-        <com.yydcdut.note.view.RevealView
+        <com.yydcdut.note.widget.RevealView
             android:id="@+id/reveal_layout"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             reveal:own_touch="true">
 
-            <com.yydcdut.note.view.RevealColorView
+            <com.yydcdut.note.widget.RevealColorView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 />
-        </com.yydcdut.note.view.RevealView>
+        </com.yydcdut.note.widget.RevealView>
     </RelativeLayout>
 
     <android.support.design.internal.ScrimInsetsFrameLayout

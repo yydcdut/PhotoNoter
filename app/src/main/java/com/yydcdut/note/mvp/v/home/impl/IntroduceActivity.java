@@ -14,7 +14,7 @@ import com.yydcdut.note.mvp.p.home.impl.IntroducePresenterImpl;
 import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.home.IIntroduceView;
 import com.yydcdut.note.utils.AppCompat;
-import com.yydcdut.note.view.CircleProgressBarLayout;
+import com.yydcdut.note.widget.CircleProgressBarLayout;
 
 import javax.inject.Inject;
 

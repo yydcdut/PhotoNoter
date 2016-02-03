@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.yydcdut.note.view.fab2.FloatingMenuLayout
+<com.yydcdut.note.widget.fab2.FloatingMenuLayout
     android:id="@+id/layout_fab_edittext"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -9,7 +9,7 @@
     android:layout_height="match_parent"
     menu:menu_label_style="@style/menu_labels_style">
 
-    <com.yydcdut.note.view.fab2.ScrollFloatingActionButton
+    <com.yydcdut.note.widget.fab2.ScrollFloatingActionButton
         android:id="@+id/fab_evernote_update"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,7 +23,7 @@
         app:pressedTranslationZ="12dp"
         fab:fab_text="@string/fab_evernote"/>
 
-    <com.yydcdut.note.view.fab2.ScrollFloatingActionButton
+    <com.yydcdut.note.widget.fab2.ScrollFloatingActionButton
         android:id="@+id/fab_voice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -37,7 +37,7 @@
         app:pressedTranslationZ="12dp"
         fab:fab_text="@string/fab_voice"/>
 
-    <com.yydcdut.note.view.fab2.RotationFloatingActionButton
+    <com.yydcdut.note.widget.fab2.RotationFloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right|bottom"
@@ -47,4 +47,4 @@
         app:borderWidth="0dp"
         app:elevation="6dp"
         app:pressedTranslationZ="12dp"/>
-</com.yydcdut.note.view.fab2.FloatingMenuLayout>
+</com.yydcdut.note.widget.fab2.FloatingMenuLayout>

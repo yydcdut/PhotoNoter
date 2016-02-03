@@ -22,10 +22,10 @@ import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.login.IUserCenterView;
 import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
-import com.yydcdut.note.view.CircleProgressBarLayout;
-import com.yydcdut.note.view.RoundedImageView;
-import com.yydcdut.note.view.UserCenterArrowView;
-import com.yydcdut.note.view.fab2.snack.OnSnackBarActionListener;
+import com.yydcdut.note.widget.CircleProgressBarLayout;
+import com.yydcdut.note.widget.RoundedImageView;
+import com.yydcdut.note.widget.UserCenterArrowView;
+import com.yydcdut.note.widget.fab2.snack.OnSnackBarActionListener;
 
 import javax.inject.Inject;
 

@@ -27,17 +27,17 @@
             android:scrollbars="vertical"/>
     </FrameLayout>
 
-    <com.yydcdut.note.view.RevealView
+    <com.yydcdut.note.widget.RevealView
         android:id="@+id/reveal_album"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         reveal:own_touch="true">
 
-        <com.yydcdut.note.view.RevealColorView
+        <com.yydcdut.note.widget.RevealColorView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             />
-    </com.yydcdut.note.view.RevealView>
+    </com.yydcdut.note.widget.RevealView>
 
     <FrameLayout
         android:layout_width="fill_parent"
@@ -49,10 +49,10 @@
         <include layout="@layout/layout_floating_album"/>
     </FrameLayout>
 
-    <com.yydcdut.note.view.CircleProgressBarLayout
+    <com.yydcdut.note.widget.CircleProgressBarLayout
         android:id="@+id/layout_progress"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:visibility="gone">
-    </com.yydcdut.note.view.CircleProgressBarLayout>
+    </com.yydcdut.note.widget.CircleProgressBarLayout>
 </RelativeLayout>

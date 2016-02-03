@@ -27,14 +27,14 @@ import com.yydcdut.note.mvp.v.BaseActivity;
 import com.yydcdut.note.mvp.v.note.IEditTextView;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.Utils;
-import com.yydcdut.note.view.CircleProgressBarLayout;
-import com.yydcdut.note.view.KeyBoardResizeFrameLayout;
-import com.yydcdut.note.view.RevealView;
-import com.yydcdut.note.view.VoiceRippleView;
-import com.yydcdut.note.view.action.ArrowActionProvider;
-import com.yydcdut.note.view.fab2.FloatingMenuLayout;
-import com.yydcdut.note.view.fab2.snack.OnSnackBarActionListener;
-import com.yydcdut.note.view.fab2.snack.SnackHelper;
+import com.yydcdut.note.widget.CircleProgressBarLayout;
+import com.yydcdut.note.widget.KeyBoardResizeFrameLayout;
+import com.yydcdut.note.widget.RevealView;
+import com.yydcdut.note.widget.VoiceRippleView;
+import com.yydcdut.note.widget.action.ArrowActionProvider;
+import com.yydcdut.note.widget.fab2.FloatingMenuLayout;
+import com.yydcdut.note.widget.fab2.snack.OnSnackBarActionListener;
+import com.yydcdut.note.widget.fab2.snack.SnackHelper;
 
 import javax.inject.Inject;
 

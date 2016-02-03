@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.yydcdut.note.view.CircleProgressBar
+    <com.yydcdut.note.widget.CircleProgressBar
         android:id="@+id/pb_loading"
         android:layout_width="70dp"
         android:layout_height="70dp"

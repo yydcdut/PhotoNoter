@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.yydcdut.note.view.KeyBoardResizeFrameLayout
+<com.yydcdut.note.widget.KeyBoardResizeFrameLayout
     android:id="@+id/layout_root"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -73,16 +73,16 @@
         </RelativeLayout>
     </FrameLayout>
 
-    <com.yydcdut.note.view.RevealView
+    <com.yydcdut.note.widget.RevealView
         android:id="@+id/reveal_fab"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         reveal:own_touch="true">
 
-        <com.yydcdut.note.view.RevealColorView
+        <com.yydcdut.note.widget.RevealColorView
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
-    </com.yydcdut.note.view.RevealView>
+    </com.yydcdut.note.widget.RevealView>
 
     <FrameLayout
         android:layout_width="fill_parent"
@@ -106,16 +106,16 @@
         android:layout_height="150dip"
         android:layout_gravity="bottom">
 
-        <com.yydcdut.note.view.RevealView
+        <com.yydcdut.note.widget.RevealView
             android:id="@+id/reveal_voice"
             android:layout_width="fill_parent"
             android:layout_height="150dip"
             reveal:own_touch="false">
 
-            <com.yydcdut.note.view.RevealColorView
+            <com.yydcdut.note.widget.RevealColorView
                 android:layout_width="match_parent"
                 android:layout_height="150dip"/>
-        </com.yydcdut.note.view.RevealView>
+        </com.yydcdut.note.widget.RevealView>
 
         <RelativeLayout
             android:id="@+id/layout_fab_voice_start"
@@ -126,7 +126,7 @@
             android:layout_margin="-6dip"
             android:visibility="gone">
 
-            <com.yydcdut.note.view.VoiceRippleView
+            <com.yydcdut.note.widget.VoiceRippleView
                 android:id="@+id/img_ripple_fab"
                 android:layout_width="100dip"
                 android:layout_height="100dip"
@@ -158,10 +158,10 @@
             android:visibility="gone"/>
     </RelativeLayout>
 
-    <com.yydcdut.note.view.CircleProgressBarLayout
+    <com.yydcdut.note.widget.CircleProgressBarLayout
         android:id="@+id/layout_progress"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:visibility="gone"/>
 
-</com.yydcdut.note.view.KeyBoardResizeFrameLayout>
+</com.yydcdut.note.widget.KeyBoardResizeFrameLayout>

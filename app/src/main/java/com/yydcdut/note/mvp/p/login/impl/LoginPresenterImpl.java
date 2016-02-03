@@ -12,7 +12,7 @@ import com.yydcdut.note.mvp.p.login.ILoginPresenter;
 import com.yydcdut.note.mvp.v.login.ILoginView;
 import com.yydcdut.note.utils.NetworkUtils;
 import com.yydcdut.note.utils.YLog;
-import com.yydcdut.note.view.fab2.snack.OnSnackBarActionListener;
+import com.yydcdut.note.widget.fab2.snack.OnSnackBarActionListener;
 
 import javax.inject.Inject;
 

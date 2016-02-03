@@ -5,14 +5,14 @@
     android:layout_height="match_parent"
     android:layout_margin="1dip">
 
-    <com.yydcdut.note.view.GridItemImageView
+    <com.yydcdut.note.widget.GridItemImageView
         android:id="@+id/img_item_album"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"/>
 
 
-    <com.yydcdut.note.view.GridItemImageView
+    <com.yydcdut.note.widget.GridItemImageView
         android:id="@+id/layout_item_album_check"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

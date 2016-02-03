@@ -4,13 +4,13 @@
              android:layout_height="match_parent"
              android:background="@android:color/transparent">
 
-    <com.yydcdut.note.view.AutoFitImageView
+    <com.yydcdut.note.widget.AutoFitImageView
         android:id="@+id/img_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"/>
 
-    <com.yydcdut.note.view.AutoFitImageView
+    <com.yydcdut.note.widget.AutoFitImageView
         android:id="@+id/img_blur"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

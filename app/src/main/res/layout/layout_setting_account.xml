@@ -18,7 +18,7 @@
         android:textColor="?attr/colorPrimary"
         android:textSize="@dimen/txt_mid"/>
 
-    <com.yydcdut.note.view.MaterialRippleLayout
+    <com.yydcdut.note.widget.MaterialRippleLayout
         android:id="@+id/layout_ripple_account_1"
         android:layout_width="match_parent"
         android:layout_height="@dimen/setting_height"
@@ -30,9 +30,9 @@
         <include
             android:id="@+id/layout_setting_account_1"
             layout="@layout/item_setting_account"/>
-    </com.yydcdut.note.view.MaterialRippleLayout>
+    </com.yydcdut.note.widget.MaterialRippleLayout>
 
-    <com.yydcdut.note.view.MaterialRippleLayout
+    <com.yydcdut.note.widget.MaterialRippleLayout
         android:id="@+id/layout_ripple_account_2"
         android:layout_width="match_parent"
         android:layout_height="@dimen/setting_height"
@@ -44,9 +44,9 @@
         <include
             android:id="@+id/layout_setting_account_2"
             layout="@layout/item_setting_account"/>
-    </com.yydcdut.note.view.MaterialRippleLayout>
+    </com.yydcdut.note.widget.MaterialRippleLayout>
 
-    <com.yydcdut.note.view.MaterialRippleLayout
+    <com.yydcdut.note.widget.MaterialRippleLayout
         android:id="@+id/layout_ripple_account_progressbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/setting_height"
@@ -58,6 +58,6 @@
         <include
             android:id="@+id/layout_setting_pg"
             layout="@layout/item_setting_pb"/>
-    </com.yydcdut.note.view.MaterialRippleLayout>
+    </com.yydcdut.note.widget.MaterialRippleLayout>
 
 </LinearLayout>
