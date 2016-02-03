@@ -13,14 +13,13 @@ import com.yydcdut.note.model.rx.RxCategory;
 import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
-import com.yydcdut.note.views.service.ICheckServiceView;
 
 import rx.schedulers.Schedulers;
 
 /**
  * Created by yuyidong on 15/7/17.
  */
-public class CheckService extends IntentService implements ICheckServiceView {
+public class CheckService extends IntentService {
 
     private RxCategory mRxCategory;
     private RxPhotoNote mRxPhotoNote;
@@ -108,11 +107,6 @@ public class CheckService extends IntentService implements ICheckServiceView {
         intent.putExtra(Const.TARGET_BROADCAST_SERVICE, true);
         sendBroadcast(intent);
         super.onDestroy();
-
-    }
-
-    @Override
-    public void stopService() {
 
     }
 }
