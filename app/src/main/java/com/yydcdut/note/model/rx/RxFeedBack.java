@@ -2,7 +2,7 @@ package com.yydcdut.note.model.rx;
 
 import android.text.TextUtils;
 
-import com.yydcdut.note.mvp.p.setting.IFeedbackPresenter;
+import com.yydcdut.note.presenters.setting.IFeedbackPresenter;
 import com.yydcdut.note.utils.LocalStorageUtils;
 
 import org.json.JSONException;

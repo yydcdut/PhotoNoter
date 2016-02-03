@@ -9,10 +9,10 @@ import com.yydcdut.note.injector.module.FragmentModule;
 import com.yydcdut.note.model.rx.RxCategory;
 import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.model.rx.RxSandBox;
-import com.yydcdut.note.mvp.v.home.impl.AlbumFragment;
-import com.yydcdut.note.mvp.v.login.impl.UserDetailFragment;
-import com.yydcdut.note.mvp.v.note.impl.DetailFragment;
 import com.yydcdut.note.utils.LocalStorageUtils;
+import com.yydcdut.note.views.home.impl.AlbumFragment;
+import com.yydcdut.note.views.login.impl.UserDetailFragment;
+import com.yydcdut.note.views.note.impl.DetailFragment;
 
 import dagger.Component;
 

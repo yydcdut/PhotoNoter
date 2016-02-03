@@ -5,8 +5,8 @@ import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 
-import com.yydcdut.note.mvp.v.login.impl.UserDetailFragment;
 import com.yydcdut.note.utils.Const;
+import com.yydcdut.note.views.login.impl.UserDetailFragment;
 
 import java.util.ArrayList;
 import java.util.List;

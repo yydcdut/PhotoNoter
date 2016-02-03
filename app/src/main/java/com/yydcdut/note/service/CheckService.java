@@ -11,9 +11,9 @@ import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.model.compare.ComparatorFactory;
 import com.yydcdut.note.model.rx.RxCategory;
 import com.yydcdut.note.model.rx.RxPhotoNote;
-import com.yydcdut.note.mvp.v.service.ICheckServiceView;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
+import com.yydcdut.note.views.service.ICheckServiceView;
 
 import rx.schedulers.Schedulers;
 

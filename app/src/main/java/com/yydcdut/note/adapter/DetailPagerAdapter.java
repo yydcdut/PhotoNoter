@@ -8,8 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.yydcdut.note.bean.PhotoNote;
-import com.yydcdut.note.mvp.v.note.impl.DetailFragment;
 import com.yydcdut.note.utils.Const;
+import com.yydcdut.note.views.note.impl.DetailFragment;
 
 import java.util.HashMap;
 import java.util.List;

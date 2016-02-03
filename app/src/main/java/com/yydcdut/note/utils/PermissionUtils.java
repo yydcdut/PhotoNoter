@@ -13,7 +13,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 
 import com.yydcdut.note.R;
-import com.yydcdut.note.mvp.IPresenter;
+import com.yydcdut.note.presenters.IPresenter;
 import com.yydcdut.note.utils.permission.Permission;
 
 import java.lang.reflect.InvocationTargetException;

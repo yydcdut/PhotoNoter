@@ -10,7 +10,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".mvp.v.home.impl.SplashActivity"
+            android:name=".views.home.impl.SplashActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -29,51 +29,51 @@
             android:theme="@style/ThemeBlue"/>
 
         <activity
-            android:name=".mvp.v.home.impl.IntroduceActivity"
+            android:name=".views.home.impl.IntroduceActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ThemeBlue"/>
         <activity
-            android:name=".mvp.v.home.impl.HomeActivity"
+            android:name=".views.home.impl.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ThemeBlue"/>
         <activity
-            android:name=".mvp.v.note.impl.DetailActivity"
+            android:name=".views.note.impl.DetailActivity"
             android:label=" "
             android:screenOrientation="portrait"
             android:theme="@style/ThemeBlue"/>
         <activity
-            android:name=".mvp.v.note.impl.MapActivity"
+            android:name=".views.note.impl.MapActivity"
             android:label=" "
             android:screenOrientation="portrait"
             android:theme="@style/ThemeBlue"/>
         <activity
-            android:name=".mvp.v.note.impl.EditTextActivity"
+            android:name=".views.note.impl.EditTextActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ThemeBlue"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity
-            android:name=".mvp.v.note.impl.ZoomActivity"
+            android:name=".views.note.impl.ZoomActivity"
             android:label=" "
             android:screenOrientation="portrait"
             android:theme="@style/ThemeBlue"/>
         <activity
-            android:name=".mvp.v.login.impl.LoginActivity"
+            android:name=".views.login.impl.LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ThemeBlue"/>
         <activity
-            android:name=".mvp.v.login.impl.UserCenterActivity"
+            android:name=".views.login.impl.UserCenterActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ThemeBlue"/>
         <activity
-            android:name=".mvp.v.setting.impl.SettingActivity"
+            android:name=".views.setting.impl.SettingActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ThemeBlue"/>
         <activity
-            android:name=".mvp.v.setting.impl.EditCategoryActivity"
+            android:name=".views.setting.impl.EditCategoryActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ThemeBlue"/>
         <activity
-            android:name=".mvp.v.setting.impl.AboutAppActivity"
+            android:name=".views.setting.impl.AboutAppActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ThemeBlue"/>
         <activity
@@ -85,11 +85,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/ThemeBlue"/>
         <activity
-            android:name=".mvp.v.setting.impl.FeedbackActivity"
+            android:name=".views.setting.impl.FeedbackActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ThemeBlue"/>
         <activity
-            android:name=".mvp.v.WebViewActivity"
+            android:name=".views.WebViewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ThemeBlue"/>
 

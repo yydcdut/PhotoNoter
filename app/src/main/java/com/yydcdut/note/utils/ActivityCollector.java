@@ -2,7 +2,7 @@ package com.yydcdut.note.utils;
 
 import android.content.Intent;
 
-import com.yydcdut.note.mvp.v.BaseActivity;
+import com.yydcdut.note.views.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.List;
