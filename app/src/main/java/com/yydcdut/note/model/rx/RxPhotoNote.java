@@ -1,7 +1,6 @@
 package com.yydcdut.note.model.rx;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.injector.ContextLife;
@@ -169,7 +168,6 @@ public class RxPhotoNote {
                 .map(photoNote4 -> {//存到缓存中
                     mCache.remove(photoNote4.getCategoryId());
                     mCache.put(photoNote4.getCategoryId(), mPhotoNoteDB.findByCategoryId(photoNote4.getCategoryId()));
-                    Log.i("yuyidong", "1145465465465");
                     return photoNote4;
                 });
     }
