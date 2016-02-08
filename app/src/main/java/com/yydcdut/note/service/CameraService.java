@@ -69,10 +69,10 @@ public class CameraService extends Service implements ICameraServiceView {
         public void add(String fileName, int size, String cameraId, long time, int categoryId,
                         boolean isMirror, int ratio, int orientation,
                         String latitude, String lontitude, int whiteBalance, int flash,
-                        int imageLength, int imageWidth, String make, String model) throws RemoteException {
+                        int imageLength, int imageWidth, String make, String model, int imageFormat) throws RemoteException {
             mCameraServicePresenter.add2DB(fileName, size, cameraId, time, categoryId,
                     isMirror, ratio, orientation, latitude, lontitude, whiteBalance, flash,
-                    imageLength, imageWidth, make, model);
+                    imageLength, imageWidth, make, model, imageFormat);
         }
     };
 

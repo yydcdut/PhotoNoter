@@ -92,14 +92,18 @@
             android:name=".views.WebViewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ThemeBlue"/>
+        <activity
+            android:name=".views.camera.impl.CameraActivity2"
+            android:screenOrientation="portrait"
+            android:theme="@style/ThemeBlue"/>
 
         <service
             android:name=".service.CameraService"
             android:process=":cameraphotos"/>
-        <service android:name=".service.CheckService"/>
         <service
             android:name=".service.SandBoxService"
             android:process=":makephotos"/>
+        <service android:name=".service.CheckService"/>
 
         <!-- ************ 友盟 ************ -->
         <meta-data

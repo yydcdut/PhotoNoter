@@ -2,6 +2,9 @@ package com.yydcdut.note.presenters.service.impl;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.ImageFormat;
+import android.graphics.Rect;
+import android.graphics.YuvImage;
 import android.media.ExifInterface;
 import android.os.Handler;
 import android.os.Message;
@@ -18,6 +21,7 @@ import com.yydcdut.note.utils.Utils;
 import com.yydcdut.note.views.IView;
 import com.yydcdut.note.views.service.ISandBoxServiceView;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -87,7 +91,17 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter {
      * @param sandPhoto
      */
     private void makePhoto(SandPhoto sandPhoto) {
-        byte[] data = getDataFromFile(sandPhoto.getFileName(), sandPhoto.getSize());
+        byte[] rowData = getDataFromFile(sandPhoto.getFileName(), sandPhoto.getSize());
+        if (rowData == null) {
+            return;
+        }
+        byte[] data;
+        if (sandPhoto.getImageFormat() == ImageFormat.JPEG) {
+            data = rowData;
+        } else {
+            data = decodeNV21(rowData,
+                    sandPhoto.getSandExif().getImageWidth(), sandPhoto.getSandExif().getImageLength());
+        }
         if (data == null) {
             return;
         }
@@ -113,6 +127,19 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter {
         deleteFromDBAndSDCard(sandPhoto);
         bitmap.recycle();
         System.gc();
+    }
+
+    private byte[] decodeNV21(byte[] data, int width, int height) {
+        YuvImage yuv = new YuvImage(data, ImageFormat.NV21, width, height, null);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        yuv.compressToJpeg(new Rect(0, 0, width, height), 100, bos);
+        byte[] bytes = bos.toByteArray();
+        try {
+            bos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bytes;
     }
 
     //todo isMirror不好做啊！

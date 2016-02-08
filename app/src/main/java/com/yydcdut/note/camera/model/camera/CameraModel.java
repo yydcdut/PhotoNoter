@@ -2,6 +2,7 @@ package com.yydcdut.note.camera.model.camera;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.ImageFormat;
 import android.hardware.Camera;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -197,7 +198,7 @@ public class CameraModel extends AbsCameraModel {
 
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
-            addData2Service(data, mCurrentCameraId, time, categoryId, isMirror, ratio);
+            addData2Service(data, mCurrentCameraId, time, categoryId, isMirror, ratio, ImageFormat.JPEG);
             //这里经常崩溃，做个延时处理
             new Handler().postDelayed(new Runnable() {
                 @Override

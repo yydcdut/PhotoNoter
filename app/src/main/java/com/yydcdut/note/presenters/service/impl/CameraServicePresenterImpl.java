@@ -2,6 +2,9 @@ package com.yydcdut.note.presenters.service.impl;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.ImageFormat;
+import android.graphics.Rect;
+import android.graphics.YuvImage;
 import android.media.ExifInterface;
 
 import com.yydcdut.note.bean.PhotoNote;
@@ -16,6 +19,7 @@ import com.yydcdut.note.utils.Utils;
 import com.yydcdut.note.views.IView;
 import com.yydcdut.note.views.service.ICameraServiceView;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -66,9 +70,10 @@ public class CameraServicePresenterImpl implements ICameraServicePresenter {
     public void add2DB(String fileName, int size, String cameraId, long time, int categoryId,
                        boolean isMirror, int ratio, int orientation,
                        String latitude, String lontitude, int whiteBalance, int flash,
-                       int imageLength, int imageWidth, String make, String model) {
+                       int imageLength, int imageWidth, String make, String model, int imageFormat) {
         SandExif sandExif = new SandExif(orientation, latitude, lontitude, whiteBalance, flash, imageLength, imageWidth, make, model);
-        SandPhoto sandPhoto = new SandPhoto(SandPhoto.ID_NULL, time, cameraId, categoryId, isMirror, ratio, fileName, size, sandExif);
+        SandPhoto sandPhoto = new SandPhoto(SandPhoto.ID_NULL, time, cameraId, categoryId, isMirror,
+                ratio, fileName, size, imageFormat, sandExif);
         mRxSandBox.saveOne(sandPhoto)
                 .subscribe(sandPhoto1 -> {
                     synchronized (mObject) {
@@ -115,7 +120,17 @@ public class CameraServicePresenterImpl implements ICameraServicePresenter {
      * @param sandPhoto
      */
     private void makePhoto(SandPhoto sandPhoto) {
-        byte[] data = getDataFromFile(sandPhoto.getFileName(), sandPhoto.getSize());
+        byte[] rowData = getDataFromFile(sandPhoto.getFileName(), sandPhoto.getSize());
+        if (rowData == null) {
+            return;
+        }
+        byte[] data;
+        if (sandPhoto.getImageFormat() == ImageFormat.JPEG) {
+            data = rowData;
+        } else {
+            data = decodeNV21(rowData,
+                    sandPhoto.getSandExif().getImageWidth(), sandPhoto.getSandExif().getImageLength());
+        }
         if (data == null) {
             return;
         }
@@ -139,6 +154,19 @@ public class CameraServicePresenterImpl implements ICameraServicePresenter {
                 });
         bitmap.recycle();
         System.gc();
+    }
+
+    private byte[] decodeNV21(byte[] data, int width, int height) {
+        YuvImage yuv = new YuvImage(data, ImageFormat.NV21, width, height, null);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        yuv.compressToJpeg(new Rect(0, 0, width, height), 100, bos);
+        byte[] bytes = bos.toByteArray();
+        try {
+            bos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bytes;
     }
 
     private byte[] getDataFromFile(String fileName, int size) {

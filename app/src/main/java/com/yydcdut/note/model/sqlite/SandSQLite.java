@@ -42,6 +42,7 @@ public class SandSQLite extends SQLiteOpenHelper {
                 "imageWidth_ INTEGER, " +//照片宽度
                 "make_ VARCHAR(50), " +//手机牌子
                 "model_ VARCHAR(50), " +//手机牌子
+                "imageFormat_ INTEGER DEFAULT 256, " +//图片格式
                 "size INTEGER NOT NULL DEFAULT -1, " +//byte[]大小
                 "fileName VARCHAR(100) NOT NULL DEFAULT 'X');";//文件名字
 
@@ -50,6 +51,24 @@ public class SandSQLite extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if (oldVersion == 4 && newVersion == 5) {
+            updateFrom4to5(db);
+        }
+        if (oldVersion == 3 && newVersion == 5) {
+            updateFrom3To4(db);
+            updateFrom4to5(db);
+        }
+        if (oldVersion == 2 && newVersion == 5) {
+            updateFrom2To3(db);
+            updateFrom3To4(db);
+            updateFrom4to5(db);
+        }
+        if (oldVersion == 1 && newVersion == 5) {
+            updateFrom1To2(db);
+            updateFrom2To3(db);
+            updateFrom3To4(db);
+            updateFrom4to5(db);
+        }
         if (oldVersion == 3 && newVersion == 4) {
             updateFrom3To4(db);
         }
@@ -136,6 +155,12 @@ public class SandSQLite extends SQLiteOpenHelper {
         for (long id : list) {
             int rows = db.delete(SandSQLite.TABLE, "_id = ?", new String[]{id + ""});
         }
+    }
+
+    private void updateFrom4to5(SQLiteDatabase db) {
+        //image格式
+        String imageFormat = "ALTER TABLE " + TABLE + " ADD imageFormat_ INTEGER DEFAULT 256;";
+        db.execSQL(imageFormat);
     }
 
     public static class DatabaseContext extends ContextWrapper {

@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class SandBoxDB {
     private static final String NAME = "SandBox.db";
-    private static final int VERSION = 4;
+    private static final int VERSION = 5;
 
     private SandSQLite mSandSQLite;
 
@@ -55,11 +55,12 @@ public class SandBoxDB {
             int imageWidth = cursor.getInt(cursor.getColumnIndex("imageWidth_"));
             String make = cursor.getString(cursor.getColumnIndex("make_"));
             String model = cursor.getString(cursor.getColumnIndex("model_"));
+            int imageFormat = cursor.getInt(cursor.getColumnIndex("imageFormat_"));
 
             SandExif sandExif = new SandExif(orientation1, latitude, lontitude, whiteBalance, flash,
                     imageLength, imageWidth, make, model);
             sandPhoto = new SandPhoto(id, time, cameraId, categoryId, isMirror,
-                    ratio, fileName, size, sandExif);
+                    ratio, fileName, size, imageFormat, sandExif);
         }
         cursor.close();
         db.close();
@@ -96,11 +97,12 @@ public class SandBoxDB {
             int imageWidth = cursor.getInt(cursor.getColumnIndex("imageWidth_"));
             String make = cursor.getString(cursor.getColumnIndex("make_"));
             String model = cursor.getString(cursor.getColumnIndex("model_"));
+            int imageFormat = cursor.getInt(cursor.getColumnIndex("imageFormat_"));
 
             SandExif sandExif = new SandExif(orientation1, latitude, lontitude, whiteBalance, flash,
                     imageLength, imageWidth, make, model);
             SandPhoto sandPhoto = new SandPhoto(id, time, cameraId, categoryId, isMirror,
-                    ratio, fileName, size, sandExif);
+                    ratio, fileName, size, imageFormat, sandExif);
             sandPhotoList.add(sandPhoto);
         }
         cursor.close();
@@ -138,11 +140,12 @@ public class SandBoxDB {
             int imageWidth = cursor.getInt(cursor.getColumnIndex("imageWidth_"));
             String make = cursor.getString(cursor.getColumnIndex("make_"));
             String model = cursor.getString(cursor.getColumnIndex("model_"));
+            int imageFormat = cursor.getInt(cursor.getColumnIndex("imageFormat_"));
 
             SandExif sandExif = new SandExif(orientation1, latitude, lontitude, whiteBalance, flash,
                     imageLength, imageWidth, make, model);
             sandPhoto = new SandPhoto(id, time, cameraId, categoryId, isMirror,
-                    ratio, fileName, size, sandExif);
+                    ratio, fileName, size, imageFormat, sandExif);
         }
         cursor.close();
         db.close();
@@ -166,6 +169,7 @@ public class SandBoxDB {
         contentValues.put("ratio", sandPhoto.getRatio());
         contentValues.put("fileName", sandPhoto.getFileName());
         contentValues.put("size", sandPhoto.getSize());
+        contentValues.put("imageFormat_", sandPhoto.getImageFormat());
 
         SandExif sandExif = sandPhoto.getSandExif();
         contentValues.put("orientation_", sandExif.getOrientation());
