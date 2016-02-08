@@ -111,7 +111,7 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter {
         } catch (OutOfMemoryError e) {
 
         }
-        String fileName = getTime4Photo(sandPhoto.getTime()) + ".jpg";
+        String fileName = sandPhoto.getTime() + ".jpg";
         if (FilePathUtils.savePhoto(fileName, bitmap)) {
             FilePathUtils.saveSmallPhoto(fileName, bitmap);
         }
@@ -228,18 +228,4 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter {
         mSandBoxServiceView.stopService();
         mSandBoxServiceView.killProgress();
     }
-
-    /**
-     * 通过时间戳给出固定格式的照片名字
-     *
-     * @param time
-     * @return
-     */
-    private static String getTime4Photo(long time) {
-        String s;
-        java.text.DateFormat format1 = new java.text.SimpleDateFormat("yyyyMMddhhmmss");
-        s = format1.format(time);
-        return s;
-    }
-
 }

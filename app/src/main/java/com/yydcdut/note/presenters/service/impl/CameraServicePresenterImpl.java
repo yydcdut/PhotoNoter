@@ -135,7 +135,7 @@ public class CameraServicePresenterImpl implements ICameraServicePresenter {
             return;
         }
         Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-        String fileName = getTime4Photo(sandPhoto.getTime()) + ".jpg";
+        String fileName = sandPhoto.getTime() + ".jpg";
         if (FilePathUtils.savePhoto(fileName, bitmap)) {
             FilePathUtils.saveSmallPhoto(fileName, bitmap);
         }
@@ -152,6 +152,7 @@ public class CameraServicePresenterImpl implements ICameraServicePresenter {
                     deleteFromDBAndSDCard(sandPhoto);
                     mCameraServiceView.sendBroadCast();
                 });
+        //todo bitmap可以重复利用?
         bitmap.recycle();
         System.gc();
     }
@@ -254,18 +255,5 @@ public class CameraServicePresenterImpl implements ICameraServicePresenter {
                 .subscribe(integer -> {
                     new File(path).delete();
                 });
-    }
-
-    /**
-     * 通过时间戳给出固定格式的照片名字
-     *
-     * @param time
-     * @return
-     */
-    private static String getTime4Photo(long time) {
-        String s;
-        java.text.DateFormat format1 = new java.text.SimpleDateFormat("yyyyMMddhhmmss");
-        s = format1.format(time);
-        return s;
     }
 }
