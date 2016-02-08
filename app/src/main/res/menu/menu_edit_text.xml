@@ -4,6 +4,6 @@
     <item
         android:id="@+id/menu_arrow"
         android:title="@string/show_or_hide"
-        app:actionProviderClass="com.yydcdut.note.view.action.ArrowActionProvider"
+        app:actionProviderClass="com.yydcdut.note.widget.action.ArrowActionProvider"
         app:showAsAction="always"/>
 </menu>
