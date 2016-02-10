@@ -34,13 +34,13 @@ import com.yydcdut.note.adapter.AlbumAdapter;
 import com.yydcdut.note.adapter.vh.PhotoViewHolder;
 import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.bean.PhotoNote;
-import com.yydcdut.note.camera.controller.CameraActivity;
 import com.yydcdut.note.presenters.home.impl.AlbumPresenterImpl;
 import com.yydcdut.note.service.SandBoxService;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.Utils;
 import com.yydcdut.note.views.BaseFragment;
+import com.yydcdut.note.views.camera.impl.CameraActivity2;
 import com.yydcdut.note.views.home.IAlbumView;
 import com.yydcdut.note.views.note.impl.DetailActivity;
 import com.yydcdut.note.views.setting.impl.SettingActivity;
@@ -348,7 +348,7 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
         mMainHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (mFloatingActionsMenu.isExpanded()) {
+                if (mFloatingActionsMenu != null && mFloatingActionsMenu.isExpanded()) {
                     mFloatingActionsMenu.collapse(false);
                     hideAlbumRevealColorView(getLocationInView(mAlbumRevealView, mFloatingView));
                 }
@@ -640,7 +640,8 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
 
     @Override
     public void jump2CameraActivity(int categoryId) {
-        Intent intent = new Intent(getContext(), CameraActivity.class);
+        Intent intent = new Intent(getContext(), CameraActivity2.class);
+//        Intent intent = new Intent(getContext(), CameraActivity.class);
         Bundle bundle = new Bundle();
         bundle.putInt(Const.CATEGORY_ID_4_PHOTNOTES, categoryId);
         intent.putExtras(bundle);

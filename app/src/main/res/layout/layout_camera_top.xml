@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/bg_shadow"
+              android:orientation="horizontal">
+
+    <com.yydcdut.note.widget.camera.AnimationTopLayout
+        android:id="@+id/layout_back"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dimen_48dip"
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/btn_back"
+            android:layout_width="@dimen/dimen_48dip"
+            android:layout_height="@dimen/dimen_48dip"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_circle_48"
+            android:padding="12dp"
+            android:src="@drawable/ic_arrow_back_white_24dp"/>
+    </com.yydcdut.note.widget.camera.AnimationTopLayout>
+
+    <com.yydcdut.note.widget.camera.AnimationTopLayout
+        android:id="@+id/layout_flash"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dimen_48dip"
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/btn_flash"
+            android:layout_width="@dimen/dimen_48dip"
+            android:layout_height="@dimen/dimen_48dip"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_circle_48"
+            android:padding="12dp"
+            android:src="@drawable/ic_flash_auto_white_24dp"/>
+    </com.yydcdut.note.widget.camera.AnimationTopLayout>
+
+    <com.yydcdut.note.widget.camera.AnimationTopLayout
+        android:id="@+id/layout_timer"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dimen_48dip"
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/btn_timer"
+            android:layout_width="@dimen/dimen_48dip"
+            android:layout_height="@dimen/dimen_48dip"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_circle_48"
+            android:padding="12dp"
+            android:src="@drawable/ic_timer_off_white_24dp"/>
+    </com.yydcdut.note.widget.camera.AnimationTopLayout>
+
+    <com.yydcdut.note.widget.camera.AnimationTopLayout
+        android:id="@+id/layout_grid"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dimen_48dip"
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/btn_grid"
+            android:layout_width="@dimen/dimen_48dip"
+            android:layout_height="@dimen/dimen_48dip"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_circle_48"
+            android:padding="12dp"
+            android:src="@drawable/ic_grid_off_white_24dp"/>
+    </com.yydcdut.note.widget.camera.AnimationTopLayout>
+
+    <com.yydcdut.note.widget.camera.AnimationTopLayout
+        android:id="@+id/layout_camera_id"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dimen_48dip"
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/btn_camera_id"
+            android:layout_width="@dimen/dimen_48dip"
+            android:layout_height="@dimen/dimen_48dip"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_circle_48"
+            android:padding="12dp"
+            android:src="@drawable/ic_camera_rear_white_24dp"/>
+    </com.yydcdut.note.widget.camera.AnimationTopLayout>
+</LinearLayout>

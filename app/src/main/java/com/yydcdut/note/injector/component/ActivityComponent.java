@@ -10,6 +10,7 @@ import com.yydcdut.note.model.rx.RxCategory;
 import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.model.rx.RxSandBox;
 import com.yydcdut.note.utils.LocalStorageUtils;
+import com.yydcdut.note.views.camera.impl.CameraActivity2;
 import com.yydcdut.note.views.home.impl.HomeActivity;
 import com.yydcdut.note.views.home.impl.IntroduceActivity;
 import com.yydcdut.note.views.home.impl.SplashActivity;
@@ -74,5 +75,7 @@ public interface ActivityComponent {
     void inject(FeedbackActivity feedbackActivity);
 
     void inject(SettingActivity settingActivity);
+
+    void inject(CameraActivity2 cameraActivity2);
 
 }
