@@ -11,7 +11,7 @@ public interface ICameraProcess {
     ICameraSettingModel reopenCamera(String id, int orientation);
 
     ICameraFocus startPreview(AutoFitPreviewView.PreviewSurface previewSurface,
-                              int previewViewWidth, int previewViewHeight);
+                              int previewWidth, int previewHeight);
 
     long capture(PictureReturnCallback pictureReturnCallback);
 

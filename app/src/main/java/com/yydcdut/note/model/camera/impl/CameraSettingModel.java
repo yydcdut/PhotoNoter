@@ -42,7 +42,7 @@ public class CameraSettingModel implements ICameraSettingModel {
     }
 
     @Override
-    public List<Size> getPreviewSizes() {
+    public List<Size> getSupportPreviewSizes() {
         List<Camera.Size> sizeList = getParameters().getSupportedPreviewSizes();
         List<Size> list = new ArrayList<>(sizeList.size());
         for (Camera.Size size : sizeList) {
@@ -52,7 +52,7 @@ public class CameraSettingModel implements ICameraSettingModel {
     }
 
     @Override
-    public List<Size> getPictureSizes() {
+    public List<Size> getSupportPictureSizes() {
         List<Camera.Size> sizeList = getParameters().getSupportedPictureSizes();
         List<Size> list = new ArrayList<>(sizeList.size());
         for (Camera.Size size : sizeList) {

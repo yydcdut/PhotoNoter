@@ -18,14 +18,17 @@ import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.camera.ICameraModel;
 import com.yydcdut.note.model.camera.ICameraProcess;
 import com.yydcdut.note.model.camera.ICameraSettingModel;
-import com.yydcdut.note.model.camera.impl.CameraModel;
+import com.yydcdut.note.model.camera.impl.CameraModelImpl;
+import com.yydcdut.note.model.camera.impl2.Camera2ModelImpl;
 import com.yydcdut.note.model.compare.SizeComparator;
 import com.yydcdut.note.presenters.camera.ICameraPresenter;
+import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.CameraStateUtils;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.Utils;
+import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.views.IView;
 import com.yydcdut.note.views.camera.ICameraView;
 import com.yydcdut.note.widget.camera.AutoFitPreviewView;
@@ -53,6 +56,7 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
     private int mCategoryId;
 
     private ICameraModel mCameraModel;
+
     private ICameraSettingModel mCameraSettingModel;
 
     private Context mContext;
@@ -77,19 +81,47 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
     private Handler mHandler;
 
     @Inject
-    public CameraPresenterImpl(@ContextLife("Activity") Context context, LocalStorageUtils localStorageUtils) {
+    public CameraPresenterImpl(@ContextLife("Activity") Context context, LocalStorageUtils localStorageUtils,
+                               CameraModelImpl cameraModelImpl) {
         mContext = context;
         mLocalStorageUtils = localStorageUtils;
+        if (AppCompat.AFTER_LOLLIPOP) {
+            //Dagger2中，在5.0以下机器，找不到Camera2类，会崩掉。。不知道原因
+            /*
+             *  java.lang.VerifyError: com/yydcdut/note/model/camera/impl2/Camera2ModelImpl
+                                                                    at com.yydcdut.note.model.camera.impl2.Camera2ModelImpl_Factory.get(Camera2ModelImpl_Factory.java:19)
+                                                                    at com.yydcdut.note.model.camera.impl2.Camera2ModelImpl_Factory.get(Camera2ModelImpl_Factory.java:8)
+                                                                    at com.yydcdut.note.presenters.camera.impl.CameraPresenterImpl_Factory.get(CameraPresenterImpl_Factory.java:31)
+                                                                    at com.yydcdut.note.presenters.camera.impl.CameraPresenterImpl_Factory.get(CameraPresenterImpl_Factory.java:11)
+                                                                    at com.yydcdut.note.views.camera.impl.CameraActivity2_MembersInjector.injectMembers(CameraActivity2_MembersInjector.java:27)
+                                                                    at com.yydcdut.note.views.camera.impl.CameraActivity2_MembersInjector.injectMembers(CameraActivity2_MembersInjector.java:9)
+                                                                    at com.yydcdut.note.injector.component.DaggerActivityComponent.inject(DaggerActivityComponent.java:315)
+                                                                    at com.yydcdut.note.views.camera.impl.CameraActivity2.initInjector(CameraActivity2.java:67)
+                                                                    at com.yydcdut.note.views.BaseActivity.onCreate(BaseActivity.java:136)
+                                                                    at android.app.Activity.performCreate(Activity.java:5104)
+                                                                    at android.app.Instrumentation.callActivityOnCreate(Instrumentation.java:1080)
+                                                                    at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:2144)
+                                                                    at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:2230)
+                                                                    at android.app.ActivityThread.access$600(ActivityThread.java:141)
+                                                                    at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1234)
+                                                                    at android.os.Handler.dispatchMessage(Handler.java:99)
+                                                                    at android.os.Looper.loop(Looper.java:137)
+                                                                    at android.app.ActivityThread.main(ActivityThread.java:5039)
+                                                                    at java.lang.reflect.Method.invokeNative(Native Method)
+                                                                    at java.lang.reflect.Method.invoke(Method.java:511)
+                                                                    at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:833)
+                                                                    at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:600)
+                                                                    at dalvik.system.NativeStart.main(Native Method)
+            */
+            mCameraModel = new Camera2ModelImpl(context);
+        } else {
+            mCameraModel = cameraModelImpl;
+        }
     }
 
     @Override
     public void attachView(@NonNull IView iView) {
         mICameraView = (ICameraView) iView;
-//        if (AppCompat.AFTER_ICE_CREAM) {
-        mCameraModel = CameraModel.getInstance();
-//        } else {
-//            mCameraModel = new Camera2Model()
-//        }
 
         String cameraId = mLocalStorageUtils.getCameraSaveCameraId();
         if (Const.CAMERA_BACK.equals(cameraId)) {
@@ -101,8 +133,9 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
             mCameraSettingModel = mCameraModel.openCamera(cameraId,
                     mLocalStorageUtils.getCameraFrontRotation());
         }
-        Size previewSize = getSuitablePreviewSize(mCameraSettingModel.getPreviewSizes());
+        Size previewSize = getSuitablePreviewSize(mCameraSettingModel.getSupportPreviewSizes());
         mICameraView.setSize(previewSize.getHeight(), previewSize.getWidth());
+        mCameraSettingModel.setPreviewSize(previewSize.getWidth(), previewSize.getHeight());
         getPictureSize();
         initLocation();
         initUIState();
@@ -160,11 +193,13 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
             if (Math.abs(preScale - screenScale) < 0.03) {
 //                mFullSize = preSize;
                 previewSize = preSize;
+                YLog.i("yuyidong", "full  full  full  full");
             }
             //4:3 默认进来4：3
             if (preScale < 1.36f && preScale > 1.30f) {
 //                m43Size = preSize;
                 previewSize = preSize;
+                YLog.i("yuyidong", "4:3  4:3  4:3  4:3");
             }
 //            if (mSizeState == Const.LAYOUT_PERSONAL_RATIO_1_1) {
 //                previewSize = m43Size;
@@ -197,7 +232,7 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
             e.printStackTrace();
         }
         if (size == null) {
-            List<Size> list = mCameraSettingModel.getPictureSizes();
+            List<Size> list = mCameraSettingModel.getSupportPictureSizes();
             Collections.sort(list, new SizeComparator());
             size = list.get(list.size() - 1);
             savePictureSizes(mCurrentCameraId, list);
@@ -228,13 +263,14 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
             mCameraModel.closeCamera();
         }
         mLocationClient.stop();
+        mCameraModel = null;
     }
 
     @Override
     public void onSurfaceAvailable(AutoFitPreviewView.PreviewSurface surface, boolean sizeChanged, int width, int height) {
         if (sizeChanged) {
             if (mCameraModel.isOpen() && !mCameraModel.isPreview()) {
-                Size previewSize = getSuitablePreviewSize(mCameraSettingModel.getPreviewSizes());
+                Size previewSize = getSuitablePreviewSize(mCameraSettingModel.getSupportPreviewSizes());
                 Size pictureSize = getPictureSize();
                 mCameraSettingModel.setPreviewSize(previewSize.getWidth(), previewSize.getHeight());
                 mCameraSettingModel.setPictureSize(pictureSize.getWidth(), pictureSize.getHeight());
@@ -259,6 +295,7 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
 
     @Override
     public void onSurfaceDestroy() {
+        YLog.i("yuyidong", "onSurfaceDestroy");
         if (mCameraModel.isPreview()) {
             mCameraModel.stopPreview();
         }

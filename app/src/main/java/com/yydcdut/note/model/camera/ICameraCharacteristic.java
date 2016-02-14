@@ -12,7 +12,7 @@ public interface ICameraCharacteristic extends ICameraParams {
 
     public boolean isFlashSupported();
 
-    List<Size> getPreviewSizes();
+    List<Size> getSupportPreviewSizes();
 
-    List<Size> getPictureSizes();
+    List<Size> getSupportPictureSizes();
 }

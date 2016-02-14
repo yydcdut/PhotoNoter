@@ -11,11 +11,14 @@ import com.yydcdut.note.widget.camera.AutoFitPreviewView;
 
 import java.io.IOException;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Created by yuyidong on 16/2/3.
  */
-public class CameraModel implements ICameraModel {
-    private static final String TAG = CameraModel.class.getSimpleName();
+public class CameraModelImpl implements ICameraModel {
+    private static final String TAG = CameraModelImpl.class.getSimpleName();
 
     private Camera mCamera;
 
@@ -32,15 +35,9 @@ public class CameraModel implements ICameraModel {
 
     private PicturesPreviewCallback mPicturesPreviewCallback;
 
-    private CameraModel() {
-    }
-
-    public static CameraModel getInstance() {
-        return CameraInstance.INSTANCE;
-    }
-
-    private static class CameraInstance {
-        private static final CameraModel INSTANCE = new CameraModel();
+    @Singleton
+    @Inject
+    public CameraModelImpl() {
     }
 
     @Override
@@ -83,7 +80,7 @@ public class CameraModel implements ICameraModel {
 
     @Override
     public ICameraFocus startPreview(AutoFitPreviewView.PreviewSurface previewSurface
-            , int previewViewWidth, int previewViewHeight) {
+            , int previewWidth, int previewHeight) {
         if (mCameraState == STATE_CAMERA_OPEN && mCamera != null) {
             try {
                 if (previewSurface.getSurfaceHolder() != null) {
@@ -100,7 +97,7 @@ public class CameraModel implements ICameraModel {
             printLog("startPreview");
         }
         if (mCameraFocusModel == null) {
-            mCameraFocusModel = new CameraFocusModel(mCamera, previewViewWidth, previewViewHeight);
+            mCameraFocusModel = new CameraFocusModel(mCamera, previewWidth, previewHeight);
         }
         return mCameraFocusModel;
     }
