@@ -30,7 +30,6 @@ import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.Utils;
-import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.views.IView;
 import com.yydcdut.note.views.camera.ICameraView;
 import com.yydcdut.note.widget.camera.AutoFitPreviewView;
@@ -286,7 +285,6 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
     public void onSurfaceAvailable(AutoFitPreviewView.PreviewSurface surface, int width, int height) {
         mPreviewSurface = surface;
         if (!mCameraModel.isOpen()) {
-            YLog.i("yuyidong", "111111111");
             mCurrentCameraId = mLocalStorageUtils.getCameraSaveCameraId();
             mPictureSize = getPictureSize();
             mCameraModel.openCamera(mCurrentCameraId,
@@ -320,7 +318,6 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
                 mPictureSize = savePictureSizes(mCurrentCameraId);
             }
         } else if (mCameraModel.isOpen() && mPreviewModel != null) {
-            YLog.i("yuyidong", "222222");
             mPreviewSize = getSuitablePreviewSize(mCameraSettingModel.getSupportPreviewSizes());
             mPreviewModel.startPreview(surface, new IPreviewModel.OnCameraPreviewCallback() {
 
