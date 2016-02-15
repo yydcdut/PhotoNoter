@@ -55,23 +55,13 @@ public class AutoFitPreviewView extends FrameLayout implements
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        mHolderSurface = new PreviewSurface(holder);
-        if (mSurfaceListener != null) {
-            mSurfaceListener.onSurfaceAvailable(mHolderSurface, false, 0, 0);
-        }
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        if (mHolderSurface == null) {
-            mHolderSurface = new PreviewSurface(holder);
-            if (mSurfaceListener != null) {
-                mSurfaceListener.onSurfaceAvailable(mHolderSurface, true, 0, 0);
-            }
-        } else {
-            if (mSurfaceListener != null) {
-                mSurfaceListener.onSurfaceAvailable(mHolderSurface, true, width, height);
-            }
+        mHolderSurface = new PreviewSurface(holder);
+        if (mSurfaceListener != null) {
+            mSurfaceListener.onSurfaceAvailable(mHolderSurface, width, height);
         }
     }
 
@@ -86,8 +76,7 @@ public class AutoFitPreviewView extends FrameLayout implements
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
         mTextureSurface = new PreviewSurface(surface);
         if (mSurfaceListener != null) {
-            mSurfaceListener.onSurfaceAvailable(mTextureSurface, false, width, height);
-            mSurfaceListener.onSurfaceAvailable(mTextureSurface, true, width, height);
+            mSurfaceListener.onSurfaceAvailable(mTextureSurface, width, height);
         }
     }
 
@@ -115,7 +104,7 @@ public class AutoFitPreviewView extends FrameLayout implements
     }
 
     public interface SurfaceListener {
-        void onSurfaceAvailable(PreviewSurface surface, boolean sizeChanged, int width, int height);
+        void onSurfaceAvailable(PreviewSurface surface, int width, int height);
 
         void onSurfaceDestroy();
     }

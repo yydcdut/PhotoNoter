@@ -10,7 +10,6 @@ import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CameraManager;
-import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.CaptureResult;
 import android.hardware.camera2.TotalCaptureResult;
@@ -23,7 +22,8 @@ import android.view.SurfaceHolder;
 import com.yydcdut.note.camera.param.Size;
 import com.yydcdut.note.model.camera.ICameraFocus;
 import com.yydcdut.note.model.camera.ICameraModel;
-import com.yydcdut.note.model.camera.ICameraSettingModel;
+import com.yydcdut.note.model.camera.ICaptureModel;
+import com.yydcdut.note.model.camera.IPreviewModel;
 import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.widget.camera.AutoFitPreviewView;
 
@@ -49,10 +49,10 @@ public class Camera2ModelImpl implements ICameraModel {
     private static final int STATE_CAMERA_CAPTURE = 3;
     private int mCameraState = STATE_CAMERA_CLOSE;
 
-    private String mCurrentCameraId;
-
     private Camera2SettingModel mCamera2SettingModel;
     private Camera2FocusModel mCamera2FocusModel;
+    private Camera2PreviewModel mCamera2PreviewModel;
+    private Camera2CaptureModel mCamera2CaptureModel;
 
     private ImageReader mJpgImageReader;
     private PictureCallBack mJpegPictureCallback;
@@ -66,14 +66,16 @@ public class Camera2ModelImpl implements ICameraModel {
     }
 
     @Override
-    public ICameraSettingModel openCamera(String id, int orientation, Size pictureSize) {
+    public void openCamera(String id, OnCameraOpenedCallback callback, int orientation, Size pictureSize) {
         if (mCameraState != STATE_CAMERA_CLOSE) {
-            return mCamera2SettingModel;
+            return;
+        }
+        if (callback == null) {
+            throw new IllegalArgumentException("");
         }
         if (mCameraManager == null) {
             mCameraManager = (CameraManager) mContext.getSystemService(Context.CAMERA_SERVICE);
         }
-        mCurrentCameraId = id;
         try {
             if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
@@ -86,169 +88,206 @@ public class Camera2ModelImpl implements ICameraModel {
 //                return null;
                 YLog.i("yuyidong", "no permission");
             }
-            mCameraManager.openCamera(id, mCameraDeviceStateCallback, null);
+            mCameraManager.openCamera(id, new CameraDevice.StateCallback() {
+                @Override
+                public void onOpened(CameraDevice camera) {
+                    mCameraState = STATE_CAMERA_OPEN;
+                    mCameraDevice = camera;
+                    mCamera2PreviewModel = new Camera2PreviewModel();
+                    try {
+                        mCamera2SettingModel = new Camera2SettingModel(mCameraManager.getCameraCharacteristics(id),
+                                mCameraManager.getCameraIdList().length);
+                        mJpgImageReader = ImageReader.newInstance(pictureSize.getWidth(), pictureSize.getHeight(), ImageFormat.JPEG, 2);
+                        mJpegPictureCallback = new PictureCallBack();
+                        mJpgImageReader.setOnImageAvailableListener(mJpegPictureCallback, null);
+                    } catch (CameraAccessException e) {
+                        e.printStackTrace();
+                    }
+                    callback.onOpen(mCamera2PreviewModel, mCamera2SettingModel);
+                }
+
+                @Override
+                public void onDisconnected(CameraDevice camera) {
+                    mCameraState = STATE_CAMERA_CLOSE;
+                    camera.close();
+                    mCameraDevice = null;
+                }
+
+                @Override
+                public void onError(CameraDevice camera, int error) {
+                    mCameraState = STATE_CAMERA_CLOSE;
+                    camera.close();
+                    mCameraDevice = null;
+                    callback.onError();
+                }
+            }, null);
         } catch (CameraAccessException e) {
             e.printStackTrace();
+            callback.onError();
         }
-        try {
-            mCamera2SettingModel = new Camera2SettingModel(mCameraManager.getCameraCharacteristics(id),
-                    mCameraManager.getCameraIdList().length);
-            mJpgImageReader = ImageReader.newInstance(pictureSize.getWidth(), pictureSize.getHeight(), ImageFormat.JPEG, 2);
-            mJpegPictureCallback = new PictureCallBack();
-            mJpgImageReader.setOnImageAvailableListener(mJpegPictureCallback, null);
-        } catch (CameraAccessException e) {
-            e.printStackTrace();
-        }
-
-        return mCamera2SettingModel;
     }
 
-    private CameraDevice.StateCallback mCameraDeviceStateCallback = new CameraDevice.StateCallback() {
+    public class Camera2PreviewModel implements IPreviewModel {
 
         @Override
-        public void onOpened(CameraDevice camera) {
-            mCameraState = STATE_CAMERA_OPEN;
-            mCameraDevice = camera;
-        }
-
-        @Override
-        public void onDisconnected(CameraDevice camera) {
-            mCameraState = STATE_CAMERA_CLOSE;
-            camera.close();
-            mCameraDevice = null;
-        }
-
-        @Override
-        public void onError(CameraDevice camera, int error) {
-            mCameraState = STATE_CAMERA_CLOSE;
-            camera.close();
-            mCameraDevice = null;
-        }
-    };
-
-    @Override
-    public ICameraSettingModel reopenCamera(String id, int orientation, Size pictureSize) {
-        if (mCurrentCameraId.equals(id)) {
-            return mCamera2SettingModel;
-        }
-        mCurrentCameraId = id;
-        if (isPreview()) {
-            stopPreview();
-        }
-        if (isOpen()) {
-            closeCamera();
-        }
-        return openCamera(mCurrentCameraId, orientation, pictureSize);
-    }
-
-    @Override
-    public ICameraFocus startPreview(AutoFitPreviewView.PreviewSurface previewSurface, Size previewSize) {
-        mPreviewSurface = previewSurface;
-        SurfaceTexture surfaceTexture = mPreviewSurface.getSurfaceTexture();
-        SurfaceHolder surfaceHolder = mPreviewSurface.getSurfaceHolder();
-        boolean success = true;
-        if (surfaceTexture != null) {
-            try {
+        public void startPreview(AutoFitPreviewView.PreviewSurface previewSurface,
+                                 OnCameraPreviewCallback callback, Size previewSize) {
+            mPreviewSurface = previewSurface;
+            SurfaceTexture surfaceTexture = mPreviewSurface.getSurfaceTexture();
+            SurfaceHolder surfaceHolder = mPreviewSurface.getSurfaceHolder();
+            boolean success = true;
+            Surface surface = null;
+            if (surfaceTexture != null) {
                 surfaceTexture.setDefaultBufferSize(previewSize.getWidth(), previewSize.getHeight());
-                Surface surface = new Surface(surfaceTexture);
-                mPreviewRequestBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
-                mPreviewRequestBuilder.addTarget(surface);
-                mCameraDevice.createCaptureSession(Arrays.asList(surface, mJpgImageReader.getSurface()), mCameraCaptureSessionStateCallback, null);
-            } catch (CameraAccessException e) {
-                e.printStackTrace();
-                success = false;
-            }
-        } else {
-            try {
+                surface = new Surface(surfaceTexture);
+            } else {
                 surfaceHolder.setFixedSize(previewSize.getWidth(), previewSize.getHeight());
-                Surface surface = surfaceHolder.getSurface();
+                surface = surfaceHolder.getSurface();
+            }
+            try {
                 mPreviewRequestBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
                 mPreviewRequestBuilder.addTarget(surface);
-                mCameraDevice.createCaptureSession(Arrays.asList(surface, mJpgImageReader.getSurface()), mCameraCaptureSessionStateCallback, null);
+                mCameraDevice.createCaptureSession(Arrays.asList(surface, mJpgImageReader.getSurface()), new CameraCaptureSession.StateCallback() {
+
+                    @Override
+                    public void onConfigured(CameraCaptureSession session) {
+                        if (null == mCameraDevice) {
+                            return;
+                        }
+                        mSession = session;
+                        try {
+                            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
+                            CaptureRequest previewRequest = mPreviewRequestBuilder.build();
+                            mSession.setRepeatingRequest(previewRequest, mCameraCaptureSessionCaptureCallback4Preview, null);
+                            mCameraState = STATE_CAMERA_PREVIEW;
+                        } catch (CameraAccessException e) {
+                            e.printStackTrace();
+                        }
+
+                        mCamera2FocusModel = new Camera2FocusModel();
+                        mCamera2CaptureModel = new Camera2CaptureModel();
+                        callback.onPreview(mCamera2CaptureModel, mCamera2FocusModel);
+                    }
+
+                    @Override
+                    public void onConfigureFailed(CameraCaptureSession session) {
+                        callback.onPreviewError();
+                    }
+                }, null);
             } catch (CameraAccessException e) {
                 e.printStackTrace();
                 success = false;
             }
+            if (!success) {
+                callback.onPreviewError();
+            }
         }
-        if (success) {
-            mCamera2FocusModel = new Camera2FocusModel();
-            return mCamera2FocusModel;
-        } else {
-            return null;
+
+        @Override
+        public void continuePreview() {
+            if (mSession != null && mCameraState == STATE_CAMERA_CAPTURE) {
+                try {
+                    mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
+                    CaptureRequest previewRequest = mPreviewRequestBuilder.build();
+                    mSession.setRepeatingRequest(previewRequest, mCameraCaptureSessionCaptureCallback4Preview, null);
+                    mCameraState = STATE_CAMERA_PREVIEW;
+                } catch (CameraAccessException e) {
+                    e.printStackTrace();
+                }
+            }
         }
+
+        @Override
+        public void stopPreview() {
+            if (mSession != null) {
+                try {
+                    mSession.stopRepeating();
+                    mCameraState = STATE_CAMERA_OPEN;
+                } catch (CameraAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        @Override
+        public boolean isPreview() {
+            return mCameraState == STATE_CAMERA_PREVIEW;
+        }
+
+        private CameraCaptureSession.CaptureCallback mCameraCaptureSessionCaptureCallback4Preview = new CameraCaptureSession.CaptureCallback() {
+
+            @Override
+            public void onCaptureProgressed(CameraCaptureSession session, CaptureRequest request, CaptureResult partialResult) {
+                super.onCaptureProgressed(session, request, partialResult);
+                mCamera2FocusModel.onCaptureProgressed(request, partialResult);
+            }
+
+            @Override
+            public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
+                super.onCaptureCompleted(session, request, result);
+                mCamera2FocusModel.onCaptureCompleted(request, result);
+            }
+
+        };
     }
 
-    private CameraCaptureSession.StateCallback mCameraCaptureSessionStateCallback = new CameraCaptureSession.StateCallback() {
+    public class Camera2CaptureModel implements ICaptureModel {
 
         @Override
-        public void onConfigured(CameraCaptureSession session) {
-            if (null == mCameraDevice) {
-                return;
-            }
-            mSession = session;
-            try {
-                mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
-                CaptureRequest previewRequest = mPreviewRequestBuilder.build();
-                mSession.setRepeatingRequest(previewRequest, mCameraCaptureSessionCaptureCallback4Preview, null);
-                mCameraState = STATE_CAMERA_PREVIEW;
-            } catch (CameraAccessException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        @Override
-        public void onConfigureFailed(CameraCaptureSession session) {
-        }
-    };
-
-    private CameraCaptureSession.CaptureCallback mCameraCaptureSessionCaptureCallback4Preview = new CameraCaptureSession.CaptureCallback() {
-
-        @Override
-        public void onCaptureProgressed(CameraCaptureSession session, CaptureRequest request, CaptureResult partialResult) {
-            super.onCaptureProgressed(session, request, partialResult);
-            mCamera2FocusModel.onCaptureProgressed(request, partialResult);
-        }
-
-        @Override
-        public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
-            super.onCaptureCompleted(session, request, result);
-            mCamera2FocusModel.onCaptureCompleted(request, result);
-        }
-
-    };
-
-    @Override
-    public long capture(PictureReturnCallback pictureReturnCallback) {
-        long time = 0l;
-        if (mCamera2FocusModel != null && mCamera2FocusModel.getFocusState() != ICameraFocus.FOCUS_STATE_FOCUSING
-                && mCameraState == STATE_CAMERA_PREVIEW && pictureReturnCallback != null) {
-            time = System.currentTimeMillis();
-            if (mJpegPictureCallback.pictureReturnCallback == null ||
-                    mJpegPictureCallback.pictureReturnCallback != pictureReturnCallback) {
-                mJpegPictureCallback.pictureReturnCallback = pictureReturnCallback;
-            }
-            mJpegPictureCallback.time = time;
-            CaptureRequest.Builder captureBuilder;
-            try {
-                captureBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
-                captureBuilder.addTarget(mJpgImageReader.getSurface());
-                captureBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
+        public long capture(PictureReturnCallback pictureReturnCallback) {
+            long time = 0l;
+            if (mCamera2FocusModel != null && mCamera2FocusModel.getFocusState() != ICameraFocus.FOCUS_STATE_FOCUSING
+                    && mCameraState == STATE_CAMERA_PREVIEW && pictureReturnCallback != null) {
+                time = System.currentTimeMillis();
+                if (mJpegPictureCallback.pictureReturnCallback == null ||
+                        mJpegPictureCallback.pictureReturnCallback != pictureReturnCallback) {
+                    mJpegPictureCallback.pictureReturnCallback = pictureReturnCallback;
+                }
+                mJpegPictureCallback.time = time;
+                CaptureRequest.Builder captureBuilder;
+                try {
+                    captureBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
+                    captureBuilder.addTarget(mJpgImageReader.getSurface());
+                    captureBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
 //                // Orientation
 //                int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
 //                captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
-                mSession.stopRepeating();
-                mSession.capture(captureBuilder.build(), mCameraCaptureSessionCaptureCallback4Capture, null);
-            } catch (CameraAccessException e) {
-                e.printStackTrace();
+                    mSession.stopRepeating();
+                    mSession.capture(captureBuilder.build(), mCameraCaptureSessionCaptureCallback4Capture, null);
+                } catch (CameraAccessException e) {
+                    e.printStackTrace();
+                }
             }
+            return time;
         }
-        return time;
+
+        @Override
+        public void startStillCapture(StillPictureReturnCallback stillPictureReturnCallback) {
+
+        }
+
+        @Override
+        public void stopStillCapture() {
+
+        }
+
+        private CameraCaptureSession.CaptureCallback mCameraCaptureSessionCaptureCallback4Capture = new CameraCaptureSession.CaptureCallback() {
+            @Override
+            public void onCaptureStarted(CameraCaptureSession session, CaptureRequest request, long timestamp, long frameNumber) {
+                super.onCaptureStarted(session, request, timestamp, frameNumber);
+                mCameraState = STATE_CAMERA_CAPTURE;
+            }
+
+            @Override
+            public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
+                super.onCaptureCompleted(session, request, result);
+            }
+        };
     }
 
     class PictureCallBack implements ImageReader.OnImageAvailableListener {
         private long time;
-        private PictureReturnCallback pictureReturnCallback;
+        private ICaptureModel.PictureReturnCallback pictureReturnCallback;
 
         @Override
         public void onImageAvailable(ImageReader reader) {
@@ -257,59 +296,6 @@ public class Camera2ModelImpl implements ICameraModel {
                 byte[] bytes = new byte[buffer.remaining()];
                 buffer.get(bytes);
                 pictureReturnCallback.onPictureTaken(true, bytes, time);
-            }
-        }
-    }
-
-    private CameraCaptureSession.CaptureCallback mCameraCaptureSessionCaptureCallback4Capture = new CameraCaptureSession.CaptureCallback() {
-        @Override
-        public void onCaptureStarted(CameraCaptureSession session, CaptureRequest request, long timestamp, long frameNumber) {
-            super.onCaptureStarted(session, request, timestamp, frameNumber);
-            mCameraState = STATE_CAMERA_CAPTURE;
-        }
-
-        @Override
-        public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
-            super.onCaptureCompleted(session, request, result);
-        }
-    };
-
-    @Override
-    public void startStillCapture(StillPictureReturnCallback stillPictureReturnCallback) {
-
-    }
-
-    @Override
-    public void stopStillCapture() {
-
-    }
-
-    @Override
-    public void restartPreview(Size previewSize) {
-        if (previewSize != null && mCameraState == STATE_CAMERA_OPEN) {
-            startPreview(mPreviewSurface, previewSize);
-        } else {
-            if (mCameraState == STATE_CAMERA_CAPTURE) {
-                try {
-                    mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_CANCEL);
-                    mSession.capture(mPreviewRequestBuilder.build(), mCameraCaptureSessionCaptureCallback4Preview, null);
-                    mSession.setRepeatingRequest(mPreviewRequestBuilder.build(), mCameraCaptureSessionCaptureCallback4Preview, null);
-                } catch (CameraAccessException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        mCameraState = STATE_CAMERA_PREVIEW;
-    }
-
-    @Override
-    public void stopPreview() {
-        if (mSession != null) {
-            try {
-                mSession.stopRepeating();
-                mCameraState = STATE_CAMERA_OPEN;
-            } catch (CameraAccessException e) {
-                e.printStackTrace();
             }
         }
     }
@@ -335,10 +321,5 @@ public class Camera2ModelImpl implements ICameraModel {
     @Override
     public boolean isOpen() {
         return mCameraState == STATE_CAMERA_OPEN;
-    }
-
-    @Override
-    public boolean isPreview() {
-        return mCameraState == STATE_CAMERA_PREVIEW;
     }
 }

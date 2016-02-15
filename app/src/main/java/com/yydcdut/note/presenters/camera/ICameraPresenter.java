@@ -10,7 +10,7 @@ public interface ICameraPresenter extends IPresenter {
 
     void bindData(int categoryId);
 
-    void onSurfaceAvailable(AutoFitPreviewView.PreviewSurface surface, boolean sizeChanged, int width, int height);
+    void onSurfaceAvailable(AutoFitPreviewView.PreviewSurface surface, int width, int height);
 
     void onSurfaceDestroy();
 

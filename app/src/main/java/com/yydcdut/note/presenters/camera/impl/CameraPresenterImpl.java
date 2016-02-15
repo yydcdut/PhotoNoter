@@ -15,9 +15,11 @@ import com.baidu.location.LocationClientOption;
 import com.yydcdut.note.R;
 import com.yydcdut.note.camera.param.Size;
 import com.yydcdut.note.injector.ContextLife;
+import com.yydcdut.note.model.camera.ICameraFocus;
 import com.yydcdut.note.model.camera.ICameraModel;
-import com.yydcdut.note.model.camera.ICameraProcess;
 import com.yydcdut.note.model.camera.ICameraSettingModel;
+import com.yydcdut.note.model.camera.ICaptureModel;
+import com.yydcdut.note.model.camera.IPreviewModel;
 import com.yydcdut.note.model.camera.impl.CameraModelImpl;
 import com.yydcdut.note.model.camera.impl2.Camera2ModelImpl;
 import com.yydcdut.note.model.compare.SizeComparator;
@@ -28,6 +30,7 @@ import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.Utils;
+import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.views.IView;
 import com.yydcdut.note.views.camera.ICameraView;
 import com.yydcdut.note.widget.camera.AutoFitPreviewView;
@@ -47,7 +50,7 @@ import javax.inject.Inject;
  * Created by yuyidong on 16/2/3.
  */
 public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
-        ICameraProcess.PictureReturnCallback, ICameraProcess.StillPictureReturnCallback {
+        ICaptureModel.PictureReturnCallback, ICaptureModel.StillPictureReturnCallback {
     private static final int TIME_LONG_CAPTURE = 1000;//1s内没有抬起，那么算作长拍摄
     private boolean mIsWannaStillCapture = false;
 
@@ -55,6 +58,7 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
     private Size mPreviewSize;
     private Size mPictureSize;
     private int mCategoryId;
+    private AutoFitPreviewView.PreviewSurface mPreviewSurface;
 
     private ICameraModel mCameraModel;
 
@@ -80,6 +84,9 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
     private static final int MSG_UP = 2;
     private static final int MSG_STILL_SIGNAL = 3;
     private Handler mHandler;
+
+    private IPreviewModel mPreviewModel;
+    private ICaptureModel mCaptureModel;
 
     @Inject
     public CameraPresenterImpl(@ContextLife("Activity") Context context, LocalStorageUtils localStorageUtils,
@@ -125,21 +132,26 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
         mICameraView = (ICameraView) iView;
         mCurrentCameraId = mLocalStorageUtils.getCameraSaveCameraId();
         mPictureSize = getPictureSize();
-        if (Const.CAMERA_BACK.equals(mCurrentCameraId)) {
-            mCameraSettingModel = mCameraModel.openCamera(mCurrentCameraId,
-                    mLocalStorageUtils.getCameraBackRotation(), mPictureSize);
-        } else {
-            mCurrentCameraId = Const.CAMERA_FRONT;
-            mCameraSettingModel = mCameraModel.openCamera(mCurrentCameraId,
-                    mLocalStorageUtils.getCameraFrontRotation(), mPictureSize);
-        }
+        mCameraModel.openCamera(mCurrentCameraId, new ICameraModel.OnCameraOpenedCallback() {
+
+            @Override
+            public void onOpen(IPreviewModel previewModel, ICameraSettingModel cameraSettingModel) {
+                mPreviewModel = previewModel;
+                mCameraSettingModel = cameraSettingModel;
+                initUIState();
+                mPreviewSize = getSuitablePreviewSize(mCameraSettingModel.getSupportPreviewSizes());
+                mICameraView.setSize(mPreviewSize.getHeight(), mPreviewSize.getWidth());
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        }, getCameraRotation(), mPictureSize);
         if (mPictureSize == null) {
             mPictureSize = savePictureSizes(mCurrentCameraId);
         }
-        mPreviewSize = getSuitablePreviewSize(mCameraSettingModel.getSupportPreviewSizes());
-        mICameraView.setSize(mPreviewSize.getHeight(), mPreviewSize.getWidth());
         initLocation();
-        initUIState();
         mHandler = new Handler(this);
     }
 
@@ -257,63 +269,89 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
 
     @Override
     public void detachView() {
-        if (mCameraModel.isPreview()) {
-            mCameraModel.stopPreview();
+        closeCamera();
+        mLocationClient.stop();
+    }
+
+    private void closeCamera() {
+        if (mPreviewModel != null && mPreviewModel.isPreview()) {
+            mPreviewModel.stopPreview();
         }
         if (mCameraModel.isOpen()) {
             mCameraModel.closeCamera();
         }
-        mLocationClient.stop();
     }
 
     @Override
-    public void onSurfaceAvailable(AutoFitPreviewView.PreviewSurface surface, boolean sizeChanged, int width, int height) {
-        if (sizeChanged) {
-            if (mCameraModel.isOpen() && !mCameraModel.isPreview()) {
-                mPreviewSize = getSuitablePreviewSize(mCameraSettingModel.getSupportPreviewSizes());
-//                mCameraSettingModel.setPreviewSize(previewSize.getWidth(), previewSize.getHeight());
-//                mCameraModel.startPreview(surface,
-//                        mICameraView.getPreviewViewWidth(), mICameraView.getPreviewViewHeight());
-                mCameraModel.startPreview(surface, mPreviewSize);
+    public void onSurfaceAvailable(AutoFitPreviewView.PreviewSurface surface, int width, int height) {
+        mPreviewSurface = surface;
+        if (!mCameraModel.isOpen()) {
+            YLog.i("yuyidong", "111111111");
+            mCurrentCameraId = mLocalStorageUtils.getCameraSaveCameraId();
+            mPictureSize = getPictureSize();
+            mCameraModel.openCamera(mCurrentCameraId,
+                    new ICameraModel.OnCameraOpenedCallback() {
+
+                        @Override
+                        public void onOpen(IPreviewModel previewModel, ICameraSettingModel cameraSettingModel) {
+                            mPreviewModel = previewModel;
+                            mCameraSettingModel = cameraSettingModel;
+                            mPreviewSize = getSuitablePreviewSize(mCameraSettingModel.getSupportPreviewSizes());
+                            mPreviewModel.startPreview(surface, new IPreviewModel.OnCameraPreviewCallback() {
+
+                                @Override
+                                public void onPreview(ICaptureModel captureModel, ICameraFocus cameraFocus) {
+                                    mCaptureModel = captureModel;
+                                }
+
+                                @Override
+                                public void onPreviewError() {
+
+                                }
+                            }, mPreviewSize);
+                        }
+
+                        @Override
+                        public void onError() {
+
+                        }
+                    }, getCameraRotation(), mPictureSize);
+            if (mPictureSize == null) {
+                mPictureSize = savePictureSizes(mCurrentCameraId);
             }
-        } else {
-            if (!mCameraModel.isOpen() && !mCameraModel.isPreview()) {
-                mCurrentCameraId = mLocalStorageUtils.getCameraSaveCameraId();
-                mPictureSize = getPictureSize();
-                if (Const.CAMERA_BACK.equals(mCurrentCameraId)) {
-                    mCameraSettingModel = mCameraModel.openCamera(mCurrentCameraId,
-                            mLocalStorageUtils.getCameraBackRotation(), mPictureSize);
-                } else {
-                    mCameraSettingModel = mCameraModel.openCamera(mCurrentCameraId,
-                            mLocalStorageUtils.getCameraFrontRotation(), mPictureSize);
+        } else if (mCameraModel.isOpen() && mPreviewModel != null) {
+            YLog.i("yuyidong", "222222");
+            mPreviewSize = getSuitablePreviewSize(mCameraSettingModel.getSupportPreviewSizes());
+            mPreviewModel.startPreview(surface, new IPreviewModel.OnCameraPreviewCallback() {
+
+                @Override
+                public void onPreview(ICaptureModel captureModel, ICameraFocus cameraFocus) {
+                    mCaptureModel = captureModel;
                 }
-                if (mPictureSize == null) {
-                    mPictureSize = savePictureSizes(mCurrentCameraId);
+
+                @Override
+                public void onPreviewError() {
+
                 }
-            }
+            }, mPreviewSize);
         }
     }
 
     @Override
     public void onSurfaceDestroy() {
-        if (mCameraModel.isPreview()) {
-            mCameraModel.stopPreview();
-        }
-        if (mCameraModel.isOpen()) {
-            mCameraModel.closeCamera();
-        }
+        closeCamera();
     }
 
     @Override
     public void onDown() {
-        if (mCameraModel.isPreview()) {
+        if (mPreviewModel != null && mPreviewModel.isPreview()) {
             mHandler.sendEmptyMessage(MSG_DOWN);
         }
     }
 
     @Override
     public void onUp() {
-        if (mCameraModel.isPreview()) {
+        if (mPreviewModel != null && mPreviewModel.isPreview()) {
             mHandler.sendEmptyMessage(MSG_UP);
         }
     }
@@ -341,10 +379,35 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
             } else {
                 mCurrentCameraId = Const.CAMERA_BACK;
             }
-            Size size = getPictureSize();
-            mCameraSettingModel = mCameraModel.reopenCamera(mCurrentCameraId, getCameraRotation(), size);
-            mCameraModel.restartPreview(size);
-            if (size == null) {
+            closeCamera();
+            Size pictureSize = getPictureSize();
+            mCameraModel.openCamera(mCurrentCameraId,
+                    new ICameraModel.OnCameraOpenedCallback() {
+
+                        @Override
+                        public void onOpen(IPreviewModel previewModel, ICameraSettingModel cameraSettingModel) {
+                            mPreviewModel = previewModel;
+                            mCameraSettingModel = cameraSettingModel;
+                            mPreviewSize = getSuitablePreviewSize(mCameraSettingModel.getSupportPreviewSizes());
+                            mPreviewModel.startPreview(mPreviewSurface, new IPreviewModel.OnCameraPreviewCallback() {
+
+                                @Override
+                                public void onPreview(ICaptureModel captureModel, ICameraFocus cameraFocus) {
+                                    mCaptureModel = captureModel;
+                                }
+
+                                @Override
+                                public void onPreviewError() {
+
+                                }
+                            }, mPreviewSize);
+                        }
+
+                        @Override
+                        public void onError() {
+                        }
+                    }, getCameraRotation(), pictureSize);
+            if (pictureSize == null) {
                 savePictureSizes(mCurrentCameraId);
             }
         }
@@ -358,7 +421,7 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
                 break;
             case MSG_STILL_SIGNAL:
                 mIsWannaStillCapture = true;
-                mCameraModel.startStillCapture(this);
+                mCaptureModel.startStillCapture(this);
                 break;
             case MSG_UP:
                 if (mHandler.hasMessages(MSG_STILL_SIGNAL)) {
@@ -366,9 +429,9 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
                 }
                 if (mIsWannaStillCapture) {
                     mIsWannaStillCapture = false;
-                    mCameraModel.stopStillCapture();
+                    mCaptureModel.stopStillCapture();
                 } else {
-                    mCameraModel.capture(this);
+                    mCaptureModel.capture(this);
                 }
                 break;
         }
@@ -487,7 +550,7 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
         if (success) {
             addData2Service(data, mCurrentCameraId, time, mCategoryId, false,
                     Const.CAMERA_SANDBOX_PHOTO_RATIO_FULL, ImageFormat.JPEG);
-            mCameraModel.restartPreview(null);
+            mPreviewModel.continuePreview();
         } else {
             mICameraView.showToast(mContext.getResources().getString(R.string.toast_fail));
         }

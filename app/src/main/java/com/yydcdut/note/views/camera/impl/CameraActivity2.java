@@ -82,8 +82,8 @@ public class CameraActivity2 extends BaseActivity implements ICameraView,
     }
 
     @Override
-    public void onSurfaceAvailable(AutoFitPreviewView.PreviewSurface surface, boolean sizeChanged, int width, int height) {
-        mCameraPresenter.onSurfaceAvailable(surface, sizeChanged, width, height);
+    public void onSurfaceAvailable(AutoFitPreviewView.PreviewSurface surface, int width, int height) {
+        mCameraPresenter.onSurfaceAvailable(surface, width, height);
     }
 
     @Override
