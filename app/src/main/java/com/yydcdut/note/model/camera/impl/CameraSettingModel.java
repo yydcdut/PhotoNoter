@@ -61,28 +61,24 @@ public class CameraSettingModel implements ICameraSettingModel {
         return list;
     }
 
-    @Override
     public void setPreviewSize(int width, int height) {
         Camera.Parameters parameters = getParameters();
         parameters.setPreviewSize(width, height);
         applyParameter(parameters);
     }
 
-    @Override
     public void setPictureSize(int width, int height) {
         Camera.Parameters parameters = getParameters();
         parameters.setPictureSize(width, height);
         applyParameter(parameters);
     }
 
-    @Override
     public Size getPictureSize() {
         Camera.Parameters parameters = getParameters();
         Camera.Size size = parameters.getPictureSize();
         return new Size(size.width, size.height);
     }
 
-    @Override
     public Size getPreviewSize() {
         Camera.Parameters parameters = getParameters();
         Camera.Size size = parameters.getPreviewSize();

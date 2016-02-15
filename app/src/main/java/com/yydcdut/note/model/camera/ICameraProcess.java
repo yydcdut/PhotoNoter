@@ -1,17 +1,17 @@
 package com.yydcdut.note.model.camera;
 
+import com.yydcdut.note.camera.param.Size;
 import com.yydcdut.note.widget.camera.AutoFitPreviewView;
 
 /**
  * Created by yuyidong on 16/2/3.
  */
 public interface ICameraProcess {
-    ICameraSettingModel openCamera(String id, int orientation);
+    ICameraSettingModel openCamera(String id, int orientation, Size pictureSize);
 
-    ICameraSettingModel reopenCamera(String id, int orientation);
+    ICameraSettingModel reopenCamera(String id, int orientation, Size pictureSize);
 
-    ICameraFocus startPreview(AutoFitPreviewView.PreviewSurface previewSurface,
-                              int previewWidth, int previewHeight);
+    ICameraFocus startPreview(AutoFitPreviewView.PreviewSurface previewSurface, Size previewSize);
 
     long capture(PictureReturnCallback pictureReturnCallback);
 
@@ -19,7 +19,7 @@ public interface ICameraProcess {
 
     void stopStillCapture();
 
-    void restartPreview();
+    void restartPreview(Size previewSize);
 
     void stopPreview();
 

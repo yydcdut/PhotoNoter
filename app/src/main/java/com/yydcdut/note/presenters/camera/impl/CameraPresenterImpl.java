@@ -28,7 +28,6 @@ import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.Utils;
-import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.views.IView;
 import com.yydcdut.note.views.camera.ICameraView;
 import com.yydcdut.note.widget.camera.AutoFitPreviewView;
@@ -53,6 +52,8 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
     private boolean mIsWannaStillCapture = false;
 
     private ICameraView mICameraView;
+    private Size mPreviewSize;
+    private Size mPictureSize;
     private int mCategoryId;
 
     private ICameraModel mCameraModel;
@@ -122,21 +123,21 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
     @Override
     public void attachView(@NonNull IView iView) {
         mICameraView = (ICameraView) iView;
-
-        String cameraId = mLocalStorageUtils.getCameraSaveCameraId();
-        if (Const.CAMERA_BACK.equals(cameraId)) {
-            mCurrentCameraId = Const.CAMERA_BACK;
+        mCurrentCameraId = mLocalStorageUtils.getCameraSaveCameraId();
+        mPictureSize = getPictureSize();
+        if (Const.CAMERA_BACK.equals(mCurrentCameraId)) {
             mCameraSettingModel = mCameraModel.openCamera(mCurrentCameraId,
-                    mLocalStorageUtils.getCameraBackRotation());
+                    mLocalStorageUtils.getCameraBackRotation(), mPictureSize);
         } else {
             mCurrentCameraId = Const.CAMERA_FRONT;
-            mCameraSettingModel = mCameraModel.openCamera(cameraId,
-                    mLocalStorageUtils.getCameraFrontRotation());
+            mCameraSettingModel = mCameraModel.openCamera(mCurrentCameraId,
+                    mLocalStorageUtils.getCameraFrontRotation(), mPictureSize);
         }
-        Size previewSize = getSuitablePreviewSize(mCameraSettingModel.getSupportPreviewSizes());
-        mICameraView.setSize(previewSize.getHeight(), previewSize.getWidth());
-        mCameraSettingModel.setPreviewSize(previewSize.getWidth(), previewSize.getHeight());
-        getPictureSize();
+        if (mPictureSize == null) {
+            mPictureSize = savePictureSizes(mCurrentCameraId);
+        }
+        mPreviewSize = getSuitablePreviewSize(mCameraSettingModel.getSupportPreviewSizes());
+        mICameraView.setSize(mPreviewSize.getHeight(), mPreviewSize.getWidth());
         initLocation();
         initUIState();
         mHandler = new Handler(this);
@@ -193,13 +194,11 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
             if (Math.abs(preScale - screenScale) < 0.03) {
 //                mFullSize = preSize;
                 previewSize = preSize;
-                YLog.i("yuyidong", "full  full  full  full");
             }
             //4:3 默认进来4：3
             if (preScale < 1.36f && preScale > 1.30f) {
 //                m43Size = preSize;
                 previewSize = preSize;
-                YLog.i("yuyidong", "4:3  4:3  4:3  4:3");
             }
 //            if (mSizeState == Const.LAYOUT_PERSONAL_RATIO_1_1) {
 //                previewSize = m43Size;
@@ -231,12 +230,6 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        if (size == null) {
-            List<Size> list = mCameraSettingModel.getSupportPictureSizes();
-            Collections.sort(list, new SizeComparator());
-            size = list.get(list.size() - 1);
-            savePictureSizes(mCurrentCameraId, list);
-        }
         return size;
     }
 
@@ -244,14 +237,22 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
      * 保存照片尺寸到SharedPreference
      *
      * @param currentCameraId
-     * @param list
      */
-    private void savePictureSizes(String currentCameraId, List<Size> list) {
+    private Size savePictureSizes(String currentCameraId) {
+        Size size = null;
         try {
+            List<Size> list = mCameraSettingModel.getSupportPictureSizes();
+            Collections.sort(list, new SizeComparator());
+            size = list.get(list.size() - 1);
             mLocalStorageUtils.setPictureSizes(currentCameraId, list);
+            mLocalStorageUtils.setPictureSize(currentCameraId, size);
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (NullPointerException e) {
+            //mCameraSettingModel有可能为空
+            e.printStackTrace();
         }
+        return size;
     }
 
     @Override
@@ -263,31 +264,31 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
             mCameraModel.closeCamera();
         }
         mLocationClient.stop();
-        mCameraModel = null;
     }
 
     @Override
     public void onSurfaceAvailable(AutoFitPreviewView.PreviewSurface surface, boolean sizeChanged, int width, int height) {
         if (sizeChanged) {
             if (mCameraModel.isOpen() && !mCameraModel.isPreview()) {
-                Size previewSize = getSuitablePreviewSize(mCameraSettingModel.getSupportPreviewSizes());
-                Size pictureSize = getPictureSize();
-                mCameraSettingModel.setPreviewSize(previewSize.getWidth(), previewSize.getHeight());
-                mCameraSettingModel.setPictureSize(pictureSize.getWidth(), pictureSize.getHeight());
+                mPreviewSize = getSuitablePreviewSize(mCameraSettingModel.getSupportPreviewSizes());
+//                mCameraSettingModel.setPreviewSize(previewSize.getWidth(), previewSize.getHeight());
 //                mCameraModel.startPreview(surface,
 //                        mICameraView.getPreviewViewWidth(), mICameraView.getPreviewViewHeight());
-                mCameraModel.startPreview(surface,
-                        previewSize.getHeight(), previewSize.getWidth());
+                mCameraModel.startPreview(surface, mPreviewSize);
             }
         } else {
             if (!mCameraModel.isOpen() && !mCameraModel.isPreview()) {
-                String cameraId = mLocalStorageUtils.getCameraSaveCameraId();
-                if (Const.CAMERA_BACK.equals(cameraId)) {
-                    mCameraSettingModel = mCameraModel.openCamera(cameraId,
-                            mLocalStorageUtils.getCameraBackRotation());
+                mCurrentCameraId = mLocalStorageUtils.getCameraSaveCameraId();
+                mPictureSize = getPictureSize();
+                if (Const.CAMERA_BACK.equals(mCurrentCameraId)) {
+                    mCameraSettingModel = mCameraModel.openCamera(mCurrentCameraId,
+                            mLocalStorageUtils.getCameraBackRotation(), mPictureSize);
                 } else {
-                    mCameraSettingModel = mCameraModel.openCamera(cameraId,
-                            mLocalStorageUtils.getCameraFrontRotation());
+                    mCameraSettingModel = mCameraModel.openCamera(mCurrentCameraId,
+                            mLocalStorageUtils.getCameraFrontRotation(), mPictureSize);
+                }
+                if (mPictureSize == null) {
+                    mPictureSize = savePictureSizes(mCurrentCameraId);
                 }
             }
         }
@@ -295,7 +296,6 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
 
     @Override
     public void onSurfaceDestroy() {
-        YLog.i("yuyidong", "onSurfaceDestroy");
         if (mCameraModel.isPreview()) {
             mCameraModel.stopPreview();
         }
@@ -335,7 +335,19 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
 
     @Override
     public void onCameraIdClick() {
-
+        if (mCameraSettingModel != null && mCameraSettingModel.getNumberOfCameras() == 2) {
+            if (Const.CAMERA_BACK.equals(mCurrentCameraId)) {
+                mCurrentCameraId = Const.CAMERA_FRONT;
+            } else {
+                mCurrentCameraId = Const.CAMERA_BACK;
+            }
+            Size size = getPictureSize();
+            mCameraSettingModel = mCameraModel.reopenCamera(mCurrentCameraId, getCameraRotation(), size);
+            mCameraModel.restartPreview(size);
+            if (size == null) {
+                savePictureSizes(mCurrentCameraId);
+            }
+        }
     }
 
     @Override
@@ -441,18 +453,16 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
         int imageWidth;
         switch (imageFormat) {
             case ImageFormat.NV21:
-                Size previewSize = mCameraSettingModel.getPreviewSize();
-                imageLength = previewSize.getHeight();
-                imageWidth = previewSize.getWidth();
+                imageLength = mPreviewSize.getHeight();
+                imageWidth = mPreviewSize.getWidth();
                 if (ratio == Const.CAMERA_SANDBOX_PHOTO_RATIO_1_1) {
                     imageLength = imageWidth;
                 }
                 break;
             default:
             case ImageFormat.JPEG:
-                Size pictureSize = mCameraSettingModel.getPictureSize();
-                imageLength = pictureSize.getHeight();
-                imageWidth = pictureSize.getWidth();
+                imageLength = mPictureSize.getHeight();
+                imageWidth = mPictureSize.getWidth();
                 if (ratio == Const.CAMERA_SANDBOX_PHOTO_RATIO_1_1) {
                     imageLength = imageWidth;
                 }
@@ -477,11 +487,10 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
         if (success) {
             addData2Service(data, mCurrentCameraId, time, mCategoryId, false,
                     Const.CAMERA_SANDBOX_PHOTO_RATIO_FULL, ImageFormat.JPEG);
-            mCameraModel.restartPreview();
+            mCameraModel.restartPreview(null);
         } else {
             mICameraView.showToast(mContext.getResources().getString(R.string.toast_fail));
         }
-
     }
 
     @Override
@@ -491,6 +500,16 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
                 addData2Service(data, mCurrentCameraId, time, mCategoryId, false,
                         Const.CAMERA_SANDBOX_PHOTO_RATIO_FULL, ImageFormat.NV21);
                 break;
+        }
+    }
+
+    private int getCameraRotation() {
+        switch (mCurrentCameraId) {
+            case Const.CAMERA_BACK:
+                return mLocalStorageUtils.getCameraBackRotation();
+            case Const.CAMERA_FRONT:
+            default:
+                return mLocalStorageUtils.getCameraFrontRotation();
         }
     }
 

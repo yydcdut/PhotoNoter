@@ -3,6 +3,7 @@ package com.yydcdut.note.model.camera.impl;
 import android.graphics.ImageFormat;
 import android.hardware.Camera;
 
+import com.yydcdut.note.camera.param.Size;
 import com.yydcdut.note.model.camera.ICameraFocus;
 import com.yydcdut.note.model.camera.ICameraModel;
 import com.yydcdut.note.model.camera.ICameraSettingModel;
@@ -10,6 +11,9 @@ import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.widget.camera.AutoFitPreviewView;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -41,7 +45,7 @@ public class CameraModelImpl implements ICameraModel {
     }
 
     @Override
-    public ICameraSettingModel openCamera(String id, int orientation) {
+    public ICameraSettingModel openCamera(String id, int orientation, Size pictureSize) {
         if (mCameraState == STATE_CAMERA_CLOSE && mCamera == null) {
             int cameraId = 0;
             try {
@@ -56,15 +60,24 @@ public class CameraModelImpl implements ICameraModel {
         } else {
             printLog("openCamera");
         }
-        if (mCameraSettingModel == null) {
-            mCameraSettingModel = new CameraSettingModel(mCamera);
+        mCameraSettingModel = new CameraSettingModel(mCamera);
+        if (pictureSize == null) {
+            List<Size> list = mCameraSettingModel.getSupportPictureSizes();
+            Collections.sort(list, new Comparator<Size>() {
+                @Override
+                public int compare(Size lhs, Size rhs) {
+                    return -(rhs.getWidth() * rhs.getHeight() - lhs.getWidth() * lhs.getHeight());
+                }
+            });
+            pictureSize = list.get(list.size() - 1);
         }
+        mCameraSettingModel.setPictureSize(pictureSize.getWidth(), pictureSize.getHeight());
         return mCameraSettingModel;
     }
 
     @Override
-    public ICameraSettingModel reopenCamera(String id, int orientation) {
-        if (id.equals(mCurrentCameraId)) {
+    public ICameraSettingModel reopenCamera(String id, int orientation, Size pictureSize) {
+        if (mCurrentCameraId.equals(id)) {
             printLog("reopenCamera   id == mCurrentCameraId");
             return mCameraSettingModel;
         }
@@ -75,14 +88,14 @@ public class CameraModelImpl implements ICameraModel {
         if (isOpen()) {
             closeCamera();
         }
-        return openCamera(mCurrentCameraId, orientation);
+        return openCamera(mCurrentCameraId, orientation, pictureSize);
     }
 
     @Override
-    public ICameraFocus startPreview(AutoFitPreviewView.PreviewSurface previewSurface
-            , int previewWidth, int previewHeight) {
+    public ICameraFocus startPreview(AutoFitPreviewView.PreviewSurface previewSurface, Size previewSize) {
         if (mCameraState == STATE_CAMERA_OPEN && mCamera != null) {
             try {
+                mCameraSettingModel.setPreviewSize(previewSize.getWidth(), previewSize.getHeight());
                 if (previewSurface.getSurfaceHolder() != null) {
                     mCamera.setPreviewDisplay(previewSurface.getSurfaceHolder());
                 } else {
@@ -96,9 +109,7 @@ public class CameraModelImpl implements ICameraModel {
         } else {
             printLog("startPreview");
         }
-        if (mCameraFocusModel == null) {
-            mCameraFocusModel = new CameraFocusModel(mCamera, previewWidth, previewHeight);
-        }
+        mCameraFocusModel = new CameraFocusModel(mCamera, previewSize.getWidth(), previewSize.getHeight());
         return mCameraFocusModel;
     }
 
@@ -111,6 +122,7 @@ public class CameraModelImpl implements ICameraModel {
             try {
 //            mCamera.takePicture(sound ? new SoundCallBack() : null, null, new PictureCallBack(time, mCategoryId, ratio, isMirror));
                 mCamera.takePicture(true ? new SoundCallBack() : null, null, new PictureCallBack(time, pictureReturnCallback));
+                mCameraState = STATE_CAMERA_CAPTURE;
             } catch (Exception e) {
                 if (pictureReturnCallback != null) {
                     pictureReturnCallback.onPictureTaken(false, null, 0l);
@@ -171,7 +183,10 @@ public class CameraModelImpl implements ICameraModel {
     }
 
     @Override
-    public void restartPreview() {
+    public void restartPreview(Size previewSize) {
+        if (previewSize != null && mCameraState == STATE_CAMERA_OPEN) {
+            mCameraSettingModel.setPreviewSize(previewSize.getWidth(), previewSize.getHeight());
+        }
         mCamera.startPreview();
         mCameraState = STATE_CAMERA_PREVIEW;
     }

@@ -6,11 +6,9 @@ import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.os.Build;
-import android.view.SurfaceHolder;
 
 import com.yydcdut.note.camera.param.Size;
 import com.yydcdut.note.model.camera.ICameraSettingModel;
-import com.yydcdut.note.widget.camera.AutoFitPreviewView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,11 +20,6 @@ import java.util.List;
 public class Camera2SettingModel implements ICameraSettingModel {
     private int mCameraNumber;
     private CameraCharacteristics mCameraCharacteristics;
-
-
-    private AutoFitPreviewView.PreviewSurface mPreviewSurface;
-    private int mPreviewWidth = -1;
-    private int mPreviewHeight = -1;
 
     public Camera2SettingModel(CameraCharacteristics cameraCharacteristics, int cameraNumber) {
         mCameraCharacteristics = cameraCharacteristics;
@@ -71,49 +64,5 @@ public class Camera2SettingModel implements ICameraSettingModel {
 
         }
         return sizeList;
-    }
-
-    public void setPreviewSurface(AutoFitPreviewView.PreviewSurface previewSurface) {
-        mPreviewSurface = previewSurface;
-        if (mPreviewWidth != -1 && mPreviewHeight != -1) {
-            SurfaceTexture surfaceTexture = mPreviewSurface.getSurfaceTexture();
-            SurfaceHolder surfaceHolder = mPreviewSurface.getSurfaceHolder();
-            if (surfaceTexture != null) {
-                surfaceTexture.setDefaultBufferSize(mPreviewWidth, mPreviewHeight);
-            } else if (surfaceHolder != null) {
-                surfaceHolder.setFixedSize(mPreviewWidth, mPreviewHeight);
-            }
-        }
-    }
-
-    @Override
-    public void setPreviewSize(int width, int height) {
-        mPreviewWidth = width;
-        mPreviewHeight = height;
-        if (mPreviewSurface == null) {
-            return;
-        }
-        SurfaceTexture surfaceTexture = mPreviewSurface.getSurfaceTexture();
-        SurfaceHolder surfaceHolder = mPreviewSurface.getSurfaceHolder();
-        if (surfaceTexture == null) {
-            surfaceTexture.setDefaultBufferSize(mPreviewWidth, mPreviewHeight);
-        } else if (surfaceHolder == null) {
-            surfaceHolder.setFixedSize(mPreviewWidth, mPreviewHeight);
-        }
-    }
-
-    @Override
-    public void setPictureSize(int width, int height) {
-
-    }
-
-    @Override
-    public Size getPictureSize() {
-        return null;
-    }
-
-    @Override
-    public Size getPreviewSize() {
-        return new Size(mPreviewWidth, mPreviewHeight);
     }
 }
