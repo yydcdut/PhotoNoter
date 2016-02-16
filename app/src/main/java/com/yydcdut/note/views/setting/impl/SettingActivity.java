@@ -20,7 +20,6 @@ import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.yydcdut.note.R;
-import com.yydcdut.note.camera.controller.AdjustCamera;
 import com.yydcdut.note.camera.param.Size;
 import com.yydcdut.note.presenters.setting.IFeedbackPresenter;
 import com.yydcdut.note.presenters.setting.ISettingPresenter;
@@ -30,6 +29,7 @@ import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.views.BaseActivity;
+import com.yydcdut.note.views.camera.impl.AdjustCameraActivity;
 import com.yydcdut.note.views.home.impl.HomeActivity;
 import com.yydcdut.note.views.setting.ISettingView;
 import com.yydcdut.note.widget.ColorChooserDialog;
@@ -427,7 +427,8 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
 
     @Override
     public void jump2CameraFixActivity() {
-        startActivity(new Intent(this, AdjustCamera.class));
+//        startActivity(new Intent(this, AdjustCamera.class));
+        startActivity(new Intent(this, AdjustCameraActivity.class));
     }
 
     @Override

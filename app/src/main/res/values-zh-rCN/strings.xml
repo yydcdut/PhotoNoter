@@ -138,6 +138,7 @@
     <string name="note_style">内容样式</string>
     <string name="account_setting">账号设置</string>
     <string name="camera_setting">相机设置</string>
+    <string name="camera_switch">切换摄像头</string>
     <string name="camera_system">系统相机</string>
     <string name="camera_5_0">高级相机(Android5.0)</string>
     <string name="picture_size">照片尺寸</string>

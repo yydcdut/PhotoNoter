@@ -152,6 +152,7 @@
     <string name="camera_5_0">Advanced Camera(Android5.0)</string>
     <string name="picture_size">Picture Size</string>
     <string name="camera_save">Save Camera Settings</string>
+    <string name="camera_switch">Switch Camera</string>
     <string name="camera_mirror">Front Camera Mirror</string>
     <string name="camera_fix">Direction of Correction</string>
     <string name="camera_sound">Shutter Sound</string>

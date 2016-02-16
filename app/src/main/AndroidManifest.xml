@@ -81,6 +81,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/ThemeBlue"/>
         <activity
+            android:name=".views.camera.impl.AdjustCameraActivity"
+            android:screenOrientation="portrait"
+            android:label=" "
+            android:theme="@style/ThemeBlue"/>
+        <activity
             android:name=".camera.controller.CameraActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ThemeBlue"/>
