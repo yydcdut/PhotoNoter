@@ -141,6 +141,9 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
             public void onOpen(IPreviewModel previewModel, ICameraSettingModel cameraSettingModel) {
                 mPreviewModel = previewModel;
                 mCameraSettingModel = cameraSettingModel;
+                if (mPictureSize == null) {
+                    mPictureSize = savePictureSizes(mCurrentCameraId);
+                }
                 initUIState();
                 initLogicState();
                 mPreviewSize = getSuitablePreviewSize(mCameraSettingModel.getSupportPreviewSizes());
@@ -156,12 +159,8 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
 
             @Override
             public void onError() {
-
             }
         }, getCameraRotation(), mPictureSize);
-        if (mPictureSize == null) {
-            mPictureSize = savePictureSizes(mCurrentCameraId);
-        }
         initLocation();
         mHandler = new Handler(this);
     }
@@ -238,12 +237,9 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
             }
             if (mRatioState == Const.LAYOUT_PERSONAL_RATIO_1_1) {
                 previewSize = m43Size;
-//                mMenuLayout.setRatio11();
             } else if (mRatioState == Const.LAYOUT_PERSONAL_RATIO_FULL) {
-//                mMenuLayout.setRatio43();
                 previewSize = mFullSize;
             } else {
-//                mMenuLayout.setRatio43();
                 previewSize = m43Size;
             }
         }
@@ -321,6 +317,9 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
                         public void onOpen(IPreviewModel previewModel, ICameraSettingModel cameraSettingModel) {
                             mPreviewModel = previewModel;
                             mCameraSettingModel = cameraSettingModel;
+                            if (mPictureSize == null) {
+                                mPictureSize = savePictureSizes(mCurrentCameraId);
+                            }
                             mPreviewSize = getSuitablePreviewSize(mCameraSettingModel.getSupportPreviewSizes());
                             mPreviewModel.startPreview(surface, new IPreviewModel.OnCameraPreviewCallback() {
 
@@ -341,9 +340,7 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
 
                         }
                     }, getCameraRotation(), mPictureSize);
-            if (mPictureSize == null) {
-                mPictureSize = savePictureSizes(mCurrentCameraId);
-            }
+
         } else if (mCameraModel.isOpen() && mPreviewModel != null) {
             mPreviewSize = getSuitablePreviewSize(mCameraSettingModel.getSupportPreviewSizes());
             mPreviewModel.startPreview(surface, new IPreviewModel.OnCameraPreviewCallback() {
@@ -442,7 +439,7 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
                 mCurrentCameraId = Const.CAMERA_BACK;
             }
             closeCamera();
-            Size pictureSize = getPictureSize();
+            final Size pictureSize = getPictureSize();
             mCameraModel.openCamera(mCurrentCameraId,
                     new ICameraModel.OnCameraOpenedCallback() {
 
@@ -450,6 +447,9 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
                         public void onOpen(IPreviewModel previewModel, ICameraSettingModel cameraSettingModel) {
                             mPreviewModel = previewModel;
                             mCameraSettingModel = cameraSettingModel;
+                            if (pictureSize == null) {
+                                savePictureSizes(mCurrentCameraId);
+                            }
                             mPreviewSize = getSuitablePreviewSize(mCameraSettingModel.getSupportPreviewSizes());
                             mPreviewModel.startPreview(mPreviewSurface, new IPreviewModel.OnCameraPreviewCallback() {
 
@@ -469,9 +469,6 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
                         public void onError() {
                         }
                     }, getCameraRotation(), pictureSize);
-            if (pictureSize == null) {
-                savePictureSizes(mCurrentCameraId);
-            }
         }
     }
 
@@ -482,8 +479,12 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
                 mHandler.sendEmptyMessageDelayed(MSG_STILL_SIGNAL, TIME_LONG_CAPTURE);
                 break;
             case MSG_STILL_SIGNAL:
-                mIsWannaStillCapture = true;
-                mCaptureModel.startStillCapture(this);
+                if (AppCompat.AFTER_LOLLIPOP) {
+                    mICameraView.showToast(mContext.getResources().getString(R.string.not_support));
+                } else {
+                    mIsWannaStillCapture = true;
+                    mCaptureModel.startStillCapture(this);
+                }
                 break;
             case MSG_UP:
                 if (mHandler.hasMessages(MSG_STILL_SIGNAL)) {
@@ -524,7 +525,7 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
     }
 
     private boolean addData2Service(byte[] data, String cameraId, long time, int categoryId,
-                                    boolean isMirror, int ratio, int imageFormat) {
+                                    boolean isMirror, int ratio, int imageFormat, int width, int height) {
         boolean bool = true;
         int size = data.length;
         String fileName = time + ".data";
@@ -574,25 +575,10 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
 //                flash = 1;
 //            }
 //        }
-        int imageLength;
-        int imageWidth;
-        switch (imageFormat) {
-            case ImageFormat.NV21:
-                imageLength = mPreviewSize.getHeight();
-                imageWidth = mPreviewSize.getWidth();
-                if (ratio == Const.CAMERA_SANDBOX_PHOTO_RATIO_1_1) {
-                    imageLength = imageWidth;
-                }
-                break;
-            default:
-            case ImageFormat.JPEG:
-                imageLength = mPictureSize.getHeight();
-                imageWidth = mPictureSize.getWidth();
-                if (ratio == Const.CAMERA_SANDBOX_PHOTO_RATIO_1_1) {
-                    imageLength = imageWidth;
-                }
-                break;
-
+        int imageLength = width;
+        int imageWidth = height;
+        if (ratio == Const.CAMERA_SANDBOX_PHOTO_RATIO_1_1) {
+            imageLength = imageWidth;
         }
         String make = Build.BRAND;
         String model = Build.MODEL;
@@ -611,7 +597,8 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
     public void onPictureTaken(boolean success, byte[] data, long time) {
         if (success) {
             addData2Service(data, mCurrentCameraId, time, mCategoryId, false,
-                    CameraStateUtils.changeRatioState2SandBoxState(mRatioState), ImageFormat.JPEG);
+                    CameraStateUtils.changeRatioState2SandBoxState(mRatioState), ImageFormat.JPEG,
+                    mPictureSize.getWidth(), mPictureSize.getHeight());
             mPreviewModel.continuePreview();
         } else {
             mICameraView.showToast(mContext.getResources().getString(R.string.toast_fail));
@@ -619,13 +606,9 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
     }
 
     @Override
-    public void onStillPictureTaken(int imageFormat, byte[] data, long time) {
-        switch (imageFormat) {
-            case ImageFormat.NV21:
-                addData2Service(data, mCurrentCameraId, time, mCategoryId, false,
-                        CameraStateUtils.changeRatioState2SandBoxState(mRatioState), ImageFormat.NV21);
-                break;
-        }
+    public void onStillPictureTaken(int imageFormat, byte[] data, long time, int width, int height) {
+        addData2Service(data, mCurrentCameraId, time, mCategoryId, false,
+                CameraStateUtils.changeRatioState2SandBoxState(mRatioState), imageFormat, width, height);
     }
 
     private int getCameraRotation() {

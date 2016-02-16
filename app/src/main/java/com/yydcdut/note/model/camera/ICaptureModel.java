@@ -15,6 +15,6 @@ public interface ICaptureModel {
     }
 
     interface StillPictureReturnCallback {
-        void onStillPictureTaken(int imageFormat, byte[] data, long time);
+        void onStillPictureTaken(int imageFormat, byte[] data, long time, int width, int height);
     }
 }

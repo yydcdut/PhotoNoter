@@ -65,4 +65,18 @@ public class Camera2SettingModel implements ICameraSettingModel {
         }
         return sizeList;
     }
+
+    public List<Size> getSupportYUV420888Sizes() {
+        StreamConfigurationMap map = mCameraCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
+        if (map == null) {
+            return null;
+        }
+        android.util.Size[] supports = map.getOutputSizes(ImageFormat.YUV_420_888);
+        List<Size> sizeList = new ArrayList<>(supports.length);
+        for (android.util.Size size : supports) {
+            sizeList.add(Size.translate(size.getWidth(), size.getHeight()));
+
+        }
+        return sizeList;
+    }
 }

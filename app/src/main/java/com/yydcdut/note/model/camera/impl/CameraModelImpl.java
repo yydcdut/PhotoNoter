@@ -198,8 +198,8 @@ public class CameraModelImpl implements ICameraModel {
         @Override
         public void onPreviewFrame(byte[] data, Camera camera) {
             if (stillPictureReturnCallback != null) {
-                long time = System.currentTimeMillis();
-                stillPictureReturnCallback.onStillPictureTaken(ImageFormat.NV21, data, time);
+                stillPictureReturnCallback.onStillPictureTaken(ImageFormat.NV21, data, System.currentTimeMillis(),
+                        mCameraSettingModel.getPreviewSize().getWidth(), mCameraSettingModel.getPreviewSize().getHeight());
             }
         }
     }
