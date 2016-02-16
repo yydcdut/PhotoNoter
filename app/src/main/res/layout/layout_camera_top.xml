@@ -38,6 +38,22 @@
     </com.yydcdut.note.widget.camera.AnimationTopLayout>
 
     <com.yydcdut.note.widget.camera.AnimationTopLayout
+        android:id="@+id/layout_ratio"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dimen_48dip"
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/btn_ratio"
+            android:layout_width="@dimen/dimen_48dip"
+            android:layout_height="@dimen/dimen_48dip"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_circle_48"
+            android:padding="12dp"
+            android:src="@drawable/ic_ratio_full_white_24dp"/>
+    </com.yydcdut.note.widget.camera.AnimationTopLayout>
+
+    <com.yydcdut.note.widget.camera.AnimationTopLayout
         android:id="@+id/layout_timer"
         android:layout_width="0dp"
         android:layout_height="@dimen/dimen_48dip"

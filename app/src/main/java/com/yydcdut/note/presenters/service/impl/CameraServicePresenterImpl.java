@@ -69,9 +69,9 @@ public class CameraServicePresenterImpl implements ICameraServicePresenter {
     @Override
     public void add2DB(String fileName, int size, String cameraId, long time, int categoryId,
                        boolean isMirror, int ratio, int orientation,
-                       String latitude, String lontitude, int whiteBalance, int flash,
+                       String latitude, String longitude, int whiteBalance, int flash,
                        int imageLength, int imageWidth, String make, String model, int imageFormat) {
-        SandExif sandExif = new SandExif(orientation, latitude, lontitude, whiteBalance, flash, imageLength, imageWidth, make, model);
+        SandExif sandExif = new SandExif(orientation, latitude, longitude, whiteBalance, flash, imageLength, imageWidth, make, model);
         SandPhoto sandPhoto = new SandPhoto(SandPhoto.ID_NULL, time, cameraId, categoryId, isMirror,
                 ratio, fileName, size, imageFormat, sandExif);
         mRxSandBox.saveOne(sandPhoto)
@@ -220,7 +220,7 @@ public class CameraServicePresenterImpl implements ICameraServicePresenter {
             }
         }
         exif.setAttribute(ExifInterface.TAG_GPS_LATITUDE, sandExif.getLatitude());
-        exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE, sandExif.getLontitude());
+        exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE, sandExif.getLongitude());
         exif.setAttribute(ExifInterface.TAG_WHITE_BALANCE, String.valueOf(sandExif.getWhiteBalance()));
         exif.setAttribute(ExifInterface.TAG_FLASH, String.valueOf(sandExif.getFlash()));
         exif.setAttribute(ExifInterface.TAG_IMAGE_LENGTH, String.valueOf(sandExif.getImageLength()));

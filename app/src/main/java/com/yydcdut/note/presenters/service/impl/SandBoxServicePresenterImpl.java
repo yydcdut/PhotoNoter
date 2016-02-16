@@ -151,7 +151,7 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter {
             exif.setAttribute(ExifInterface.TAG_ORIENTATION, String.valueOf(ExifInterface.ORIENTATION_ROTATE_270));
         }
         exif.setAttribute(ExifInterface.TAG_GPS_LATITUDE, sandExif.getLatitude());
-        exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE, sandExif.getLontitude());
+        exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE, sandExif.getLongitude());
         exif.setAttribute(ExifInterface.TAG_WHITE_BALANCE, String.valueOf(sandExif.getWhiteBalance()));
         exif.setAttribute(ExifInterface.TAG_FLASH, String.valueOf(sandExif.getFlash()));
         exif.setAttribute(ExifInterface.TAG_IMAGE_LENGTH, String.valueOf(sandExif.getImageLength()));

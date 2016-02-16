@@ -24,8 +24,15 @@ public interface ICameraView extends IView {
     void showToast(String toast);
 
     void initState(int currentFlash, int[] flashDrawableRes,
+                   int currentRatio,
                    int currentTimer,
                    int currentGrid,
                    int currentCameraId, int[] cameraIdDrawableRes);
+
+    void do43RatioAnimation();
+
+    void do11RatioAnimation();
+
+    void doFullRatioAnimation();
 
 }

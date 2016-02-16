@@ -10,6 +10,7 @@ import android.os.RemoteException;
 import android.support.design.widget.FloatingActionButton;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.yydcdut.note.ICameraData;
@@ -50,6 +51,9 @@ public class CameraActivity2 extends BaseActivity implements ICameraView,
     @Bind(R.id.view_top)
     CameraTopView mCameraTopView;
 
+    @Bind(R.id.view_ratio_cover)
+    View mRatioCoverView;
+
     @Override
     public boolean setStatusBar() {
         return false;
@@ -73,6 +77,10 @@ public class CameraActivity2 extends BaseActivity implements ICameraView,
     public void initUiAndListener() {
         if (AppCompat.AFTER_LOLLIPOP) {
             mCameraTopView.setItemsMarginTop(getStatusBarSize());
+        }
+        if (AppCompat.hasNavigationBar(this)) {
+            RelativeLayout.LayoutParams l = (RelativeLayout.LayoutParams) mCaptureBtn.getLayoutParams();
+            l.bottomMargin = (int) (AppCompat.getNavigationBarHeight(this) + getResources().getDimension(R.dimen.dimen_12dip));
         }
         Bundle bundle = getIntent().getExtras();
         mCameraPresenter.bindData(bundle.getInt(Const.CATEGORY_ID_4_PHOTNOTES));
@@ -98,23 +106,23 @@ public class CameraActivity2 extends BaseActivity implements ICameraView,
 
     @Override
     public void add2Service(String fileName, int size, String cameraId, long time, int categoryId,
-                            boolean isMirror, int ratio, int orientation, String latitude, String lontitude,
+                            boolean isMirror, int ratio, int orientation, String latitude, String longitude,
                             int whiteBalance, int flash, int imageLength, int imageWidth,
                             String make, String model, int imageFormat) throws RemoteException {
         if (mCameraService != null) {
             mCameraService.add(fileName, size, cameraId, time, categoryId, isMirror, ratio, orientation,
-                    latitude, lontitude, whiteBalance, flash, imageLength, imageWidth, make, model, imageFormat);
+                    latitude, longitude, whiteBalance, flash, imageLength, imageWidth, make, model, imageFormat);
         }
     }
 
     @Override
     public int getPreviewViewWidth() {
-        return mAutoFitPreviewView.getWidth();
+        return mAutoFitPreviewView.getAspectWidth();
     }
 
     @Override
     public int getPreviewViewHeight() {
-        return mAutoFitPreviewView.getHeight();
+        return mAutoFitPreviewView.getAspectHeight();
     }
 
     @Override
@@ -124,14 +132,62 @@ public class CameraActivity2 extends BaseActivity implements ICameraView,
 
     @Override
     public void initState(int currentFlash, int[] flashDrawableRes,
+                          int currentRatio,
                           int currentTimer,
                           int currentGrid,
                           int currentCameraId, int[] cameraIdDrawableRes) {
         mCameraTopView.initItemState(
                 currentFlash, flashDrawableRes,
+                currentRatio,
                 currentTimer,
                 currentGrid,
                 currentCameraId, cameraIdDrawableRes);
+    }
+
+    @Override
+    public void do43RatioAnimation() {
+        if (mRatioCoverView.getVisibility() == View.VISIBLE) {
+            mRatioCoverView.setVisibility(View.GONE);
+        }
+        int top = mCameraTopView.getMeasuredHeight();
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mAutoFitPreviewView.getLayoutParams();
+        layoutParams.setMargins(0, top, 0, 0);
+        mAutoFitPreviewView.setLayoutParams(layoutParams);
+    }
+
+    @Override
+    public void do11RatioAnimation() {
+        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mRatioCoverView.getLayoutParams();
+        if (lp.height == 0) {
+            int topMargin = mCameraTopView.getMeasuredHeight();
+            int width = mAutoFitPreviewView.getAspectWidth();
+            int height = mAutoFitPreviewView.getAspectHeight();
+            topMargin += height;
+            int delta = height - width;
+            if (delta > 0) {
+                topMargin -= delta;
+                lp.height = delta;
+            }
+            mRatioCoverView.setVisibility(View.VISIBLE);
+            lp.setMargins(0, topMargin, 0, 0);
+            mRatioCoverView.setLayoutParams(lp);
+            mRatioCoverView.requestLayout();
+        } else {
+            mRatioCoverView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void doFullRatioAnimation() {
+        if (mRatioCoverView.getVisibility() == View.VISIBLE) {
+            mRatioCoverView.setVisibility(View.GONE);
+        }
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mAutoFitPreviewView.getLayoutParams();
+        if (layoutParams.topMargin == 0) {
+            return;
+        }
+        layoutParams.setMargins(0, 0, 0, 0);
+        mAutoFitPreviewView.setLayoutParams(layoutParams);
     }
 
     @Override
@@ -186,22 +242,27 @@ public class CameraActivity2 extends BaseActivity implements ICameraView,
     }
 
     @Override
-    public void onFlashClick(View view) {
-        mCameraPresenter.onFlashClick();
+    public void onFlashClick(View view, int state) {
+        mCameraPresenter.onFlashClick(state);
     }
 
     @Override
-    public void onTimerClick(View view) {
-        mCameraPresenter.onTimerClick();
+    public void onRatioClick(View view, int state) {
+        mCameraPresenter.onRatioClick(state);
     }
 
     @Override
-    public void onGridClick(View view) {
-        mCameraPresenter.onGridClick();
+    public void onTimerClick(View view, int state) {
+        mCameraPresenter.onTimerClick(state);
     }
 
     @Override
-    public void onCameraIdClick(View view) {
-        mCameraPresenter.onCameraIdClick();
+    public void onGridClick(View view, int state) {
+        mCameraPresenter.onGridClick(state);
+    }
+
+    @Override
+    public void onCameraIdClick(View view, int state) {
+        mCameraPresenter.onCameraIdClick(state);
     }
 }

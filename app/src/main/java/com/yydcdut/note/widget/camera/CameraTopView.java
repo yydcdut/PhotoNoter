@@ -20,6 +20,9 @@ public class CameraTopView extends LinearLayout implements View.OnClickListener,
     private int[] mFlashDrawableRes;
     private int mFlashState;
 
+    private int[] mRatioDrawableRes;
+    private int mRatioState;
+
     private int[] mTimerDrawableRes;
     private int mTimerState;
 
@@ -32,14 +35,18 @@ public class CameraTopView extends LinearLayout implements View.OnClickListener,
     public CameraTopView(Context context, AttributeSet attrs) {
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.layout_camera_top, this, true);
-        mItemLayoutView = new AnimationTopLayout[5];
-        mItemImageView = new ImageView[5];
+        mItemLayoutView = new AnimationTopLayout[6];
+        mItemImageView = new ImageView[6];
     }
 
     /**
      * 初始化Timer，grid的Drawable
      */
     private void initSomeState() {
+        mRatioDrawableRes = new int[]{
+                R.drawable.ic_ratio_full_white_24dp,
+                R.drawable.ic_ratio_4_3_white_24dp,
+                R.drawable.ic_ratio_1_1_white_24dp};
         mTimerDrawableRes = new int[]{
                 R.drawable.ic_timer_off_white_24dp,
                 R.drawable.ic_timer_3_white_24dp,
@@ -49,6 +56,7 @@ public class CameraTopView extends LinearLayout implements View.OnClickListener,
                 R.drawable.ic_grid_on_white_24dp};
         mItemLayoutView[2].setOnAnimationHalfFinishListener(this);
         mItemLayoutView[3].setOnAnimationHalfFinishListener(this);
+        mItemLayoutView[4].setOnAnimationHalfFinishListener(this);
     }
 
     @Override
@@ -56,14 +64,16 @@ public class CameraTopView extends LinearLayout implements View.OnClickListener,
         super.onFinishInflate();
         mItemLayoutView[0] = (AnimationTopLayout) findViewById(R.id.layout_back);
         mItemLayoutView[1] = (AnimationTopLayout) findViewById(R.id.layout_flash);
-        mItemLayoutView[2] = (AnimationTopLayout) findViewById(R.id.layout_timer);
-        mItemLayoutView[3] = (AnimationTopLayout) findViewById(R.id.layout_grid);
-        mItemLayoutView[4] = (AnimationTopLayout) findViewById(R.id.layout_camera_id);
+        mItemLayoutView[2] = (AnimationTopLayout) findViewById(R.id.layout_ratio);
+        mItemLayoutView[3] = (AnimationTopLayout) findViewById(R.id.layout_timer);
+        mItemLayoutView[4] = (AnimationTopLayout) findViewById(R.id.layout_grid);
+        mItemLayoutView[5] = (AnimationTopLayout) findViewById(R.id.layout_camera_id);
         mItemImageView[0] = (ImageView) findViewById(R.id.btn_back);
         mItemImageView[1] = (ImageView) findViewById(R.id.btn_flash);
-        mItemImageView[2] = (ImageView) findViewById(R.id.btn_timer);
-        mItemImageView[3] = (ImageView) findViewById(R.id.btn_grid);
-        mItemImageView[4] = (ImageView) findViewById(R.id.btn_camera_id);
+        mItemImageView[2] = (ImageView) findViewById(R.id.btn_ratio);
+        mItemImageView[3] = (ImageView) findViewById(R.id.btn_timer);
+        mItemImageView[4] = (ImageView) findViewById(R.id.btn_grid);
+        mItemImageView[5] = (ImageView) findViewById(R.id.btn_camera_id);
         for (View view : mItemImageView) {
             view.setOnClickListener(this);
         }
@@ -83,11 +93,13 @@ public class CameraTopView extends LinearLayout implements View.OnClickListener,
     }
 
     public void initItemState(int currentFlash, int[] flashDrawableRes,
+                              int currentRatio,
                               int currentTimer,
                               int currentGrid,
                               int currentCameraId, int[] cameraIdDrawableRes) {
         mFlashState = currentFlash;
         mFlashDrawableRes = flashDrawableRes;
+        mRatioState = currentRatio;
         mTimerState = currentTimer;
         mGridState = currentGrid;
         mCameraIdDrawableRes = cameraIdDrawableRes;
@@ -96,12 +108,13 @@ public class CameraTopView extends LinearLayout implements View.OnClickListener,
             mItemLayoutView[1].setOnAnimationHalfFinishListener(this);
         }
         if (mCameraIdDrawableRes.length > 1) {
-            mItemLayoutView[4].setOnAnimationHalfFinishListener(this);
+            mItemLayoutView[5].setOnAnimationHalfFinishListener(this);
         }
         mItemImageView[1].setImageResource(mFlashDrawableRes[mFlashState % mFlashDrawableRes.length]);
-        mItemImageView[2].setImageResource(mTimerDrawableRes[mTimerState % mTimerDrawableRes.length]);
-        mItemImageView[3].setImageResource(mGridDrawableRes[mGridState % mGridDrawableRes.length]);
-        mItemImageView[4].setImageResource(mCameraIdDrawableRes[mCameraIdState % mCameraIdDrawableRes.length]);
+        mItemImageView[2].setImageResource(mRatioDrawableRes[mRatioState % mRatioDrawableRes.length]);
+        mItemImageView[3].setImageResource(mTimerDrawableRes[mTimerState % mTimerDrawableRes.length]);
+        mItemImageView[4].setImageResource(mGridDrawableRes[mGridState % mGridDrawableRes.length]);
+        mItemImageView[5].setImageResource(mCameraIdDrawableRes[mCameraIdState % mCameraIdDrawableRes.length]);
     }
 
 
@@ -118,15 +131,18 @@ public class CameraTopView extends LinearLayout implements View.OnClickListener,
                     mItemLayoutView[1].doAnimation();
                 }
                 break;
-            case R.id.btn_timer:
+            case R.id.btn_ratio:
                 mItemLayoutView[2].doAnimation();
                 break;
-            case R.id.btn_grid:
+            case R.id.btn_timer:
                 mItemLayoutView[3].doAnimation();
+                break;
+            case R.id.btn_grid:
+                mItemLayoutView[4].doAnimation();
                 break;
             case R.id.btn_camera_id:
                 if (mCameraIdDrawableRes.length > 1) {
-                    mItemLayoutView[4].doAnimation();
+                    mItemLayoutView[5].doAnimation();
                 }
                 break;
         }
@@ -137,30 +153,42 @@ public class CameraTopView extends LinearLayout implements View.OnClickListener,
         switch (v.getId()) {
             case R.id.btn_flash:
                 mFlashState++;
-                mItemImageView[1].setImageResource(mFlashDrawableRes[mFlashState % mFlashDrawableRes.length]);
+                int currentFlashState = mFlashState % mFlashDrawableRes.length;
+                mItemImageView[1].setImageResource(mFlashDrawableRes[currentFlashState]);
                 if (mOnItemClickListener != null) {
-                    mOnItemClickListener.onFlashClick(v);
+                    mOnItemClickListener.onFlashClick(v, currentFlashState);
+                }
+                break;
+            case R.id.btn_ratio:
+                mRatioState++;
+                int currentRatioState = mRatioState % mRatioDrawableRes.length;
+                mItemImageView[2].setImageResource(mRatioDrawableRes[currentRatioState]);
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.onRatioClick(v, currentRatioState);
                 }
                 break;
             case R.id.btn_timer:
                 mTimerState++;
-                mItemImageView[2].setImageResource(mTimerDrawableRes[mTimerState % mTimerDrawableRes.length]);
+                int currentTimerState = mTimerState % mTimerDrawableRes.length;
+                mItemImageView[3].setImageResource(mTimerDrawableRes[currentTimerState]);
                 if (mOnItemClickListener != null) {
-                    mOnItemClickListener.onTimerClick(v);
+                    mOnItemClickListener.onTimerClick(v, currentTimerState);
                 }
                 break;
             case R.id.btn_grid:
                 mGridState++;
-                mItemImageView[3].setImageResource(mGridDrawableRes[mGridState % mGridDrawableRes.length]);
+                int currentGridState = mGridState % mGridDrawableRes.length;
+                mItemImageView[4].setImageResource(mGridDrawableRes[currentGridState]);
                 if (mOnItemClickListener != null) {
-                    mOnItemClickListener.onGridClick(v);
+                    mOnItemClickListener.onGridClick(v, currentGridState);
                 }
                 break;
             case R.id.btn_camera_id:
                 mCameraIdState++;
-                mItemImageView[4].setImageResource(mCameraIdDrawableRes[mCameraIdState % mCameraIdDrawableRes.length]);
+                int currentCameraIdState = mCameraIdState % mCameraIdDrawableRes.length;
+                mItemImageView[5].setImageResource(mCameraIdDrawableRes[currentCameraIdState]);
                 if (mOnItemClickListener != null) {
-                    mOnItemClickListener.onCameraIdClick(v);
+                    mOnItemClickListener.onCameraIdClick(v, currentCameraIdState);
                 }
                 break;
         }
@@ -175,12 +203,14 @@ public class CameraTopView extends LinearLayout implements View.OnClickListener,
     public interface OnItemClickListener {
         void onBackClick(View view);
 
-        void onFlashClick(View view);
+        void onFlashClick(View view, int state);
 
-        void onTimerClick(View view);
+        void onRatioClick(View view, int state);
 
-        void onGridClick(View view);
+        void onTimerClick(View view, int state);
 
-        void onCameraIdClick(View view);
+        void onGridClick(View view, int state);
+
+        void onCameraIdClick(View view, int state);
     }
 }

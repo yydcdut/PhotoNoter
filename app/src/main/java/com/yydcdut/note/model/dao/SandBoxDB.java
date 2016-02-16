@@ -174,7 +174,7 @@ public class SandBoxDB {
         SandExif sandExif = sandPhoto.getSandExif();
         contentValues.put("orientation_", sandExif.getOrientation());
         contentValues.put("latitude_", sandExif.getLatitude());
-        contentValues.put("lontitude_", sandExif.getLontitude());
+        contentValues.put("lontitude_", sandExif.getLongitude());
         contentValues.put("whiteBalance_", sandExif.getWhiteBalance());
         contentValues.put("flash_", sandExif.getFlash());
         contentValues.put("imageLength_", sandExif.getImageLength());

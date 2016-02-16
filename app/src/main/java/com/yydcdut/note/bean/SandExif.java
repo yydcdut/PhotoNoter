@@ -6,7 +6,7 @@ package com.yydcdut.note.bean;
 public class SandExif {
     private final int orientation;
     private final String latitude;
-    private final String lontitude;
+    private final String longitude;
     private final int whiteBalance;
     private final int flash;
     private final int imageLength;
@@ -14,11 +14,11 @@ public class SandExif {
     private final String make;
     private final String model;
 
-    public SandExif(int orientation, String latitude, String lontitude, int whiteBalance, int flash,
+    public SandExif(int orientation, String latitude, String longitude, int whiteBalance, int flash,
                     int imageLength, int imageWidth, String make, String model) {
         this.orientation = orientation;
         this.latitude = latitude;
-        this.lontitude = lontitude;
+        this.longitude = longitude;
         this.whiteBalance = whiteBalance;
         this.flash = flash;
         this.imageLength = imageLength;
@@ -35,8 +35,8 @@ public class SandExif {
         return latitude;
     }
 
-    public String getLontitude() {
-        return lontitude;
+    public String getLongitude() {
+        return longitude;
     }
 
     public int getWhiteBalance() {
@@ -68,7 +68,7 @@ public class SandExif {
         return "SandExif{" +
                 "orientation=" + orientation +
                 ", latitude='" + latitude + '\'' +
-                ", lontitude='" + lontitude + '\'' +
+                ", longitude='" + longitude + '\'' +
                 ", whiteBalance=" + whiteBalance +
                 ", flash=" + flash +
                 ", imageLength=" + imageLength +

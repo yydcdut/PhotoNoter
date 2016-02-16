@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -17,6 +18,7 @@ import com.yydcdut.note.camera.param.Size;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.camera.ICameraFocus;
 import com.yydcdut.note.model.camera.ICameraModel;
+import com.yydcdut.note.model.camera.ICameraParams;
 import com.yydcdut.note.model.camera.ICameraSettingModel;
 import com.yydcdut.note.model.camera.ICaptureModel;
 import com.yydcdut.note.model.camera.IPreviewModel;
@@ -52,40 +54,41 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
         ICaptureModel.PictureReturnCallback, ICaptureModel.StillPictureReturnCallback {
     private static final int TIME_LONG_CAPTURE = 1000;//1s内没有抬起，那么算作长拍摄
     private boolean mIsWannaStillCapture = false;
-
-    private ICameraView mICameraView;
-    private Size mPreviewSize;
+    /* Size */
+    private Size mFullSize;
+    private Size m43Size;
     private Size mPictureSize;
+    private Size mPreviewSize;
+    /* 业务逻辑 */
     private int mCategoryId;
+    /* UI */
+    private ICameraView mICameraView;
     private AutoFitPreviewView.PreviewSurface mPreviewSurface;
-
+    /* Model */
     private ICameraModel mCameraModel;
-
     private ICameraSettingModel mCameraSettingModel;
-
+    private IPreviewModel mPreviewModel;
+    private ICaptureModel mCaptureModel;
+    /* 参数 */
     private Context mContext;
     private LocalStorageUtils mLocalStorageUtils;
 
-//    private int mFlashState = 0;
-//    private int mTimerState = 0;
-//    private int mGridState =0;
-//    private int mCameraId;
-
+    private int mFlashState = 0;
+    private int mRatioState = 0;
+    private int mTimerState = 0;
+    private boolean mGridState = false;
 
     /* 坐标 */
     private LocationClient mLocationClient;
     private double mLatitude;
-    private double mLontitude;
+    private double mLongitude;
 
     private String mCurrentCameraId;
-
+    /* Message */
     private static final int MSG_DOWN = 1;
     private static final int MSG_UP = 2;
     private static final int MSG_STILL_SIGNAL = 3;
     private Handler mHandler;
-
-    private IPreviewModel mPreviewModel;
-    private ICaptureModel mCaptureModel;
 
     @Inject
     public CameraPresenterImpl(@ContextLife("Activity") Context context, LocalStorageUtils localStorageUtils,
@@ -121,6 +124,7 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
                                                                     at dalvik.system.NativeStart.main(Native Method)
             */
             mCameraModel = new Camera2ModelImpl(context);
+//            mCameraModel = cameraModelImpl;
         } else {
             mCameraModel = cameraModelImpl;
         }
@@ -138,7 +142,15 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
                 mPreviewModel = previewModel;
                 mCameraSettingModel = cameraSettingModel;
                 initUIState();
+                initLogicState();
                 mPreviewSize = getSuitablePreviewSize(mCameraSettingModel.getSupportPreviewSizes());
+                if (mPreviewSize.equals(mFullSize)) {
+                    mICameraView.doFullRatioAnimation();
+                } else if (mPreviewSize.equals(m43Size)) {
+                    mICameraView.do43RatioAnimation();
+                } else {
+                    mICameraView.do11RatioAnimation();
+                }
                 mICameraView.setSize(mPreviewSize.getHeight(), mPreviewSize.getWidth());
             }
 
@@ -171,13 +183,28 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
                             R.drawable.ic_camera_front_white_24dp};
             if (mLocalStorageUtils.getCameraSaveSetting()) {
                 mICameraView.initState(
-                        CameraStateUtils.changeFlahsSaveState2UIState(mLocalStorageUtils.getCameraSaveFlash()), flashRes,
-                        CameraStateUtils.changeTimerSaveState2UIState(mLocalStorageUtils.getCameraSaveTimer()),
-                        CameraStateUtils.changeGridSaveState2UIState(mLocalStorageUtils.getCameraGridOpen()),
-                        CameraStateUtils.changeCameraIdSaveState2UIState(mLocalStorageUtils.getCameraSaveCameraId()), cameraIdRes);
+                        CameraStateUtils.changeFlashLogicState2UIState(mLocalStorageUtils.getCameraSaveFlash()), flashRes,
+                        CameraStateUtils.changeRatioLogicState2UIState(mLocalStorageUtils.getCameraPreviewRatioDefault()),
+                        CameraStateUtils.changeTimerLogicState2UIState(mLocalStorageUtils.getCameraSaveTimer()),
+                        CameraStateUtils.changeGridLogicState2UIState(mLocalStorageUtils.getCameraGridOpen()),
+                        CameraStateUtils.changeCameraIdLogicState2UIState(mLocalStorageUtils.getCameraSaveCameraId()), cameraIdRes);
             } else {
-                mICameraView.initState(0, flashRes, 0, 0, 0, cameraIdRes);
+                mICameraView.initState(0, flashRes, 0, 0, 0, 0, cameraIdRes);
             }
+        }
+    }
+
+    private void initLogicState() {
+        if (mLocalStorageUtils.getCameraSaveSetting()) {
+            mFlashState = mLocalStorageUtils.getCameraSaveFlash();
+            mRatioState = mLocalStorageUtils.getCameraPreviewRatioDefault();
+            mTimerState = mLocalStorageUtils.getCameraSaveTimer();
+            mGridState = mLocalStorageUtils.getCameraGridOpen();
+        } else {
+            mFlashState = ICameraParams.FLASH_OFF;
+            mRatioState = Const.LAYOUT_PERSONAL_RATIO_FULL;
+            mTimerState = Const.LAYOUT_PERSONAL_TIMER_0;
+            mGridState = false;
         }
     }
 
@@ -203,31 +230,29 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
             float preScale = preSize.getWidth() / (float) preSize.getHeight();
             //full ratio 如果全屏也是4：3的话，就先这样吧
             if (Math.abs(preScale - screenScale) < 0.03) {
-//                mFullSize = preSize;
-                previewSize = preSize;
+                mFullSize = preSize;
             }
             //4:3 默认进来4：3
             if (preScale < 1.36f && preScale > 1.30f) {
-//                m43Size = preSize;
-                previewSize = preSize;
+                m43Size = preSize;
             }
-//            if (mSizeState == Const.LAYOUT_PERSONAL_RATIO_1_1) {
-//                previewSize = m43Size;
+            if (mRatioState == Const.LAYOUT_PERSONAL_RATIO_1_1) {
+                previewSize = m43Size;
 //                mMenuLayout.setRatio11();
-//            } else if (mSizeState == Const.LAYOUT_PERSONAL_RATIO_FULL) {
+            } else if (mRatioState == Const.LAYOUT_PERSONAL_RATIO_FULL) {
 //                mMenuLayout.setRatio43();
-//                previewSize = mFullSize;
-//            } else {
+                previewSize = mFullSize;
+            } else {
 //                mMenuLayout.setRatio43();
-//                previewSize = m43Size;
-//            }
+                previewSize = m43Size;
+            }
         }
-//        if (mFullSize == null) {
-//            mFullSize = previewList.get(previewList.size() / 2);
-//        }
-//        if (m43Size == null) {
-//            m43Size = previewList.get(previewList.size() / 2);
-//        }
+        if (mFullSize == null) {
+            mFullSize = previewList.get(previewList.size() / 2);
+        }
+        if (m43Size == null) {
+            m43Size = previewList.get(previewList.size() / 2);
+        }
         if (previewSize == null) {
             previewSize = previewList.get(0);
         }
@@ -285,7 +310,9 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
     public void onSurfaceAvailable(AutoFitPreviewView.PreviewSurface surface, int width, int height) {
         mPreviewSurface = surface;
         if (!mCameraModel.isOpen()) {
-            mCurrentCameraId = mLocalStorageUtils.getCameraSaveCameraId();
+            if (TextUtils.isEmpty(mCurrentCameraId)) {
+                mCurrentCameraId = mLocalStorageUtils.getCameraSaveCameraId();
+            }
             mPictureSize = getPictureSize();
             mCameraModel.openCamera(mCurrentCameraId,
                     new ICameraModel.OnCameraOpenedCallback() {
@@ -354,22 +381,60 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
     }
 
     @Override
-    public void onFlashClick() {
-
+    public void onFlashClick(int state) {
+        mFlashState = CameraStateUtils.changeFlashUIState2LogicState(state);
     }
 
     @Override
-    public void onTimerClick() {
+    public void onRatioClick(int state) {
+        mRatioState = CameraStateUtils.changeRatioUIState2LogicState(state);
+        if (mRatioState == Const.LAYOUT_PERSONAL_RATIO_4_3 || mRatioState == Const.LAYOUT_PERSONAL_RATIO_FULL) {
+            switch (mRatioState) {
+                case Const.LAYOUT_PERSONAL_RATIO_FULL:
+                    mPreviewSize = mFullSize;
+                    mICameraView.doFullRatioAnimation();
+                    break;
+                case Const.LAYOUT_PERSONAL_RATIO_4_3:
+                default:
+                    mPreviewSize = m43Size;
+                    mICameraView.do43RatioAnimation();
+                    break;
+            }
+            mPreviewModel.stopPreview();
+            mICameraView.setSize(mPreviewSize.getHeight(), mPreviewSize.getWidth());
+            mPreviewModel.startPreview(mPreviewSurface, new IPreviewModel.OnCameraPreviewCallback() {
+                @Override
+                public void onPreview(ICaptureModel captureModel, ICameraFocus cameraFocus) {
+                    mCaptureModel = captureModel;
+                }
 
+                @Override
+                public void onPreviewError() {
+
+                }
+            }, mPreviewSize);
+        } else {
+            if (!mPreviewSize.equals(m43Size)) {
+                mPreviewSize = m43Size;
+                mPreviewModel.stopPreview();
+                mICameraView.setSize(mPreviewSize.getHeight(), mPreviewSize.getWidth());
+            }
+            mICameraView.do11RatioAnimation();
+        }
     }
 
     @Override
-    public void onGridClick() {
-
+    public void onTimerClick(int state) {
+        mTimerState = CameraStateUtils.changeTimerUIState2LogicState(state);
     }
 
     @Override
-    public void onCameraIdClick() {
+    public void onGridClick(int state) {
+        mGridState = CameraStateUtils.changeGridUIState2LogicState(state);
+    }
+
+    @Override
+    public void onCameraIdClick(int state) {
         if (mCameraSettingModel != null && mCameraSettingModel.getNumberOfCameras() == 2) {
             if (Const.CAMERA_BACK.equals(mCurrentCameraId)) {
                 mCurrentCameraId = Const.CAMERA_FRONT;
@@ -441,7 +506,7 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
             @Override
             public void onReceiveLocation(BDLocation bdLocation) {
                 mLatitude = bdLocation.getLatitude();
-                mLontitude = bdLocation.getLongitude();
+                mLongitude = bdLocation.getLongitude();
             }
         });
         LocationClientOption option = new LocationClientOption();
@@ -492,10 +557,10 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
         String latitude1 = String.valueOf((int) ((mLatitude - (int) mLatitude) * 60) + "/1,");
         String latitude2 = String.valueOf((int) ((((mLatitude - (int) mLatitude) * 60) - ((int) ((mLatitude - (int) mLatitude) * 60))) * 60 * 10000)) + "/10000";
         String latitude = new StringBuilder(latitude0).append(latitude1).append(latitude2).toString();
-        String lontitude0 = String.valueOf((int) mLontitude) + "/1,";
-        String lontitude1 = String.valueOf((int) ((mLontitude - (int) mLontitude) * 60) + "/1,");
-        String lontitude2 = String.valueOf((int) ((((mLontitude - (int) mLontitude) * 60) - ((int) ((mLontitude - (int) mLontitude) * 60))) * 60 * 10000)) + "/10000";
-        String lontitude = new StringBuilder(lontitude0).append(lontitude1).append(lontitude2).toString();
+        String longitude0 = String.valueOf((int) mLongitude) + "/1,";
+        String longitude1 = String.valueOf((int) ((mLongitude - (int) mLongitude) * 60) + "/1,");
+        String longitude2 = String.valueOf((int) ((((mLongitude - (int) mLongitude) * 60) - ((int) ((mLongitude - (int) mLongitude) * 60))) * 60 * 10000)) + "/10000";
+        String longitude = new StringBuilder(longitude0).append(longitude1).append(longitude2).toString();
         int whiteBalance = 0;
 //        if (getSettingModel().getSupportedWhiteBalance().size() > 0) {
 //            if (getSettingModel().getWhiteBalance() != ICameraParams.WHITE_BALANCE_AUTO) {
@@ -533,7 +598,7 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
         String model = Build.MODEL;
         try {
             mICameraView.add2Service(fileName, size, cameraId, time, categoryId, isMirror, ratio,
-                    orientation, latitude, lontitude, whiteBalance, flash, imageLength, imageWidth,
+                    orientation, latitude, longitude, whiteBalance, flash, imageLength, imageWidth,
                     make, model, imageFormat);
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -546,7 +611,7 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
     public void onPictureTaken(boolean success, byte[] data, long time) {
         if (success) {
             addData2Service(data, mCurrentCameraId, time, mCategoryId, false,
-                    Const.CAMERA_SANDBOX_PHOTO_RATIO_FULL, ImageFormat.JPEG);
+                    CameraStateUtils.changeRatioState2SandBoxState(mRatioState), ImageFormat.JPEG);
             mPreviewModel.continuePreview();
         } else {
             mICameraView.showToast(mContext.getResources().getString(R.string.toast_fail));
@@ -558,7 +623,7 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
         switch (imageFormat) {
             case ImageFormat.NV21:
                 addData2Service(data, mCurrentCameraId, time, mCategoryId, false,
-                        Const.CAMERA_SANDBOX_PHOTO_RATIO_FULL, ImageFormat.NV21);
+                        CameraStateUtils.changeRatioState2SandBoxState(mRatioState), ImageFormat.NV21);
                 break;
         }
     }

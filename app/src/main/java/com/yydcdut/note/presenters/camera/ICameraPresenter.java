@@ -18,11 +18,13 @@ public interface ICameraPresenter extends IPresenter {
 
     void onUp();
 
-    void onFlashClick();
+    void onFlashClick(int state);
 
-    void onTimerClick();
+    void onRatioClick(int state);
 
-    void onGridClick();
+    void onTimerClick(int state);
 
-    void onCameraIdClick();
+    void onGridClick(int state);
+
+    void onCameraIdClick(int state);
 }

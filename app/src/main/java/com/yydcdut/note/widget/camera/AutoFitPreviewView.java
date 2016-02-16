@@ -53,6 +53,22 @@ public class AutoFitPreviewView extends FrameLayout implements
         }
     }
 
+    public int getAspectWidth() {
+        if (mAutoFitTextureView != null) {
+            return mAutoFitTextureView.getMeasuredWidth();
+        } else {
+            return mAutoFitSurfaceView.getMeasuredWidth();
+        }
+    }
+
+    public int getAspectHeight() {
+        if (mAutoFitTextureView != null) {
+            return mAutoFitTextureView.getMeasuredHeight();
+        } else {
+            return mAutoFitSurfaceView.getMeasuredHeight();
+        }
+    }
+
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
     }
