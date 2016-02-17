@@ -1,6 +1,6 @@
 package com.yydcdut.note.camera.model;
 
-import com.yydcdut.note.camera.param.Size;
+import com.yydcdut.note.utils.camera.param.Size;
 
 /**
  * Created by yuyidong on 15-4-13.

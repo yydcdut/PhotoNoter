@@ -1,6 +1,7 @@
-package com.yydcdut.note.utils;
+package com.yydcdut.note.utils.camera;
 
 import com.yydcdut.note.model.camera.ICameraParams;
+import com.yydcdut.note.utils.Const;
 
 /**
  * Created by yuyidong on 16/2/10.

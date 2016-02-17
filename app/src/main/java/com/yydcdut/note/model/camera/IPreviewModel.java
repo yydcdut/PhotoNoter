@@ -1,6 +1,6 @@
 package com.yydcdut.note.model.camera;
 
-import com.yydcdut.note.camera.param.Size;
+import com.yydcdut.note.utils.camera.param.Size;
 import com.yydcdut.note.widget.camera.AutoFitPreviewView;
 
 /**

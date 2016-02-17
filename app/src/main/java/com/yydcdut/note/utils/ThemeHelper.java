@@ -1,5 +1,9 @@
 package com.yydcdut.note.utils;
 
+import android.content.Context;
+import android.content.res.TypedArray;
+import android.util.TypedValue;
+
 import com.yydcdut.note.R;
 
 import java.util.ArrayList;
@@ -107,5 +111,25 @@ public class ThemeHelper {
 
     public int getColorPrimary() {
         return colorPrimary;
+    }
+
+    public static int getPrimaryColor(Context context) {
+        TypedValue typedValue = new TypedValue();
+        int[] colorAttr = new int[]{R.attr.colorPrimary};
+        int indexOfAttrColor = 0;
+        TypedArray a = context.obtainStyledAttributes(typedValue.data, colorAttr);
+        int color = a.getColor(indexOfAttrColor, -1);
+        a.recycle();
+        return color;
+    }
+
+    public static int getDarkPrimaryColor(Context context) {
+        TypedValue typedValue = new TypedValue();
+        int[] colorAttr = new int[]{R.attr.colorPrimaryDark};
+        int indexOfAttrColor = 0;
+        TypedArray a = context.obtainStyledAttributes(typedValue.data, colorAttr);
+        int color = a.getColor(indexOfAttrColor, -1);
+        a.recycle();
+        return color;
     }
 }

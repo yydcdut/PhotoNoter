@@ -2,8 +2,8 @@ package com.yydcdut.note.model.camera.impl;
 
 import android.hardware.Camera;
 
-import com.yydcdut.note.camera.param.Size;
 import com.yydcdut.note.model.camera.ICameraSettingModel;
+import com.yydcdut.note.utils.camera.param.Size;
 
 import java.util.ArrayList;
 import java.util.List;

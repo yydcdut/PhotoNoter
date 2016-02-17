@@ -3,7 +3,6 @@ package com.yydcdut.note.presenters.camera.impl;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.yydcdut.note.camera.param.Size;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.camera.ICameraFocus;
 import com.yydcdut.note.model.camera.ICameraModel;
@@ -16,6 +15,7 @@ import com.yydcdut.note.presenters.camera.IAdjustCameraPresenter;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.Utils;
+import com.yydcdut.note.utils.camera.param.Size;
 import com.yydcdut.note.views.IView;
 import com.yydcdut.note.views.camera.IAdjustCameraView;
 import com.yydcdut.note.widget.camera.AutoFitPreviewView;

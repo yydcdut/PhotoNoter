@@ -6,7 +6,6 @@ import android.hardware.Camera;
 import android.support.annotation.NonNull;
 
 import com.yydcdut.note.R;
-import com.yydcdut.note.camera.param.Size;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.camera.ICameraModel;
 import com.yydcdut.note.model.camera.impl.CameraModelImpl;
@@ -16,6 +15,7 @@ import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.PermissionUtils;
+import com.yydcdut.note.utils.camera.param.Size;
 import com.yydcdut.note.utils.permission.Permission;
 import com.yydcdut.note.views.IView;
 import com.yydcdut.note.views.setting.ISettingView;

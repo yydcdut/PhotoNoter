@@ -21,7 +21,9 @@ import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.views.BaseActivity;
 import com.yydcdut.note.views.camera.ICameraView;
+import com.yydcdut.note.widget.camera.AnimationTextView;
 import com.yydcdut.note.widget.camera.AutoFitPreviewView;
+import com.yydcdut.note.widget.camera.CameraGridView;
 import com.yydcdut.note.widget.camera.CameraTopView;
 
 import javax.inject.Inject;
@@ -34,7 +36,7 @@ import butterknife.OnTouch;
  * Created by yuyidong on 16/2/3.
  */
 public class CameraActivity2 extends BaseActivity implements ICameraView,
-        AutoFitPreviewView.SurfaceListener, CameraTopView.OnItemClickListener {
+        AutoFitPreviewView.SurfaceListener, CameraTopView.OnItemClickListener, AnimationTextView.OnAnimationTextViewListener {
     /* Service */
     private boolean mIsBind = false;
     private ICameraData mCameraService;
@@ -53,6 +55,12 @@ public class CameraActivity2 extends BaseActivity implements ICameraView,
 
     @Bind(R.id.view_ratio_cover)
     View mRatioCoverView;
+
+    @Bind(R.id.grid_camera)
+    CameraGridView mCameraGridView;
+
+    @Bind(R.id.txt_timer)
+    AnimationTextView mWindowTextView;
 
     @Override
     public boolean setStatusBar() {
@@ -86,6 +94,7 @@ public class CameraActivity2 extends BaseActivity implements ICameraView,
         mCameraPresenter.bindData(bundle.getInt(Const.CATEGORY_ID_4_PHOTNOTES));
         mAutoFitPreviewView.setSurfaceListener(this);
         mCameraTopView.setOnItemClickListener(this);
+        mWindowTextView.setOnAnimationTextViewListener(this);
         bindCameraService();
     }
 
@@ -123,6 +132,11 @@ public class CameraActivity2 extends BaseActivity implements ICameraView,
     @Override
     public int getPreviewViewHeight() {
         return mAutoFitPreviewView.getAspectHeight();
+    }
+
+    @Override
+    public int getTopViewHeight() {
+        return mCameraTopView.getMeasuredHeight();
     }
 
     @Override
@@ -188,6 +202,35 @@ public class CameraActivity2 extends BaseActivity implements ICameraView,
         }
         layoutParams.setMargins(0, 0, 0, 0);
         mAutoFitPreviewView.setLayoutParams(layoutParams);
+    }
+
+    @Override
+    public void setGridUI(boolean show, int top, int bottom) {
+        if (show) {
+            mCameraGridView.open();
+            mCameraGridView.setMargin(top, bottom);
+        } else {
+            mCameraGridView.close();
+        }
+    }
+
+    @Override
+    public void startTimer(int time) {
+        if (!mWindowTextView.isCountDown()) {
+            mWindowTextView.start(time);
+        }
+    }
+
+    @Override
+    public boolean isTimerCounting() {
+        return mWindowTextView.isCountDown();
+    }
+
+    @Override
+    public void interruptTimer() {
+        if (mWindowTextView.isCountDown()) {
+            mWindowTextView.interrupt();
+        }
     }
 
     @Override
@@ -264,5 +307,15 @@ public class CameraActivity2 extends BaseActivity implements ICameraView,
     @Override
     public void onCameraIdClick(View view, int state) {
         mCameraPresenter.onCameraIdClick(state);
+    }
+
+    @Override
+    public void onTextCancel() {
+        mCameraPresenter.onTimerCancel();
+    }
+
+    @Override
+    public void onTextDisappear() {
+        mCameraPresenter.onTimerFinish();
     }
 }

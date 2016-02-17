@@ -4,12 +4,12 @@ import android.content.Context;
 import android.graphics.ImageFormat;
 import android.hardware.Camera;
 
-import com.yydcdut.note.camera.param.Size;
 import com.yydcdut.note.model.camera.ICameraFocus;
 import com.yydcdut.note.model.camera.ICameraModel;
 import com.yydcdut.note.model.camera.ICaptureModel;
 import com.yydcdut.note.model.camera.IPreviewModel;
 import com.yydcdut.note.utils.YLog;
+import com.yydcdut.note.utils.camera.param.Size;
 import com.yydcdut.note.widget.camera.AutoFitPreviewView;
 
 import java.io.IOException;

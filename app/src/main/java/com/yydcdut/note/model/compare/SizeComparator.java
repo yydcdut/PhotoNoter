@@ -1,7 +1,7 @@
 package com.yydcdut.note.model.compare;
 
 
-import com.yydcdut.note.camera.param.Size;
+import com.yydcdut.note.utils.camera.param.Size;
 
 import java.util.Comparator;
 

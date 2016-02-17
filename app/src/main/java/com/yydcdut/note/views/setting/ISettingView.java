@@ -1,6 +1,6 @@
 package com.yydcdut.note.views.setting;
 
-import com.yydcdut.note.camera.param.Size;
+import com.yydcdut.note.utils.camera.param.Size;
 import com.yydcdut.note.views.IView;
 
 import org.json.JSONException;

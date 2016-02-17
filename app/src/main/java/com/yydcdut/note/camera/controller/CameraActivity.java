@@ -17,7 +17,6 @@ import com.yydcdut.note.R;
 import com.yydcdut.note.camera.model.AbsCameraModel;
 import com.yydcdut.note.camera.model.ICameraParams;
 import com.yydcdut.note.camera.model.camera.CameraModel;
-import com.yydcdut.note.camera.param.Size;
 import com.yydcdut.note.camera.view.AnimationTextView;
 import com.yydcdut.note.camera.view.AutoFitSurfaceView;
 import com.yydcdut.note.camera.view.CameraGridView;
@@ -31,6 +30,7 @@ import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.Utils;
+import com.yydcdut.note.utils.camera.param.Size;
 
 import org.json.JSONException;
 

@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.yydcdut.note.camera.model.ICameraParams;
-import com.yydcdut.note.camera.param.Size;
+import com.yydcdut.note.utils.camera.param.Size;
 
 import org.json.JSONArray;
 import org.json.JSONException;

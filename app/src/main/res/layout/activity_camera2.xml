@@ -11,6 +11,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
+    <com.yydcdut.note.widget.camera.CameraGridView
+        android:id="@+id/grid_camera"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
+    <com.yydcdut.note.widget.camera.AnimationTextView
+        android:id="@+id/txt_timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="30sp"
+        android:visibility="gone"/>
+
     <View
         android:id="@+id/view_ratio_cover"
         android:layout_width="match_parent"

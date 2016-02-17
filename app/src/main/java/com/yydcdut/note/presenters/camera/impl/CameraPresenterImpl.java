@@ -14,7 +14,6 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.yydcdut.note.R;
-import com.yydcdut.note.camera.param.Size;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.camera.ICameraFocus;
 import com.yydcdut.note.model.camera.ICameraModel;
@@ -27,11 +26,12 @@ import com.yydcdut.note.model.camera.impl2.Camera2ModelImpl;
 import com.yydcdut.note.model.compare.SizeComparator;
 import com.yydcdut.note.presenters.camera.ICameraPresenter;
 import com.yydcdut.note.utils.AppCompat;
-import com.yydcdut.note.utils.CameraStateUtils;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.Utils;
+import com.yydcdut.note.utils.camera.CameraStateUtils;
+import com.yydcdut.note.utils.camera.param.Size;
 import com.yydcdut.note.views.IView;
 import com.yydcdut.note.views.camera.ICameraView;
 import com.yydcdut.note.widget.camera.AutoFitPreviewView;
@@ -88,6 +88,7 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
     private static final int MSG_DOWN = 1;
     private static final int MSG_UP = 2;
     private static final int MSG_STILL_SIGNAL = 3;
+    private static final int MSG_CAPTURE = 4;
     private Handler mHandler;
 
     @Inject
@@ -146,6 +147,7 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
                 }
                 initUIState();
                 initLogicState();
+                onGridClick(-1);
                 mPreviewSize = getSuitablePreviewSize(mCameraSettingModel.getSupportPreviewSizes());
                 if (mPreviewSize.equals(mFullSize)) {
                     mICameraView.doFullRatioAnimation();
@@ -399,6 +401,7 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
             }
             mPreviewModel.stopPreview();
             mICameraView.setSize(mPreviewSize.getHeight(), mPreviewSize.getWidth());
+            onGridClick(-1);
             mPreviewModel.startPreview(mPreviewSurface, new IPreviewModel.OnCameraPreviewCallback() {
                 @Override
                 public void onPreview(ICaptureModel captureModel, ICameraFocus cameraFocus) {
@@ -416,6 +419,7 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
                 mPreviewModel.stopPreview();
                 mICameraView.setSize(mPreviewSize.getHeight(), mPreviewSize.getWidth());
             }
+            onGridClick(-1);
             mICameraView.do11RatioAnimation();
         }
     }
@@ -426,8 +430,45 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
     }
 
     @Override
+    public void onTimerCancel() {
+
+    }
+
+    @Override
+    public void onTimerFinish() {
+        mHandler.sendEmptyMessage(MSG_CAPTURE);
+    }
+
+    @Override
     public void onGridClick(int state) {
-        mGridState = CameraStateUtils.changeGridUIState2LogicState(state);
+        if (state != -1) {
+            mGridState = CameraStateUtils.changeGridUIState2LogicState(state);
+        }
+        if (mGridState) {
+            int top = 0;
+            int bottom = 0;
+            int screenHeight = Utils.sScreenHeight;
+            int viewHeight = mICameraView.getPreviewViewHeight();
+            switch (mRatioState) {
+                case Const.LAYOUT_PERSONAL_RATIO_FULL:
+                    if (viewHeight < screenHeight) {
+                        bottom = screenHeight - viewHeight;
+                    }
+                    break;
+                case Const.LAYOUT_PERSONAL_RATIO_1_1:
+                    top = mICameraView.getTopViewHeight();
+                    bottom = screenHeight - top - mICameraView.getPreviewViewWidth();
+                    break;
+                case Const.LAYOUT_PERSONAL_RATIO_4_3:
+                    top = mICameraView.getTopViewHeight();
+                    bottom = screenHeight - top - viewHeight;
+                    break;
+            }
+            mICameraView.setGridUI(true, top, bottom);
+        } else {
+            mICameraView.setGridUI(false, 0, 0);
+
+        }
     }
 
     @Override
@@ -494,8 +535,27 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
                     mIsWannaStillCapture = false;
                     mCaptureModel.stopStillCapture();
                 } else {
-                    mCaptureModel.capture(this);
+                    if (mICameraView.isTimerCounting()) {
+                        mICameraView.interruptTimer();
+                        break;
+                    }
+                    switch (mTimerState) {
+                        case Const.LAYOUT_PERSONAL_TIMER_0:
+                            mCaptureModel.capture(this);
+                            break;
+                        case Const.LAYOUT_PERSONAL_TIMER_3:
+                            mICameraView.startTimer(3);
+                            break;
+                        case Const.LAYOUT_PERSONAL_TIMER_10:
+                            mICameraView.startTimer(10);
+                            break;
+
+                    }
+
                 }
+                break;
+            case MSG_CAPTURE:
+                mCaptureModel.capture(this);
                 break;
         }
         return false;
@@ -612,6 +672,7 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
     }
 
     private int getCameraRotation() {
+        //// FIXME: 16/2/17 Camera2内部实现实际上没有用到Rotation
         switch (mCurrentCameraId) {
             case Const.CAMERA_BACK:
                 return mLocalStorageUtils.getCameraBackRotation();

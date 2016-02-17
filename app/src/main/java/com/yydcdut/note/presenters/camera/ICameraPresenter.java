@@ -27,4 +27,8 @@ public interface ICameraPresenter extends IPresenter {
     void onGridClick(int state);
 
     void onCameraIdClick(int state);
+
+    void onTimerCancel();
+
+    void onTimerFinish();
 }

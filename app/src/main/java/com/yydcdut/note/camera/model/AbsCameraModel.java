@@ -13,10 +13,10 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.yydcdut.note.ICameraData;
-import com.yydcdut.note.camera.param.Size;
 import com.yydcdut.note.service.CameraService;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
+import com.yydcdut.note.utils.camera.param.Size;
 
 import java.io.File;
 import java.io.FileOutputStream;

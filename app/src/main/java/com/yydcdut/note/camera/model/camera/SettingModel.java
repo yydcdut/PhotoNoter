@@ -5,7 +5,7 @@ import android.hardware.Camera;
 import com.yydcdut.note.camera.model.ICameraParams;
 import com.yydcdut.note.camera.model.ICameraSetting;
 import com.yydcdut.note.camera.param.ParamsConvert;
-import com.yydcdut.note.camera.param.Size;
+import com.yydcdut.note.utils.camera.param.Size;
 
 import java.util.ArrayList;
 import java.util.List;

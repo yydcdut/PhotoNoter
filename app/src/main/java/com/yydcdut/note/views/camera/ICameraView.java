@@ -13,13 +13,15 @@ public interface ICameraView extends IView {
 
     void add2Service(java.lang.String fileName, int size, java.lang.String cameraId, long time,
                      int categoryId, boolean isMirror, int ratio, int orientation,
-                     java.lang.String latitude, java.lang.String lontitude, int whiteBalance,
+                     java.lang.String latitude, java.lang.String longitude, int whiteBalance,
                      int flash, int imageLength, int imageWidth, java.lang.String make,
                      java.lang.String model, int imageFormat) throws RemoteException;
 
     int getPreviewViewWidth();
 
     int getPreviewViewHeight();
+
+    int getTopViewHeight();
 
     void showToast(String toast);
 
@@ -35,4 +37,11 @@ public interface ICameraView extends IView {
 
     void doFullRatioAnimation();
 
+    void setGridUI(boolean show, int top, int bottom);
+
+    void startTimer(int time);
+
+    boolean isTimerCounting();
+
+    void interruptTimer();
 }

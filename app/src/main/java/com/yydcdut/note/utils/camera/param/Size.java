@@ -1,4 +1,4 @@
-package com.yydcdut.note.camera.param;
+package com.yydcdut.note.utils.camera.param;
 
 import android.hardware.Camera;
 

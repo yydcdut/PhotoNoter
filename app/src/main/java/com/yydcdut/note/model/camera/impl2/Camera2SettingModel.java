@@ -7,8 +7,8 @@ import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.os.Build;
 
-import com.yydcdut.note.camera.param.Size;
 import com.yydcdut.note.model.camera.ICameraSettingModel;
+import com.yydcdut.note.utils.camera.param.Size;
 
 import java.util.ArrayList;
 import java.util.List;

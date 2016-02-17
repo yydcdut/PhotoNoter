@@ -2,7 +2,7 @@ package com.yydcdut.note.model.camera;
 
 import android.content.Context;
 
-import com.yydcdut.note.camera.param.Size;
+import com.yydcdut.note.utils.camera.param.Size;
 
 /**
  * Created by yuyidong on 16/2/3.
