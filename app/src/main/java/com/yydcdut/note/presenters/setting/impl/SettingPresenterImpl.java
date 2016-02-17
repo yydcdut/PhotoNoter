@@ -8,6 +8,8 @@ import android.support.annotation.NonNull;
 import com.yydcdut.note.R;
 import com.yydcdut.note.camera.param.Size;
 import com.yydcdut.note.injector.ContextLife;
+import com.yydcdut.note.model.camera.ICameraModel;
+import com.yydcdut.note.model.camera.impl.CameraModelImpl;
 import com.yydcdut.note.model.rx.RxUser;
 import com.yydcdut.note.presenters.setting.ISettingPresenter;
 import com.yydcdut.note.utils.AppCompat;
@@ -39,16 +41,16 @@ public class SettingPresenterImpl implements ISettingPresenter, PermissionUtils.
     private Activity mActivity;
     private LocalStorageUtils mLocalStorageUtils;
     private RxUser mRxUser;
-
-    private static final boolean SUPPORT_CAMERA_5_0 = false;
+    private ICameraModel mCameraModel;
 
     @Inject
     public SettingPresenterImpl(@ContextLife("Activity") Context context, Activity activity,
-                                LocalStorageUtils localStorageUtils, RxUser rxUser) {
+                                LocalStorageUtils localStorageUtils, RxUser rxUser, CameraModelImpl cameraModel) {
         mContext = context;
         mActivity = activity;
         mLocalStorageUtils = localStorageUtils;
         mRxUser = rxUser;
+        mCameraModel = cameraModel;
     }
 
     @Override
@@ -57,7 +59,10 @@ public class SettingPresenterImpl implements ISettingPresenter, PermissionUtils.
         mSettingView.initPreferenceSetting();
         mSettingView.initAccountSetting();
         mSettingView.initCameraSetting(mLocalStorageUtils.getCameraSystem(),
-                mLocalStorageUtils.getCameraNumber());
+                mCameraModel.getCameraNumber(mContext));
+        if (!AppCompat.AFTER_LOLLIPOP) {
+            mSettingView.showCamera2Gray();
+        }
         mSettingView.initSyncSetting(false, false);
         mSettingView.initAboutSetting();
 
@@ -110,14 +115,16 @@ public class SettingPresenterImpl implements ISettingPresenter, PermissionUtils.
                 boolean isSystem = mLocalStorageUtils.getCameraSystem();
                 mLocalStorageUtils.setCameraSystem(!isSystem);
                 mSettingView.setCameraSettingClickable(!isSystem,
-                        mLocalStorageUtils.getCameraNumber());
+                        mCameraModel.getCameraNumber(mContext));
                 break;
             case ISettingPresenter.TAG_CAMERA2:
-                boolean use = mLocalStorageUtils.getCameraSystem();
-                if ((!AppCompat.AFTER_LOLLIPOP || !SUPPORT_CAMERA_5_0) && !use) {
-                    mSettingView.showSnackbar(mContext.getString(R.string.toast_not_support));
+                boolean useSystem = mLocalStorageUtils.getCameraSystem();
+                if (!AppCompat.AFTER_LOLLIPOP || useSystem) {
                     return;
                 }
+                boolean useCamera2 = mLocalStorageUtils.getCameraAndroidLollipop();
+                mLocalStorageUtils.setCameraAndroidLollipop(!useCamera2);
+                mSettingView.setCheckBoxState(ISettingPresenter.TAG_CAMERA2, !useCamera2);
                 break;
             case ISettingPresenter.TAG_CAMERA_SIZE:
                 if (mLocalStorageUtils.getCameraSystem()) {
@@ -221,6 +228,11 @@ public class SettingPresenterImpl implements ISettingPresenter, PermissionUtils.
     }
 
     @Override
+    public boolean getCameraAndroidLollipop() {
+        return mLocalStorageUtils.getCameraAndroidLollipop();
+    }
+
+    @Override
     public boolean getCameraSaveSetting() {
         return mLocalStorageUtils.getCameraSaveSetting();
     }
@@ -232,7 +244,7 @@ public class SettingPresenterImpl implements ISettingPresenter, PermissionUtils.
 
     @Override
     public int getCameraNumber() {
-        return mLocalStorageUtils.getCameraNumber();
+        return mCameraModel.getCameraNumber(mContext);
     }
 
     @Override
@@ -257,8 +269,7 @@ public class SettingPresenterImpl implements ISettingPresenter, PermissionUtils.
             return;
         }
         //暂时用Camera的方法
-        int total = Camera.getNumberOfCameras();
-        mLocalStorageUtils.setCameraNumber(total);
+        int total = mCameraModel.getCameraNumber(mContext);
         int[] cameraIds;
         if (total == 0) {
             cameraIds = new int[0];
@@ -313,7 +324,7 @@ public class SettingPresenterImpl implements ISettingPresenter, PermissionUtils.
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            int numbers = mLocalStorageUtils.getCameraNumber();
+            int numbers = mCameraModel.getCameraNumber(mContext);
             if (numbers == 2) {
                 try {
                     mSettingView.showCameraIdsChooser();

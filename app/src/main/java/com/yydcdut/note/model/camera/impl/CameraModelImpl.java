@@ -1,5 +1,6 @@
 package com.yydcdut.note.model.camera.impl;
 
+import android.content.Context;
 import android.graphics.ImageFormat;
 import android.hardware.Camera;
 
@@ -219,6 +220,11 @@ public class CameraModelImpl implements ICameraModel {
     @Override
     public boolean isOpen() {
         return mCameraState == STATE_CAMERA_OPEN;
+    }
+
+    @Override
+    public int getCameraNumber(Context context) {
+        return Camera.getNumberOfCameras();
     }
 
     /**

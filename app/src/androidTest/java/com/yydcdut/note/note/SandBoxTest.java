@@ -1,5 +1,6 @@
 package com.yydcdut.note.note;
 
+import android.graphics.ImageFormat;
 import android.test.InstrumentationTestCase;
 
 import com.yydcdut.note.bean.SandExif;
@@ -22,7 +23,8 @@ public class SandBoxTest extends InstrumentationTestCase {
     }
 
     public void testSave() {
-        SandPhoto sandPhoto = new SandPhoto(SandPhoto.ID_NULL, 1l, "0", 1, false, 1, "111", 11, new SandExif(0, "s", "ss", 0, 0, 0, 1, "1", "1"));
+        SandPhoto sandPhoto = new SandPhoto(SandPhoto.ID_NULL, 1l, "0", 1, false, 1, "111", 11, ImageFormat.JPEG,
+                new SandExif(0, "s", "ss", 0, 0, 0, 1, "1", "1"));
         mRxSandBox.saveOne(sandPhoto)
                 .subscribe(new Subscriber<SandPhoto>() {
                     @Override

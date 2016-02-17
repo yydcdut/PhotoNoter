@@ -39,6 +39,8 @@ public interface ISettingPresenter extends IPresenter {
 
     boolean getCameraSystem();
 
+    boolean getCameraAndroidLollipop();
+
     boolean getCameraSaveSetting();
 
     boolean getCameraMirrorOpen();

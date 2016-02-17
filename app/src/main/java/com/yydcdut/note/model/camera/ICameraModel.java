@@ -1,5 +1,7 @@
 package com.yydcdut.note.model.camera;
 
+import android.content.Context;
+
 import com.yydcdut.note.camera.param.Size;
 
 /**
@@ -13,9 +15,10 @@ public interface ICameraModel {
     boolean isOpen();
 
     interface OnCameraOpenedCallback {
-        void onOpen(IPreviewModel previewModel,ICameraSettingModel cameraSettingModel);
+        void onOpen(IPreviewModel previewModel, ICameraSettingModel cameraSettingModel);
 
         void onError();
     }
 
+    int getCameraNumber(Context context);
 }

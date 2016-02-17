@@ -439,4 +439,15 @@ public class Camera2ModelImpl implements ICameraModel {
     public boolean isOpen() {
         return mCameraState == STATE_CAMERA_OPEN;
     }
+
+    @Override
+    public int getCameraNumber(Context context) {
+        int number = 0;
+        try {
+            number = ((CameraManager) context.getSystemService(Context.CAMERA_SERVICE)).getCameraIdList().length;
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
+        return number;
+    }
 }

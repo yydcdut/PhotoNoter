@@ -849,7 +849,6 @@ public class CameraActivity extends AppCompatActivity implements SurfaceHolder.C
         }
         //暂时用Camera的方法
         int total = Camera.getNumberOfCameras();
-        mLocalStorageUtils.setCameraNumber(total);
         int[] cameraIds;
         if (total == 0) {
             cameraIds = new int[0];

@@ -120,11 +120,11 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
         setData(themeView, R.drawable.ic_color_lens_gray_24dp, R.string.theme);
         linearLayout.addView(themeView);
 
-        View statusbarView = getItemView();
-        setClick(statusbarView);
-        setTag(statusbarView, ISettingPresenter.TAG_STATUS_BAR);
-        setData(statusbarView, R.drawable.ic_settings_cell_black_24dp, R.string.status_bar);
-        linearLayout.addView(statusbarView);
+        View statusBarView = getItemView();
+        setClick(statusBarView);
+        setTag(statusBarView, ISettingPresenter.TAG_STATUS_BAR);
+        setData(statusBarView, R.drawable.ic_settings_cell_black_24dp, R.string.status_bar);
+        linearLayout.addView(statusBarView);
 
 //        View floatingView = getItemView();
 //        setClick(floatingView);
@@ -148,10 +148,10 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
 
     @Override
     public void setStatusBarClickable(boolean clickable) {
-        View statusbarView = mViewMap.get(ISettingPresenter.TAG_STATUS_BAR);
+        View statusBarView = mViewMap.get(ISettingPresenter.TAG_STATUS_BAR);
         if (!clickable) {
-            ((TextView) statusbarView.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
-            statusbarView.findViewById(R.id.layout_ripple_setting).setOnClickListener(null);
+            ((TextView) statusBarView.findViewById(R.id.txt_setting)).setTextColor(AppCompat.getColor(R.color.txt_alpha_gray, this));
+            statusBarView.findViewById(R.id.layout_ripple_setting).setOnClickListener(null);
         }
     }
 
@@ -239,14 +239,12 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
         initLocalData(viewCapture, mSettingPresenter.getCameraSystem());
         linearLayout.addView(viewCapture);
 
-        final View cameraView = getItemCheckView();
-        setClick(cameraView);
-        setTag(cameraView, ISettingPresenter.TAG_CAMERA2);
-        setData(cameraView, R.drawable.ic_camera_grey_24dp, R.string.camera_5_0);
-        initLocalData(cameraView, false);
-        linearLayout.addView(cameraView);
-        TextView textView2 = (TextView) cameraView.findViewById(R.id.txt_setting);
-        textView2.setTextColor(getResources().getColor(R.color.txt_alpha_gray));
+        final View camera2View = getItemCheckView();
+        setClick(camera2View);
+        setTag(camera2View, ISettingPresenter.TAG_CAMERA2);
+        setData(camera2View, R.drawable.ic_camera_grey_24dp, R.string.camera_5_0);
+        initLocalData(camera2View, mSettingPresenter.getCameraAndroidLollipop());
+        linearLayout.addView(camera2View);
 
         final View viewSize = getItemView();
         setClick(viewSize);
@@ -268,7 +266,7 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
         initLocalData(viewMirror, mSettingPresenter.getCameraMirrorOpen());
         linearLayout.addView(viewMirror);
 //        if (cameraNumbers < 2) {
-            ((TextView) viewMirror.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
+        ((TextView) viewMirror.findViewById(R.id.txt_setting)).setTextColor(AppCompat.getColor(R.color.txt_alpha_gray, this));
 //        }
 
         final View viewFix = getItemView();
@@ -279,29 +277,29 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
         linearLayout.addView(viewFix);
 
         if (isSystem) {
-//            ((TextView) cameraView.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
-            ((TextView) viewSize.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
-            ((TextView) viewSave.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
-//            ((TextView) viewMirror.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
-            ((TextView) viewFix.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
+            ((TextView) camera2View.findViewById(R.id.txt_setting)).setTextColor(AppCompat.getColor(R.color.txt_alpha_gray, this));
+            ((TextView) viewSize.findViewById(R.id.txt_setting)).setTextColor(AppCompat.getColor(R.color.txt_alpha_gray, this));
+            ((TextView) viewSave.findViewById(R.id.txt_setting)).setTextColor(AppCompat.getColor(R.color.txt_alpha_gray, this));
+//            ((TextView) viewMirror.findViewById(R.id.txt_setting)).setTextColor(AppCompat.getColor(R.color.txt_alpha_gray,this));
+            ((TextView) viewFix.findViewById(R.id.txt_setting)).setTextColor(AppCompat.getColor(R.color.txt_alpha_gray, this));
         } else {
-//            ((TextView) cameraView.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_gray));
-            ((TextView) viewSize.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_gray));
-            ((TextView) viewSave.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_gray));
-//            ((TextView) viewMirror.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_gray));
-            ((TextView) viewFix.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_gray));
+            ((TextView) camera2View.findViewById(R.id.txt_setting)).setTextColor(AppCompat.getColor(R.color.txt_gray, this));
+            ((TextView) viewSize.findViewById(R.id.txt_setting)).setTextColor(AppCompat.getColor(R.color.txt_gray, this));
+            ((TextView) viewSave.findViewById(R.id.txt_setting)).setTextColor(AppCompat.getColor(R.color.txt_gray, this));
+//            ((TextView) viewMirror.findViewById(R.id.txt_setting)).setTextColor(AppCompat.getColor(R.color.txt_gray,this));
+            ((TextView) viewFix.findViewById(R.id.txt_setting)).setTextColor(AppCompat.getColor(R.color.txt_gray, this));
 //            if (mSettingPresenter.getCameraNumber() < 2) {
-//                ((TextView) viewMirror.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
+//                ((TextView) viewMirror.findViewById(R.id.txt_setting)).setTextColor(AppCompat.getColor(R.color.txt_alpha_gray));
 //            }
         }
 
         if (cameraNumbers == 0) {
-            ((TextView) viewCapture.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
-//        ((TextView) cameraViwq.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
-            ((TextView) viewSize.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
-            ((TextView) viewSave.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
-            ((TextView) viewMirror.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
-            ((TextView) viewFix.findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
+            ((TextView) viewCapture.findViewById(R.id.txt_setting)).setTextColor(AppCompat.getColor(R.color.txt_alpha_gray, this));
+//        ((TextView) cameraViwq.findViewById(R.id.txt_setting)).setTextColor(AppCompat.getColor(R.color.txt_alpha_gray,this));
+            ((TextView) viewSize.findViewById(R.id.txt_setting)).setTextColor(AppCompat.getColor(R.color.txt_alpha_gray, this));
+            ((TextView) viewSave.findViewById(R.id.txt_setting)).setTextColor(AppCompat.getColor(R.color.txt_alpha_gray, this));
+            ((TextView) viewMirror.findViewById(R.id.txt_setting)).setTextColor(AppCompat.getColor(R.color.txt_alpha_gray, this));
+            ((TextView) viewFix.findViewById(R.id.txt_setting)).setTextColor(AppCompat.getColor(R.color.txt_alpha_gray, this));
             viewCapture.setOnClickListener(null);
 //        cameraViwe.setOnClickListener(null);
             viewSize.setOnClickListener(null);
@@ -318,19 +316,19 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
         CheckBox checkBox = (CheckBox) viewCapture.findViewById(R.id.cb_setting);
         checkBox.setChecked(isSystem);
         if (isSystem) {
-//            ((TextView) mViewMap.get(ISettingPresenter.TAG_CAMERA2).findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
-            ((TextView) mViewMap.get(ISettingPresenter.TAG_CAMERA_SIZE).findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
-            ((TextView) mViewMap.get(ISettingPresenter.TAG_CAMERA_SAVE).findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
-//            ((TextView) mViewMap.get(ISettingPresenter.TAG_CAMERA_MIRROR).findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
-            ((TextView) mViewMap.get(ISettingPresenter.TAG_CAMERA_FIX).findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
+            ((TextView) mViewMap.get(ISettingPresenter.TAG_CAMERA2).findViewById(R.id.txt_setting)).setTextColor(AppCompat.getColor(R.color.txt_alpha_gray, this));
+            ((TextView) mViewMap.get(ISettingPresenter.TAG_CAMERA_SIZE).findViewById(R.id.txt_setting)).setTextColor(AppCompat.getColor(R.color.txt_alpha_gray, this));
+            ((TextView) mViewMap.get(ISettingPresenter.TAG_CAMERA_SAVE).findViewById(R.id.txt_setting)).setTextColor(AppCompat.getColor(R.color.txt_alpha_gray, this));
+//            ((TextView) mViewMap.get(ISettingPresenter.TAG_CAMERA_MIRROR).findViewById(R.id.txt_setting)).setTextColor(AppCompat.getColor(R.color.txt_alpha_gray,this));
+            ((TextView) mViewMap.get(ISettingPresenter.TAG_CAMERA_FIX).findViewById(R.id.txt_setting)).setTextColor(AppCompat.getColor(R.color.txt_alpha_gray, this));
         } else {
-//            ((TextView) mViewMap.get(ISettingPresenter.TAG_CAMERA2).findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_gray));
-            ((TextView) mViewMap.get(ISettingPresenter.TAG_CAMERA_SIZE).findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_gray));
-            ((TextView) mViewMap.get(ISettingPresenter.TAG_CAMERA_SAVE).findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_gray));
-//            ((TextView) mViewMap.get(ISettingPresenter.TAG_CAMERA_MIRROR).findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_gray));
-            ((TextView) mViewMap.get(ISettingPresenter.TAG_CAMERA_FIX).findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_gray));
+            ((TextView) mViewMap.get(ISettingPresenter.TAG_CAMERA2).findViewById(R.id.txt_setting)).setTextColor(AppCompat.getColor(R.color.txt_gray, this));
+            ((TextView) mViewMap.get(ISettingPresenter.TAG_CAMERA_SIZE).findViewById(R.id.txt_setting)).setTextColor(AppCompat.getColor(R.color.txt_gray, this));
+            ((TextView) mViewMap.get(ISettingPresenter.TAG_CAMERA_SAVE).findViewById(R.id.txt_setting)).setTextColor(AppCompat.getColor(R.color.txt_gray, this));
+//            ((TextView) mViewMap.get(ISettingPresenter.TAG_CAMERA_MIRROR).findViewById(R.id.txt_setting)).setTextColor(AppCompat.getColor(R.color.txt_gray,this));
+            ((TextView) mViewMap.get(ISettingPresenter.TAG_CAMERA_FIX).findViewById(R.id.txt_setting)).setTextColor(AppCompat.getColor(R.color.txt_gray, this));
 //            if (cameraNumbers < 2) {
-//                ((TextView) mViewMap.get(ISettingPresenter.TAG_CAMERA_MIRROR).findViewById(R.id.txt_setting)).setTextColor(getResources().getColor(R.color.txt_alpha_gray));
+//                ((TextView) mViewMap.get(ISettingPresenter.TAG_CAMERA_MIRROR).findViewById(R.id.txt_setting)).setTextColor(AppCompat.getColor(R.color.txt_alpha_gray,this));
 //            }
         }
     }
@@ -427,7 +425,6 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
 
     @Override
     public void jump2CameraFixActivity() {
-//        startActivity(new Intent(this, AdjustCamera.class));
         startActivity(new Intent(this, AdjustCameraActivity.class));
     }
 
@@ -441,6 +438,13 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
     @Override
     public void jump2AboutActivity() {
         startActivity(new Intent(this, AboutAppActivity.class));
+    }
+
+    @Override
+    public void showCamera2Gray() {
+        View camera2View = mViewMap.get(ISettingPresenter.TAG_CAMERA2);
+        TextView textView2 = (TextView) camera2View.findViewById(R.id.txt_setting);
+        textView2.setTextColor(getResources().getColor(R.color.txt_alpha_gray));
     }
 
     @Override

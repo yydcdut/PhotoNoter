@@ -145,4 +145,9 @@ public interface ISettingView extends IView {
      */
     void jump2AboutActivity();
 
+    /**
+     * 让Camera2那选项变不可操作的颜色
+     */
+    void showCamera2Gray();
+
 }

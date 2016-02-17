@@ -44,11 +44,11 @@ public class LocalStorageUtils {
     private static final String PICTURE_SIZE_1 = "picture_size_2";//设置的拍照的图片大小 前置
     private static final String PICTURE_DEFAULT = "";//默认拍照图片大小 后置
 
-    private static final String CAMERA_NUMBER = "camera_number";//相机ID数量
-    private static final int CAMERA_NUMBER_DEFAULT = 1;//相机ID数量默认1个
-
     private static final String CAMERA_SYSTEM = "camera_system";//是否是用系统的相机
     private static final boolean CAMERA_SYSTEM_DEFAULT = false;//默认是不使用
+
+    private static final String CAMERA_ANDROID_LOLLIPOP = "camera_android_lollipop";
+    private static final boolean CAMERA_ANDROID_LOLLIPOP_DEFAULT = false;
 
     private static final String CAMERA_SAVE_SETTING = "camera_save_setting";//退出时保存相机参数
     private static final boolean CAMERA_SAVE_SETTING_DEFAULT = false;//退出时保存相机参数的默认值，不保存
@@ -347,28 +347,6 @@ public class LocalStorageUtils {
         return new Size(width, height);
     }
 
-
-    /**
-     * 设置相机数量
-     *
-     * @param number
-     */
-    public void setCameraNumber(int number) {
-        SharedPreferences.Editor editor = mSharedPreferences.edit();
-        editor.putInt(CAMERA_NUMBER, number);
-        editor.commit();
-    }
-
-    /**
-     * 获取是否是使用系统相机
-     *
-     * @return
-     */
-    public int getCameraNumber() {
-        return mSharedPreferences.getInt(CAMERA_NUMBER, CAMERA_NUMBER_DEFAULT);
-    }
-
-
     /**
      * 设置是否是用系统相机
      *
@@ -387,6 +365,26 @@ public class LocalStorageUtils {
      */
     public boolean getCameraSystem() {
         return mSharedPreferences.getBoolean(CAMERA_SYSTEM, CAMERA_SYSTEM_DEFAULT);
+    }
+
+    /**
+     * 是否使用Android5.0的Camera2
+     *
+     * @param use
+     */
+    public void setCameraAndroidLollipop(boolean use) {
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putBoolean(CAMERA_ANDROID_LOLLIPOP, use);
+        editor.commit();
+    }
+
+    /**
+     * 是否使用Android5.0的Camera2
+     *
+     * @return
+     */
+    public boolean getCameraAndroidLollipop() {
+        return mSharedPreferences.getBoolean(CAMERA_ANDROID_LOLLIPOP, CAMERA_ANDROID_LOLLIPOP_DEFAULT);
     }
 
     /**
