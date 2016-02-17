@@ -95,8 +95,7 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
                                CameraModelImpl cameraModelImpl) {
         mContext = context;
         mLocalStorageUtils = localStorageUtils;
-        //todo 是不是使用Camera2
-        if (AppCompat.AFTER_LOLLIPOP) {
+        if (AppCompat.AFTER_LOLLIPOP && mLocalStorageUtils.getCameraAndroidLollipop()) {
             //Dagger2中，在5.0以下机器，找不到Camera2类，会崩掉。。不知道原因
             /*
              *  java.lang.VerifyError: com/yydcdut/note/model/camera/impl2/Camera2ModelImpl
