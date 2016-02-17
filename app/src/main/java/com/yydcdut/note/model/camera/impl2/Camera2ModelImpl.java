@@ -37,7 +37,7 @@ import java.util.List;
  * Created by yuyidong on 16/2/3.
  */
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-public class Camera2ModelImpl implements ICameraModel {
+public class Camera2ModelImpl implements ICameraModel, Camera2SettingModel.OnParameterChangedListener {
     private static final String TAG = Camera2ModelImpl.class.getSimpleName();
 
     private Context mContext;
@@ -101,6 +101,7 @@ public class Camera2ModelImpl implements ICameraModel {
                     try {
                         mCamera2SettingModel = new Camera2SettingModel(mCameraManager.getCameraCharacteristics(id),
                                 mCameraManager.getCameraIdList().length);
+                        mCamera2SettingModel.setOnParameterChangedListener(Camera2ModelImpl.this);
                         Size picSize = null;
                         if (pictureSize == null) {
                             List<Size> list = mCamera2SettingModel.getSupportPictureSizes();
@@ -184,6 +185,17 @@ public class Camera2ModelImpl implements ICameraModel {
         return returnSize;
     }
 
+    @Override
+    public void onChanged(CaptureRequest.Builder builder) {
+        if (mCameraDevice != null && mSession != null && builder != null) {
+            try {
+                mSession.setRepeatingRequest(builder.build(), mCameraCaptureSessionCaptureCallback4Preview, null);
+            } catch (CameraAccessException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public class Camera2PreviewModel implements IPreviewModel {
 
         @Override
@@ -197,6 +209,7 @@ public class Camera2ModelImpl implements ICameraModel {
                 mYuvImageReader = ImageReader.newInstance(yuvSize.getWidth(), yuvSize.getHeight(), ImageFormat.YUV_420_888, 10);
                 mPicturesPreviewCallback = new PicturesPreviewCallback();
                 mYuvImageReader.setOnImageAvailableListener(mPicturesPreviewCallback, null);
+                mCamera2SettingModel.setCaptureRequestBuilder(mPreviewRequestBuilder);
                 mPreviewRequestBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
                 mPreviewRequestBuilder.addTarget(surface);
                 mCameraDevice.createCaptureSession(Arrays.asList(surface, mJpgImageReader.getSurface(), mYuvImageReader.getSurface()),

@@ -16,8 +16,6 @@ public class CameraStateUtils {
                 return 0;
             case ICameraParams.FLASH_ON:
                 return 2;
-            case ICameraParams.FLASH_TORCH:
-            case ICameraParams.FLASH_TORCH_OFF:
             default:
                 return 0;
         }

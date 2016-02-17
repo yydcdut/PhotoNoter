@@ -31,4 +31,5 @@ public interface ICameraPresenter extends IPresenter {
     void onTimerCancel();
 
     void onTimerFinish();
+
 }

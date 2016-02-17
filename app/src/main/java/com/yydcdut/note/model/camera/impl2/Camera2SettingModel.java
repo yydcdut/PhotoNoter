@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraCharacteristics;
+import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.os.Build;
 
@@ -21,9 +22,15 @@ public class Camera2SettingModel implements ICameraSettingModel {
     private int mCameraNumber;
     private CameraCharacteristics mCameraCharacteristics;
 
+    private CaptureRequest.Builder mBuilder;
+
     public Camera2SettingModel(CameraCharacteristics cameraCharacteristics, int cameraNumber) {
         mCameraCharacteristics = cameraCharacteristics;
         mCameraNumber = cameraNumber;
+    }
+
+    public void setCaptureRequestBuilder(CaptureRequest.Builder builder) {
+        mBuilder = builder;
     }
 
     @Override
@@ -83,5 +90,50 @@ public class Camera2SettingModel implements ICameraSettingModel {
     @Override
     public void setDisplayOrientation(int degree) {
 
+    }
+
+    @Override
+    public void setFlash(int flashState) {
+        switch (flashState) {
+            case FLASH_OFF:
+                mBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);
+                mBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_OFF);
+                break;
+            case FLASH_AUTO:
+                mBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH);
+                break;
+            case FLASH_ON:
+                mBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON_ALWAYS_FLASH);
+                break;
+            default:
+                break;
+        }
+        if (mOnParameterChangedListener != null) {
+            mOnParameterChangedListener.onChanged(mBuilder);
+        }
+    }
+
+    @Override
+    public int getFlash() {
+        switch (mBuilder.get(CaptureRequest.CONTROL_AE_MODE)) {
+            case CaptureRequest.CONTROL_AE_MODE_OFF:
+                return FLASH_OFF;
+            case CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH:
+                return FLASH_AUTO;
+            case CaptureRequest.CONTROL_AE_MODE_ON_ALWAYS_FLASH:
+                return FLASH_ON;
+
+        }
+        return FLASH_OFF;
+    }
+
+    private OnParameterChangedListener mOnParameterChangedListener;
+
+    public void setOnParameterChangedListener(OnParameterChangedListener onParameterChangedListener) {
+        mOnParameterChangedListener = onParameterChangedListener;
+    }
+
+    public interface OnParameterChangedListener {
+        void onChanged(CaptureRequest.Builder builder);
     }
 }

@@ -89,4 +89,37 @@ public class CameraSettingModel implements ICameraSettingModel {
     public void setDisplayOrientation(int degree) {
         mCamera.setDisplayOrientation(degree);
     }
+
+    @Override
+    public void setFlash(int flashState) {
+        Camera.Parameters parameters = getParameters();
+        switch (flashState) {
+            case FLASH_OFF:
+                parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                break;
+            case FLASH_AUTO:
+                parameters.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
+                break;
+            case FLASH_ON:
+                parameters.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
+                break;
+            default:
+                break;
+        }
+        applyParameter(parameters);
+    }
+
+    @Override
+    public int getFlash() {
+        Camera.Parameters parameters = getParameters();
+        switch (parameters.getFlashMode()) {
+            case Camera.Parameters.FLASH_MODE_OFF:
+                return FLASH_OFF;
+            case Camera.Parameters.FLASH_MODE_AUTO:
+                return FLASH_AUTO;
+            case Camera.Parameters.FLASH_MODE_ON:
+                return FLASH_ON;
+        }
+        return FLASH_OFF;
+    }
 }

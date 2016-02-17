@@ -147,16 +147,16 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
                 }
                 initUIState();
                 initLogicState();
-                onGridClick(-1);
                 mPreviewSize = getSuitablePreviewSize(mCameraSettingModel.getSupportPreviewSizes());
-                if (mPreviewSize.equals(mFullSize)) {
+                if (mRatioState == Const.LAYOUT_PERSONAL_RATIO_FULL) {
                     mICameraView.doFullRatioAnimation();
-                } else if (mPreviewSize.equals(m43Size)) {
+                } else if (mRatioState == Const.LAYOUT_PERSONAL_RATIO_4_3) {
                     mICameraView.do43RatioAnimation();
                 } else {
                     mICameraView.do11RatioAnimation();
                 }
                 mICameraView.setSize(mPreviewSize.getHeight(), mPreviewSize.getWidth());
+                onGridClick(-1);
             }
 
             @Override
@@ -296,11 +296,25 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
     }
 
     private void closeCamera() {
+        saveState();
         if (mPreviewModel != null && mPreviewModel.isPreview()) {
             mPreviewModel.stopPreview();
         }
         if (mCameraModel.isOpen()) {
             mCameraModel.closeCamera();
+        }
+    }
+
+    /**
+     * 保存参数
+     */
+    private void saveState() {
+        if (mLocalStorageUtils.getCameraSaveSetting()) {
+            mLocalStorageUtils.setCameraSaveFlash(mFlashState);
+            mLocalStorageUtils.setCameraSaveTimer(mTimerState);
+            mLocalStorageUtils.setCameraGridOpen(mGridState);
+            mLocalStorageUtils.setCameraPreviewRatio(mRatioState);
+            mLocalStorageUtils.setCameraSaveCameraId(mCurrentCameraId);
         }
     }
 
@@ -382,6 +396,9 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
     @Override
     public void onFlashClick(int state) {
         mFlashState = CameraStateUtils.changeFlashUIState2LogicState(state);
+        if (mCameraSettingModel != null) {
+            mCameraSettingModel.setFlash(mFlashState);
+        }
     }
 
     @Override
@@ -401,7 +418,6 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
             }
             mPreviewModel.stopPreview();
             mICameraView.setSize(mPreviewSize.getHeight(), mPreviewSize.getWidth());
-            onGridClick(-1);
             mPreviewModel.startPreview(mPreviewSurface, new IPreviewModel.OnCameraPreviewCallback() {
                 @Override
                 public void onPreview(ICaptureModel captureModel, ICameraFocus cameraFocus) {
@@ -419,9 +435,9 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
                 mPreviewModel.stopPreview();
                 mICameraView.setSize(mPreviewSize.getHeight(), mPreviewSize.getWidth());
             }
-            onGridClick(-1);
             mICameraView.do11RatioAnimation();
         }
+        onGridClick(-1);
     }
 
     @Override
@@ -447,27 +463,21 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
         if (mGridState) {
             int top = 0;
             int bottom = 0;
-            int screenHeight = Utils.sScreenHeight;
-            int viewHeight = mICameraView.getPreviewViewHeight();
             switch (mRatioState) {
                 case Const.LAYOUT_PERSONAL_RATIO_FULL:
-                    if (viewHeight < screenHeight) {
-                        bottom = screenHeight - viewHeight;
-                    }
-                    break;
-                case Const.LAYOUT_PERSONAL_RATIO_1_1:
-                    top = mICameraView.getTopViewHeight();
-                    bottom = screenHeight - top - mICameraView.getPreviewViewWidth();
+                    mICameraView.setGridUI(true, top, bottom, mPreviewSize.getWidth(), mPreviewSize.getHeight());
                     break;
                 case Const.LAYOUT_PERSONAL_RATIO_4_3:
                     top = mICameraView.getTopViewHeight();
-                    bottom = screenHeight - top - viewHeight;
+                    mICameraView.setGridUI(true, top, bottom, mPreviewSize.getWidth(), mPreviewSize.getHeight());
+                    break;
+                case Const.LAYOUT_PERSONAL_RATIO_1_1:
+                    top = mICameraView.getTopViewHeight();
+                    mICameraView.setGridUI(true, top, bottom, mPreviewSize.getWidth(), mPreviewSize.getWidth());
                     break;
             }
-            mICameraView.setGridUI(true, top, bottom);
         } else {
-            mICameraView.setGridUI(false, 0, 0);
-
+            mICameraView.setGridUI(false, 0, 0, mPreviewSize.getWidth(), mPreviewSize.getHeight());
         }
     }
 
@@ -491,6 +501,8 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
                             if (pictureSize == null) {
                                 savePictureSizes(mCurrentCameraId);
                             }
+                            initUIState();
+                            initLogicState();
                             mPreviewSize = getSuitablePreviewSize(mCameraSettingModel.getSupportPreviewSizes());
                             mPreviewModel.startPreview(mPreviewSurface, new IPreviewModel.OnCameraPreviewCallback() {
 

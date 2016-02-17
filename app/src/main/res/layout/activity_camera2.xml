@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <com.yydcdut.note.widget.camera.CameraGridView
+    <com.yydcdut.note.widget.camera.CameraGridLayout
         android:id="@+id/grid_camera"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

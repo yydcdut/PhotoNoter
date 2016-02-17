@@ -6,8 +6,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 /**
  * Created by yuyidong on 15/9/1.
@@ -69,20 +67,4 @@ public class CameraGridView extends View {
         canvas.drawLine(0, deltaHeight, getMeasuredWidth(), deltaHeight, p);
         canvas.drawLine(0, deltaHeight * 2, getMeasuredWidth(), deltaHeight * 2, p);
     }
-
-    public void open() {
-        setVisibility(VISIBLE);
-    }
-
-    public void close() {
-        setVisibility(INVISIBLE);
-    }
-
-    public void setMargin(int top, int bottom) {
-        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-        lp.setMargins(0, top, 0, bottom);
-        setLayoutParams(lp);
-    }
-
 }

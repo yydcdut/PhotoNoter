@@ -37,7 +37,7 @@ public interface ICameraView extends IView {
 
     void doFullRatioAnimation();
 
-    void setGridUI(boolean show, int top, int bottom);
+    void setGridUI(boolean show, int top, int bottom, int previewWidth, int previewHeight);
 
     void startTimer(int time);
 

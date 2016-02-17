@@ -19,11 +19,12 @@ import com.yydcdut.note.presenters.camera.impl.CameraPresenterImpl;
 import com.yydcdut.note.service.CameraService;
 import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.Const;
+import com.yydcdut.note.utils.Utils;
 import com.yydcdut.note.views.BaseActivity;
 import com.yydcdut.note.views.camera.ICameraView;
 import com.yydcdut.note.widget.camera.AnimationTextView;
 import com.yydcdut.note.widget.camera.AutoFitPreviewView;
-import com.yydcdut.note.widget.camera.CameraGridView;
+import com.yydcdut.note.widget.camera.CameraGridLayout;
 import com.yydcdut.note.widget.camera.CameraTopView;
 
 import javax.inject.Inject;
@@ -57,7 +58,7 @@ public class CameraActivity2 extends BaseActivity implements ICameraView,
     View mRatioCoverView;
 
     @Bind(R.id.grid_camera)
-    CameraGridView mCameraGridView;
+    CameraGridLayout mCameraGridLayout;
 
     @Bind(R.id.txt_timer)
     AnimationTextView mWindowTextView;
@@ -136,7 +137,12 @@ public class CameraActivity2 extends BaseActivity implements ICameraView,
 
     @Override
     public int getTopViewHeight() {
-        return mCameraTopView.getMeasuredHeight();
+        int height = 0;
+        if (AppCompat.AFTER_LOLLIPOP) {
+            height += getStatusBarSize();
+        }
+        height += getResources().getDimension(R.dimen.dimen_48dip);
+        return height;
     }
 
     @Override
@@ -163,7 +169,7 @@ public class CameraActivity2 extends BaseActivity implements ICameraView,
         if (mRatioCoverView.getVisibility() == View.VISIBLE) {
             mRatioCoverView.setVisibility(View.GONE);
         }
-        int top = mCameraTopView.getMeasuredHeight();
+        int top = getTopViewHeight();
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mAutoFitPreviewView.getLayoutParams();
         layoutParams.setMargins(0, top, 0, 0);
         mAutoFitPreviewView.setLayoutParams(layoutParams);
@@ -171,24 +177,26 @@ public class CameraActivity2 extends BaseActivity implements ICameraView,
 
     @Override
     public void do11RatioAnimation() {
+        do43RatioAnimation();
+        mRatioCoverView.setVisibility(View.VISIBLE);
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mRatioCoverView.getLayoutParams();
-        if (lp.height == 0) {
-            int topMargin = mCameraTopView.getMeasuredHeight();
-            int width = mAutoFitPreviewView.getAspectWidth();
-            int height = mAutoFitPreviewView.getAspectHeight();
-            topMargin += height;
-            int delta = height - width;
-            if (delta > 0) {
-                topMargin -= delta;
-                lp.height = delta;
-            }
-            mRatioCoverView.setVisibility(View.VISIBLE);
-            lp.setMargins(0, topMargin, 0, 0);
-            mRatioCoverView.setLayoutParams(lp);
-            mRatioCoverView.requestLayout();
+        int topMargin = getTopViewHeight();
+        int width = mAutoFitPreviewView.getAspectWidth();
+        int height = mAutoFitPreviewView.getAspectHeight();
+        int delta = 0;
+        if (width == 0 || height == 0) {
+            width = Utils.sScreenWidth;
+            delta = width;
         } else {
-            mRatioCoverView.setVisibility(View.VISIBLE);
+            delta = height - width;
         }
+        topMargin += width;
+        if (delta > 0) {
+            lp.height = delta;
+        }
+        lp.setMargins(0, topMargin, 0, 0);
+        mRatioCoverView.setLayoutParams(lp);
+        mRatioCoverView.requestLayout();
     }
 
     @Override
@@ -205,12 +213,13 @@ public class CameraActivity2 extends BaseActivity implements ICameraView,
     }
 
     @Override
-    public void setGridUI(boolean show, int top, int bottom) {
+    public void setGridUI(boolean show, int top, int bottom, int previewWidth, int previewHeight) {
         if (show) {
-            mCameraGridView.open();
-            mCameraGridView.setMargin(top, bottom);
+            mCameraGridLayout.open();
+            mCameraGridLayout.setAspectRatio(previewHeight, previewWidth);
+            mCameraGridLayout.setMargin(top, bottom);
         } else {
-            mCameraGridView.close();
+            mCameraGridLayout.close();
         }
     }
 

@@ -6,4 +6,8 @@ package com.yydcdut.note.model.camera;
 public interface ICameraRequest extends ICameraParams {
 
     void setDisplayOrientation(int degree);
+
+    void setFlash(int flashState);
+
+    int getFlash();
 }
