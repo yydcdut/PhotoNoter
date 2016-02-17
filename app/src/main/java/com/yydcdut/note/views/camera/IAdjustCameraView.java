@@ -8,4 +8,6 @@ import com.yydcdut.note.views.IView;
 public interface IAdjustCameraView extends IView {
 
     void setSize(int w, int h);
+
+    void finishActivity();
 }

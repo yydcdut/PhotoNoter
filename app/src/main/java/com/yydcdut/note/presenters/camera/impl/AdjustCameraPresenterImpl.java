@@ -11,10 +11,8 @@ import com.yydcdut.note.model.camera.ICameraSettingModel;
 import com.yydcdut.note.model.camera.ICaptureModel;
 import com.yydcdut.note.model.camera.IPreviewModel;
 import com.yydcdut.note.model.camera.impl.CameraModelImpl;
-import com.yydcdut.note.model.camera.impl2.Camera2ModelImpl;
 import com.yydcdut.note.model.compare.SizeComparator;
 import com.yydcdut.note.presenters.camera.IAdjustCameraPresenter;
-import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.Utils;
@@ -38,7 +36,7 @@ public class AdjustCameraPresenterImpl implements IAdjustCameraPresenter {
     private String mCameraId = Const.CAMERA_BACK;
 
     private int mCurrentOrientationDegree = 0;
-    private int mDeltaOrientationDegree = 90;
+    private static final int DELTA_DEGREE = 90;
 
     private LocalStorageUtils mLocalStorageUtils;
 
@@ -53,21 +51,23 @@ public class AdjustCameraPresenterImpl implements IAdjustCameraPresenter {
                                      CameraModelImpl cameraModelImpl) {
         mLocalStorageUtils = localStorageUtils;
         mCurrentOrientationDegree = getCameraRotation();
-        //todo 是不是使用Camera2
-        if (AppCompat.AFTER_LOLLIPOP) {
-            mCameraModel = new Camera2ModelImpl(context);
-        } else {
-            mCameraModel = cameraModelImpl;
-        }
+        //Camera2没有设置方向的方法
+//        if (AppCompat.AFTER_LOLLIPOP) {
+//            mCameraModel = new Camera2ModelImpl(context);
+//        } else {
+        mCameraModel = cameraModelImpl;
+//        }
     }
 
     private int getCameraRotation() {
         switch (mCameraId) {
             case Const.CAMERA_BACK:
-                return mLocalStorageUtils.getCameraBackRotation();
+                mCurrentOrientationDegree = mLocalStorageUtils.getCameraBackRotation();
+                return mCurrentOrientationDegree;
             default:
             case Const.CAMERA_FRONT:
-                return mLocalStorageUtils.getCameraFrontRotation();
+                mCurrentOrientationDegree = mLocalStorageUtils.getCameraBackRotation();
+                return mCurrentOrientationDegree;
         }
     }
 
@@ -109,13 +109,23 @@ public class AdjustCameraPresenterImpl implements IAdjustCameraPresenter {
                 continue;
             }
             float preScale = preSize.getWidth() / (float) preSize.getHeight();
-            //full ratio 如果全屏也是4：3的话，就先这样吧
             if (Math.abs(preScale - screenScale) < 0.03) {
                 previewSize = preSize;
             }
         }
         if (previewSize == null) {
-            previewSize = previewList.get(0);
+            for (Size preSize : previewList) {
+                if (preSize.getWidth() * preSize.getHeight() > 1200000) {
+                    continue;
+                }
+                float preScale = preSize.getWidth() / (float) preSize.getHeight();
+                if (preScale < 1.36f && preScale > 1.30f) {
+                    previewSize = preSize;
+                }
+            }
+        }
+        if (previewSize == null) {
+            previewSize = previewList.get(previewList.size() / 2);
         }
         return previewSize;
     }
@@ -203,6 +213,7 @@ public class AdjustCameraPresenterImpl implements IAdjustCameraPresenter {
 
     @Override
     public void switchCamera() {
+        saveRotation();
         if (mCameraSettingModel != null && mCameraSettingModel.getNumberOfCameras() == 2) {
             if (Const.CAMERA_BACK.equals(mCameraId)) {
                 mCameraId = Const.CAMERA_FRONT;
@@ -230,12 +241,24 @@ public class AdjustCameraPresenterImpl implements IAdjustCameraPresenter {
 
     @Override
     public void clickBack() {
+        saveRotation();
+        mAdjustCameraView.finishActivity();
+    }
 
+    private void saveRotation() {
+        if (Const.CAMERA_BACK.equals(mCameraId)) {
+            mLocalStorageUtils.setCameraBackRotation(mCurrentOrientationDegree % 360);
+        } else if (Const.CAMERA_FRONT.equals(mCameraId)) {
+            mLocalStorageUtils.setCameraFrontRotation(mCurrentOrientationDegree % 360);
+        }
     }
 
     @Override
     public void clickRotation() {
-
+        if (mCameraSettingModel != null) {
+            mCurrentOrientationDegree = (mCurrentOrientationDegree + DELTA_DEGREE) % 360;
+            mCameraSettingModel.setDisplayOrientation(mCurrentOrientationDegree);
+        }
     }
 
     private IPreviewModel.OnCameraPreviewCallback mPreviewCallback = new IPreviewModel.OnCameraPreviewCallback() {

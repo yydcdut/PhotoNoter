@@ -84,4 +84,9 @@ public class CameraSettingModel implements ICameraSettingModel {
         Camera.Size size = parameters.getPreviewSize();
         return new Size(size.width, size.height);
     }
+
+    @Override
+    public void setDisplayOrientation(int degree) {
+        mCamera.setDisplayOrientation(degree);
+    }
 }

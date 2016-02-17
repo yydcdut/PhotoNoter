@@ -79,4 +79,9 @@ public class Camera2SettingModel implements ICameraSettingModel {
         }
         return sizeList;
     }
+
+    @Override
+    public void setDisplayOrientation(int degree) {
+
+    }
 }

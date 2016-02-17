@@ -73,28 +73,18 @@ public class AdjustCameraActivity extends BaseActivity implements IAdjustCameraV
     private void initToolBarUI() {
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        mToolbar.setOnMenuItemClickListener(onToolBarMenuItemClick);
         mToolbar.setBackgroundColor(AppCompat.getColor(android.R.color.transparent, this));
         mToolbar.setTitle("");
     }
-
-    private Toolbar.OnMenuItemClickListener onToolBarMenuItemClick = new Toolbar.OnMenuItemClickListener() {
-        @Override
-        public boolean onMenuItemClick(MenuItem menuItem) {
-            switch (menuItem.getItemId()) {
-                case R.id.menu_switch_camera:
-                    mAdjustCameraPresenter.switchCamera();
-                    break;
-            }
-            return true;
-        }
-    };
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 mAdjustCameraPresenter.clickBack();
+                break;
+            case R.id.menu_switch_camera:
+                mAdjustCameraPresenter.switchCamera();
                 break;
         }
         return true;
@@ -124,5 +114,15 @@ public class AdjustCameraActivity extends BaseActivity implements IAdjustCameraV
     @Override
     public void setSize(int w, int h) {
         mAutoFitPreviewView.setAspectRatio(w, h);
+    }
+
+    @Override
+    public void finishActivity() {
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        mAdjustCameraPresenter.clickBack();
     }
 }
