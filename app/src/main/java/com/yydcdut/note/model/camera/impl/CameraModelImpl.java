@@ -151,12 +151,10 @@ public class CameraModelImpl implements ICameraModel {
                 time = System.currentTimeMillis();
                 try {
 //            mCamera.takePicture(sound ? new SoundCallBack() : null, null, new PictureCallBack(time, mCategoryId, ratio, isMirror));
-                    mCamera.takePicture(true ? new SoundCallBack() : null, null, new PictureCallBack(time, pictureReturnCallback));
+                    mCamera.takePicture(null, null, new PictureCallBack(time, pictureReturnCallback));
                     mCameraState = STATE_CAMERA_CAPTURE;
                 } catch (Exception e) {
-                    if (pictureReturnCallback != null) {
-                        pictureReturnCallback.onPictureTaken(false, null, 0l);
-                    }
+                    pictureReturnCallback.onPictureTaken(false, null, 0l);
                 }
             } else {
                 YLog.i(TAG, "capture  focusState--->" + mCameraFocusModel.getFocusState() + "   CameraState--->" + mCameraState);
