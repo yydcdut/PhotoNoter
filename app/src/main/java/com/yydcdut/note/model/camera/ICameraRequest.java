@@ -10,4 +10,12 @@ public interface ICameraRequest extends ICameraParams {
     void setFlash(int flashState);
 
     int getFlash();
+
+    void setZoom(int value);
+
+    int getZoom();
+
+    void setExposureCompensation(int value);
+
+    int calculateZoom(int firstZoomValue, float firstCurrentSpan, float currectCurrentSpan);
 }

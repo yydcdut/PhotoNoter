@@ -209,9 +209,9 @@ public class Camera2ModelImpl implements ICameraModel, Camera2SettingModel.OnPar
                 mYuvImageReader = ImageReader.newInstance(yuvSize.getWidth(), yuvSize.getHeight(), ImageFormat.YUV_420_888, 10);
                 mPicturesPreviewCallback = new PicturesPreviewCallback();
                 mYuvImageReader.setOnImageAvailableListener(mPicturesPreviewCallback, null);
-                mCamera2SettingModel.setCaptureRequestBuilder(mPreviewRequestBuilder);
                 mPreviewRequestBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
                 mPreviewRequestBuilder.addTarget(surface);
+                mCamera2SettingModel.setCaptureRequestBuilder(mPreviewRequestBuilder);
                 mCameraDevice.createCaptureSession(Arrays.asList(surface, mJpgImageReader.getSurface(), mYuvImageReader.getSurface()),
                         new CameraCaptureSession.StateCallback() {
 

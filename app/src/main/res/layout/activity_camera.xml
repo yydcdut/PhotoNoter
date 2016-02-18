@@ -31,7 +31,7 @@
         android:textColor="@android:color/white"
         android:textSize="30sp"/>
 
-    <com.yydcdut.note.camera.view.GestureView
+    <com.yydcdut.note.widget.camera.GestureView
         android:id="@+id/view_gesture"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"/>

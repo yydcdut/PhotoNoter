@@ -8,6 +8,7 @@ import android.os.Message;
 import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -30,6 +31,7 @@ import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.Utils;
+import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.utils.camera.CameraStateUtils;
 import com.yydcdut.note.utils.camera.param.Size;
 import com.yydcdut.note.views.IView;
@@ -69,20 +71,24 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
     private ICameraSettingModel mCameraSettingModel;
     private IPreviewModel mPreviewModel;
     private ICaptureModel mCaptureModel;
+    private ICameraFocus mCameraFocus;
     /* 参数 */
     private Context mContext;
     private LocalStorageUtils mLocalStorageUtils;
-
+    /* 状态 */
     private int mFlashState = 0;
     private int mRatioState = 0;
     private int mTimerState = 0;
     private boolean mGridState = false;
-
     /* 坐标 */
     private LocationClient mLocationClient;
     private double mLatitude;
     private double mLongitude;
-
+    /* Camera Zoom */
+    private float mZoomCurrentSpan = 0;
+    private int mFirstZoomValue = 0;
+    private int mLastZoomValue = 0;
+    /* CameraId */
     private String mCurrentCameraId;
     /* Message */
     private static final int MSG_DOWN = 1;
@@ -124,9 +130,11 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
                 at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:600)
                 at dalvik.system.NativeStart.main(Native Method)
             */
+            YLog.i("yuyidong", "Camera2ModelImpl");
             mCameraModel = new Camera2ModelImpl(context);
 //            mCameraModel = cameraModelImpl;
         } else {
+            YLog.i("yuyidong", "CameraModelImpl");
             mCameraModel = cameraModelImpl;
         }
     }
@@ -342,6 +350,7 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
                                 @Override
                                 public void onPreview(ICaptureModel captureModel, ICameraFocus cameraFocus) {
                                     mCaptureModel = captureModel;
+                                    mCameraFocus = cameraFocus;
                                 }
 
                                 @Override
@@ -364,6 +373,7 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
                 @Override
                 public void onPreview(ICaptureModel captureModel, ICameraFocus cameraFocus) {
                     mCaptureModel = captureModel;
+                    mCameraFocus = cameraFocus;
                 }
 
                 @Override
@@ -422,6 +432,7 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
                 @Override
                 public void onPreview(ICaptureModel captureModel, ICameraFocus cameraFocus) {
                     mCaptureModel = captureModel;
+                    mCameraFocus = cameraFocus;
                 }
 
                 @Override
@@ -509,6 +520,7 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
                                 @Override
                                 public void onPreview(ICaptureModel captureModel, ICameraFocus cameraFocus) {
                                     mCaptureModel = captureModel;
+                                    mCameraFocus = cameraFocus;
                                 }
 
                                 @Override
@@ -692,6 +704,38 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
             default:
                 return mLocalStorageUtils.getCameraFrontRotation();
         }
+    }
+
+    @Override
+    public boolean onZoomChange(float num) {
+        int zoomValue = mCameraSettingModel.calculateZoom(mFirstZoomValue, mZoomCurrentSpan, num);
+        if (zoomValue != -1 && mLastZoomValue != zoomValue) {
+            mCameraSettingModel.setZoom(zoomValue);
+            mLastZoomValue = zoomValue;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onZoomBegin(float currentSpan) {
+        boolean isZoomSupported = mCameraSettingModel.isZoomSupported();
+        YLog.i("yuyidong", "isZoomSupported--->" + isZoomSupported);
+        if (isZoomSupported) {
+            mZoomCurrentSpan = currentSpan;
+            mFirstZoomValue = mCameraSettingModel.getZoom();
+            mLastZoomValue = mFirstZoomValue;
+        }
+        return isZoomSupported;
+    }
+
+    @Override
+    public void getMotionEvent(MotionEvent event) {
+
+    }
+
+    @Override
+    public boolean onFocusTrigger(float x, float y) {
+        return false;
     }
 
 }

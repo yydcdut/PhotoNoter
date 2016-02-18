@@ -26,6 +26,7 @@ import com.yydcdut.note.widget.camera.AnimationTextView;
 import com.yydcdut.note.widget.camera.AutoFitPreviewView;
 import com.yydcdut.note.widget.camera.CameraGridLayout;
 import com.yydcdut.note.widget.camera.CameraTopView;
+import com.yydcdut.note.widget.camera.GestureView;
 
 import javax.inject.Inject;
 
@@ -37,7 +38,9 @@ import butterknife.OnTouch;
  * Created by yuyidong on 16/2/3.
  */
 public class CameraActivity2 extends BaseActivity implements ICameraView,
-        AutoFitPreviewView.SurfaceListener, CameraTopView.OnItemClickListener, AnimationTextView.OnAnimationTextViewListener {
+        AutoFitPreviewView.SurfaceListener, CameraTopView.OnItemClickListener,
+        AnimationTextView.OnAnimationTextViewListener, GestureView.OnZoomScaleListener,
+        GestureView.OnFocusListener {
     /* Service */
     private boolean mIsBind = false;
     private ICameraData mCameraService;
@@ -62,6 +65,9 @@ public class CameraActivity2 extends BaseActivity implements ICameraView,
 
     @Bind(R.id.txt_timer)
     AnimationTextView mWindowTextView;
+
+    @Bind(R.id.view_gesture)
+    GestureView mGestureView;
 
     @Override
     public boolean setStatusBar() {
@@ -96,6 +102,8 @@ public class CameraActivity2 extends BaseActivity implements ICameraView,
         mAutoFitPreviewView.setSurfaceListener(this);
         mCameraTopView.setOnItemClickListener(this);
         mWindowTextView.setOnAnimationTextViewListener(this);
+        mGestureView.setOnZoomScaleListener(this);
+        mGestureView.setOnFocusListener(this);
         bindCameraService();
     }
 
@@ -326,5 +334,25 @@ public class CameraActivity2 extends BaseActivity implements ICameraView,
     @Override
     public void onTextDisappear() {
         mCameraPresenter.onTimerFinish();
+    }
+
+    @Override
+    public boolean onZoomChange(float num) {
+        return mCameraPresenter.onZoomChange(num);
+    }
+
+    @Override
+    public boolean onZoomBegin(float currentSpan) {
+        return mCameraPresenter.onZoomBegin(currentSpan);
+    }
+
+    @Override
+    public void getMotionEvent(MotionEvent event) {
+        mCameraPresenter.getMotionEvent(event);
+    }
+
+    @Override
+    public boolean onFocusTrigger(float x, float y) {
+        return mCameraPresenter.onFocusTrigger(x, y);
     }
 }

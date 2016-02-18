@@ -61,6 +61,29 @@ public class CameraSettingModel implements ICameraSettingModel {
         return list;
     }
 
+    @Override
+    public boolean isZoomSupported() {
+        return getParameters().isZoomSupported();
+    }
+
+    @Override
+    public int getMaxZoom() {
+        Camera.Parameters parameters = getParameters();
+        return parameters.getMaxZoom();
+    }
+
+    @Override
+    public int getMaxExposureCompensation() {
+        Camera.Parameters parameters = getParameters();
+        return parameters.getMaxExposureCompensation();
+    }
+
+    @Override
+    public int getMinExposureCompensation() {
+        Camera.Parameters parameters = getParameters();
+        return parameters.getMinExposureCompensation();
+    }
+
     public void setPreviewSize(int width, int height) {
         Camera.Parameters parameters = getParameters();
         parameters.setPreviewSize(width, height);
@@ -121,5 +144,42 @@ public class CameraSettingModel implements ICameraSettingModel {
                 return FLASH_ON;
         }
         return FLASH_OFF;
+    }
+
+    @Override
+    public void setZoom(int value) {
+        Camera.Parameters parameters = getParameters();
+        parameters.setZoom(value);
+        applyParameter(parameters);
+    }
+
+    @Override
+    public int getZoom() {
+        Camera.Parameters parameters = getParameters();
+        return parameters.getZoom();
+    }
+
+    @Override
+    public void setExposureCompensation(int value) {
+        Camera.Parameters parameters = getParameters();
+        parameters.setExposureCompensation(value);
+        applyParameter(parameters);
+    }
+
+    @Override
+    public int calculateZoom(int firstZoomValue, float firstCurrentSpan, float currectCurrentSpan) {
+        if (!isZoomSupported()) {
+            return -1;
+        }
+        List<Integer> zoomRatios = getParameters().getZoomRatios();
+        int scaleInt = (int) ((currectCurrentSpan / firstCurrentSpan) * zoomRatios.get(firstZoomValue));
+        int size = zoomRatios.size();
+        for (int index = 0; index < size; index++) {
+            int value = zoomRatios.get(index);
+            if (scaleInt <= value) {
+                return index;
+            }
+        }
+        return size - 1;
     }
 }

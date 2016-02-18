@@ -14,4 +14,5 @@ public interface ICameraFocus {
     void triggerFocus(int x, int y);
 
     void cancelFocus();
+
 }

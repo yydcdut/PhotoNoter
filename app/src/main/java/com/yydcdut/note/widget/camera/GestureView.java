@@ -1,4 +1,4 @@
-package com.yydcdut.note.camera.view;
+package com.yydcdut.note.widget.camera;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -115,8 +115,8 @@ public class GestureView extends View {
         if (mOnFocusListener != null) {
             mOnFocusListener.getMotionEvent(event);
         }
-        boolean retVal = true && mScaleGestureDetector.onTouchEvent(event);
-        retVal = (true && mGestureDetector.onTouchEvent(event)) || retVal;
+        boolean retVal = mScaleGestureDetector.onTouchEvent(event);
+        retVal = mGestureDetector.onTouchEvent(event) || retVal;
         return retVal;
     }
 

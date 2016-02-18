@@ -15,4 +15,12 @@ public interface ICameraCharacteristic extends ICameraParams {
     List<Size> getSupportPreviewSizes();
 
     List<Size> getSupportPictureSizes();
+
+    boolean isZoomSupported();
+
+    int getMaxZoom();
+
+    int getMaxExposureCompensation();
+
+    int getMinExposureCompensation();
 }

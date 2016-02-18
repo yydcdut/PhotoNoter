@@ -2,13 +2,16 @@ package com.yydcdut.note.model.camera.impl2;
 
 import android.annotation.TargetApi;
 import android.graphics.ImageFormat;
+import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.os.Build;
+import android.util.Range;
 
 import com.yydcdut.note.model.camera.ICameraSettingModel;
+import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.utils.camera.param.Size;
 
 import java.util.ArrayList;
@@ -73,6 +76,28 @@ public class Camera2SettingModel implements ICameraSettingModel {
         return sizeList;
     }
 
+    @Override
+    public boolean isZoomSupported() {
+        return mCameraCharacteristics.get(CameraCharacteristics.SCALER_AVAILABLE_MAX_DIGITAL_ZOOM) >= 1;
+    }
+
+    @Override
+    public int getMaxZoom() {
+        return (int) (mCameraCharacteristics.get(CameraCharacteristics.SCALER_AVAILABLE_MAX_DIGITAL_ZOOM) * 100);
+    }
+
+    @Override
+    public int getMaxExposureCompensation() {
+        Range<Long> range = mCameraCharacteristics.get(CameraCharacteristics.SENSOR_INFO_EXPOSURE_TIME_RANGE);
+        return Integer.valueOf(range.getLower().toString());
+    }
+
+    @Override
+    public int getMinExposureCompensation() {
+        Range<Long> range = mCameraCharacteristics.get(CameraCharacteristics.SENSOR_INFO_EXPOSURE_TIME_RANGE);
+        return Integer.valueOf(range.getUpper().toString());
+    }
+
     public List<Size> getSupportYUV420888Sizes() {
         StreamConfigurationMap map = mCameraCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
         if (map == null) {
@@ -108,9 +133,7 @@ public class Camera2SettingModel implements ICameraSettingModel {
             default:
                 break;
         }
-        if (mOnParameterChangedListener != null) {
-            mOnParameterChangedListener.onChanged(mBuilder);
-        }
+        doChange();
     }
 
     @Override
@@ -127,6 +150,53 @@ public class Camera2SettingModel implements ICameraSettingModel {
         return FLASH_OFF;
     }
 
+    @Override
+    public void setZoom(int value) {
+        //value ---> 0 ~ max*100
+        float zoom = ((float) value / 100);
+        Rect rect = mCameraCharacteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE);
+        float max = mCameraCharacteristics.get(CameraCharacteristics.SCALER_AVAILABLE_MAX_DIGITAL_ZOOM);
+        float scale = 1 - ((max - zoom) / max);//scale是从 0 ~ 1，当为0的时候没有变化，当为1的时候最大放大
+        float change = max * scale + 1.0f * (1 - scale);//change是从 1.0 ~ max，当为1.0的时候没有变化，当为max的时候最大放大
+        if (change > max) {
+            return;
+        }
+        int centerX = rect.centerX();
+        int centerY = rect.centerY();
+        int width = rect.width();
+        int height = rect.height();
+        float newWidth = width / change;
+        float newHeight = height / change;
+        float left = centerX - newWidth / 2;
+        float top = centerY - newHeight / 2;
+        float right = newWidth / 2 + centerX;
+        float bottom = newHeight / 2 + centerY;
+        Rect newRect = new Rect((int) left, (int) top, (int) right, (int) bottom);
+        mBuilder.set(CaptureRequest.SCALER_CROP_REGION, newRect);
+        YLog.i("yuyidong", "width-->" + width + "  height-->" + height + "  newWidth-->" + newWidth + "  newHeight-->" + newHeight + "  change-->" + change + "  scale-->" + scale);
+        doChange();
+    }
+
+    @Override
+    public int getZoom() {
+        return 0;
+    }
+
+    @Override
+    public void setExposureCompensation(int value) {
+        mBuilder.set(CaptureRequest.CONTROL_AE_EXPOSURE_COMPENSATION, value);
+        doChange();
+    }
+
+    @Override
+    public int calculateZoom(int firstZoomValue, float firstCurrentSpan, float currectCurrentSpan) {
+        if (!isZoomSupported()) {
+            return -1;
+        }
+        YLog.i("yuyidong", "calculateZoom--->" + (int) (((currectCurrentSpan / firstCurrentSpan - 1) * getMaxZoom()) + firstZoomValue));
+        return (int) (((currectCurrentSpan / firstCurrentSpan - 1) * getMaxZoom()) + firstZoomValue);
+    }
+
     private OnParameterChangedListener mOnParameterChangedListener;
 
     public void setOnParameterChangedListener(OnParameterChangedListener onParameterChangedListener) {
@@ -135,5 +205,11 @@ public class Camera2SettingModel implements ICameraSettingModel {
 
     public interface OnParameterChangedListener {
         void onChanged(CaptureRequest.Builder builder);
+    }
+
+    private void doChange() {
+        if (mOnParameterChangedListener != null) {
+            mOnParameterChangedListener.onChanged(mBuilder);
+        }
     }
 }
