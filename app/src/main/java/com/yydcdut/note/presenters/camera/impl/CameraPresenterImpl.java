@@ -8,7 +8,6 @@ import android.os.Message;
 import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.view.MotionEvent;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -199,6 +198,11 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
                         CameraStateUtils.changeCameraIdLogicState2UIState(mLocalStorageUtils.getCameraSaveCameraId()), cameraIdRes);
             } else {
                 mICameraView.initState(0, flashRes, 0, 0, 0, 0, cameraIdRes);
+            }
+            if (Const.CAMERA_BACK.equals(mCurrentCameraId)) {
+                mICameraView.initFocus(true);
+            } else {
+                mICameraView.initFocus(false);
             }
         }
     }
@@ -728,13 +732,8 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
     }
 
     @Override
-    public void getMotionEvent(MotionEvent event) {
-
-    }
-
-    @Override
-    public boolean onFocusTrigger(float x, float y) {
-        return false;
+    public void onFocusTrigger(int viewWidth, int viewHeight, float x, float y) {
+        mCameraFocus.triggerFocus(viewWidth, viewHeight, (int) x, (int) y);
     }
 
 }

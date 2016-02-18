@@ -54,13 +54,13 @@ public class CameraFocusModel implements ICameraFocus {
     }
 
     @Override
-    public void triggerFocus(int x, int y) {
+    public void triggerFocus(int viewWidth, int viewHeight, int x, int y) {
         if (mIsSupport) {
             mState = FOCUS_STATE_FOCUSING;
             Camera.Parameters parameters = mCamera.getParameters();
             parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
-            parameters.setFocusAreas(Arrays.asList(convert(x, y)));
-            parameters.setMeteringAreas(Arrays.asList(convert(x, y)));
+            parameters.setFocusAreas(Arrays.asList(convert(calculateTapArea(viewWidth, viewHeight, x, y, 1f))));
+            parameters.setMeteringAreas(Arrays.asList(convert(calculateTapArea(viewWidth, viewHeight, x, y, 2f))));
             try {
                 mCamera.setParameters(parameters);
             } catch (Exception e) {
@@ -68,6 +68,37 @@ public class CameraFocusModel implements ICameraFocus {
             }
             mCamera.autoFocus(mAutoFocusCallback);
         }
+    }
+
+    /**
+     * Convert touch position x:y in (-1000~1000)
+     */
+    private Rect calculateTapArea(int viewWidth, int viewHeight, float x, float y, float coefficient) {
+        int areaSize = Float.valueOf(300 * coefficient).intValue();
+        x = x / viewWidth;
+        y = y / viewHeight;
+
+        float cameraX = y;
+        float cameraY = 1 - x;
+
+        int centerX = (int) (cameraX * 2000 - 1000);
+        int centerY = (int) (cameraY * 2000 - 1000);
+        int left = clamp(centerX - areaSize / 2, -1000, 1000);
+        int top = clamp(centerY - areaSize / 2, -1000, 1000);
+        int right = clamp(left + areaSize, -1000, 1000);
+        int bottom = clamp(top + areaSize, -1000, 1000);
+
+        return new Rect(left, top, right, bottom);
+    }
+
+    private int clamp(int x, int min, int max) {
+        if (x > max) {
+            return max;
+        }
+        if (x < min) {
+            return min;
+        }
+        return x;
     }
 
     @Override
@@ -97,6 +128,10 @@ public class CameraFocusModel implements ICameraFocus {
         return new Camera.Area(convertArea(x, y), WEIGHT);
     }
 
+    private Camera.Area convert(Rect rect) {
+        return new Camera.Area(rect, WEIGHT);
+    }
+
     /**
      * 判断是否支持focus
      *
@@ -119,6 +154,7 @@ public class CameraFocusModel implements ICameraFocus {
     /**
      * 将坐标转换
      */
+    @Deprecated
     private Rect convertArea(int x, int y) {
         int newX = (int) ((((float) y) / mViewHeight) * WIDTH - HALF_WIDTH);
         int newY = (int) (-((((float) x) / mViewWidth) * HEIGHT)) + HALF_HEIGHT;

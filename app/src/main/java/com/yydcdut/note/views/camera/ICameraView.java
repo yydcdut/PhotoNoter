@@ -44,4 +44,6 @@ public interface ICameraView extends IView {
     boolean isTimerCounting();
 
     void interruptTimer();
+
+    void initFocus(boolean visible);
 }

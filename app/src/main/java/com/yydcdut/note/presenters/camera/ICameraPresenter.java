@@ -1,7 +1,5 @@
 package com.yydcdut.note.presenters.camera;
 
-import android.view.MotionEvent;
-
 import com.yydcdut.note.presenters.IPresenter;
 import com.yydcdut.note.widget.camera.AutoFitPreviewView;
 
@@ -38,8 +36,5 @@ public interface ICameraPresenter extends IPresenter {
 
     boolean onZoomBegin(float currentSpan);
 
-    void getMotionEvent(MotionEvent event);
-
-    boolean onFocusTrigger(float x, float y);
-
+    void onFocusTrigger(int viewWidth, int viewHeight, float x, float y);
 }

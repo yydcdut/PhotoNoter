@@ -11,7 +11,7 @@ public interface ICameraFocus {
 
     int getFocusState();
 
-    void triggerFocus(int x, int y);
+    void triggerFocus(int viewWidth, int viewHeight, int x, int y);
 
     void cancelFocus();
 

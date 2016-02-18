@@ -20,8 +20,6 @@ import com.yydcdut.note.camera.model.camera.CameraModel;
 import com.yydcdut.note.camera.view.AnimationTextView;
 import com.yydcdut.note.camera.view.AutoFitSurfaceView;
 import com.yydcdut.note.camera.view.CameraGridView;
-import com.yydcdut.note.camera.view.FocusView;
-import com.yydcdut.note.camera.view.IsoView;
 import com.yydcdut.note.camera.view.MenuLayout;
 import com.yydcdut.note.camera.view.callback.OnLayoutItemClickListener;
 import com.yydcdut.note.model.compare.SizeComparator;
@@ -30,7 +28,9 @@ import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.Utils;
 import com.yydcdut.note.utils.camera.param.Size;
+import com.yydcdut.note.widget.camera.FocusView;
 import com.yydcdut.note.widget.camera.GestureView;
+import com.yydcdut.note.widget.camera.IsoView;
 
 import org.json.JSONException;
 

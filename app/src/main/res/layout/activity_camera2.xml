@@ -32,6 +32,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
+    <com.yydcdut.note.widget.camera.IsoView
+        android:id="@+id/pb_iso"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/iso_height"
+        android:visibility="gone"/>
+
+    <com.yydcdut.note.widget.camera.FocusView
+        android:id="@+id/img_focus"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="gone"/>
+
     <View
         android:id="@+id/view_ratio_cover"
         android:layout_width="match_parent"
@@ -57,6 +69,5 @@
         app:elevation="3dp"
         app:pressedTranslationZ="12dp"
         app:rippleColor="?attr/colorPrimaryDark"/>
-
 
 </RelativeLayout>

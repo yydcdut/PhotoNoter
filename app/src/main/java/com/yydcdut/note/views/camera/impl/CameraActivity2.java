@@ -26,7 +26,9 @@ import com.yydcdut.note.widget.camera.AnimationTextView;
 import com.yydcdut.note.widget.camera.AutoFitPreviewView;
 import com.yydcdut.note.widget.camera.CameraGridLayout;
 import com.yydcdut.note.widget.camera.CameraTopView;
+import com.yydcdut.note.widget.camera.FocusView;
 import com.yydcdut.note.widget.camera.GestureView;
+import com.yydcdut.note.widget.camera.IsoView;
 
 import javax.inject.Inject;
 
@@ -40,7 +42,8 @@ import butterknife.OnTouch;
 public class CameraActivity2 extends BaseActivity implements ICameraView,
         AutoFitPreviewView.SurfaceListener, CameraTopView.OnItemClickListener,
         AnimationTextView.OnAnimationTextViewListener, GestureView.OnZoomScaleListener,
-        GestureView.OnFocusListener {
+        GestureView.OnFocusListener, FocusView.OnTriggerFocusListener,
+        FocusView.OnFocusStateChangedListener {
     /* Service */
     private boolean mIsBind = false;
     private ICameraData mCameraService;
@@ -68,6 +71,12 @@ public class CameraActivity2 extends BaseActivity implements ICameraView,
 
     @Bind(R.id.view_gesture)
     GestureView mGestureView;
+
+    @Bind(R.id.img_focus)
+    FocusView mFocusImage;
+
+    @Bind(R.id.pb_iso)
+    IsoView mIsoView;
 
     @Override
     public boolean setStatusBar() {
@@ -104,6 +113,8 @@ public class CameraActivity2 extends BaseActivity implements ICameraView,
         mWindowTextView.setOnAnimationTextViewListener(this);
         mGestureView.setOnZoomScaleListener(this);
         mGestureView.setOnFocusListener(this);
+        mFocusImage.setOnFocusStateChangedListener(this);
+        mFocusImage.setOnTriggerFocusListener(this);
         bindCameraService();
     }
 
@@ -251,6 +262,16 @@ public class CameraActivity2 extends BaseActivity implements ICameraView,
     }
 
     @Override
+    public void initFocus(boolean visible) {
+        if (visible) {
+            mFocusImage.initFocus(mAutoFitPreviewView.getAspectWidth(), mAutoFitPreviewView.getAspectHeight());
+            mIsoView.setVisibility(View.GONE);
+        } else {
+            mFocusImage.setNotSupport();
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         unbindCameraService();
@@ -348,11 +369,57 @@ public class CameraActivity2 extends BaseActivity implements ICameraView,
 
     @Override
     public void getMotionEvent(MotionEvent event) {
-        mCameraPresenter.getMotionEvent(event);
+        mFocusImage.setMotionEvent(event);
     }
 
     @Override
     public boolean onFocusTrigger(float x, float y) {
-        return mCameraPresenter.onFocusTrigger(x, y);
+        if (focusFocusing(x, y)) {
+            mCameraPresenter.onFocusTrigger(mAutoFitPreviewView.getAspectWidth(),
+                    mAutoFitPreviewView.getAspectHeight(), x, y);
+        }
+        return true;
+    }
+
+    @Override
+    public void onTriggerFocus(float x, float y) {
+        if (focusFocusing(x, y)) {
+            mCameraPresenter.onFocusTrigger(mAutoFitPreviewView.getAspectWidth(),
+                    mAutoFitPreviewView.getAspectHeight(), x, y);
+        }
+    }
+
+    @Override
+    public void onBeginFocusing(float x, float y) {
+        mIsoView.setVisibility(View.VISIBLE);
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mIsoView.getLayoutParams();
+        float isoHeight = getResources().getDimension(R.dimen.iso_height);
+        float leftMargin;
+        if (x <= Utils.sScreenWidth / 2) {
+            leftMargin = x + getResources().getDimension(R.dimen.focus_length_max) * 2 / 3;
+        } else {
+            leftMargin = x - getResources().getDimension(R.dimen.focus_length_max);
+        }
+        layoutParams.setMargins((int) (leftMargin), (int) (y - isoHeight / 2), 0, 0);
+    }
+
+    @Override
+    public void onBeginMoving() {
+        mIsoView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onFocusDisappeared() {
+        mIsoView.setVisibility(View.GONE);
+    }
+
+    /**
+     * 设置mFocusImage为聚焦状态
+     *
+     * @param x
+     * @param y
+     */
+    private boolean focusFocusing(float x, float y) {
+        return mFocusImage.startFocusing(x, y);
     }
 }

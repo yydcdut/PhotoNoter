@@ -23,7 +23,7 @@ public class Camera2FocusModel implements ICameraFocus {
     }
 
     @Override
-    public void triggerFocus(int x, int y) {
+    public void triggerFocus(int viewWidth, int viewHeight, int x, int y) {
 
     }
 

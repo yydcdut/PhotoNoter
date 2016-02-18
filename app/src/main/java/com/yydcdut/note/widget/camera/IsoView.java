@@ -1,4 +1,4 @@
-package com.yydcdut.note.camera.view;
+package com.yydcdut.note.widget.camera;
 
 import android.content.Context;
 import android.graphics.Bitmap;

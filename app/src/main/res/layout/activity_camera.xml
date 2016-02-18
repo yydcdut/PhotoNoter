@@ -16,7 +16,7 @@
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"/>
 
-    <com.yydcdut.note.camera.view.FocusView
+    <com.yydcdut.note.widget.camera.FocusView
         android:id="@+id/img_focus"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -36,7 +36,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"/>
 
-    <com.yydcdut.note.camera.view.IsoView
+    <com.yydcdut.note.widget.camera.IsoView
         android:id="@+id/pb_iso"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/iso_height"/>
