@@ -11,7 +11,6 @@ import android.os.Build;
 import android.util.Range;
 
 import com.yydcdut.note.model.camera.ICameraSettingModel;
-import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.utils.camera.param.Size;
 
 import java.util.ArrayList;
@@ -173,13 +172,22 @@ public class Camera2SettingModel implements ICameraSettingModel {
         float bottom = newHeight / 2 + centerY;
         Rect newRect = new Rect((int) left, (int) top, (int) right, (int) bottom);
         mBuilder.set(CaptureRequest.SCALER_CROP_REGION, newRect);
-        YLog.i("yuyidong", "width-->" + width + "  height-->" + height + "  newWidth-->" + newWidth + "  newHeight-->" + newHeight + "  change-->" + change + "  scale-->" + scale);
         doChange();
     }
 
     @Override
     public int getZoom() {
-        return 0;
+        float max = mCameraCharacteristics.get(CameraCharacteristics.SCALER_AVAILABLE_MAX_DIGITAL_ZOOM);
+        Rect currentRect = mBuilder.get(CaptureRequest.SCALER_CROP_REGION);
+        Rect totalRect = mCameraCharacteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE);
+        if (currentRect == null) {
+            currentRect = totalRect;
+        }
+        float scaleX = ((float) totalRect.width()) / currentRect.width();
+        float scaleY = ((float) totalRect.height()) / currentRect.height();
+        float change = scaleX > scaleY ? scaleY : scaleX;//change是从 1.0 ~ max，当为1.0的时候没有变化，当为max的时候最大放大
+        float scale = (change - 1.0f) / (max - 1.0f);//scale是从 0 ~ 1，当为0的时候没有变化，当为1的时候最大放大
+        return (int) (scale * max * 100);
     }
 
     @Override
@@ -193,8 +201,14 @@ public class Camera2SettingModel implements ICameraSettingModel {
         if (!isZoomSupported()) {
             return -1;
         }
-        YLog.i("yuyidong", "calculateZoom--->" + (int) (((currectCurrentSpan / firstCurrentSpan - 1) * getMaxZoom()) + firstZoomValue));
-        return (int) (((currectCurrentSpan / firstCurrentSpan - 1) * getMaxZoom()) + firstZoomValue);
+        int value = (int) (((currectCurrentSpan / firstCurrentSpan - 1) * getMaxZoom()) + firstZoomValue);
+        if (value > getMaxZoom()) {
+            return getMaxZoom();
+        } else if (value < 0) {
+            return 0;
+        } else {
+            return value;
+        }
     }
 
     private OnParameterChangedListener mOnParameterChangedListener;

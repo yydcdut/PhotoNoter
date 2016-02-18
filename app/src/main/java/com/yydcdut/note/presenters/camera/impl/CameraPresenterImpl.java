@@ -719,7 +719,6 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
     @Override
     public boolean onZoomBegin(float currentSpan) {
         boolean isZoomSupported = mCameraSettingModel.isZoomSupported();
-        YLog.i("yuyidong", "isZoomSupported--->" + isZoomSupported);
         if (isZoomSupported) {
             mZoomCurrentSpan = currentSpan;
             mFirstZoomValue = mCameraSettingModel.getZoom();
