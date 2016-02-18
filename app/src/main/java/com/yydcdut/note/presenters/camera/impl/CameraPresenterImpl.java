@@ -79,6 +79,7 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
     private int mRatioState = 0;
     private int mTimerState = 0;
     private boolean mGridState = false;
+    private int mExposureCompensation = 0;
     /* 坐标 */
     private LocationClient mLocationClient;
     private double mLatitude;
@@ -199,6 +200,7 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
             } else {
                 mICameraView.initState(0, flashRes, 0, 0, 0, 0, cameraIdRes);
             }
+
             if (Const.CAMERA_BACK.equals(mCurrentCameraId)) {
                 mICameraView.initFocus(true);
             } else {
@@ -327,6 +329,7 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
             mLocalStorageUtils.setCameraGridOpen(mGridState);
             mLocalStorageUtils.setCameraPreviewRatio(mRatioState);
             mLocalStorageUtils.setCameraSaveCameraId(mCurrentCameraId);
+            mLocalStorageUtils.setCameraExposureCompensation(mExposureCompensation);
         }
     }
 
@@ -355,6 +358,7 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
                                 public void onPreview(ICaptureModel captureModel, ICameraFocus cameraFocus) {
                                     mCaptureModel = captureModel;
                                     mCameraFocus = cameraFocus;
+                                    initExposure();
                                 }
 
                                 @Override
@@ -378,6 +382,7 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
                 public void onPreview(ICaptureModel captureModel, ICameraFocus cameraFocus) {
                     mCaptureModel = captureModel;
                     mCameraFocus = cameraFocus;
+                    initExposure();
                 }
 
                 @Override
@@ -385,6 +390,24 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
 
                 }
             }, mPreviewSize);
+        }
+    }
+
+    /**
+     * 初始化曝光
+     */
+    private void initExposure() {
+        if (mLocalStorageUtils.getCameraSaveSetting()) {
+            mExposureCompensation = mLocalStorageUtils.getCameraExposureCompensation();
+            YLog.i("yuyidong", "mExposureCompensation--->" + mExposureCompensation);
+            int max = mCameraSettingModel.getMaxExposureCompensation();
+            int min = mCameraSettingModel.getMinExposureCompensation();
+            float percent = 1 - ((float) (mExposureCompensation + Math.abs(min))) / (max + Math.abs(min));
+            YLog.i("yuyidong", "percent--->" + percent + "  (int) (mICameraView.getIsoViewMaxValue() * percent)-->" + (int) (mICameraView.getIsoViewMaxValue() * percent));
+            mICameraView.setIsoViewValue((int) (mICameraView.getIsoViewMaxValue() * percent));
+            mCameraSettingModel.setExposureCompensation(mExposureCompensation);
+        } else {
+            mICameraView.setIsoViewValue(mICameraView.getIsoViewMaxValue() / 2);
         }
     }
 
@@ -734,6 +757,17 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
     @Override
     public void onFocusTrigger(int viewWidth, int viewHeight, float x, float y) {
         mCameraFocus.triggerFocus(viewWidth, viewHeight, (int) x, (int) y);
+    }
+
+    @Override
+    public void onValueChanged(int value) {
+        int max = mCameraSettingModel.getMaxExposureCompensation();
+        int min = mCameraSettingModel.getMinExposureCompensation();
+        int finalValue = -(value * (max - min) / mICameraView.getIsoViewMaxValue() - Math.abs(min));
+        if (finalValue <= max && finalValue >= min) {
+            mCameraSettingModel.setExposureCompensation(finalValue);
+            mExposureCompensation = finalValue;
+        }
     }
 
 }

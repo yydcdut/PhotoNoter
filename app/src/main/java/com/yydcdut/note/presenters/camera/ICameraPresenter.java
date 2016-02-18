@@ -37,4 +37,7 @@ public interface ICameraPresenter extends IPresenter {
     boolean onZoomBegin(float currentSpan);
 
     void onFocusTrigger(int viewWidth, int viewHeight, float x, float y);
+
+    void onValueChanged(int value);
+
 }

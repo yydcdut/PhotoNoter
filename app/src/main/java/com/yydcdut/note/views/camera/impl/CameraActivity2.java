@@ -41,9 +41,10 @@ import butterknife.OnTouch;
  */
 public class CameraActivity2 extends BaseActivity implements ICameraView,
         AutoFitPreviewView.SurfaceListener, CameraTopView.OnItemClickListener,
-        AnimationTextView.OnAnimationTextViewListener, GestureView.OnZoomScaleListener,
-        GestureView.OnFocusListener, FocusView.OnTriggerFocusListener,
-        FocusView.OnFocusStateChangedListener {
+        AnimationTextView.OnAnimationTextViewListener,
+        GestureView.OnZoomScaleListener, GestureView.OnFocusListener,
+        FocusView.OnTriggerFocusListener, FocusView.OnFocusStateChangedListener,
+        IsoView.OnValueChangedListener, IsoView.OnIsoViewOnTouchedListener {
     /* Service */
     private boolean mIsBind = false;
     private ICameraData mCameraService;
@@ -115,6 +116,8 @@ public class CameraActivity2 extends BaseActivity implements ICameraView,
         mGestureView.setOnFocusListener(this);
         mFocusImage.setOnFocusStateChangedListener(this);
         mFocusImage.setOnTriggerFocusListener(this);
+        mIsoView.setOnValueChangedListener(this);
+        mIsoView.setOnIsoViewOnTouchedListener(this);
         bindCameraService();
     }
 
@@ -272,6 +275,16 @@ public class CameraActivity2 extends BaseActivity implements ICameraView,
     }
 
     @Override
+    public int getIsoViewMaxValue() {
+        return mIsoView.getValueMax();
+    }
+
+    @Override
+    public void setIsoViewValue(int value) {
+        mIsoView.setValue(value);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         unbindCameraService();
@@ -421,5 +434,15 @@ public class CameraActivity2 extends BaseActivity implements ICameraView,
      */
     private boolean focusFocusing(float x, float y) {
         return mFocusImage.startFocusing(x, y);
+    }
+
+    @Override
+    public void onValueChanged(View view, int value) {
+        mCameraPresenter.onValueChanged(value);
+    }
+
+    @Override
+    public void onTouched() {
+        mFocusImage.delayDisappear();
     }
 }

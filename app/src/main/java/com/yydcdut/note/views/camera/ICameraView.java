@@ -46,4 +46,8 @@ public interface ICameraView extends IView {
     void interruptTimer();
 
     void initFocus(boolean visible);
+
+    int getIsoViewMaxValue();
+
+    void setIsoViewValue(int value);
 }
