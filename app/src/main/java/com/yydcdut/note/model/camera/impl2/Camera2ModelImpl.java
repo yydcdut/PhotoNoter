@@ -20,6 +20,7 @@ import android.support.v4.app.ActivityCompat;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
+import com.yydcdut.note.model.camera.ICameraFocus;
 import com.yydcdut.note.model.camera.ICameraModel;
 import com.yydcdut.note.model.camera.ICaptureModel;
 import com.yydcdut.note.model.camera.IPreviewModel;
@@ -37,7 +38,8 @@ import java.util.List;
  * Created by yuyidong on 16/2/3.
  */
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-public class Camera2ModelImpl implements ICameraModel, Camera2SettingModel.OnParameterChangedListener {
+public class Camera2ModelImpl implements ICameraModel, Camera2SettingModel.OnParameterChangedListener,
+        Camera2FocusModel.OnParameterChangedListener {
     private static final String TAG = Camera2ModelImpl.class.getSimpleName();
 
     private Context mContext;
@@ -230,7 +232,9 @@ public class Camera2ModelImpl implements ICameraModel, Camera2SettingModel.OnPar
                                     e.printStackTrace();
                                 }
 
-                                mCamera2FocusModel = new Camera2FocusModel();
+                                mCamera2FocusModel = new Camera2FocusModel(mCamera2SettingModel.isFocusSupported(),
+                                        mPreviewRequestBuilder, mCamera2SettingModel.getActiveArraySize());
+                                mCamera2FocusModel.setOnParameterChangedListener(Camera2ModelImpl.this);
                                 mCamera2CaptureModel = new Camera2CaptureModel();
                                 callback.onPreview(mCamera2CaptureModel, mCamera2FocusModel);
                             }
@@ -303,28 +307,28 @@ public class Camera2ModelImpl implements ICameraModel, Camera2SettingModel.OnPar
         @Override
         public long capture(PictureReturnCallback pictureReturnCallback) {
             long time = 0l;
-//            if (mCamera2FocusModel != null && mCamera2FocusModel.getFocusState() != ICameraFocus.FOCUS_STATE_FOCUSING
-//                    && mCameraState == STATE_CAMERA_PREVIEW && pictureReturnCallback != null) {
-            time = System.currentTimeMillis();
-            if (mJpegPictureCallback.pictureReturnCallback == null ||
-                    mJpegPictureCallback.pictureReturnCallback != pictureReturnCallback) {
-                mJpegPictureCallback.pictureReturnCallback = pictureReturnCallback;
-            }
-            mJpegPictureCallback.time = time;
-            CaptureRequest.Builder captureBuilder;
-            try {
-                captureBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
-                captureBuilder.addTarget(mJpgImageReader.getSurface());
-                captureBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
+            if (mCamera2FocusModel != null && mCamera2FocusModel.getFocusState() != ICameraFocus.FOCUS_STATE_FOCUSING
+                    && mCameraState == STATE_CAMERA_PREVIEW && pictureReturnCallback != null) {
+                time = System.currentTimeMillis();
+                if (mJpegPictureCallback.pictureReturnCallback == null ||
+                        mJpegPictureCallback.pictureReturnCallback != pictureReturnCallback) {
+                    mJpegPictureCallback.pictureReturnCallback = pictureReturnCallback;
+                }
+                mJpegPictureCallback.time = time;
+                CaptureRequest.Builder captureBuilder;
+                try {
+                    captureBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
+                    captureBuilder.addTarget(mJpgImageReader.getSurface());
+                    captureBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
 //                // Orientation
 //                int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
 //                captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
-                mSession.stopRepeating();
-                mSession.capture(captureBuilder.build(), mCameraCaptureSessionCaptureCallback4Capture, null);
-            } catch (CameraAccessException e) {
-                e.printStackTrace();
+                    mSession.stopRepeating();
+                    mSession.capture(captureBuilder.build(), mCameraCaptureSessionCaptureCallback4Capture, null);
+                } catch (CameraAccessException e) {
+                    e.printStackTrace();
+                }
             }
-//            }
             return time;
         }
 
@@ -402,16 +406,12 @@ public class Camera2ModelImpl implements ICameraModel, Camera2SettingModel.OnPar
 
         @Override
         public void onImageAvailable(ImageReader reader) {
-            YLog.i("yuyidong", "stillPictureReturnCallback != null-->" + (stillPictureReturnCallback != null));
             if (stillPictureReturnCallback != null) {
-                YLog.i("yuyidong", "00000000");
                 Image image = reader.acquireNextImage();
                 stillPictureReturnCallback.onStillPictureTaken(ImageFormat.NV21, convertYUV420ToN21(image),
                         System.currentTimeMillis(), reader.getWidth(), reader.getHeight());
-                YLog.i("yuyidong", "1111111");
                 image.close();
             }
-            YLog.i("yuyidong", "1111222222111");
         }
     }
 

@@ -81,20 +81,25 @@ public class Camera2SettingModel implements ICameraSettingModel {
     }
 
     @Override
+    public boolean isFocusSupported() {
+        return mCameraCharacteristics.get(CameraCharacteristics.CONTROL_MAX_REGIONS_AF) > 0;
+    }
+
+    @Override
     public int getMaxZoom() {
         return (int) (mCameraCharacteristics.get(CameraCharacteristics.SCALER_AVAILABLE_MAX_DIGITAL_ZOOM) * 100);
     }
 
     @Override
     public int getMaxExposureCompensation() {
-        Range<Long> range = mCameraCharacteristics.get(CameraCharacteristics.SENSOR_INFO_EXPOSURE_TIME_RANGE);
-        return Integer.valueOf(range.getLower().toString());
+        Range<Integer> range = mCameraCharacteristics.get(CameraCharacteristics.CONTROL_AE_COMPENSATION_RANGE);
+        return range.getUpper();
     }
 
     @Override
     public int getMinExposureCompensation() {
-        Range<Long> range = mCameraCharacteristics.get(CameraCharacteristics.SENSOR_INFO_EXPOSURE_TIME_RANGE);
-        return Integer.valueOf(range.getUpper().toString());
+        Range<Integer> range = mCameraCharacteristics.get(CameraCharacteristics.CONTROL_AE_COMPENSATION_RANGE);
+        return range.getLower();
     }
 
     public List<Size> getSupportYUV420888Sizes() {
@@ -209,6 +214,10 @@ public class Camera2SettingModel implements ICameraSettingModel {
         } else {
             return value;
         }
+    }
+
+    public Rect getActiveArraySize() {
+        return mCameraCharacteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE);
     }
 
     private OnParameterChangedListener mOnParameterChangedListener;

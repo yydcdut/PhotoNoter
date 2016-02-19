@@ -67,6 +67,19 @@ public class CameraSettingModel implements ICameraSettingModel {
     }
 
     @Override
+    public boolean isFocusSupported() {
+        if (getParameters().getSupportedFocusModes().contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
+            if (getParameters().getMaxNumFocusAreas() <= 0) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    @Override
     public int getMaxZoom() {
         Camera.Parameters parameters = getParameters();
         return parameters.getMaxZoom();

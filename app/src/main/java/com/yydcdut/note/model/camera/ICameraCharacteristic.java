@@ -18,6 +18,8 @@ public interface ICameraCharacteristic extends ICameraParams {
 
     boolean isZoomSupported();
 
+    boolean isFocusSupported();
+
     int getMaxZoom();
 
     int getMaxExposureCompensation();
