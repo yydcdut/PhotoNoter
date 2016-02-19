@@ -30,3 +30,5 @@ proguard/
 *.iml
 /.DS_Store
 *.txt
+
+.sonar
