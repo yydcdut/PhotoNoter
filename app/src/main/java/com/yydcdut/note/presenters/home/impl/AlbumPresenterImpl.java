@@ -41,8 +41,10 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 import rx.Observable;
+import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
+import rx.functions.Action1;
 
 /**
  * Created by yuyidong on 15/11/20.
@@ -148,6 +150,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter, PermissionUtils.OnPe
         //当图片数据改变的时候，比如滤镜，Service作图
         //另外个进程发来广播的时候
         //todo  这里可以弄动画，需要计算的过程
+        //// TODO: 16/2/19 改为本地广播
         if (broadcast_process || broadcast_service) {
             mRxPhotoNote.refreshByCategoryId(mCategoryId, mAlbumSortKind)
                     .observeOn(AndroidSchedulers.mainThread())
@@ -219,7 +222,12 @@ public class AlbumPresenterImpl implements IAlbumPresenter, PermissionUtils.OnPe
                     .subscribe(integer -> {
                         mRxCategory.updateChangeCategory(mCategoryId, toCategoryId, integer)
                                 .subscribe(categories -> {
-                                    mRxPhotoNote.refreshByCategoryId(mCategoryId, ComparatorFactory.FACTORY_NOT_SORT).subscribe();
+                                    mRxPhotoNote.refreshByCategoryId(mCategoryId, ComparatorFactory.FACTORY_NOT_SORT).subscribe(new Action1<List<PhotoNote>>() {
+                                        @Override
+                                        public void call(List<PhotoNote> photoNoteList) {
+                                            mAlbumView.updateDataNoChange(photoNoteList);
+                                        }
+                                    });
                                     mRxPhotoNote.refreshByCategoryId(toCategoryId, ComparatorFactory.FACTORY_NOT_SORT).subscribe();
                                     EventBus.getDefault().post(new CategoryMoveEvent());
                                 });
@@ -245,7 +253,22 @@ public class AlbumPresenterImpl implements IAlbumPresenter, PermissionUtils.OnPe
                         photoNoteList.remove(entry.getValue());
                         mAlbumView.notifyItemRemoved(entry.getKey() - times);
                         times++;
-                        mRxPhotoNote.deletePhotoNote(entry.getValue()).subscribe();
+                        mRxPhotoNote.deletePhotoNote(entry.getValue()).subscribe(new Subscriber<List<PhotoNote>>() {
+                            @Override
+                            public void onCompleted() {
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+
+                            @Override
+                            public void onNext(List<PhotoNote> photoNoteList) {
+                                FilePathUtils.deleteAllFiles(entry.getValue().getPhotoName());
+                                mAlbumView.updateDataNoChange(photoNoteList);
+                            }
+                        });
                     }
                     EventBus.getDefault().post(new PhotoNoteDeleteEvent());
                 });

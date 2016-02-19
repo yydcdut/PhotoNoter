@@ -594,6 +594,11 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
     }
 
     @Override
+    public void updateDataNoChange(List<PhotoNote> photoNoteList) {
+        mAdapter.updateDataNoChange(photoNoteList);
+    }
+
+    @Override
     public void showMovePhotos2AnotherCategoryDialog(final String[] categoryIdStringArray, final String[] categoryLabelArray) {
         new AlertDialog.Builder(getContext(), R.style.note_dialog)
                 .setTitle(R.string.dialog_title_move)

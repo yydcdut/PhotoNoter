@@ -132,7 +132,7 @@ public class EditTextPresenterImpl implements IEditTextPresenter, PermissionUtil
                     photoNote.setTitle(mEditTextView.getNoteTitle());
                     photoNote.setContent(mEditTextView.getNoteContent());
                     photoNote.setEditedNoteTime(System.currentTimeMillis());
-                    mRxPhotoNote.savePhotoNote(photoNote).subscribe();
+                    mRxPhotoNote.updatePhotoNote(photoNote).subscribe();
                 });
     }
 

@@ -21,6 +21,8 @@ public interface IAlbumView extends IView {
 
     void updateData(List<PhotoNote> photoNoteList);
 
+    void updateDataNoChange(List<PhotoNote> photoNoteList);
+
     void showMovePhotos2AnotherCategoryDialog(String[] categoryIdArray, String[] categoryLabelArray);
 
     void notifyItemRemoved(int position);
