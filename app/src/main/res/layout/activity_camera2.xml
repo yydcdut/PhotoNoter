@@ -27,6 +27,13 @@
         android:textSize="30sp"
         android:visibility="gone"/>
 
+    <View
+        android:id="@+id/view_ratio_cover"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="?attr/colorPrimary"
+        android:visibility="gone"/>
+
     <com.yydcdut.note.widget.camera.GestureView
         android:id="@+id/view_gesture"
         android:layout_width="match_parent"
@@ -42,13 +49,6 @@
         android:id="@+id/img_focus"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:visibility="gone"/>
-
-    <View
-        android:id="@+id/view_ratio_cover"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="?attr/colorPrimary"
         android:visibility="gone"/>
 
     <com.yydcdut.note.widget.camera.CameraTopView
