@@ -118,6 +118,7 @@ public class CameraActivity2 extends BaseActivity implements ICameraView,
         mFocusImage.setOnTriggerFocusListener(this);
         mIsoView.setOnValueChangedListener(this);
         mIsoView.setOnIsoViewOnTouchedListener(this);
+        mIsoView.setVisibility(View.INVISIBLE);
         bindCameraService();
     }
 

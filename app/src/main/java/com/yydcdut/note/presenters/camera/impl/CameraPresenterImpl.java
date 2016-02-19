@@ -399,11 +399,9 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
     private void initExposure() {
         if (mLocalStorageUtils.getCameraSaveSetting()) {
             mExposureCompensation = mLocalStorageUtils.getCameraExposureCompensation();
-            YLog.i("yuyidong", "mExposureCompensation--->" + mExposureCompensation);
             int max = mCameraSettingModel.getMaxExposureCompensation();
             int min = mCameraSettingModel.getMinExposureCompensation();
             float percent = 1 - ((float) (mExposureCompensation + Math.abs(min))) / (max + Math.abs(min));
-            YLog.i("yuyidong", "percent--->" + percent + "  (int) (mICameraView.getIsoViewMaxValue() * percent)-->" + (int) (mICameraView.getIsoViewMaxValue() * percent));
             mICameraView.setIsoViewValue((int) (mICameraView.getIsoViewMaxValue() * percent));
             mCameraSettingModel.setExposureCompensation(mExposureCompensation);
         } else {
