@@ -168,6 +168,7 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter {
     @Override
     public void loginOrOutEvernote() {
         mRxUser.isLoginEvernote()
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aBoolean -> {
                     if (aBoolean) {
                         mRxUser.logoutEvernote().subscribe();
