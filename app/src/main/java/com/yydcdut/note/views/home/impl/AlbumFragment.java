@@ -40,7 +40,7 @@ import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.Utils;
 import com.yydcdut.note.views.BaseFragment;
-import com.yydcdut.note.views.camera.impl.CameraActivity2;
+import com.yydcdut.note.views.camera.impl.CameraActivity;
 import com.yydcdut.note.views.home.IAlbumView;
 import com.yydcdut.note.views.note.impl.DetailActivity;
 import com.yydcdut.note.views.setting.impl.SettingActivity;
@@ -645,7 +645,7 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
 
     @Override
     public void jump2CameraActivity(int categoryId) {
-        Intent intent = new Intent(getContext(), CameraActivity2.class);
+        Intent intent = new Intent(getContext(), CameraActivity.class);
 //        Intent intent = new Intent(getContext(), CameraActivity.class);
         Bundle bundle = new Bundle();
         bundle.putInt(Const.CATEGORY_ID_4_PHOTNOTES, categoryId);

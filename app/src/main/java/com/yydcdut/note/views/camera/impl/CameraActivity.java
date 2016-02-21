@@ -39,7 +39,7 @@ import butterknife.OnTouch;
 /**
  * Created by yuyidong on 16/2/3.
  */
-public class CameraActivity2 extends BaseActivity implements ICameraView,
+public class CameraActivity extends BaseActivity implements ICameraView,
         AutoFitPreviewView.SurfaceListener, CameraTopView.OnItemClickListener,
         AnimationTextView.OnAnimationTextViewListener,
         GestureView.OnZoomScaleListener, GestureView.OnFocusListener,

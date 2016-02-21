@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
-import com.yydcdut.note.camera.model.ICameraParams;
+import com.yydcdut.note.model.camera.ICameraParams;
 import com.yydcdut.note.utils.camera.param.Size;
 
 import org.json.JSONArray;
@@ -69,7 +69,7 @@ public class LocalStorageUtils {
     private static final boolean CAMERA_LOCATION_DEFAULT = false;//默认关闭
 
     private static final String CAMERA_WHITE_BALANCE = "camera_white_balance";//白平衡
-    private static final int CAMERA_WHITE_BALANCE_DEFAULT = ICameraParams.WHITE_BALANCE_AUTO;//白平衡默认值为auto
+    private static final int CAMERA_WHITE_BALANCE_DEFAULT = 0;//ICameraParams.WHITE_BALANCE_AUTO;//白平衡默认值为auto
 
     private static final String CAMERA_GRID_OPEN = "camera_grid_open";//grid是否打开
     private static final boolean CAMERA_GRID_OPEN_DEFAULT = false;//grid打开状态默认值是关闭

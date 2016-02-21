@@ -77,16 +77,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/ThemeBlue"/>
         <activity
-            android:name=".camera.controller.AdjustCamera"
-            android:screenOrientation="portrait"
-            android:theme="@style/ThemeBlue"/>
-        <activity
             android:name=".views.camera.impl.AdjustCameraActivity"
             android:screenOrientation="portrait"
             android:label=" "
             android:theme="@style/ThemeBlue"/>
         <activity
-            android:name=".camera.controller.CameraActivity"
+            android:name=".views.camera.impl.CameraActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ThemeBlue"/>
         <activity
@@ -95,10 +91,6 @@
             android:theme="@style/ThemeBlue"/>
         <activity
             android:name=".views.WebViewActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/ThemeBlue"/>
-        <activity
-            android:name=".views.camera.impl.CameraActivity2"
             android:screenOrientation="portrait"
             android:theme="@style/ThemeBlue"/>
 
