@@ -25,7 +25,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import rx.Observable;
-import rx.functions.Action1;
+import rx.Subscriber;
 import rx.schedulers.Schedulers;
 
 /**
@@ -124,10 +124,20 @@ public class SplashPresenterImpl implements ISplashPresenter, Handler.Callback,
                     .count()
                     .subscribe(fileNumber -> {
                         mRxSandBox.getNumber()
-                                .subscribe(new Action1<Integer>() {
+                                .subscribe(new Subscriber<Integer>() {
                                     @Override
-                                    public void call(Integer dbNumber) {
-                                        if (fileNumber != dbNumber) {
+                                    public void onCompleted() {
+
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+
+                                    }
+
+                                    @Override
+                                    public void onNext(Integer integer) {
+                                        if (fileNumber != integer) {
                                             Intent checkIntent = new Intent(mContext, CheckService.class);
                                             mContext.startService(checkIntent);
                                         }

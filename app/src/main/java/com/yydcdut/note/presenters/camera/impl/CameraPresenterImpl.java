@@ -603,9 +603,7 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
                         case Const.LAYOUT_PERSONAL_TIMER_10:
                             mICameraView.startTimer(10);
                             break;
-
                     }
-
                 }
                 break;
             case MSG_CAPTURE:

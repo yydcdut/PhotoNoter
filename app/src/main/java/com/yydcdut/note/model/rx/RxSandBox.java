@@ -91,6 +91,7 @@ public class RxSandBox {
             @Override
             public void call(Subscriber<? super Integer> subscriber) {
                 subscriber.onNext(mSandBoxDB.getAllNumber());
+                subscriber.onCompleted();
             }
         }).subscribeOn(Schedulers.io());
     }
