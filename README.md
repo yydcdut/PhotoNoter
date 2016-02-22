@@ -50,6 +50,18 @@ debug{
 
 <img src="https://raw.githubusercontent.com/yydcdut/PhotoNoter/master/screenshot/screen9.png" width="25%" height="25%" style="max-width:100%;"><img src="https://raw.githubusercontent.com/yydcdut/PhotoNoter/master/screenshot/screen10.png" width="25%" height="25%" style="max-width:100%;"><img src="https://raw.githubusercontent.com/yydcdut/PhotoNoter/master/screenshot/screen11.png" width="25%" height="25%" style="max-width:100%;"><img src="https://raw.githubusercontent.com/yydcdut/PhotoNoter/master/screenshot/screen12.png" width="25%" height="25%" style="max-width:100%;">
 
+## Dribbble
+
+有些界面是模仿Dribbble网站App效果图实现的：
+
+<img src="https://raw.githubusercontent.com/yydcdut/PhotoNoter/master/screenshot/dribbble_1.gif" width="800" height="600" style="max-width:100%;"><img src="https://raw.githubusercontent.com/yydcdut/PhotoNoter/master/screenshot/dribbble_1_like.gif" width="348" height="600" style="max-width:100%;">
+
+dribbble site:<a href="https://dribbble.com/shots/2111846-Photo-browser">Photo browser</a>
+
+<img src="https://raw.githubusercontent.com/yydcdut/PhotoNoter/master/screenshot/dribbble_2.gif" width="800" height="600" style="max-width:100%;"><img src="https://raw.githubusercontent.com/yydcdut/PhotoNoter/master/screenshot/dribbble_2_like.gif" width="348" height="600" style="max-width:100%;">
+
+dribbble site:<a href="https://dribbble.com/shots/1895284-Expanding-product-gallery">Expanding product gallery</a>
+
 # 技术点
 
 1. 整体项目MVP结构(1.2.0之前是MVC)。
