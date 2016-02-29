@@ -27,6 +27,7 @@ public class FontTextView extends TextView {
         if (attrs != null) {
             final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.font_textview, defStyleAttr, 0);
             isFixed = a.getBoolean(R.styleable.font_textview_fixed, false);
+            a.recycle();
         }
     }
 
