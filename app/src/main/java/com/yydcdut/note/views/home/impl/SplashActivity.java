@@ -6,10 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
-import com.yydcdut.note.injector.component.DaggerActivityComponent;
-import com.yydcdut.note.injector.module.ActivityModule;
 import com.yydcdut.note.presenters.home.impl.SplashPresenterImpl;
 import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.views.BaseActivity;
@@ -27,13 +24,6 @@ public class SplashActivity extends BaseActivity implements ISplashView {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        mActivityComponent = DaggerActivityComponent.builder()
-                .activityModule(new ActivityModule(this))
-                .applicationComponent(((NoteApplication) getApplication()).getApplicationComponent())
-                .build();
-        mActivityComponent.inject(this);
-        mSplashPresenter.attachView(this);
-        mSplashPresenter.isWannaCloseSplash();
         super.onCreate(savedInstanceState);
     }
 
@@ -50,11 +40,14 @@ public class SplashActivity extends BaseActivity implements ISplashView {
 
     @Override
     public void initInjector() {
+        mActivityComponent.inject(this);
         mIPresenter = mSplashPresenter;
     }
 
     @Override
     public void initUiAndListener() {
+        mSplashPresenter.attachView(this);
+        mSplashPresenter.isWannaCloseSplash();
         View logoView = findViewById(R.id.layout_splash);
         View backgroundView = findViewById(R.id.img_splash_bg);
 
