@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import com.yydcdut.note.R;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.rx.RxSandBox;
+import com.yydcdut.note.model.rx.SubscriberAdapter;
 import com.yydcdut.note.presenters.home.ISplashPresenter;
 import com.yydcdut.note.service.CheckService;
 import com.yydcdut.note.utils.FilePathUtils;
@@ -25,7 +26,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import rx.Observable;
-import rx.Subscriber;
 import rx.schedulers.Schedulers;
 
 /**
@@ -122,27 +122,20 @@ public class SplashPresenterImpl implements ISplashPresenter, Handler.Callback,
                             file.getName().toLowerCase().endsWith(".png") ||
                             file.getName().toLowerCase().endsWith(".jpeg"))
                     .count()
-                    .subscribe(fileNumber -> {
-                        mRxSandBox.getNumber()
-                                .subscribe(new Subscriber<Integer>() {
-                                    @Override
-                                    public void onCompleted() {
-
-                                    }
-
-                                    @Override
-                                    public void onError(Throwable e) {
-
-                                    }
-
-                                    @Override
-                                    public void onNext(Integer integer) {
-                                        if (fileNumber != integer) {
-                                            Intent checkIntent = new Intent(mContext, CheckService.class);
-                                            mContext.startService(checkIntent);
+                    .subscribe(new SubscriberAdapter<Integer>() {
+                        @Override
+                        public void onNext(Integer fileNumber) {
+                            mRxSandBox.getNumber()
+                                    .subscribe(new SubscriberAdapter<Integer>() {
+                                        @Override
+                                        public void onNext(Integer integer) {
+                                            if (fileNumber != integer) {
+                                                Intent checkIntent = new Intent(mContext, CheckService.class);
+                                                mContext.startService(checkIntent);
+                                            }
                                         }
-                                    }
-                                });
+                                    });
+                        }
                     });
         }
     }
