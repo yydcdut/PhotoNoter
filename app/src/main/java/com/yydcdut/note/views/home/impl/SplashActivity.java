@@ -20,6 +20,7 @@ import javax.inject.Inject;
 public class SplashActivity extends BaseActivity implements ISplashView {
     @Inject
     SplashPresenterImpl mSplashPresenter;
+
     private AnimatorSet mAnimatorSet;
 
     @Override

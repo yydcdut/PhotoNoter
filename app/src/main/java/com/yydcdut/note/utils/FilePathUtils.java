@@ -7,9 +7,7 @@ import android.graphics.Matrix;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
-import android.widget.Toast;
 
-import com.yydcdut.note.R;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 
 import java.io.BufferedOutputStream;
@@ -25,10 +23,10 @@ import java.io.OutputStream;
  */
 public class FilePathUtils {
     private static final String DIR_NAME = "PhotoNoter";
-    private static final String FULL_PATH = Environment.getExternalStorageDirectory() + File.separator + DIR_NAME + File.separator;
+    private static String FULL_PATH;
 
     private static final String SMALL_PICTURE_DIR_NAME = ".small";
-    private static final String FULL_SMALL_PATH = FULL_PATH + SMALL_PICTURE_DIR_NAME + File.separator;
+    private static String FULL_SMALL_PATH;
 
     private static final String OTHER_DIR_NAME = ".other";
 
@@ -39,10 +37,11 @@ public class FilePathUtils {
     public static void initEnvironment(Context context) {
         String state = Environment.getExternalStorageState();
         if (!Environment.MEDIA_MOUNTED.equals(state)) {
-            Toast.makeText(context,
-                    context.getResources().getString(R.string.toast_sdcard),
-                    Toast.LENGTH_SHORT).show();
+            FULL_PATH = context.getFilesDir().getAbsolutePath() + File.separator;
+        } else {
+            FULL_PATH = Environment.getExternalStorageDirectory() + File.separator + DIR_NAME + File.separator;
         }
+        FULL_SMALL_PATH = FULL_PATH + SMALL_PICTURE_DIR_NAME + File.separator;
         createDirIfNotExist();
         createSmallDirIfNotExist();
         createOtherImageDirIfNotExist();
