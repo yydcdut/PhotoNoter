@@ -57,7 +57,25 @@ public class SplashPresenterImpl implements ISplashPresenter, Handler.Callback,
     @Override
     public void attachView(IView iView) {
         mSplashView = (ISplashView) iView;
-        checkDisks();
+        try {
+            checkDisks();
+        } catch (Exception e) {
+            //混淆之后这里有bug Testing
+            /*
+            #1084	03-02 16:08:54.619	14414	E	AndroidRuntime	 Caused by: java.lang.NullPointerException
+            #1085	03-02 16:08:54.619	14414	E	AndroidRuntime	         at java.io.File.fixSlashes(File.java:185)
+            #1086	03-02 16:08:54.619	14414	E	AndroidRuntime	         at java.io.File.(File.java:134)
+            #1087	03-02 16:08:54.619	14414	E	AndroidRuntime	         at com.yydcdut.note.e.b.a.bm.f(Unknown Source)
+            #1088	03-02 16:08:54.619	14414	E	AndroidRuntime	         at com.yydcdut.note.e.b.a.bm.a(Unknown Source)
+            #1089	03-02 16:08:54.619	14414	E	AndroidRuntime	         at com.yydcdut.note.views.home.impl.SplashActivity.d(Unknown Source)
+            #1090	03-02 16:08:54.619	14414	E	AndroidRuntime	         at com.yydcdut.note.views.BaseActivity.onCreate(Unknown Source)
+            #1091	03-02 16:08:54.619	14414	E	AndroidRuntime	         at com.yydcdut.note.views.home.impl.SplashActivity.onCreate(Unknown Source)
+            #1092	03-02 16:08:54.619	14414	E	AndroidRuntime	         at android.app.Activity.performCreate(Activity.java:4465)
+            #1093	03-02 16:08:54.619	14414	E	AndroidRuntime	         at android.app.Instrumentation.callActivityOnCreate(Instrumentation.java:1049)
+            #1094	03-02 16:08:54.619	14414	E	AndroidRuntime	         at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:1920)
+            #1095	03-02 16:08:54.619	14414	E	AndroidRuntime	         ... 11 more
+             */
+        }
     }
 
     @Override

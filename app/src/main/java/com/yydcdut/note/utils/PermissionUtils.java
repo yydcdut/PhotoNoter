@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentCompat;
 import android.support.v4.app.ActivityCompat;
@@ -53,6 +54,9 @@ public class PermissionUtils {
     };
 
     public static boolean hasPermission4Camera(@NonNull Context context) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return true;
+        }
         int permissionCheck = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA);
         if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
             return true;
@@ -62,6 +66,9 @@ public class PermissionUtils {
     }
 
     public static boolean hasPermission4Storage(@NonNull Context context) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return true;
+        }
         int permission0 = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         int permission1 = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE);
         if (permission0 == PackageManager.PERMISSION_GRANTED && permission1 == PackageManager.PERMISSION_GRANTED) {
@@ -72,6 +79,9 @@ public class PermissionUtils {
     }
 
     public static boolean hasPermission4Location(@NonNull Context context) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return true;
+        }
         int permission0 = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION);
         int permission1 = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION);
         if (permission0 == PackageManager.PERMISSION_GRANTED && permission1 == PackageManager.PERMISSION_GRANTED) {
@@ -82,6 +92,9 @@ public class PermissionUtils {
     }
 
     public static boolean hasPermission4Audio(@NonNull Context context) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return true;
+        }
         int permission = ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO);
         if (permission == PackageManager.PERMISSION_GRANTED) {
             return true;
@@ -91,6 +104,9 @@ public class PermissionUtils {
     }
 
     public static boolean hasPermission4PhoneState(@NonNull Context context) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return true;
+        }
         int permission = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE);
         if (permission == PackageManager.PERMISSION_GRANTED) {
             return true;
