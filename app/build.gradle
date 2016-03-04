@@ -87,10 +87,6 @@ android {
 //        AnZhuo {}
 //        BaiDu {}
 //        AnZhi {}
-//        GFeng {}
-//        AppChina {}
-//        EoeMarket {}
-//        PP {}
     }
 
     productFlavors.all { flavor ->
@@ -119,7 +115,6 @@ ext {
 }
 dependencies {
     //    compile fileTree(include: ['*.jar'], dir: 'src/libs')
-    //    compile "com.android.support:support-v4:${rootProject.ext.supportVersion}"
     compile "com.android.support:appcompat-v7:${rootProject.ext.supportVersion}"
     compile "com.android.support:support-v13:${rootProject.ext.supportVersion}"
     compile "com.nineoldandroids:library:2.4.0"
@@ -147,8 +142,8 @@ dependencies {
     compile files("src/libs/Sunflower.jar")
     debugCompile "com.squareup.leakcanary:leakcanary-android:${leakcanaryVersion}"
     releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:${leakcanaryVersion}"
-//    debugCompile "com.github.moduth:blockcanary:1.0.0"
-//    releaseCompile "com.github.moduth:blockcanary-no-op:1.0.0"
+    debugCompile "com.github.moduth:blockcanary:1.0.0"
+    releaseCompile "com.github.moduth:blockcanary-no-op:1.0.0"
     compile project(":PG_Edit_SDK")
 }
 
