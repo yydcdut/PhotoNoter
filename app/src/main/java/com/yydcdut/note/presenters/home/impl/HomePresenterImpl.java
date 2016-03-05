@@ -28,13 +28,14 @@ import com.yydcdut.note.utils.permission.Permission;
 import com.yydcdut.note.views.IView;
 import com.yydcdut.note.views.home.IHomeView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.List;
 
 import javax.inject.Inject;
 
-import de.greenrobot.event.EventBus;
-import de.greenrobot.event.Subscribe;
-import de.greenrobot.event.ThreadMode;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -242,35 +243,35 @@ public class HomePresenterImpl implements IHomePresenter, PermissionUtils.OnPerm
         mContext.sendBroadcast(intent);
     }
 
-    @Subscribe(threadMode = ThreadMode.MainThread)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCategoryCreateEvent(CategoryCreateEvent categoryCreateEvent) {
         mRxCategory.getAllCategories()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(categories -> mHomeView.updateCategoryList(categories));
     }
 
-    @Subscribe(threadMode = ThreadMode.MainThread)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCategoryUpdateEvent(CategoryUpdateEvent categoryUpdateEvent) {
         mRxCategory.getAllCategories()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(categories -> mHomeView.updateCategoryList(categories));
     }
 
-    @Subscribe(threadMode = ThreadMode.MainThread)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCategoryMoveEvent(CategoryMoveEvent categoryMoveEvent) {
         mRxCategory.getAllCategories()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(categories -> mHomeView.updateCategoryList(categories));
     }
 
-    @Subscribe(threadMode = ThreadMode.MainThread)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCategoryRenameEvent(CategoryEditEvent categoryEditEvent) {
         mRxCategory.getAllCategories()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(categories -> mHomeView.updateCategoryList(categories));
     }
 
-    @Subscribe(threadMode = ThreadMode.MainThread)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCategoryDeleteEvent(CategoryDeleteEvent categoryDeleteEvent) {
         mRxCategory.getAllCategories()
                 .observeOn(AndroidSchedulers.mainThread())
@@ -290,7 +291,7 @@ public class HomePresenterImpl implements IHomePresenter, PermissionUtils.OnPerm
 
     }
 
-    @Subscribe(threadMode = ThreadMode.MainThread)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPhotoNoteCreateEvent(PhotoNoteCreateEvent photoNoteCreateEvent) {
         mRxPhotoNote.findByCategoryId(mCategoryId, ComparatorFactory.FACTORY_NOT_SORT)
                 .subscribe(photoNoteList -> {
@@ -306,7 +307,7 @@ public class HomePresenterImpl implements IHomePresenter, PermissionUtils.OnPerm
                 });
     }
 
-    @Subscribe(threadMode = ThreadMode.MainThread)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPhotoNoteDeleteEvent(PhotoNoteDeleteEvent photoNoteDeleteEvent) {
         mRxPhotoNote.findByCategoryId(mCategoryId, ComparatorFactory.FACTORY_NOT_SORT)
                 .subscribe(photoNoteList -> {

@@ -18,6 +18,8 @@ import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.views.IView;
 import com.yydcdut.note.views.setting.IEditCategoryView;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -26,7 +28,6 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import de.greenrobot.event.EventBus;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;

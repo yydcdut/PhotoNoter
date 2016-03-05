@@ -30,6 +30,8 @@ import com.yydcdut.note.utils.permission.Permission;
 import com.yydcdut.note.views.IView;
 import com.yydcdut.note.views.home.IAlbumView;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Comparator;
@@ -39,7 +41,6 @@ import java.util.TreeMap;
 
 import javax.inject.Inject;
 
-import de.greenrobot.event.EventBus;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
