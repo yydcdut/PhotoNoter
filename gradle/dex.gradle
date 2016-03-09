@@ -1,3 +1,101 @@
+import java.util.jar.JarEntry
+import java.util.jar.JarFile
+import java.util.regex.Matcher
+import java.util.regex.Pattern
+
 task hello << {
-    println "11111"
+    //解压
+    unZip("${project.rootDir}${File.separator}" +
+            "app${File.separator}" +
+            "build${File.separator}" +
+            "intermediates${File.separator}" +
+            "multi-dex${File.separator}" +
+            "Store360${File.separator}" +
+            "debug${File.separator}" +
+            "allclasses.jar")
+    //给出需要找出来的类
+    //src文件夹下面，要去找依赖的
+    List srcList = new ArrayList();
+    //application
+    srcList.add("com.yydcdut.note.NoteApplication")
+    //放第一个dex的Activity
+    srcList.add("com.yydcdut.note.DexActivity")
+    srcList.add("com.yydcdut.note.views.home.impl.SplashActivity")
+    //对应的presenter
+    srcList.add("com.yydcdut.note.views.home.ISplashView")
+    //Broadcast
+    //Service
+    //Provider
+    //inject
+    srcList.add("com.yydcdut.note.injector.componet.ActivityComponent")
+    srcList.add("com.yydcdut.note.injector.componet.ApplicationComponent")
+    srcList.add("com.yydcdut.note.injector.componet.FragmentComponent")
+    srcList.add("com.yydcdut.note.injector.componet.ServiceComponent")
+    srcList.add("com.yydcdut.note.injector.module.ActivityModule")
+    srcList.add("com.yydcdut.note.injector.module.ApplicationModule")
+    srcList.add("com.yydcdut.note.injector.module.FragmentModule")
+    srcList.add("com.yydcdut.note.injector.module.ServiceModule")
+    //注解
+    //build/generated/source/apt/Store360/debug??/文件夹下面，不用去找依赖的
+    List buildList = new ArrayList();
+
+    //第三方
+    //butterKnife代码
+
+    //dagger2代码
+
+    //Rx
+
+}
+
+def unZip(String jarFilePath) {
+    def outJarPath = getJarUnzipFile(jarFilePath);
+    def jarFile = new JarFile(jarFilePath);
+    Enumeration<JarEntry> jarEntrys = jarFile.entries();
+    while (jarEntrys.hasMoreElements()) {
+        JarEntry jarEntry = jarEntrys.nextElement();
+        String outFileName = outJarPath + jarEntry.getName();
+        File f = new File(outFileName);
+        makeSupDir(outFileName);
+        if (jarEntry.isDirectory()) {
+            continue;
+        }
+        writeFile(jarFile.getInputStream(jarEntry), f);
+    }
+}
+
+def makeSupDir(String outFileName) {
+    Pattern p = Pattern.compile("[/\\\\" + File.separator + "]");
+    Matcher m = p.matcher(outFileName);
+    while (m.find()) {
+        int index = m.start();
+        String subDir = outFileName.substring(0, index);
+        File subDirFile = new File(subDir);
+        if (!subDirFile.exists())
+            subDirFile.mkdir();
+    }
+}
+
+def getJarUnzipFile(String jarFilePath) {
+    Pattern pattern = Pattern.compile('allclasses.jar$|classes.jar$');//debug|release
+    Matcher matcher = pattern.matcher(jarFilePath);
+    String path = matcher.replaceAll("");
+    def totalPath = "${path}photonoter/"
+    def file = new File(totalPath)
+    if (!file.exists()) {
+        file.mkdir()
+    }
+    return "${file.getAbsolutePath()}${File.separator}"
+}
+
+def writeFile(InputStream ips, File outputFile) {
+    OutputStream ops = new BufferedOutputStream(new FileOutputStream(outputFile));
+    byte[] buffer = new byte[1024];
+    int nBytes = 0;
+    while ((nBytes = ips.read(buffer)) > 0) {
+        ops.write(buffer, 0, nBytes);
+    }
+    ops.flush();
+    ops.close();
+    ips.close();
 }
