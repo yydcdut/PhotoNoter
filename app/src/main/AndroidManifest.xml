@@ -78,8 +78,8 @@
             android:theme="@style/ThemeBlue"/>
         <activity
             android:name=".views.camera.impl.AdjustCameraActivity"
-            android:screenOrientation="portrait"
             android:label=" "
+            android:screenOrientation="portrait"
             android:theme="@style/ThemeBlue"/>
         <activity
             android:name=".views.camera.impl.CameraActivity"
@@ -176,7 +176,7 @@
         <!-- ************ Baidu Begin ************ -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="pjFyNkykpYu1bIqYkQFGRnbx"/>
+            android:value="Mx338srYEciirSHk6xKMrAlm"/>
         <!-- release Mx338srYEciirSHk6xKMrAlm -->
         <!-- debug pjFyNkykpYu1bIqYkQFGRnbx -->
         <service
