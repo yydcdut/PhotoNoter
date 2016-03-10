@@ -14,18 +14,58 @@ task hello << {
             "debug${File.separator}" +
             "allclasses.jar")
     //给出需要找出来的类
+    //todo 可以用SAX去解析AndroidManifest.xml，这里因为项目的特殊性，就直接写了，这样的不好的地方就在于换包名就需要跟着手动换这里的
+    Set<String> packageJavaSet = new HashSet<>();
+    findMainDependency()
+    findAllBuildDependency()
+    findThirdJava()
+}
+
+def findMainDependency(Set<String> packageJavaSet) {
+    String srcPath = "${projectDir}${File.separator}" +
+            "src${File.separator}" +
+            "main${File.separator}" +
+            "java${File.separator}"
     //src文件夹下面，要去找依赖的
-    List srcList = new ArrayList();
+    List<String> srcList = new ArrayList<>();
     //application
     srcList.add("com.yydcdut.note.NoteApplication")
     //放第一个dex的Activity
     srcList.add("com.yydcdut.note.DexActivity")
     srcList.add("com.yydcdut.note.views.home.impl.SplashActivity")
-    //对应的presenter
+    srcList.add("com.yydcdut.note.views.home.impl.IntroduceActivity")
+    srcList.add("com.yydcdut.note.views.home.impl.HomeActivity")
+    srcList.add("com.yydcdut.note.views.BaseActivity")
+    srcList.add("com.yydcdut.note.views.BaseFragment")
+    //对应的view接口
     srcList.add("com.yydcdut.note.views.home.ISplashView")
+    srcList.add("com.yydcdut.note.views.home.IIntroduceView")
+    srcList.add("com.yydcdut.note.views.home.IHomeView")
+    srcList.add("com.yydcdut.note.views.IThemeView")
+    srcList.add("com.yydcdut.note.views.IView")
+    //对应的presenter和presenter接口
+    srcList.add("com.yydcdut.note.presenters.home.impl.SplashPresenterImpl")
+    srcList.add("com.yydcdut.note.presenters.home.ISplashPresenter")
+    srcList.add("com.yydcdut.note.presenters.home.impl.IntroducePresenterImpl")
+    srcList.add("com.yydcdut.note.presenters.home.IIntroducePresenter")
+    srcList.add("com.yydcdut.note.presenters.home.impl.HomePresenterImpl")
+    srcList.add("com.yydcdut.note.presenters.home.IHomePresenter")
+    srcList.add("com.yydcdut.note.presenters.home.impl.AlbumPresenterImpl")
+    srcList.add("com.yydcdut.note.presenters.home.IAlbumPresenter")
+    srcList.add("com.yydcdut.note.views.IPresenter")
+    srcList.add("com.yydcdut.note.views.ThemePresenter")
     //Broadcast
+    // nothing
     //Service
+    srcList.add("com.yydcdut.note.service.CameraService")//考虑aidl吗?
+    srcList.add("com.yydcdut.note.presenters.service.impl.CameraServicePresenterImpl")
+    srcList.add("com.yydcdut.note.presenters.service.ICameraServicePresenter")
+    srcList.add("com.yydcdut.note.service.SandBoxService")
+    srcList.add("com.yydcdut.note.presenters.service.impl.SandBoxServicePresenterImpl")
+    srcList.add("com.yydcdut.note.presenters.service.ISandBoxServicePresenter")
+    srcList.add("com.yydcdut.note.service.CheckService")
     //Provider
+    // nothing
     //inject
     srcList.add("com.yydcdut.note.injector.componet.ActivityComponent")
     srcList.add("com.yydcdut.note.injector.componet.ApplicationComponent")
@@ -36,34 +76,107 @@ task hello << {
     srcList.add("com.yydcdut.note.injector.module.FragmentModule")
     srcList.add("com.yydcdut.note.injector.module.ServiceModule")
     //注解
-    //build/generated/source/apt/Store360/debug??/文件夹下面，不用去找依赖的
-    List buildList = new ArrayList();
-
-    //第三方
-    //butterKnife代码
-
-    //dagger2代码
-
-    //Rx
-
+    srcList.add("com.yydcdut.note.injector.ContextLife")
+    srcList.add("com.yydcdut.note.injector.PerActivity")
+    srcList.add("com.yydcdut.note.injector.PerFragment")
+    srcList.add("com.yydcdut.note.injector.PerService")
+    //module
+    //srcList.add("us.pinguo.edit.sdk.PGEditActivity")//Camera360
 }
 
-def unZip(String jarFilePath) {
-    def outJarPath = getJarUnzipFile(jarFilePath);
-    def jarFile = new JarFile(jarFilePath);
-    Enumeration<JarEntry> jarEntrys = jarFile.entries();
-    while (jarEntrys.hasMoreElements()) {
-        JarEntry jarEntry = jarEntrys.nextElement();
-        String outFileName = outJarPath + jarEntry.getName();
-        File f = new File(outFileName);
-        makeSupDir(outFileName);
-        if (jarEntry.isDirectory()) {
-            continue;
+def findAllBuildDependency(String flavor, String buildType, Set<String> packageJavaSet) {
+    //build/generated/source/apt/Store360/debug/com/yydcdut/note
+    def buildSourcePath = "${projectDir}${File.separator}" +
+            "build${File.separator}" +
+            "generated${File.separator}" +
+            "source${File.separator}" +
+            "apt${File.separator}" +
+            "${flavor}${File.separator}" +
+            "${buildType}${File.separator}" +
+            "com${File.separator}" +
+            "yydcdut${File.separator}" +
+            "note${File.separator}"
+    def dir = new File(buildSourcePath)
+    getJavaFileInDir(dir, packageJavaSet)
+    //把自己加进去
+}
+
+/**
+ * 利用递归找出所有的文件夹或者文件里面的import的类
+ * @param dirOrFile
+ * @param packageJavaSet
+ * @return
+ */
+def getJavaFileInDir(File dirOrFile, Set<String> packageJavaSet) {
+    if (dirOrFile.isDirectory()) {
+        def files = dirOrFile.listFiles()
+        for (File file : files) {
+            getJavaFileInDir(file)
         }
-        writeFile(jarFile.getInputStream(jarEntry), f);
+    } else {
+        getDependentJava(dirOrFile, packageJavaSet)
     }
 }
 
+/**
+ * 得到该Java文件的import的类
+ * @param path
+ * @param packageJavSet
+ * @return
+ */
+def getDependentJava(File file, Set<String> packageJavSet) {
+    def content = readJavaFile(file)
+    def pattern = Pattern.compile("import *");
+    def packageJavas = pattern.split(content);
+    for (int i = 1; i < packageJavas.length; i++) {
+        //系统的不要
+        if (packageJavas[i].startsWith("java") || (packageJavas[i].startsWith("android") && !packageJavas[i].startsWith("android.support"))) {
+            continue;
+        } else {
+            packageJavSet.add(packageJavas[i].substring(0, packageJavas[i].length() - 1))//去掉分号
+        }
+    }
+    String lastOne = packageJavas[packageJavas.length - 1]
+    String lastPackage = lastOne.split("\n")[0]
+    packageJavSet.add(lastPackage.trim().substring(0, lastPackage.length() - 2))
+}
+
+def findThirdJava() {
+    //第三方 无需找依赖的
+    List<String> thirdList = new ArrayList<>();
+    thirdList.add("us.pinguo.bigdata.BDUpService")//Camera360
+    thirdList.add("us.pinguo.bigdata.BDAlarmReceiver")//Camera360
+    thirdList.add("com.tencent.tauth.AuthActivity")//QQ
+    thirdList.add("com.tencent.connect.common.AssistActivity")//QQ
+    thirdList.add("com.evernote.client.android.EvernoteOAuthActivity")//Evernote
+    thirdList.add("com.evernote.client.android.login.EvernoteLoginActivity")//Evernote
+    thirdList.add("com.baidu.location.f")//Baidu Map
+}
+
+/**
+ * 解压Jar
+ * @param jarFilePath
+ */
+def unZip(String jarFilePath) {
+    def outJarPath = getJarUnzipFile(jarFilePath)
+    def jarFile = new JarFile(jarFilePath)
+    Enumeration<JarEntry> jarEntries = jarFile.entries()
+    while (jarEntries.hasMoreElements()) {
+        JarEntry jarEntry = jarEntries.nextElement()
+        String outFileName = outJarPath + jarEntry.getName()
+        File f = new File(outFileName)
+        makeSupDir(outFileName)
+        if (jarEntry.isDirectory()) {
+            continue;
+        }
+        writeFile(jarFile.getInputStream(jarEntry), f)
+    }
+}
+
+/**
+ * 创建文件夹
+ * @param outFileName
+ */
 def makeSupDir(String outFileName) {
     Pattern p = Pattern.compile("[/\\\\" + File.separator + "]");
     Matcher m = p.matcher(outFileName);
@@ -76,6 +189,11 @@ def makeSupDir(String outFileName) {
     }
 }
 
+/**
+ * 得到解压Jar的文件夹地址
+ * @param jarFilePath
+ * @return
+ */
 def getJarUnzipFile(String jarFilePath) {
     Pattern pattern = Pattern.compile('allclasses.jar$|classes.jar$');//debug|release
     Matcher matcher = pattern.matcher(jarFilePath);
@@ -88,14 +206,72 @@ def getJarUnzipFile(String jarFilePath) {
     return "${file.getAbsolutePath()}${File.separator}"
 }
 
-def writeFile(InputStream ips, File outputFile) {
-    OutputStream ops = new BufferedOutputStream(new FileOutputStream(outputFile));
-    byte[] buffer = new byte[1024];
-    int nBytes = 0;
-    while ((nBytes = ips.read(buffer)) > 0) {
-        ops.write(buffer, 0, nBytes);
+/**
+ * 删除解压出来的Jar的文件夹的地址
+ * @param jarFilePath
+ * @return
+ */
+def deleteUnzipJarFiles(String jarFilePath) {
+    def path = getJarUnzipFile(jarFilePath)
+    def dir = new File(path)
+    if (!dir.exists() || !dir.isDirectory()) {
+        return;
     }
-    ops.flush();
-    ops.close();
-    ips.close();
+    deleteDir(jarFilePath)
+}
+
+/**
+ * 递归删除文件
+ * @param jarFilePath
+ * @return
+ */
+def deleteDir(String jarFilePath) {
+    def dir = new File(jarFilePath)
+    if (!dir.exists() || !dir.isDirectory()) {
+        return;
+    }
+    def files = dir.listFiles()
+    for (File file : files) {
+        if (file.isDirectory()) {
+            deleteDir(file.getAbsolutePath())
+        } else {
+            file.delete()
+        }
+    }
+    dir.delete()
+}
+
+/**
+ * 写文件
+ * @param ips
+ * @param outputFile
+ * @return
+ */
+def writeFile(InputStream ips, File outputFile) {
+    def ops = new BufferedOutputStream(new FileOutputStream(outputFile))
+    def buffer = new byte[1024]
+    def nBytes = 0
+    while ((nBytes = ips.read(buffer)) > 0) {
+        ops.write(buffer, 0, nBytes)
+    }
+    ops.flush()
+    ops.close()
+    ips.close()
+}
+
+/**
+ * 读文件
+ * @param file
+ * @return
+ */
+def readJavaFile(File file) {
+    def fis = new FileInputStream(file)
+    def bytes = new byte[10]
+    def len = -1
+    StringBuilder sb = new StringBuilder()
+    while ((len = fis.read(bytes)) != -1) {
+        sb.append(new String(bytes, 0, len))
+    }
+    fis.close()
+    return sb.toString()
 }
