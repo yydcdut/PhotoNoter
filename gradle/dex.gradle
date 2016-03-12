@@ -3,7 +3,22 @@ import java.util.jar.JarFile
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
-task hello << {
+task autoSpliteDex << {
+    if (description == null) {
+        println("description == null")
+        return;
+    }
+    def flavor = null
+    def buildType = null
+    def flavorAndBuildType = description
+    if (flavorAndBuildType.toLowerCase().contains("debug")) {
+        flavor = flavorAndBuildType.substring(0, flavorAndBuildType.length() - "debug".length())
+        buildType = "debug"
+    } else {
+        flavor = flavorAndBuildType.substring(0, flavorAndBuildType.length() - "release".length())
+        buildType = "release"
+    }
+
     //src/main/java/
     def srcPath = "${projectDir}${File.separator}" +
             "src${File.separator}" +
@@ -16,24 +31,24 @@ task hello << {
             "generated${File.separator}" +
             "source${File.separator}" +
             "apt${File.separator}" +
-            "Store360${File.separator}" +
-            "debug${File.separator}"
+            "${flavor}${File.separator}" +
+            "${buildType}${File.separator}"
 
     //build/intermediates/multi-dex/Store360/debug/allclasses.jar
     def jarDebugPath = "${projectDir}${File.separator}" +
             "build${File.separator}" +
             "intermediates${File.separator}" +
             "multi-dex${File.separator}" +
-            "Store360${File.separator}" +
-            "debug${File.separator}" +
+            "${flavor}${File.separator}" +
+            "${buildType}${File.separator}" +
             "allclasses.jar"
 
     def mainDexListPath = "${projectDir}${File.separator}" +
             "build${File.separator}" +
             "intermediates${File.separator}" +
             "multi-dex${File.separator}" +
-            "Store360${File.separator}" +
-            "debug${File.separator}" +
+            "${flavor}${File.separator}" +
+            "${buildType}${File.separator}" +
             "maindexlist.txt"
     //multidex.keep
     def multiDexKeepPath = "${projectDir}${File.separator}multidex.keep"
@@ -41,7 +56,7 @@ task hello << {
     //需要找依赖的类的列表
     Set<String> needFindDependencyList = new HashSet<>();
     //找到四大组件
-    findComponent("Store360", "debug", needFindDependencyList)
+    findComponent(flavor, buildType, needFindDependencyList)
     //找到项目需要放进第一个dex的
     findNeededPresenters(needFindDependencyList)
     //需要放进第一个dex的类的列表
@@ -98,7 +113,7 @@ task hello << {
     writeFileIfNotExist(mainDexListPath, multiDexKeepPath, packageClassSet)
     //删除解压出来的jar文件
     deleteUnzipJarFiles(outJarPath)
-
+    println("Finish")
 }
 
 /**

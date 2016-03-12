@@ -110,6 +110,34 @@ android.applicationVariants.all {
         }
 }
 
+tasks.whenTaskAdded { task ->
+    if (task.name.startsWith("create") && task.name.endsWith("MainDexClassList")) {
+
+        task.doLast {
+            def flavorAndBuildType = task.name.substring("create".length(), task.name.length() - "MainDexClassList".length())
+            autoSpliteDex.configure {
+                description = flavorAndBuildType
+            }
+            autoSpliteDex.execute()
+        }
+    } else if (task.name.startsWith("dex") && (task.name.toLowerCase().endsWith("debug") || task.name.toLowerCase().endsWith("release"))) {
+        task.doFirst {
+//            task.dependsOn autoSpliteDex
+        }
+        task.doLast {
+        }
+    }
+}
+
+afterEvaluate {
+    tasks.each {
+        if (it.name.startsWith("dex") && (it.name.toLowerCase().endsWith("debug") || it.name.toLowerCase().endsWith("release"))) {
+//            it.dependsOn autoSpliteDex
+        }
+    }
+}
+
+
 ext {
     dagger2Version = '2.0'
     leakcanaryVersion = '1.3'
