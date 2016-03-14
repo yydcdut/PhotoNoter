@@ -84,7 +84,7 @@ signingConfigs {
 
 有些界面是模仿Dribbble网站App效果图实现的：
 
-<a href="https://github.com/yydcdut/PhotoNoter/blob/master/DRIBBBLE.md">Dribbble</a>
+[Dribbble](https://github.com/yydcdut/PhotoNoter/blob/master/dribbble.md)
 
 # 技术点
 
@@ -108,23 +108,23 @@ signingConfigs {
 
 # 更新版本说明
 
-<a href="https://github.com/yydcdut/PhotoNoter/blob/master/CHANGELOG.md">ChangeLog</a>
+[ChangeLog](https://github.com/yydcdut/PhotoNoter/blob/master/CHANGELOG.md)
 
 # 致谢
 
-- <a href="https://github.com/markushi/android-ui">android-ui</a>
-- <a href="https://github.com/futuresimple/android-floating-action-button">android-floating-action-button</a>
-- <a href="https://github.com/yydcdut/SlideAndDragListView">SlideAndDragListView</a>
-- <a href="https://github.com/lsjwzh/MaterialLoadingProgressBar">MaterialLoadingProgressBar</a>
-- <a href="http://sdk.camera360.com/">Camera360 SDK</a>
-- <a href="https://github.com/greenrobot/EventBus">EventBus</a>
-- <a href="https://github.com/JakeWharton/butterknife">ButterKnife</a>
-- <a href="https://github.com/google/dagger">Google Dagger</a>
-- <a href="https://github.com/evernote/evernote-sdk-android">Evernote SDK</a>
-- <a href="https://github.com/ReactiveX/RxJava">RxJava</a>
-- <a href="https://github.com/ReactiveX/RxAndroid">RxAndroid</a>
-- <a href="https://github.com/square/leakcanary">LeakCanary</a>
-- <a href="https://github.com/orfjackal/retrolambda">RetroLambda</a>
+- [android-ui](https://github.com/markushi/android-ui)
+- [android-floating-action-button](https://github.com/futuresimple/android-floating-action-button)
+- [SlideAndDragListView](https://github.com/yydcdut/SlideAndDragListView)
+- [MaterialLoadingProgressBar](https://github.com/lsjwzh/MaterialLoadingProgressBar)
+- [Camera360 SDK](http://sdk.camera360.com/)
+- [EventBus](https://github.com/greenrobot/EventBus)
+- [ButterKnife](https://github.com/JakeWharton/butterknife)
+- [Google Dagger](https://github.com/google/dagger)
+- [Evernote SDK](https://github.com/evernote/evernote-sdk-android)
+- [RxJava](https://github.com/ReactiveX/RxJava)
+- [RxAndroid](https://github.com/ReactiveX/RxAndroid)
+- [LeakCanary](https://github.com/square/leakcanary)
+- [RetroLambda](https://github.com/orfjackal/retrolambda)
 
 # License
 
