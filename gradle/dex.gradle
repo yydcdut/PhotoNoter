@@ -3,9 +3,9 @@ import java.util.jar.JarFile
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
-task autoSpliteDex << {
+task autoSplitDex << {
     if (description == null) {
-        println("description == null")
+        println("\n\n\ndescription == null\n\n\n")
         return;
     }
     def flavor = null
@@ -42,7 +42,7 @@ task autoSpliteDex << {
             "${flavor}${File.separator}" +
             "${buildType}${File.separator}" +
             "allclasses.jar"
-
+    //build/intermediates/multi-dex/Store360/debug/maindexlist.txt
     def mainDexListPath = "${projectDir}${File.separator}" +
             "build${File.separator}" +
             "intermediates${File.separator}" +
@@ -52,6 +52,14 @@ task autoSpliteDex << {
             "maindexlist.txt"
     //multidex.keep
     def multiDexKeepPath = "${projectDir}${File.separator}multidex.keep"
+    ///build/outputs/mapping/Store360/debug/mapping.txt
+    def mappingTxtPath = "${projectDir}${File.separator}" +
+            "build${File.separator}" +
+            "outputs${File.separator}" +
+            "mapping${File.separator}" +
+            "${flavor}${File.separator}" +
+            "${buildType}${File.separator}" +
+            "mapping.txt"
 
     //需要找依赖的类的列表
     Set<String> needFindDependencyList = new HashSet<>();
@@ -83,29 +91,33 @@ task autoSpliteDex << {
     def outJarPath = getJarUnzipFile(jarDebugPath)
     //解压
     unZip(jarDebugPath)
-    //找内部类
-    for (Iterator<String> iterator = packageJavaSet.iterator(); iterator.hasNext();) {
-        def packageJava = iterator.next()
-        def javaName = packageJava.replace(".", File.separator).split(File.separator)[packageJava.replace(".", File.separator).split(File.separator).length - 1]
-        def sb = new StringBuilder();
-        for (int i = 0; i < packageJava.replace(".", File.separator).split(File.separator).length - 1; i++) {
-            sb.append(packageJava.replace(".", File.separator).split(File.separator)[i])
-            sb.append(File.separator)
-        }
-        def packagePath = outJarPath + sb.toString()
-        def dir = new File(packagePath)
-        if (dir.exists() && dir.isDirectory()) {
-            def files = dir.listFiles()
-            for (File file : files) {
-                if (!file.isDirectory()) {
-                    //找到内部类
-                    if (file.getName().startsWith(javaName)) {
-                        def clazz = file.getAbsolutePath().replace(outJarPath, "").replace(File.separator, '.')
-                        packageClassSet.add(clazz)
+    if (buildType.equals("debug")) {
+        //找内部类
+        for (Iterator<String> iterator = packageJavaSet.iterator(); iterator.hasNext();) {
+            def packageJava = iterator.next()
+            def javaName = packageJava.replace(".", File.separator).split(File.separator)[packageJava.replace(".", File.separator).split(File.separator).length - 1]
+            def sb = new StringBuilder();
+            for (int i = 0; i < packageJava.replace(".", File.separator).split(File.separator).length - 1; i++) {
+                sb.append(packageJava.replace(".", File.separator).split(File.separator)[i])
+                sb.append(File.separator)
+            }
+            def packagePath = outJarPath + sb.toString()
+            def dir = new File(packagePath)
+            if (dir.exists() && dir.isDirectory()) {
+                def files = dir.listFiles()
+                for (File file : files) {
+                    if (!file.isDirectory()) {
+                        //找到内部类
+                        if (file.getName().startsWith(javaName)) {
+                            def clazz = file.getAbsolutePath().replace(outJarPath, "").replace(File.separator, '.')
+                            packageClassSet.add(clazz)
+                        }
                     }
                 }
             }
         }
+    } else {
+        //通过mapping.txt去找
     }
     //先将系统的复制过来
     copyFile(mainDexListPath, multiDexKeepPath)

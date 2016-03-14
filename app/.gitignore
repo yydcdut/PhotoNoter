@@ -4,3 +4,5 @@
 /debug.keystore
 
 .sonar
+
+/release.properties

@@ -52,6 +52,12 @@ android {
 
     signingConfigs {
         release {
+            Properties p = new Properties()
+            p.load(new FileInputStream(project.file('release.properties')))
+            storeFile file(p.storeFile)
+            storePassword p.storePassword
+            keyAlias p.keyAlias
+            keyPassword p.keyPassword
         }
         debug {
             storeFile file("debug.keystore")
@@ -105,24 +111,22 @@ android.applicationVariants.all {
                     dex.additionalParameters = []
                 }
                 dex.additionalParameters += '--multi-dex'
-                dex.additionalParameters += '--set-max-idx-number=55000'
-                dex.additionalParameters += "--main-dex-list=$projectDir/multidex.keep".toString()
+//                dex.additionalParameters += '--set-max-idx-number=55000'
+//                dex.additionalParameters += "--main-dex-list=$projectDir/multidex.keep".toString()
         }
 }
 
 tasks.whenTaskAdded { task ->
     if (task.name.startsWith("create") && task.name.endsWith("MainDexClassList")) {
-
         task.doLast {
-            def flavorAndBuildType = task.name.substring("create".length(), task.name.length() - "MainDexClassList".length())
-            autoSpliteDex.configure {
-                description = flavorAndBuildType
-            }
-            autoSpliteDex.execute()
+//            def flavorAndBuildType = task.name.substring("create".length(), task.name.length() - "MainDexClassList".length())
+//            autoSplitDex.configure {
+//                description = flavorAndBuildType
+//            }
+//            autoSplitDex.execute()
         }
     } else if (task.name.startsWith("dex") && (task.name.toLowerCase().endsWith("debug") || task.name.toLowerCase().endsWith("release"))) {
         task.doFirst {
-//            task.dependsOn autoSpliteDex
         }
         task.doLast {
         }
@@ -132,7 +136,6 @@ tasks.whenTaskAdded { task ->
 afterEvaluate {
     tasks.each {
         if (it.name.startsWith("dex") && (it.name.toLowerCase().endsWith("debug") || it.name.toLowerCase().endsWith("release"))) {
-//            it.dependsOn autoSpliteDex
         }
     }
 }
