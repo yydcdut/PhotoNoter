@@ -52,12 +52,12 @@ android {
 
     signingConfigs {
         release {
-            Properties p = new Properties()
-            p.load(new FileInputStream(project.file('release.properties')))
-            storeFile file(p.storeFile)
-            storePassword p.storePassword
-            keyAlias p.keyAlias
-            keyPassword p.keyPassword
+//            Properties p = new Properties()
+//            p.load(new FileInputStream(project.file('release.properties')))
+//            storeFile file(p.storeFile)
+//            storePassword p.storePassword
+//            keyAlias p.keyAlias
+//            keyPassword p.keyPassword
         }
         debug {
             storeFile file("debug.keystore")
