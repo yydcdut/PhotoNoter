@@ -12,27 +12,55 @@ Material Design风格的开源照片笔记。
 
 # 编译
 
+## 'signingConfig.storeFile' does not exist
+
 如果编译不过，错误日志是：
 
 > Error:A problem was found with the configuration of task ':app:packagexxxxDebug'.
-
 >
-
 > File ‘/xxxxxxxxxx/debug.keystore' specified for property 'signingConfig.storeFile' does not exist.
 
-将{$projectName}/app/build.gradle中的下面代码删除
+
+将/app/build.gradle中的下面代码**注释**或者**删除**
 
 ``` groovy
-debug{
-            storeFile file("debug.keystore")
-     }
+signingConfigs {
+	debug {
+		//storeFile file("debug.keystore")
+	}
+}
 ```
 
+## release.properties (No such file or directory)
 
+如果编译不过，错误日志是：
+
+> What went wrong:
+> A problem occurred evaluating project ':app'.
+> xxxxxxxx/app/release.properties (No such file or directory)
+
+将/app/build.gradle中的下面代码**注释**或者**删除**
+
+```groovy
+signingConfigs {
+	release {
+		//Properties p = new Properties()
+		//p.load(new FileInputStream(project.file('release.properties')))
+		//storeFile file(p.storeFile)
+        //storePassword p.storePassword
+		//keyAlias p.keyAlias
+		//keyPassword p.keyPassword
+	}
+}
+```
+
+## NDK
 
 如果编译不过，错误日志是跟NDK有关的：
 
 > 开发环境的ndk版本是android-ndk-r10e
+## Others
+
 
 如果还是不行，请将错误日志issues，谢谢！
 
