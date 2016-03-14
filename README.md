@@ -36,7 +36,9 @@ signingConfigs {
 如果编译不过，错误日志是：
 
 > What went wrong:
+>
 > A problem occurred evaluating project ':app'.
+>
 > xxxxxxxx/app/release.properties (No such file or directory)
 
 将/app/build.gradle中的下面代码**注释**或者**删除**
@@ -59,8 +61,8 @@ signingConfigs {
 如果编译不过，错误日志是跟NDK有关的：
 
 > 开发环境的ndk版本是android-ndk-r10e
-## Others
 
+## Others
 
 如果还是不行，请将错误日志issues，谢谢！
 
