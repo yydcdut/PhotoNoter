@@ -111,19 +111,19 @@ android.applicationVariants.all {
                     dex.additionalParameters = []
                 }
                 dex.additionalParameters += '--multi-dex'
-//                dex.additionalParameters += '--set-max-idx-number=55000'
-//                dex.additionalParameters += "--main-dex-list=$projectDir/multidex.keep".toString()
+                dex.additionalParameters += '--set-max-idx-number=55000'
+                dex.additionalParameters += "--main-dex-list=$projectDir/multidex.keep".toString()
         }
 }
 
 tasks.whenTaskAdded { task ->
     if (task.name.startsWith("create") && task.name.endsWith("MainDexClassList")) {
         task.doLast {
-//            def flavorAndBuildType = task.name.substring("create".length(), task.name.length() - "MainDexClassList".length())
-//            autoSplitDex.configure {
-//                description = flavorAndBuildType
-//            }
-//            autoSplitDex.execute()
+            def flavorAndBuildType = task.name.substring("create".length(), task.name.length() - "MainDexClassList".length())
+            autoSplitDex.configure {
+                description = flavorAndBuildType
+            }
+            autoSplitDex.execute()
         }
     } else if (task.name.startsWith("dex") && (task.name.toLowerCase().endsWith("debug") || task.name.toLowerCase().endsWith("release"))) {
         task.doFirst {

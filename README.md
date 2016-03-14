@@ -99,11 +99,12 @@ signingConfigs {
 9. 一些 UI 的动画，比如 “ 意见反馈”、 “ 语音输入” 这里面的动画。
 10. 主题设置，沉浸式状态栏（Android5.0）。
 11. 切换主题。
-12. 可以滑动 item 和可以拖放 item 的 ListView（<a href="https://github.com/yydcdut/SlideAndDragListView">SlideAndDragListView</a>）。 
+12. 可以滑动 item 和可以拖放 item 的 ListView（[SlideAndDragListView](https://github.com/yydcdut/SlideAndDragListView)）。 
 13. RxJava + RxAndroid（RxCategory/ RxPhotoNote/ RxSandBox/ RxFeedBack/ RxUser）。
 14. dex分包处理。第一次开启App的时候 install dex + dexopt 时间很长，所以第一次开启的时候另启进程专门做这个事情，防止主线程因为时间长而发生ANR。至于自己去配置主dex是为了以防自动分包ClassNotFound异常。
-15. Android 6.0 权限适配。
-16. NDK && AIDL。
+15. Dex自动分包脚本。
+16. Android 6.0 权限适配。
+17. NDK && AIDL。
 
 # 更新版本说明
 
