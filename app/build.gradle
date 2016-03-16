@@ -16,6 +16,10 @@ android {
         renderscriptTargetApi 19
         renderscriptSupportModeEnabled true
         multiDexEnabled true
+//        jackOptions {
+//            enabled true
+//        }
+//        useJack true
 
         ndk {
             moduleName = "blur"
@@ -85,7 +89,9 @@ android {
     }
 
     productFlavors {
-        Store360 {}
+        Store360 {
+//            useJack = true
+        }
 //        QQ {}
 //        WanDouJia {}
 //        Xiaomi {}
