@@ -3,6 +3,17 @@ apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.neenbedankt.android-apt'
 apply from: '../gradle/dex.gradle'
 
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.1.0-alpha1' //default
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
+        classpath 'me.tatarka:gradle-retrolambda:3.2.0'
+    }
+}
+
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -109,17 +120,30 @@ android {
     sourceSets { main { jni.srcDirs = ['src/main/jni'] } }
 }
 
-android.applicationVariants.all {
-    variant ->
-        dex.doFirst {
-            dex ->
-                if (dex.additionalParameters == null) {
-                    dex.additionalParameters = []
-                }
-                dex.additionalParameters += '--multi-dex'
-                dex.additionalParameters += '--set-max-idx-number=55000'
-                dex.additionalParameters += "--main-dex-list=$projectDir/multidex.keep".toString()
+//android.applicationVariants.all {
+//    variant ->
+//        dx.doFirst {
+//            dx ->
+//                if (dx.additionalParameters == null) {
+//                    dx.additionalParameters = []
+//                }
+//                dx.additionalParameters += '--multi-dex'
+//                dx.additionalParameters += '--set-max-idx-number=55000'
+//                dx.additionalParameters += "--main-dex-list=$projectDir/multidex.keep".toString()
+//        }
+//}
+
+afterEvaluate {
+    tasks.matching {
+        it.name.startsWith('dex')
+    }.each { dx ->
+        if (dx.additionalParameters == null) {
+            dx.additionalParameters = []
         }
+        dx.additionalParameters += '--multi-dex'
+        dx.additionalParameters += '--set-max-idx-number=55000'
+        dx.additionalParameters += "--main-dex-list=$projectDir/multidex.keep".toString()
+    }
 }
 
 tasks.whenTaskAdded { task ->

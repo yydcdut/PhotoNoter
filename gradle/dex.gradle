@@ -57,6 +57,8 @@ task autoSplitDex << {
             "${flavor}${File.separator}" +
             "${buildType}${File.separator}" +
             "maindexlist.txt"
+    //support.keep
+    def supportKeepPath = "${projectDir}${File.separator}support.keep"
     //multidex.keep
     def multiDexKeepPath = "${projectDir}${File.separator}multidex.keep"
     ///build/outputs/mapping/Store360/debug/mapping.txt
@@ -152,7 +154,9 @@ task autoSplitDex << {
         }
     }
     //先将系统的复制过来
-    copyFile(mainDexListPath, multiDexKeepPath)
+    copyFile(mainDexListPath, multiDexKeepPath, false)
+    //复制multidex support包
+    copyFile(supportKeepPath, multiDexKeepPath, true)
     //把class写到multidex.keep
     writeFileIfNotExist(mainDexListPath, multiDexKeepPath, packageClassSet)
     //删除解压出来的jar文件
@@ -484,10 +488,10 @@ def writeFileIfNotExist(String existCheckPath, String path, Set<String> set) {
  * @param to
  * @return
  */
-def copyFile(String from, String to) {
+def copyFile(String from, String to, boolean append) {
     def byteread = 0;
     def input = new FileInputStream(from); ;
-    def out = new FileOutputStream(to); ;
+    def out = new FileOutputStream(to, append); ;
     def buffer = new byte[1024];
     while ((byteread = input.read(buffer)) != -1) {
         out.write(buffer, 0, byteread);
