@@ -1,26 +1,23 @@
-package com.yydcdut.gallery;
+package com.yydcdut.gallery.controller;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.yydcdut.gallery.R;
+import com.yydcdut.gallery.fragment.PhotoFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
 
@@ -33,9 +30,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Bind(R.id.nav_view)
     NavigationView mNavigationView;
 
-    private List<String> mFolderList;
-    private ArrayAdapter<String> mAdapter;
-    private ActionBar mActionBar;
+    private PhotoFragment mPhotoFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,24 +38,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
-        mToolbar.setTitle("");
-        mFolderList = new ArrayList<>();
-        mFolderList.add("111");
-        mFolderList.add("222");
-        mFolderList.add("333");
-        mFolderList.add("444");
-        mAdapter = new ArrayAdapter<>(this, R.layout.item_spinner, mFolderList);
-        mActionBar = getSupportActionBar();
-        mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-        mActionBar.setListNavigationCallbacks(mAdapter, new ActionBar.OnNavigationListener() {
-
-            @Override
-            public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-                Log.i("yuyidong", mActionBar.getSelectedNavigationIndex() + "    " + itemPosition + "  " + itemId);
-                mActionBar.setSelectedNavigationItem(0);
-                return false;
-            }
-        });
+        mToolbar.setTitle(" ");
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -68,6 +46,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
 
         mNavigationView.setNavigationItemSelectedListener(this);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        mPhotoFragment = PhotoFragment.newInstance();
+        fragmentManager.beginTransaction().replace(R.id.layout_photo, mPhotoFragment).commit();
     }
 
 
@@ -108,4 +90,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
+
 }
