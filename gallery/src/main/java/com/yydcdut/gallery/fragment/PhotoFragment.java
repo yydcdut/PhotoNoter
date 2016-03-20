@@ -80,6 +80,7 @@ public class PhotoFragment extends BaseFragment implements ActionBar.OnNavigatio
         int size = getResources().getDisplayMetrics().widthPixels / 3;
         mPhotoAdapter = new PhotoAdapter(getContext(), size, mMediaFolderByNameMap.get(MediaFolder.ALL), null, null);
         mRecyclerView.setAdapter(mPhotoAdapter);
+
     }
 
     @Override
