@@ -80,7 +80,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             View view = mNavigationView.getChildAt(i);
             if (view instanceof RecyclerView) {
                 RecyclerView recyclerView = (RecyclerView) view;
-                mNavigationAdapter = new NavigationAdapter(this, recyclerView.getAdapter(), galleryAppList, this);
+                mNavigationAdapter = new NavigationAdapter(recyclerView.getAdapter(), galleryAppList, this);
                 recyclerView.setAdapter(mNavigationAdapter);
             }
         }

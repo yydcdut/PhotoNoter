@@ -1,6 +1,5 @@
 package com.yydcdut.gallery.adapter;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -18,15 +17,13 @@ import java.util.List;
  * Created by yuyidong on 16/3/20.
  */
 public class NavigationAdapter extends RecyclerView.Adapter {
-    private Context mContext;
     private RecyclerView.Adapter mSystemNavAdapter;
     private List<GalleryApp> mGalleryAppList;
     private NavFooterViewHolder.OnNavFooterItemClickListener mOnNavFooterItemClickListener;
 
-    public NavigationAdapter(@NonNull Context context, @NonNull RecyclerView.Adapter systemNavAdapter,
+    public NavigationAdapter(@NonNull RecyclerView.Adapter systemNavAdapter,
                              @Nullable List<GalleryApp> galleryAppList,
                              @Nullable NavFooterViewHolder.OnNavFooterItemClickListener listener) {
-        mContext = context;
         mSystemNavAdapter = systemNavAdapter;
         mGalleryAppList = galleryAppList;
         mOnNavFooterItemClickListener = listener;
@@ -53,7 +50,7 @@ public class NavigationAdapter extends RecyclerView.Adapter {
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder holder = mSystemNavAdapter.onCreateViewHolder(parent, viewType);
         if (holder == null) {
-            View view = LayoutInflater.from(mContext).inflate(R.layout.nav_footer_main, null);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.nav_footer_main, null);
             holder = new NavFooterViewHolder(view, mGalleryAppList, mOnNavFooterItemClickListener);
         }
         return holder;
