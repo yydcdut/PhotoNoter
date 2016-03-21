@@ -49,8 +49,10 @@ public class NoteApplication extends Application {
             return;
         }
 
-        LeakCanary.install(this);
+        if (BuildConfig.LOG_DEBUG) {
+            LeakCanary.install(this);
 //        BlockCanary.install(this, new NoteBlockCanaryContext(this)).start();
+        }
 
         initComponent();
         Utils.init(this);
