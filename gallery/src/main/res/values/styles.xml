@@ -17,4 +17,11 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
+    <style name="AppCheckBox">
+        <item name="android:paddingRight">@dimen/checkbox_photo_padding_right</item>
+        <item name="android:paddingTop">@dimen/checkbox_photo_padding_top</item>
+        <item name="android:button">@drawable/btn_check_white</item>
+    </style>
+
+
 </resources>

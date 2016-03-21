@@ -6,4 +6,8 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="checkbox_photo_padding_right">3dp</dimen>
+    <dimen name="checkbox_photo_padding_top">6dp</dimen>
+
 </resources>
