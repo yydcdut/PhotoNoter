@@ -8,6 +8,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.squareup.leakcanary.LeakCanary;
 
 /**
  * Created by yuyidong on 16/3/19.
@@ -17,6 +18,10 @@ public class GalleryApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        if (BuildConfig.LOG_DEBUG) {
+            LeakCanary.install(this);
+        }
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
                 .threadPriority(Thread.NORM_PRIORITY - 2)
                 .denyCacheImageMultipleSizesInMemory()

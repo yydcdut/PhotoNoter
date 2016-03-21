@@ -118,11 +118,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.nav_gallery) {
-            mNavigationView.getMenu().findItem(R.id.nav_file).setChecked(false);
         } else if (id == R.id.nav_file) {
-            mNavigationView.getMenu().findItem(R.id.nav_gallery).setChecked(false);
         }
-        item.setChecked(true);
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -134,5 +131,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         jumpIntent.setPackage(galleryApp.getPackageName());
         jumpIntent.setAction(Intent.ACTION_GET_CONTENT);
         startActivity(jumpIntent);
+        mDrawerLayout.closeDrawer(GravityCompat.START);
     }
 }

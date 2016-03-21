@@ -5,12 +5,14 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yydcdut.gallery.R;
 import com.yydcdut.gallery.model.GalleryApp;
+import com.yydcdut.gallery.utils.AppCompat;
 
 import java.util.List;
 
@@ -25,15 +27,29 @@ public class NavFooterViewHolder extends RecyclerView.ViewHolder implements View
         super(itemView);
         mOnNavFooterItemClickListener = onNavFooterItemClickListener;
         LinearLayout linearLayout = (LinearLayout) itemView;
-        for (GalleryApp galleryApp : galleryAppList) {
-            View view = LayoutInflater.from(itemView.getContext()).inflate(R.layout.item_nav_footer, null);
-            ImageView imageView = (ImageView) view.findViewById(R.id.img_nav_footer);
-            imageView.setImageDrawable(galleryApp.getLogoDrawable());
-            TextView textView = (TextView) view.findViewById(R.id.txt_nav_footer);
-            textView.setText(galleryApp.getAppName());
-            linearLayout.addView(view);
-            view.setTag(galleryApp);
-            view.setOnClickListener(this);
+        if (galleryAppList != null && galleryAppList.size() > 0) {
+            linearLayout.addView(LayoutInflater.from(itemView.getContext()).inflate(R.layout.item_nav_separator, null));
+            TextView subHeaderTextView = (TextView) LayoutInflater.from(itemView.getContext()).inflate(R.layout.item_nav_subheader, null);
+            subHeaderTextView.setText("Third App");
+            linearLayout.addView(subHeaderTextView);
+            for (GalleryApp galleryApp : galleryAppList) {
+                ViewGroup viewGroup = null;
+                if (AppCompat.AFTER_ICE_CREAM) {
+                    viewGroup = (ViewGroup) LayoutInflater.from(itemView.getContext()).inflate(R.layout.item_nav_footer_v14, null);
+                } else {
+                    viewGroup = (ViewGroup) LayoutInflater.from(itemView.getContext()).inflate(R.layout.item_nav_footer, null);
+                }
+                for (int i = 0; i < viewGroup.getChildCount(); i++) {
+                    View view = viewGroup.getChildAt(i);
+                    view.setTag(galleryApp);
+                }
+                ImageView imageView = (ImageView) viewGroup.findViewById(R.id.img_nav_footer);
+                imageView.setImageDrawable(galleryApp.getLogoDrawable());
+                TextView textView = (TextView) viewGroup.findViewById(R.id.txt_nav_footer);
+                textView.setText(galleryApp.getAppName());
+                linearLayout.addView(viewGroup);
+                viewGroup.setOnClickListener(this);
+            }
         }
     }
 
