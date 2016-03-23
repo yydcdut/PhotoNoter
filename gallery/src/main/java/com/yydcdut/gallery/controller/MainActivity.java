@@ -20,7 +20,7 @@ import android.view.View;
 import com.yydcdut.gallery.R;
 import com.yydcdut.gallery.adapter.NavigationAdapter;
 import com.yydcdut.gallery.adapter.vh.NavFooterViewHolder;
-import com.yydcdut.gallery.fragment.PhotoFragment;
+import com.yydcdut.gallery.fragment.MediaPhotoFragment;
 import com.yydcdut.gallery.model.GalleryApp;
 import com.yydcdut.gallery.model.SelectPhotoModel;
 import com.yydcdut.gallery.utils.Jumper;
@@ -47,7 +47,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private MenuItem mPreviewMenu;
 
-    private PhotoFragment mPhotoFragment;
+    private MediaPhotoFragment mMediaPhotoFragment;
 
     private NavigationAdapter mNavigationAdapter;
 
@@ -90,8 +90,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        mPhotoFragment = PhotoFragment.newInstance();
-        fragmentManager.beginTransaction().replace(R.id.layout_photo, mPhotoFragment).commit();
+        mMediaPhotoFragment = MediaPhotoFragment.newInstance();
+        fragmentManager.beginTransaction().replace(R.id.layout_photo, mMediaPhotoFragment).commit();
     }
 
     @Override

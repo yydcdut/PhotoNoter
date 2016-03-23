@@ -30,7 +30,7 @@ import butterknife.ButterKnife;
 /**
  * Created by yuyidong on 16/3/19.
  */
-public class PhotoFragment extends BaseFragment implements ActionBar.OnNavigationListener,
+public class MediaPhotoFragment extends BaseFragment implements ActionBar.OnNavigationListener,
         PhotoViewHolder.OnItemClickListener, PhotoViewHolder.OnItemSelectListener {
 
     private MainActivity mMainActivity;
@@ -45,15 +45,14 @@ public class PhotoFragment extends BaseFragment implements ActionBar.OnNavigatio
     private Map<String, MediaFolder> mMediaFolderByNameMap;
     private String mCurrentFolderName = null;
 
-    public static PhotoFragment newInstance() {
-        return new PhotoFragment();
+    public static MediaPhotoFragment newInstance() {
+        return new MediaPhotoFragment();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.frag_photo, null);
-        return view;
+        return inflater.inflate(R.layout.frag_media_photo, null);
     }
 
     @Override
