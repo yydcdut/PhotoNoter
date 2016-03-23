@@ -19,7 +19,6 @@ import com.yydcdut.gallery.model.MediaFolder;
 import com.yydcdut.gallery.model.PhotoModel;
 import com.yydcdut.gallery.model.SelectPhotoModel;
 import com.yydcdut.gallery.utils.Jumper;
-import com.yydcdut.gallery.utils.YLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,7 +107,6 @@ public class PhotoFragment extends BaseFragment implements ActionBar.OnNavigatio
     @Override
     public void onItemSelectClick(View v, int layoutPosition, int adapterPosition, boolean isSelected) {
         String path = mMediaFolderByNameMap.get(mCurrentFolderName).getMediaPhotoList().get(adapterPosition).getPath();
-        YLog.i("yuyidong", "path-->" + path + "  " + layoutPosition + "   " + adapterPosition + "  " + isSelected);
         if (isSelected) {
             SelectPhotoModel.getInstance().addPath(path);
         } else {

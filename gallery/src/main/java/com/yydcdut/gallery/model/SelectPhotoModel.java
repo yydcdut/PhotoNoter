@@ -1,22 +1,16 @@
 package com.yydcdut.gallery.model;
 
-import java.util.Comparator;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by yuyidong on 16/3/23.
  */
 public class SelectPhotoModel {
-    private Set<String> mSelectPhotoSet;
+    private List<String> mSelectPhotoList;
 
     private SelectPhotoModel() {
-        mSelectPhotoSet = new TreeSet<>(new Comparator() {
-            @Override
-            public int compare(Object lhs, Object rhs) {
-                return 1;
-            }
-        });
+        mSelectPhotoList = new ArrayList<>();
     }
 
     private static class Holder {
@@ -28,23 +22,27 @@ public class SelectPhotoModel {
     }
 
     public boolean addPath(String path) {
-        return mSelectPhotoSet.add(path);
+        if (!mSelectPhotoList.contains(path)) {
+            return mSelectPhotoList.add(path);
+        } else {
+            return false;
+        }
     }
 
     public boolean removePath(String path) {
-        return mSelectPhotoSet.remove(path);
+        return mSelectPhotoList.remove(path);
     }
 
     public boolean contains(String path) {
-        return mSelectPhotoSet.contains(path);
+        return mSelectPhotoList.contains(path);
     }
 
     public int getCount() {
-        return mSelectPhotoSet.size();
+        return mSelectPhotoList.size();
     }
 
     public void clear() {
-        mSelectPhotoSet.clear();
+        mSelectPhotoList.clear();
     }
 
 }
