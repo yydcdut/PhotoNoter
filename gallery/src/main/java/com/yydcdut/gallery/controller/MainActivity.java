@@ -22,6 +22,8 @@ import com.yydcdut.gallery.adapter.NavigationAdapter;
 import com.yydcdut.gallery.adapter.vh.NavFooterViewHolder;
 import com.yydcdut.gallery.fragment.PhotoFragment;
 import com.yydcdut.gallery.model.GalleryApp;
+import com.yydcdut.gallery.model.SelectPhotoModel;
+import com.yydcdut.gallery.utils.Jumper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,6 +114,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_preview) {
+            if (SelectPhotoModel.getInstance().getCount() != 0) {
+                Jumper.jump2DetailActivityPreviewSelected(this);
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);

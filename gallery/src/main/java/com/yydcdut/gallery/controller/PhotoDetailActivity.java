@@ -6,7 +6,9 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 
 import com.yydcdut.gallery.R;
-import com.yydcdut.gallery.adapter.PhotoViewPager;
+import com.yydcdut.gallery.adapter.AbsPhotoPagerAdapter;
+import com.yydcdut.gallery.adapter.PhotoAllPagerAdapter;
+import com.yydcdut.gallery.adapter.PhotoSelectedPagerAdapter;
 import com.yydcdut.gallery.model.MediaPhoto;
 import com.yydcdut.gallery.model.PhotoModel;
 import com.yydcdut.gallery.utils.AppCompat;
@@ -24,11 +26,7 @@ public class PhotoDetailActivity extends BaseActivity {
     @Bind(R.id.vp_detail)
     ViewPager mViewPager;
 
-    private PhotoViewPager mPhotoViewPager;
-
-    private int mInitPage;
-
-    private List<MediaPhoto> mMediaPhotoList;
+    private AbsPhotoPagerAdapter mPhotoPagerAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,12 +36,17 @@ public class PhotoDetailActivity extends BaseActivity {
             AppCompat.setFullWindow(getWindow());
         }
         ButterKnife.bind(this);
-        mInitPage = getIntent().getIntExtra(INTENT_PAGE, 0);
-        String folderName = getIntent().getStringExtra(INTENT_FOLDER);
-        mMediaPhotoList = PhotoModel.getInstance().findByMedia(this).get(folderName).getMediaPhotoList();
-        mPhotoViewPager = new PhotoViewPager(mMediaPhotoList);
-        mViewPager.setAdapter(mPhotoViewPager);
-        mViewPager.setCurrentItem(mInitPage);
+        if (getIntent().getBooleanExtra(INTENT_PREVIEW_SELECTED, false)) {
+            mPhotoPagerAdapter = new PhotoSelectedPagerAdapter();
+            mViewPager.setAdapter(mPhotoPagerAdapter);
+        } else {
+            int initPage = getIntent().getIntExtra(INTENT_PAGE, 0);
+            String folderName = getIntent().getStringExtra(INTENT_FOLDER);
+            List<MediaPhoto> mediaPhotoList = PhotoModel.getInstance().findByMedia(this).get(folderName).getMediaPhotoList();
+            mPhotoPagerAdapter = new PhotoAllPagerAdapter(mediaPhotoList);
+            mViewPager.setAdapter(mPhotoPagerAdapter);
+            mViewPager.setCurrentItem(initPage);
+        }
     }
 
     @Override

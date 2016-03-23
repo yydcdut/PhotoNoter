@@ -1,6 +1,5 @@
 package com.yydcdut.gallery.adapter;
 
-import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +15,10 @@ import uk.co.senab.photoview.PhotoView;
 /**
  * Created by yuyidong on 16/3/22.
  */
-public class PhotoViewPager extends PagerAdapter {
+public class PhotoAllPagerAdapter extends AbsPhotoPagerAdapter {
     private List<MediaPhoto> mMediaPhotoList;
 
-    public PhotoViewPager(List<MediaPhoto> mediaPhotoList) {
+    public PhotoAllPagerAdapter(List<MediaPhoto> mediaPhotoList) {
         mMediaPhotoList = mediaPhotoList;
     }
 
@@ -38,7 +37,7 @@ public class PhotoViewPager extends PagerAdapter {
         View view = LayoutInflater.from(container.getContext()).inflate(R.layout.item_pager_photo, null);
         PhotoView imageView = (PhotoView) view.findViewById(R.id.img_item_detail);
         ImageLoader.getInstance().displayImage("file:/" + mMediaPhotoList.get(position).getPath(), imageView);
-        container.addView(view); // 为viewpager增加布局
+        container.addView(view);
         return view;
     }
 

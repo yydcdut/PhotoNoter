@@ -45,4 +45,8 @@ public class SelectPhotoModel {
         mSelectPhotoList.clear();
     }
 
+    public String get(int position) {
+        return mSelectPhotoList.get(position);
+    }
+
 }

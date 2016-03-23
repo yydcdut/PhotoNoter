@@ -101,7 +101,7 @@ public class PhotoFragment extends BaseFragment implements ActionBar.OnNavigatio
 
     @Override
     public void onItemClick(View v, int layoutPosition, int adapterPosition) {
-        Jumper.jump2DetailActivity(getContext(), adapterPosition, mCurrentFolderName);
+        Jumper.jump2DetailActivityAll(getContext(), adapterPosition, mCurrentFolderName);
     }
 
     @Override
@@ -112,6 +112,11 @@ public class PhotoFragment extends BaseFragment implements ActionBar.OnNavigatio
         } else {
             SelectPhotoModel.getInstance().removePath(path);
         }
-        mMainActivity.getPreviewMenu().setTitle(getResources().getString(R.string.action_view) + "(" + SelectPhotoModel.getInstance().getCount() + ")");
+        if (SelectPhotoModel.getInstance().getCount() == 0) {
+            mMainActivity.getPreviewMenu().setTitle(getResources().getString(R.string.action_view));
+
+        } else {
+            mMainActivity.getPreviewMenu().setTitle(getResources().getString(R.string.action_view) + "(" + SelectPhotoModel.getInstance().getCount() + ")");
+        }
     }
 }

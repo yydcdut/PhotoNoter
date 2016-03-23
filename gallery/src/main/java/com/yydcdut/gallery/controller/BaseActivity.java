@@ -8,4 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 public abstract class BaseActivity extends AppCompatActivity {
     public static final String INTENT_PAGE = "page";
     public static final String INTENT_FOLDER = "folder";
+
+    public static final String INTENT_PREVIEW_SELECTED = "preview_selected";
 }

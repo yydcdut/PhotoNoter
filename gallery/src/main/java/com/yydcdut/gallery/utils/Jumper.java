@@ -11,10 +11,17 @@ import com.yydcdut.gallery.controller.PhotoDetailActivity;
  */
 public class Jumper {
 
-    public static void jump2DetailActivity(Context context, int page, String folderName) {
+    public static void jump2DetailActivityAll(Context context, int page, String folderName) {
         Intent intent = new Intent(context, PhotoDetailActivity.class);
         intent.putExtra(BaseActivity.INTENT_PAGE, page);
         intent.putExtra(BaseActivity.INTENT_FOLDER, folderName);
+        intent.putExtra(BaseActivity.INTENT_PREVIEW_SELECTED, false);
+        context.startActivity(intent);
+    }
+
+    public static void jump2DetailActivityPreviewSelected(Context context) {
+        Intent intent = new Intent(context, PhotoDetailActivity.class);
+        intent.putExtra(BaseActivity.INTENT_PREVIEW_SELECTED, true);
         context.startActivity(intent);
     }
 }
