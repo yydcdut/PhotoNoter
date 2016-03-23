@@ -61,6 +61,7 @@ dependencies {
     compile "com.android.support:recyclerview-v7:${rootProject.ext.supportVersion}"
     compile 'com.jakewharton:butterknife:7.0.1'
     compile "com.nineoldandroids:library:2.4.0"
+    compile "com.commit451:PhotoView:1.2.4"
     debugCompile "com.squareup.leakcanary:leakcanary-android:${leakcanaryVersion}"
     releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:${leakcanaryVersion}"
     compile files('libs/universal-image-loader-1.9.4.jar')

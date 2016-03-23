@@ -8,6 +8,7 @@ import com.yydcdut.gallery.R;
 import com.yydcdut.gallery.adapter.PhotoViewPager;
 import com.yydcdut.gallery.model.MediaPhoto;
 import com.yydcdut.gallery.model.PhotoModel;
+import com.yydcdut.gallery.utils.AppCompat;
 
 import java.util.List;
 
@@ -31,6 +32,9 @@ public class PhotoDetailActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_detail);
+        if (AppCompat.AFTER_LOLLIPOP) {
+            AppCompat.setFullWindow(getWindow());
+        }
         ButterKnife.bind(this);
         mInitPage = getIntent().getIntExtra(INTENT_PAGE, 0);
         String folderName = getIntent().getStringExtra(INTENT_FOLDER);
