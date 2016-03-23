@@ -43,6 +43,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Bind(R.id.nav_view)
     NavigationView mNavigationView;
 
+    private MenuItem mPreviewMenu;
+
     private PhotoFragment mPhotoFragment;
 
     private NavigationAdapter mNavigationAdapter;
@@ -102,13 +104,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
+        mPreviewMenu = menu.findItem(R.id.action_preview);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_clean) {
+        if (id == R.id.action_preview) {
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -132,5 +135,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         jumpIntent.setAction(Intent.ACTION_GET_CONTENT);
         startActivity(jumpIntent);
         mDrawerLayout.closeDrawer(GravityCompat.START);
+    }
+
+    public MenuItem getPreviewMenu() {
+        return mPreviewMenu;
     }
 }

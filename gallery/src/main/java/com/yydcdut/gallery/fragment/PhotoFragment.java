@@ -17,7 +17,9 @@ import com.yydcdut.gallery.adapter.vh.PhotoViewHolder;
 import com.yydcdut.gallery.controller.MainActivity;
 import com.yydcdut.gallery.model.MediaFolder;
 import com.yydcdut.gallery.model.PhotoModel;
+import com.yydcdut.gallery.model.SelectPhotoModel;
 import com.yydcdut.gallery.utils.Jumper;
+import com.yydcdut.gallery.utils.YLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +33,7 @@ import butterknife.ButterKnife;
  */
 public class PhotoFragment extends BaseFragment implements ActionBar.OnNavigationListener,
         PhotoViewHolder.OnItemClickListener, PhotoViewHolder.OnItemSelectListener {
+
     private MainActivity mMainActivity;
 
     @Bind(R.id.rv_album)
@@ -82,7 +85,6 @@ public class PhotoFragment extends BaseFragment implements ActionBar.OnNavigatio
         int size = getResources().getDisplayMetrics().widthPixels / 3;
         mPhotoAdapter = new PhotoAdapter(getContext(), size, mMediaFolderByNameMap.get(mCurrentFolderName), this, this);
         mRecyclerView.setAdapter(mPhotoAdapter);
-
     }
 
     @Override
@@ -104,7 +106,14 @@ public class PhotoFragment extends BaseFragment implements ActionBar.OnNavigatio
     }
 
     @Override
-    public boolean onItemSelectClick(View v, int layoutPosition, int adapterPosition, boolean isSelected) {
-        return false;
+    public void onItemSelectClick(View v, int layoutPosition, int adapterPosition, boolean isSelected) {
+        String path = mMediaFolderByNameMap.get(mCurrentFolderName).getMediaPhotoList().get(adapterPosition).getPath();
+        YLog.i("yuyidong", "path-->" + path + "  " + layoutPosition + "   " + adapterPosition + "  " + isSelected);
+        if (isSelected) {
+            SelectPhotoModel.getInstance().addPath(path);
+        } else {
+            SelectPhotoModel.getInstance().removePath(path);
+        }
+        mMainActivity.getPreviewMenu().setTitle(getResources().getString(R.string.action_view) + "(" + SelectPhotoModel.getInstance().getCount() + ")");
     }
 }

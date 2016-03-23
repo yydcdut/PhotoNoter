@@ -2,21 +2,20 @@ package com.yydcdut.gallery.adapter.vh;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
 import com.yydcdut.gallery.R;
 import com.yydcdut.gallery.view.GridItemImageView;
+import com.yydcdut.gallery.view.PhotoCheckBox;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
 /**
  * Created by yuyidong on 16/3/19.
  */
-public class PhotoViewHolder extends RecyclerView.ViewHolder {
+public class PhotoViewHolder extends RecyclerView.ViewHolder implements PhotoCheckBox.OnPhotoCheckedChangeListener {
     private OnItemClickListener mOnItemClickListener;
     private OnItemSelectListener mOnItemSelectListener;
 
@@ -27,7 +26,7 @@ public class PhotoViewHolder extends RecyclerView.ViewHolder {
     public GridItemImageView bgImageView;
 
     @Bind(R.id.cb_item_photo)
-    public CheckBox checkBox;
+    public PhotoCheckBox checkBox;
 
     public PhotoViewHolder(View itemView, int size, OnItemClickListener onItemClickListener, OnItemSelectListener onItemSelectListener) {
         super(itemView);
@@ -35,17 +34,19 @@ public class PhotoViewHolder extends RecyclerView.ViewHolder {
         mOnItemClickListener = onItemClickListener;
         mOnItemSelectListener = onItemSelectListener;
         imageView.setSize(size);
+        bgImageView.setSize(size);
+        checkBox.setOnPhotoCheckedChangeListener(this);
     }
 
-    @OnClick(R.id.img_item_photo)
+    @OnClick(R.id.img_item_bg)
     public void onPhotoClick(View v) {
         if (mOnItemClickListener != null) {
             mOnItemClickListener.onItemClick(v, getLayoutPosition(), getAdapterPosition());
         }
     }
 
-    @OnCheckedChanged(R.id.cb_item_photo)
-    public void onCheckBoxCheck(CompoundButton buttonView, boolean isChecked) {
+    @Override
+    public void onPhotoCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (mOnItemSelectListener != null) {
             mOnItemSelectListener.onItemSelectClick(buttonView, getLayoutPosition(), getAdapterPosition(), isChecked);
         }
@@ -56,6 +57,6 @@ public class PhotoViewHolder extends RecyclerView.ViewHolder {
     }
 
     public interface OnItemSelectListener {
-        boolean onItemSelectClick(View v, int layoutPosition, int adapterPosition, boolean isSelected);
+        void onItemSelectClick(View v, int layoutPosition, int adapterPosition, boolean isSelected);
     }
 }

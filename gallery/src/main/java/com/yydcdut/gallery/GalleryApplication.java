@@ -9,6 +9,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.squareup.leakcanary.LeakCanary;
+import com.yydcdut.gallery.utils.YLog;
 
 /**
  * Created by yuyidong on 16/3/19.
@@ -22,6 +23,7 @@ public class GalleryApplication extends Application {
         if (BuildConfig.LOG_DEBUG) {
             LeakCanary.install(this);
         }
+        YLog.setDEBUG(BuildConfig.LOG_DEBUG);
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
                 .threadPriority(Thread.NORM_PRIORITY - 2)
                 .denyCacheImageMultipleSizesInMemory()
@@ -47,4 +49,6 @@ public class GalleryApplication extends Application {
 //                .displayer(new FadeInBitmapDisplayer(100))//是否图片加载好后渐入的动画时间
                 .build();//构建完成
     }
+
+
 }

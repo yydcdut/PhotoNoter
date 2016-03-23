@@ -3,6 +3,7 @@ package com.yydcdut.gallery.controller;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
+import android.view.Menu;
 
 import com.yydcdut.gallery.R;
 import com.yydcdut.gallery.adapter.PhotoViewPager;
@@ -26,6 +27,7 @@ public class PhotoDetailActivity extends BaseActivity {
     private PhotoViewPager mPhotoViewPager;
 
     private int mInitPage;
+
     private List<MediaPhoto> mMediaPhotoList;
 
     @Override
@@ -42,6 +44,11 @@ public class PhotoDetailActivity extends BaseActivity {
         mPhotoViewPager = new PhotoViewPager(mMediaPhotoList);
         mViewPager.setAdapter(mPhotoViewPager);
         mViewPager.setCurrentItem(mInitPage);
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
     }
 }

@@ -13,6 +13,7 @@ import com.yydcdut.gallery.R;
 import com.yydcdut.gallery.adapter.vh.PhotoViewHolder;
 import com.yydcdut.gallery.model.MediaFolder;
 import com.yydcdut.gallery.model.MediaPhoto;
+import com.yydcdut.gallery.model.SelectPhotoModel;
 
 import java.util.List;
 
@@ -46,9 +47,13 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
     @Override
     public void onBindViewHolder(PhotoViewHolder holder, int position) {
         MediaPhoto mediaPhoto = mMediaPhotoList.get(position);
+        if (SelectPhotoModel.getInstance().contains(mediaPhoto.getPath())) {
+            holder.checkBox.setCheckedWithoutCallback(true);
+        } else {
+            holder.checkBox.setCheckedWithoutCallback(false);
+        }
         holder.imageView.setImageResource(R.drawable.ic_gf_default_photo);
         ImageLoader.getInstance().displayImage("file:/" + mediaPhoto.getThumbPath(), holder.imageView);
-
     }
 
     @Override
