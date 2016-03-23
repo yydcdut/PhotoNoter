@@ -4,7 +4,19 @@
                 android:layout_height="match_parent"
                 android:background="@android:color/black">
 
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_detail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <View
+        android:id="@+id/view_status_cover"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimaryDark"/>
+
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/layout_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
@@ -13,13 +25,37 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@android:color/transparent"/>
+            android:background="?attr/colorPrimary"/>
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/vp_detail"
+
+    <RelativeLayout
+        android:id="@+id/layout_detail_bottom"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentBottom="true"
+        android:background="?attr/colorPrimary">
+
+        <com.yydcdut.gallery.view.PhotoCheckBox
+            android:id="@+id/cb_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_toLeftOf="@+id/txt_detail"
+            android:paddingLeft="6dp"/>
+
+        <TextView
+            android:id="@+id/txt_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:text="@string/choose"
+            android:textColor="@android:color/white"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

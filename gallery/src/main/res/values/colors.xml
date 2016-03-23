@@ -5,4 +5,5 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="little_black">#22000000</color>
+    <color name="half_black">#66000000</color>
 </resources>

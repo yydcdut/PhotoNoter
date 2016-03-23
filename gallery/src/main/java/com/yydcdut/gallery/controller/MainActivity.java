@@ -23,6 +23,7 @@ import com.yydcdut.gallery.adapter.vh.NavFooterViewHolder;
 import com.yydcdut.gallery.fragment.MediaPhotoFragment;
 import com.yydcdut.gallery.model.GalleryApp;
 import com.yydcdut.gallery.model.SelectPhotoModel;
+import com.yydcdut.gallery.utils.AppCompat;
 import com.yydcdut.gallery.utils.Jumper;
 
 import java.util.ArrayList;
@@ -57,8 +58,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
-        mToolbar.setTitle(" ");
-
+        mToolbar.setTitle("");
+        AppCompat.setElevation(mToolbar, getResources().getDimension(R.dimen.ui_elevation));
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         mDrawerLayout.setDrawerListener(toggle);

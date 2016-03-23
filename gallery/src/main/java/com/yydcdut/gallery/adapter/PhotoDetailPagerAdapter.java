@@ -1,53 +1,64 @@
 package com.yydcdut.gallery.adapter;
 
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.view.View;
+import android.view.ViewGroup;
 
-import com.yydcdut.gallery.fragment.PhotoDetailFragment;
-import com.yydcdut.gallery.model.MediaPhoto;
-import com.yydcdut.gallery.model.SelectPhotoModel;
-import com.yydcdut.gallery.utils.YLog;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
+
+import uk.co.senab.photoview.PhotoView;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
  * Created by yuyidong on 16/3/23.
  */
-public class PhotoDetailPagerAdapter extends FragmentPagerAdapter {
-    private boolean misPreviewSelected;
-    private List<MediaPhoto> mMediaPhotoList;
+public class PhotoDetailPagerAdapter extends PagerAdapter implements PhotoViewAttacher.OnPhotoTapListener {
+    private List<String> mPhotoPathList;
 
-    public PhotoDetailPagerAdapter(@NonNull FragmentManager fm, @NonNull boolean isPreviewSelected,
-                                   @Nullable List<MediaPhoto> mediaPhotoList) {
-        super(fm);
-        misPreviewSelected = isPreviewSelected;
-        mMediaPhotoList = mediaPhotoList;
-    }
-
-    @Override
-    public Fragment getItem(int position) {
-        PhotoDetailFragment photoDetailFragment = PhotoDetailFragment.getInstance();
-        Bundle bundle = new Bundle();
-        if (misPreviewSelected) {
-            bundle.putString(PhotoDetailFragment.PHOTO_PATH, SelectPhotoModel.getInstance().get(position));
-        } else {
-            bundle.putString(PhotoDetailFragment.PHOTO_PATH, mMediaPhotoList.get(position).getPath());
-            YLog.i("yuyidong", "111111       " + mMediaPhotoList.get(position).getPath());
-        }
-        photoDetailFragment.setArguments(bundle);
-        return photoDetailFragment;
+    public PhotoDetailPagerAdapter(List<String> photoPathList) {
+        mPhotoPathList = photoPathList;
     }
 
     @Override
     public int getCount() {
-        if (misPreviewSelected) {
-            return SelectPhotoModel.getInstance().getCount();
-        } else {
-            return mMediaPhotoList.size();
+        return mPhotoPathList.size();
+    }
+
+    @Override
+    public View instantiateItem(ViewGroup container, int position) {
+        final PhotoView photoView = new PhotoView(container.getContext());
+        ImageLoader.getInstance().displayImage("file:/" + mPhotoPathList.get(position), photoView);
+        container.addView(photoView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        photoView.setOnPhotoTapListener(this);
+        return photoView;
+    }
+
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        container.removeView((View) object);
+    }
+
+    @Override
+    public boolean isViewFromObject(View view, Object object) {
+        return view == object;
+    }
+
+    @Override
+    public void onPhotoTap(View view, float x, float y) {
+        if (mOnPhotoClickListener != null) {
+            mOnPhotoClickListener.onPhotoClick(view);
         }
+    }
+
+    private OnPhotoClickListener mOnPhotoClickListener;
+
+    public void setOnPhotoClickListener(OnPhotoClickListener onPhotoClickListener) {
+        mOnPhotoClickListener = onPhotoClickListener;
+    }
+
+    public interface OnPhotoClickListener {
+        void onPhotoClick(View view);
     }
 }

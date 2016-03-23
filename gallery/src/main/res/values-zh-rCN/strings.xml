@@ -5,5 +5,8 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_view">预览</string>
+    <string name="action_finish">完成</string>
+
+    <string name="choose">选择</string>
 
 </resources>
