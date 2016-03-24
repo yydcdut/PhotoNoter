@@ -101,7 +101,6 @@ public class PhotoDetailActivity extends BaseActivity implements PhotoDetailPage
             }
             photoDetailPagerAdapter = new PhotoDetailPagerAdapter(mAdapterPathList);
             mViewPager.setAdapter(photoDetailPagerAdapter);
-            mToolbar.setTitle("1/" + mAdapterPathList.size());
         } else {
             int initPage = getIntent().getIntExtra(INTENT_PAGE, 0);
             String folderName = getIntent().getStringExtra(INTENT_FOLDER);
@@ -113,7 +112,6 @@ public class PhotoDetailActivity extends BaseActivity implements PhotoDetailPage
             photoDetailPagerAdapter = new PhotoDetailPagerAdapter(mAdapterPathList);
             mViewPager.setAdapter(photoDetailPagerAdapter);
             mViewPager.setCurrentItem(initPage);
-            mToolbar.setTitle((initPage + 1) + "/" + mAdapterPathList.size());
         }
         photoDetailPagerAdapter.setOnPhotoClickListener(this);
     }
@@ -134,6 +132,7 @@ public class PhotoDetailActivity extends BaseActivity implements PhotoDetailPage
         getMenuInflater().inflate(R.menu.menu_detail_photo, menu);
         mFinishMenuItem = menu.findItem(R.id.action_finish);
         updateFinishMenuNumber(SelectPhotoModel.getInstance().getCount());
+        mToolbar.setTitle((mViewPager.getCurrentItem() + 1) + "/" + mViewPager.getAdapter().getCount());
         return true;
     }
 
