@@ -2,7 +2,6 @@ package com.yydcdut.gallery.controller;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +20,7 @@ import com.yydcdut.gallery.model.MediaPhoto;
 import com.yydcdut.gallery.model.PhotoModel;
 import com.yydcdut.gallery.model.SelectPhotoModel;
 import com.yydcdut.gallery.utils.AppCompat;
+import com.yydcdut.gallery.view.FixViewPager;
 import com.yydcdut.gallery.view.PhotoCheckBox;
 
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ public class PhotoDetailActivity extends BaseActivity implements PhotoDetailPage
     private boolean isPreviewSelected = false;
 
     @Bind(R.id.vp_detail)
-    ViewPager mViewPager;
+    FixViewPager mViewPager;
 
     @Bind(R.id.view_status_cover)
     View mStatusCoverView;
@@ -62,6 +62,8 @@ public class PhotoDetailActivity extends BaseActivity implements PhotoDetailPage
     PhotoCheckBox mPhotoCheckBox;
 
     private MenuItem mFinishMenuItem;
+
+    private List<String> mAdapterPathList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -92,37 +94,46 @@ public class PhotoDetailActivity extends BaseActivity implements PhotoDetailPage
 
     private void initViewPager() {
         PhotoDetailPagerAdapter photoDetailPagerAdapter;
-        List<String> pathList = null;
         if (isPreviewSelected) {
-            pathList = new ArrayList<>(SelectPhotoModel.getInstance().getCount());
+            mAdapterPathList = new ArrayList<>(SelectPhotoModel.getInstance().getCount());
             for (int i = 0; i < SelectPhotoModel.getInstance().getCount(); i++) {
-                pathList.add(SelectPhotoModel.getInstance().get(i));
+                mAdapterPathList.add(SelectPhotoModel.getInstance().get(i));
             }
-            photoDetailPagerAdapter = new PhotoDetailPagerAdapter(pathList);
+            photoDetailPagerAdapter = new PhotoDetailPagerAdapter(mAdapterPathList);
             mViewPager.setAdapter(photoDetailPagerAdapter);
+            mToolbar.setTitle("1/" + mAdapterPathList.size());
         } else {
             int initPage = getIntent().getIntExtra(INTENT_PAGE, 0);
             String folderName = getIntent().getStringExtra(INTENT_FOLDER);
             List<MediaPhoto> mediaPhotoList = PhotoModel.getInstance().findByMedia(this).get(folderName).getMediaPhotoList();
-            pathList = new ArrayList<>(mediaPhotoList.size());
+            mAdapterPathList = new ArrayList<>(mediaPhotoList.size());
             for (MediaPhoto mediaPhoto : mediaPhotoList) {
-                pathList.add(mediaPhoto.getPath());
+                mAdapterPathList.add(mediaPhoto.getPath());
             }
-            photoDetailPagerAdapter = new PhotoDetailPagerAdapter(pathList);
+            photoDetailPagerAdapter = new PhotoDetailPagerAdapter(mAdapterPathList);
             mViewPager.setAdapter(photoDetailPagerAdapter);
             mViewPager.setCurrentItem(initPage);
+            mToolbar.setTitle((initPage + 1) + "/" + mAdapterPathList.size());
         }
         photoDetailPagerAdapter.setOnPhotoClickListener(this);
     }
 
     @OnPageChange(value = R.id.vp_detail, callback = OnPageChange.Callback.PAGE_SELECTED)
     public void onViewPageSelected(int position) {
+        String path = mAdapterPathList.get(position);
+        if (SelectPhotoModel.getInstance().contains(path)) {
+            mPhotoCheckBox.setCheckedWithoutCallback(true);
+        } else {
+            mPhotoCheckBox.setCheckedWithoutCallback(false);
+        }
+        mToolbar.setTitle((mViewPager.getCurrentItem() + 1) + "/" + mViewPager.getAdapter().getCount());
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_detail_photo, menu);
         mFinishMenuItem = menu.findItem(R.id.action_finish);
+        updateFinishMenuNumber(SelectPhotoModel.getInstance().getCount());
         return true;
     }
 
@@ -138,9 +149,12 @@ public class PhotoDetailActivity extends BaseActivity implements PhotoDetailPage
         return true;
     }
 
-
     public void updateFinishMenuNumber(int number) {
-        mFinishMenuItem.setTitle(getResources().getString(R.string.action_finish) + "(" + number + ")");
+        if (number == 0) {
+            mFinishMenuItem.setTitle(getResources().getString(R.string.action_finish));
+        } else {
+            mFinishMenuItem.setTitle(getResources().getString(R.string.action_finish) + "(" + number + ")");
+        }
     }
 
     @Override
@@ -159,7 +173,8 @@ public class PhotoDetailActivity extends BaseActivity implements PhotoDetailPage
         AnimatorSet animation = new AnimatorSet();
         animation.setDuration(1000);
         animation.playTogether(
-                ObjectAnimator.ofFloat(mAppBarLayout, "Y", getStatusBarSize(), -getActionBarSize() - getStatusBarSize()),
+                ObjectAnimator.ofFloat(mAppBarLayout, "Y", AppCompat.AFTER_LOLLIPOP ? getStatusBarSize() : 0,
+                        -getActionBarSize() - (AppCompat.AFTER_LOLLIPOP ? getStatusBarSize() : 0)),
                 ObjectAnimator.ofFloat(mBottomLayout, "Y", mBottomLayout.getTop(), mBottomLayout.getTop() + getActionBarSize()),
                 ObjectAnimator.ofFloat(mStatusCoverView, "Y", 0f, -getActionBarSize())
         );
@@ -167,8 +182,10 @@ public class PhotoDetailActivity extends BaseActivity implements PhotoDetailPage
             @Override
             public void onAnimationStart(Animator animation) {
                 isAnimationDoing = true;
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                if (AppCompat.AFTER_LOLLIPOP) {
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                }
             }
 
             @Override
@@ -184,7 +201,8 @@ public class PhotoDetailActivity extends BaseActivity implements PhotoDetailPage
         AnimatorSet animation = new AnimatorSet();
         animation.setDuration(1000);
         animation.playTogether(
-                ObjectAnimator.ofFloat(mAppBarLayout, "Y", -getActionBarSize() - getStatusBarSize(), getStatusBarSize()),
+                ObjectAnimator.ofFloat(mAppBarLayout, "Y", -getActionBarSize() - (AppCompat.AFTER_LOLLIPOP ? getStatusBarSize() : 0),
+                        AppCompat.AFTER_LOLLIPOP ? getStatusBarSize() : 0),
                 ObjectAnimator.ofFloat(mBottomLayout, "Y", mBottomLayout.getTop() + getActionBarSize(), mBottomLayout.getTop()),
                 ObjectAnimator.ofFloat(mStatusCoverView, "Y", -getActionBarSize(), 0f)
         );
@@ -198,8 +216,10 @@ public class PhotoDetailActivity extends BaseActivity implements PhotoDetailPage
             public void onAnimationEnd(Animator animation) {
                 isAnimationDoing = false;
                 isWidgetShowed = true;
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+                if (AppCompat.AFTER_LOLLIPOP) {
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+                }
             }
         });
         animation.start();
@@ -210,8 +230,14 @@ public class PhotoDetailActivity extends BaseActivity implements PhotoDetailPage
         mPhotoCheckBox.setChecked(!mPhotoCheckBox.isChecked());
     }
 
-
     @Override
     public void onPhotoCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        String path = mAdapterPathList.get(mViewPager.getCurrentItem());
+        if (isChecked && !SelectPhotoModel.getInstance().contains(path)) {
+            SelectPhotoModel.getInstance().addPath(path);
+        } else if (!isChecked) {
+            SelectPhotoModel.getInstance().removePath(path);
+        }
+        updateFinishMenuNumber(SelectPhotoModel.getInstance().getCount());
     }
 }
