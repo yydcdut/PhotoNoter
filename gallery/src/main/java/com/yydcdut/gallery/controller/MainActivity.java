@@ -146,4 +146,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public MenuItem getPreviewMenu() {
         return mPreviewMenu;
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

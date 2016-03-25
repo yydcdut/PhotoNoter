@@ -1,5 +1,6 @@
 package com.yydcdut.gallery.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -14,6 +15,7 @@ import android.widget.ArrayAdapter;
 import com.yydcdut.gallery.R;
 import com.yydcdut.gallery.adapter.PhotoAdapter;
 import com.yydcdut.gallery.adapter.vh.PhotoViewHolder;
+import com.yydcdut.gallery.controller.BaseActivity;
 import com.yydcdut.gallery.controller.MainActivity;
 import com.yydcdut.gallery.model.MediaFolder;
 import com.yydcdut.gallery.model.PhotoModel;
@@ -100,7 +102,7 @@ public class MediaPhotoFragment extends BaseFragment implements ActionBar.OnNavi
 
     @Override
     public void onItemClick(View v, int layoutPosition, int adapterPosition) {
-        Jumper.jump2DetailActivityAll(getContext(), adapterPosition, mCurrentFolderName);
+        Jumper.jump2DetailActivityAll(getActivity(), adapterPosition, mCurrentFolderName);
     }
 
     @Override
@@ -116,6 +118,14 @@ public class MediaPhotoFragment extends BaseFragment implements ActionBar.OnNavi
 
         } else {
             mMainActivity.getPreviewMenu().setTitle(getResources().getString(R.string.action_view) + "(" + SelectPhotoModel.getInstance().getCount() + ")");
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == BaseActivity.REQUEST_CODE && resultCode == BaseActivity.CODE_RESULT_CHANGED) {
+
         }
     }
 }
