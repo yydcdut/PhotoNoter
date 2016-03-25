@@ -1,1 +1,1 @@
-include ':app', ':PG_Edit_SDK', ':gallery'
+include ':app', ':PG_Edit_SDK', ':plugin_app'
