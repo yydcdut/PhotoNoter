@@ -21,7 +21,6 @@ import com.yydcdut.note.utils.YLog;
 import java.io.File;
 import java.io.IOException;
 
-import us.pinguo.edit.sdk.PGEditImageLoader;
 
 /**
  * Created by yyd on 15-3-29.
@@ -57,7 +56,6 @@ public class NoteApplication extends Application {
         initComponent();
         Utils.init(this);
         initImageLoader();
-        PGEditImageLoader.initImageLoader(this);
 
         //打点
         MobclickAgent.setDebugMode(BuildConfig.LOG_DEBUG);

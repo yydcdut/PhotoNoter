@@ -11,6 +11,9 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.squareup.leakcanary.LeakCanary;
 import com.yydcdut.gallery.utils.YLog;
 
+import us.pinguo.edit.sdk.PGEditImageLoader;
+import us.pinguo.edit.sdk.base.PGEditSDK;
+
 /**
  * Created by yuyidong on 16/3/19.
  */
@@ -48,6 +51,10 @@ public class GalleryApplication extends Application {
 //                .displayer(new RoundedBitmapDisplayer(20))//是否设置为圆角，弧度为多少
 //                .displayer(new FadeInBitmapDisplayer(100))//是否图片加载好后渐入的动画时间
                 .build();//构建完成
+
+        PGEditImageLoader.initImageLoader(this);
+        PGEditSDK.instance().initSDK(this);
+
     }
 
 

@@ -1,7 +1,5 @@
 package com.yydcdut.note.presenters.note.impl;
 
-import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -20,7 +18,6 @@ import com.yydcdut.note.views.note.IZoomView;
 import javax.inject.Inject;
 
 import rx.android.schedulers.AndroidSchedulers;
-import us.pinguo.edit.sdk.base.PGEditSDK;
 
 /**
  * Created by yuyidong on 15/11/15.
@@ -28,7 +25,6 @@ import us.pinguo.edit.sdk.base.PGEditSDK;
 public class ZoomPresenterImpl implements IZoomPresenter {
     private Context mContext;
     private RxPhotoNote mRxPhotoNote;
-    private Activity mActivity;
     /* 数据 */
     private int mPosition;
     private int mComparator;
@@ -40,11 +36,9 @@ public class ZoomPresenterImpl implements IZoomPresenter {
     private boolean mIsChanged = false;
 
     @Inject
-    public ZoomPresenterImpl(@ContextLife("Activity") Context context, Activity activity,
-                             RxPhotoNote rxPhotoNote) {
+    public ZoomPresenterImpl(@ContextLife("Activity") Context context, RxPhotoNote rxPhotoNote) {
         mContext = context;
         mRxPhotoNote = rxPhotoNote;
-        mActivity = activity;
     }
 
     @Override
@@ -54,7 +48,7 @@ public class ZoomPresenterImpl implements IZoomPresenter {
                 .map(photoNoteList -> photoNoteList.get(mPosition))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(photoNote -> mZoomView.showImage(photoNote.getBigPhotoPathWithFile()));
-        PGEditSDK.instance().initSDK(mActivity.getApplication());
+
     }
 
     @Override
@@ -71,21 +65,22 @@ public class ZoomPresenterImpl implements IZoomPresenter {
 
     @Override
     public void jump2PGEditActivity() {
-        int memoryClass = ((ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
-        if (memoryClass <= 48) {
-            ImageLoaderManager.clearMemoryCache();
-        }
-        mRxPhotoNote.findByCategoryId(mCategoryId, mComparator)
-                .map(photoNoteList -> photoNoteList.get(mPosition))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(photoNote -> {
-                    String path = photoNote.getBigPhotoPathWithoutFile();
-                    if (!path.endsWith(".jpg")) {
-                        mZoomView.showSnackBar(mContext.getResources().getString(R.string.toast_pgedit_not_support));
-                    } else {
-                        mZoomView.jump2PGEditActivity(path);
-                    }
-                });
+        mZoomView.showSnackBar(mContext.getResources().getString(R.string.function_offoline));
+//        int memoryClass = ((ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
+//        if (memoryClass <= 48) {
+//            ImageLoaderManager.clearMemoryCache();
+//        }
+//        mRxPhotoNote.findByCategoryId(mCategoryId, mComparator)
+//                .map(photoNoteList -> photoNoteList.get(mPosition))
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(photoNote -> {
+//                    String path = photoNote.getBigPhotoPathWithoutFile();
+//                    if (!path.endsWith(".jpg")) {
+//                        mZoomView.showSnackBar(mContext.getResources().getString(R.string.toast_pgedit_not_support));
+//                    } else {
+//                        mZoomView.jump2PGEditActivity(path);
+//                    }
+//                });
 
     }
 

@@ -1,6 +1,5 @@
 package com.yydcdut.note.views.note.impl;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,9 +22,6 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import uk.co.senab.photoview.PhotoView;
-import us.pinguo.edit.sdk.PGEditActivity;
-import us.pinguo.edit.sdk.base.PGEditResult;
-import us.pinguo.edit.sdk.base.PGEditSDK;
 
 
 /**
@@ -136,28 +132,28 @@ public class ZoomActivity extends BaseActivity implements IZoomView {
         }
     };
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PGEditSDK.PG_EDIT_SDK_REQUEST_CODE
-                && resultCode == Activity.RESULT_OK) {
-
-            final PGEditResult editResult = PGEditSDK.instance().handleEditResult(data);
-
-            mZoomPresenter.refreshImage();
-            mZoomPresenter.saveSmallImage(editResult.getThumbNail());
-        }
-
-        if (requestCode == PGEditSDK.PG_EDIT_SDK_REQUEST_CODE
-                && resultCode == PGEditSDK.PG_EDIT_SDK_RESULT_CODE_CANCEL) {
-            //用户取消编辑
-        }
-
-        if (requestCode == PGEditSDK.PG_EDIT_SDK_REQUEST_CODE
-                && resultCode == PGEditSDK.PG_EDIT_SDK_RESULT_CODE_NOT_CHANGED) {
-            // 照片没有修改
-        }
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == PGEditSDK.PG_EDIT_SDK_REQUEST_CODE
+//                && resultCode == Activity.RESULT_OK) {
+//
+//            final PGEditResult editResult = PGEditSDK.instance().handleEditResult(data);
+//
+//            mZoomPresenter.refreshImage();
+//            mZoomPresenter.saveSmallImage(editResult.getThumbNail());
+//        }
+//
+//        if (requestCode == PGEditSDK.PG_EDIT_SDK_REQUEST_CODE
+//                && resultCode == PGEditSDK.PG_EDIT_SDK_RESULT_CODE_CANCEL) {
+//            //用户取消编辑
+//        }
+//
+//        if (requestCode == PGEditSDK.PG_EDIT_SDK_REQUEST_CODE
+//                && resultCode == PGEditSDK.PG_EDIT_SDK_RESULT_CODE_NOT_CHANGED) {
+//            // 照片没有修改
+//        }
+//    }
 
     @Override
     public void onBackPressed() {
@@ -181,7 +177,7 @@ public class ZoomActivity extends BaseActivity implements IZoomView {
 
     @Override
     public void jump2PGEditActivity(String path) {
-        PGEditSDK.instance().startEdit(ZoomActivity.this, PGEditActivity.class, path, path);
+//        PGEditSDK.instance().startEdit(ZoomActivity.this, PGEditActivity.class, path, path);
     }
 
     @Override

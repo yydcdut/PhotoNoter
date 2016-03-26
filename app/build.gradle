@@ -26,7 +26,7 @@ android {
         versionName project.VERSION_NAME
         renderscriptTargetApi 19
         renderscriptSupportModeEnabled true
-        multiDexEnabled true
+//        multiDexEnabled true
 //        jackOptions {
 //            enabled true
 //        }
@@ -120,55 +120,30 @@ android {
     sourceSets { main { jni.srcDirs = ['src/main/jni'] } }
 }
 
-//android.applicationVariants.all {
-//    variant ->
-//        dx.doFirst {
-//            dx ->
-//                if (dx.additionalParameters == null) {
-//                    dx.additionalParameters = []
-//                }
-//                dx.additionalParameters += '--multi-dex'
-//                dx.additionalParameters += '--set-max-idx-number=55000'
-//                dx.additionalParameters += "--main-dex-list=$projectDir/multidex.keep".toString()
+//afterEvaluate {
+//    tasks.matching {
+//        it.name.startsWith('dex')
+//    }.each { dx ->
+//        if (dx.additionalParameters == null) {
+//            dx.additionalParameters = []
 //        }
+//        dx.additionalParameters += '--multi-dex'
+//        dx.additionalParameters += '--set-max-idx-number=55000'
+//        dx.additionalParameters += "--main-dex-list=$projectDir/multidex.keep".toString()
+//    }
 //}
 
-afterEvaluate {
-    tasks.matching {
-        it.name.startsWith('dex')
-    }.each { dx ->
-        if (dx.additionalParameters == null) {
-            dx.additionalParameters = []
-        }
-        dx.additionalParameters += '--multi-dex'
-        dx.additionalParameters += '--set-max-idx-number=55000'
-        dx.additionalParameters += "--main-dex-list=$projectDir/multidex.keep".toString()
-    }
-}
-
-tasks.whenTaskAdded { task ->
-    if (task.name.startsWith("create") && task.name.endsWith("MainDexClassList")) {
-        task.doLast {
-            def flavorAndBuildType = task.name.substring("create".length(), task.name.length() - "MainDexClassList".length())
-            autoSplitDex.configure {
-                description = flavorAndBuildType
-            }
-            autoSplitDex.execute()
-        }
-    } else if (task.name.startsWith("dex") && (task.name.toLowerCase().endsWith("debug") || task.name.toLowerCase().endsWith("release"))) {
-        task.doFirst {
-        }
-        task.doLast {
-        }
-    }
-}
-
-afterEvaluate {
-    tasks.each {
-        if (it.name.startsWith("dex") && (it.name.toLowerCase().endsWith("debug") || it.name.toLowerCase().endsWith("release"))) {
-        }
-    }
-}
+//tasks.whenTaskAdded { task ->
+//    if (task.name.startsWith("create") && task.name.endsWith("MainDexClassList")) {
+//        task.doLast {
+//            def flavorAndBuildType = task.name.substring("create".length(), task.name.length() - "MainDexClassList".length())
+//            autoSplitDex.configure {
+//                description = flavorAndBuildType
+//            }
+//            autoSplitDex.execute()
+//        }
+//    }
+//}
 
 
 ext {
@@ -202,10 +177,10 @@ dependencies {
     compile files("src/libs/BaiduLBS_Android.jar")
     compile files("src/libs/Msc.jar")
     compile files("src/libs/Sunflower.jar")
+    compile files('src/libs/universal-image-loader-1.9.4.jar')
     debugCompile "com.squareup.leakcanary:leakcanary-android:${leakcanaryVersion}"
     releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:${leakcanaryVersion}"
     debugCompile "com.github.moduth:blockcanary:1.0.0"
     releaseCompile "com.github.moduth:blockcanary-no-op:1.0.0"
-    compile project(":PG_Edit_SDK")
 }
 

@@ -16,7 +16,7 @@ android {
 
     defaultConfig {
         applicationId "com.yydcdut.gallery"
-        minSdkVersion rootProject.ext.galleryMinSdkVersion
+        minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
@@ -54,7 +54,7 @@ ext {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile "com.android.support:support-v4:${rootProject.ext.supportVersion}"
+//    compile "com.android.support:support-v4:${rootProject.ext.supportVersion}"
     compile "com.android.support:appcompat-v7:${rootProject.ext.supportVersion}"
     compile "com.android.support:design:${rootProject.ext.supportVersion}"
     compile "com.android.support:support-annotations:${rootProject.ext.supportVersion}"
@@ -64,5 +64,5 @@ dependencies {
     compile "com.commit451:PhotoView:1.2.4"
     debugCompile "com.squareup.leakcanary:leakcanary-android:${leakcanaryVersion}"
     releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:${leakcanaryVersion}"
-    compile files('libs/universal-image-loader-1.9.4.jar')
+    compile project(":PG_Edit_SDK")
 }

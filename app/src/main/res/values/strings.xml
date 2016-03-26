@@ -239,4 +239,7 @@
         and Baidu Map needs it, so you must understand now!</string>
     <string name="permission_audio">App needs \"Microphone\" permission，the function of voice input needs it!</string>
     <string name="permission_cancel">Why? ヽ( ｀0´)ﾉ</string>
+
+    <string name="function_offoline">Function is offline temporarily</string>
+
 </resources>

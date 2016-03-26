@@ -41,7 +41,6 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import us.pinguo.edit.sdk.base.widget.AnimationAdapter;
 
 /**
  * Created by yyd on 15-4-8.
@@ -321,12 +320,21 @@ public class EditTextActivity extends BaseActivity implements IEditTextView, Vie
                         mVoiceTextView.setVisibility(View.VISIBLE);
                         Animation animation = AnimationUtils.loadAnimation(EditTextActivity.this, R.anim.anim_scale_small_2_big);
                         animation.setDuration(300l);
-                        animation.setAnimationListener(new AnimationAdapter() {
+                        animation.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+
+                            }
+
                             @Override
                             public void onAnimationEnd(Animation animation) {
-                                super.onAnimationEnd(animation);
                                 mVoiceRippleView.startAnimation();
                                 mEditTextPresenter.startVoice();
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+
                             }
                         });
                         mVoiceFabLayout.startAnimation(animation);
