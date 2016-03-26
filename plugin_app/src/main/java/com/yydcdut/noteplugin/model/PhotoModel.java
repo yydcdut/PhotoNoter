@@ -5,6 +5,9 @@ import android.database.Cursor;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 
+import com.yydcdut.noteplugin.bean.MediaFolder;
+import com.yydcdut.noteplugin.bean.MediaPhoto;
+
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

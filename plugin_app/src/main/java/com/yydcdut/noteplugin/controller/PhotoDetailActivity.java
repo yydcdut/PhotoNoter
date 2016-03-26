@@ -16,7 +16,7 @@ import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.yydcdut.noteplugin.R;
 import com.yydcdut.noteplugin.adapter.PhotoDetailPagerAdapter;
-import com.yydcdut.noteplugin.model.MediaPhoto;
+import com.yydcdut.noteplugin.bean.MediaPhoto;
 import com.yydcdut.noteplugin.model.PhotoModel;
 import com.yydcdut.noteplugin.model.SelectPhotoModel;
 import com.yydcdut.noteplugin.utils.AppCompat;

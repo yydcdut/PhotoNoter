@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yydcdut.noteplugin.R;
-import com.yydcdut.noteplugin.model.GalleryApp;
+import com.yydcdut.noteplugin.bean.GalleryApp;
 import com.yydcdut.noteplugin.utils.AppCompat;
 
 import java.util.List;

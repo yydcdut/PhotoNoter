@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yydcdut.noteplugin.R;
 import com.yydcdut.noteplugin.adapter.vh.PhotoViewHolder;
-import com.yydcdut.noteplugin.model.MediaFolder;
-import com.yydcdut.noteplugin.model.MediaPhoto;
+import com.yydcdut.noteplugin.bean.MediaFolder;
+import com.yydcdut.noteplugin.bean.MediaPhoto;
 import com.yydcdut.noteplugin.model.SelectPhotoModel;
 
 import java.util.List;

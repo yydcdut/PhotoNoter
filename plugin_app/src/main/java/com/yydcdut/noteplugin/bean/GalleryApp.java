@@ -1,4 +1,4 @@
-package com.yydcdut.noteplugin.model;
+package com.yydcdut.noteplugin.bean;
 
 import android.graphics.drawable.Drawable;
 
