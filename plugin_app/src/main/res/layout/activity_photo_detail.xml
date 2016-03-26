@@ -4,7 +4,7 @@
                 android:layout_height="match_parent"
                 android:background="@android:color/black">
 
-    <com.yydcdut.gallery.view.FixViewPager
+    <com.yydcdut.noteplugin.view.FixViewPager
         android:id="@+id/vp_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
@@ -37,7 +37,7 @@
         android:layout_alignParentBottom="true"
         android:background="?attr/colorPrimary">
 
-        <com.yydcdut.gallery.view.PhotoCheckBox
+        <com.yydcdut.noteplugin.view.PhotoCheckBox
             android:id="@+id/cb_detail"
             style="@style/AppCheckBox"
             android:layout_width="wrap_content"

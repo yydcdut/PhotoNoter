@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.yydcdut.gallery"
+<manifest package="com.yydcdut.noteplugin"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
-        android:name=".GalleryApplication"
+        android:name="com.yydcdut.noteplugin.GalleryApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".controller.MainActivity"
+            android:name="com.yydcdut.noteplugin.controller.MainActivity"
             android:label=""
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".controller.PhotoDetailActivity"
+            android:name="com.yydcdut.noteplugin.controller.PhotoDetailActivity"
             android:label=""
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>

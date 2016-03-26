@@ -4,19 +4,19 @@
                 android:layout_height="match_parent"
                 android:layout_margin="1dp">
 
-    <com.yydcdut.gallery.view.GridItemImageView
+    <com.yydcdut.noteplugin.view.GridItemImageView
         android:id="@+id/img_item_photo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"/>
 
-    <com.yydcdut.gallery.view.GridItemImageView
+    <com.yydcdut.noteplugin.view.GridItemImageView
         android:id="@+id/img_item_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/little_black"/>
 
-    <com.yydcdut.gallery.view.PhotoCheckBox
+    <com.yydcdut.noteplugin.view.PhotoCheckBox
         android:id="@+id/cb_item_photo"
         style="@style/AppCheckBox"
         android:layout_width="wrap_content"
