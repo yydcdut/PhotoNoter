@@ -35,4 +35,6 @@ public interface IDetailView extends IView {
     void showPopupMenu();
 
     void showFabIcon(@DrawableRes int iconRes);
+
+    public void showSnackBar(String content);
 }

@@ -17,6 +17,7 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
@@ -474,6 +475,10 @@ public class DetailActivity extends BaseActivity implements IDetailView,
      * 打开RevealColorView并且开启activity
      */
     private void showRevealColorViewAndStartActivity() {
+        if (mTitleLabelView.getVisibility() != View.VISIBLE) {
+            showSnackBar(getString(R.string.function_offoline));
+            return;
+        }
         mIsIgnoreBackPress = true;
         final Point p = getLocationInView(mRevealView, mFab);
         mRevealView.reveal(p.x, p.y, getThemeColor(), mFab.getHeight() / 2, Const.DURATION, new RevealView.RevealAnimationListener() {
@@ -481,7 +486,7 @@ public class DetailActivity extends BaseActivity implements IDetailView,
             @Override
             public void finish() {
                 if (mTitleLabelView.getVisibility() != View.VISIBLE) {
-                    mDetailPresenter.jump2MapActivity();
+//                    mDetailPresenter.jump2MapActivity();
                 } else {
                     mDetailPresenter.jump2EditTextActivity();
                 }
@@ -509,5 +514,10 @@ public class DetailActivity extends BaseActivity implements IDetailView,
         if (!mIsIgnoreBackPress) {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public void showSnackBar(String content) {
+        Toast.makeText(this, content, Toast.LENGTH_SHORT).show();
     }
 }

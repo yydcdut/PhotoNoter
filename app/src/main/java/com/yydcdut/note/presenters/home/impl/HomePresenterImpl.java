@@ -3,10 +3,8 @@ package com.yydcdut.note.presenters.home.impl;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 
-import com.baidu.mapapi.SDKInitializer;
 import com.yydcdut.note.R;
 import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.bus.CategoryCreateEvent;
@@ -327,19 +325,19 @@ public class HomePresenterImpl implements IHomePresenter, PermissionUtils.OnPerm
      * 因为相册页面的fragment和activity很沉重，速度之慢，所以这些不是特别必须的就稍后初始化
      */
     private void initDelay() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                initBaiduMap();
-            }
-        }, 200);
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                initBaiduMap();
+//            }
+//        }, 200);
     }
 
     @Permission(PermissionUtils.CODE_PHONE_STATE)
     private void initBaiduMap() {
         boolean hasPermission = PermissionUtils.hasPermission4PhoneState(mContext);
         if (hasPermission) {
-            SDKInitializer.initialize(mActivity.getApplication());
+//            SDKInitializer.initialize(mActivity.getApplication());
         } else {
             PermissionUtils.requestPermissionsWithDialog(mActivity, mContext.getString(R.string.permission_phone_state),
                     PermissionUtils.PERMISSION_PHONE_STATE, PermissionUtils.CODE_PHONE_STATE);
