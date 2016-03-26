@@ -149,6 +149,15 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == BaseActivity.REQUEST_CODE && resultCode == BaseActivity.CODE_RESULT_CHANGED) {
+            mMediaPhotoFragment.notifyAdapterDataChanged();
+            if (SelectPhotoModel.getInstance().getCount() == 0) {
+                mPreviewMenu.setTitle(getResources().getString(R.string.action_view));
+            } else {
+                mPreviewMenu.setTitle(getResources().getString(R.string.action_view) + "(" + SelectPhotoModel.getInstance().getCount() + ")");
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

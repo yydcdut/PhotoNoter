@@ -101,6 +101,7 @@ public class PhotoDetailActivity extends BaseActivity implements PhotoDetailPage
             }
             photoDetailPagerAdapter = new PhotoDetailPagerAdapter(mAdapterPathList);
             mViewPager.setAdapter(photoDetailPagerAdapter);
+            mPhotoCheckBox.setCheckedWithoutCallback(true);
         } else {
             int initPage = getIntent().getIntExtra(INTENT_PAGE, 0);
             String folderName = getIntent().getStringExtra(INTENT_FOLDER);
@@ -112,6 +113,13 @@ public class PhotoDetailActivity extends BaseActivity implements PhotoDetailPage
             photoDetailPagerAdapter = new PhotoDetailPagerAdapter(mAdapterPathList);
             mViewPager.setAdapter(photoDetailPagerAdapter);
             mViewPager.setCurrentItem(initPage);
+            for (int i = 0; i < SelectPhotoModel.getInstance().getCount(); i++) {
+                String selectedPath = SelectPhotoModel.getInstance().get(i);
+                if (selectedPath.equals(mAdapterPathList.get(initPage))) {
+                    mPhotoCheckBox.setCheckedWithoutCallback(true);
+                    break;
+                }
+            }
         }
         photoDetailPagerAdapter.setOnPhotoClickListener(this);
     }
@@ -140,12 +148,20 @@ public class PhotoDetailActivity extends BaseActivity implements PhotoDetailPage
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                setResult(BaseActivity.CODE_RESULT_CHANGED);
                 finish();
                 break;
             case R.id.action_finish:
                 break;
         }
         return true;
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        setResult(BaseActivity.CODE_RESULT_CHANGED);
+        finish();
     }
 
     public void updateFinishMenuNumber(int number) {

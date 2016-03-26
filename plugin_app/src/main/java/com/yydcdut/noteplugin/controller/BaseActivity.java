@@ -16,7 +16,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     public static final int REQUEST_CODE = 1;
 
     public static final int CODE_RESULT_CHANGED = 1;
-    public static final int CODE_RESULT_NOT_CHANGED = 2;
+    public static final int CODE_RESULT_NOT_CHANGED = -1;
 
     public static final String INTENT_PAGE = "page";
     public static final String INTENT_FOLDER = "folder";

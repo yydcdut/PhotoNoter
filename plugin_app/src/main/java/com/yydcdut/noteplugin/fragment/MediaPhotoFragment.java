@@ -40,7 +40,7 @@ public class MediaPhotoFragment extends BaseFragment implements ActionBar.OnNavi
     @Bind(R.id.rv_album)
     RecyclerView mRecyclerView;
 
-    private ArrayAdapter<String> mAdapter;
+    private ArrayAdapter<String> mFolderAdapter;
     private PhotoAdapter mPhotoAdapter;
     private ActionBar mActionBar;
     private List<String> mFolderNameList;
@@ -78,10 +78,10 @@ public class MediaPhotoFragment extends BaseFragment implements ActionBar.OnNavi
         mFolderNameList.remove(MediaFolder.ALL);
         mFolderNameList.add(0, MediaFolder.ALL);
         mCurrentFolderName = MediaFolder.ALL;
-        mAdapter = new ArrayAdapter<>(getContext(), R.layout.item_spinner, mFolderNameList);
+        mFolderAdapter = new ArrayAdapter<>(getContext(), R.layout.item_spinner, mFolderNameList);
         mActionBar = mMainActivity.getSupportActionBar();
         mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-        mActionBar.setListNavigationCallbacks(mAdapter, this);
+        mActionBar.setListNavigationCallbacks(mFolderAdapter, this);
         int size = getResources().getDisplayMetrics().widthPixels / 3;
         mPhotoAdapter = new PhotoAdapter(getContext(), size, mMediaFolderByNameMap.get(mCurrentFolderName), this, this);
         mRecyclerView.setAdapter(mPhotoAdapter);
@@ -115,7 +115,6 @@ public class MediaPhotoFragment extends BaseFragment implements ActionBar.OnNavi
         }
         if (SelectPhotoModel.getInstance().getCount() == 0) {
             mMainActivity.getPreviewMenu().setTitle(getResources().getString(R.string.action_view));
-
         } else {
             mMainActivity.getPreviewMenu().setTitle(getResources().getString(R.string.action_view) + "(" + SelectPhotoModel.getInstance().getCount() + ")");
         }
@@ -123,9 +122,19 @@ public class MediaPhotoFragment extends BaseFragment implements ActionBar.OnNavi
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == BaseActivity.REQUEST_CODE && resultCode == BaseActivity.CODE_RESULT_CHANGED) {
-
+            mPhotoAdapter.notifyDataSetChanged();
+            if (SelectPhotoModel.getInstance().getCount() == 0) {
+                mMainActivity.getPreviewMenu().setTitle(getResources().getString(R.string.action_view));
+            } else {
+                mMainActivity.getPreviewMenu().setTitle(getResources().getString(R.string.action_view) + "(" + SelectPhotoModel.getInstance().getCount() + ")");
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    public void notifyAdapterDataChanged() {
+        mPhotoAdapter.notifyDataSetChanged();
     }
 }
