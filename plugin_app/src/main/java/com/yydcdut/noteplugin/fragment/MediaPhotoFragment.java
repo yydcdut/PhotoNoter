@@ -13,8 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import com.yydcdut.noteplugin.R;
-import com.yydcdut.noteplugin.adapter.PhotoAdapter;
-import com.yydcdut.noteplugin.adapter.vh.PhotoViewHolder;
+import com.yydcdut.noteplugin.adapter.MediaPhotoAdapter;
+import com.yydcdut.noteplugin.adapter.vh.MediaPhotoViewHolder;
 import com.yydcdut.noteplugin.bean.MediaFolder;
 import com.yydcdut.noteplugin.controller.BaseActivity;
 import com.yydcdut.noteplugin.controller.MainActivity;
@@ -33,7 +33,7 @@ import butterknife.ButterKnife;
  * Created by yuyidong on 16/3/19.
  */
 public class MediaPhotoFragment extends BaseFragment implements ActionBar.OnNavigationListener,
-        PhotoViewHolder.OnItemClickListener, PhotoViewHolder.OnItemSelectListener {
+        MediaPhotoViewHolder.OnItemClickListener, MediaPhotoViewHolder.OnItemSelectListener {
 
     private MainActivity mMainActivity;
 
@@ -41,7 +41,7 @@ public class MediaPhotoFragment extends BaseFragment implements ActionBar.OnNavi
     RecyclerView mRecyclerView;
 
     private ArrayAdapter<String> mFolderAdapter;
-    private PhotoAdapter mPhotoAdapter;
+    private MediaPhotoAdapter mMediaPhotoAdapter;
     private ActionBar mActionBar;
     private List<String> mFolderNameList;
     private Map<String, MediaFolder> mMediaFolderByNameMap;
@@ -83,8 +83,8 @@ public class MediaPhotoFragment extends BaseFragment implements ActionBar.OnNavi
         mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         mActionBar.setListNavigationCallbacks(mFolderAdapter, this);
         int size = getResources().getDisplayMetrics().widthPixels / 3;
-        mPhotoAdapter = new PhotoAdapter(getContext(), size, mMediaFolderByNameMap.get(mCurrentFolderName), this, this);
-        mRecyclerView.setAdapter(mPhotoAdapter);
+        mMediaPhotoAdapter = new MediaPhotoAdapter(getContext(), size, mMediaFolderByNameMap.get(mCurrentFolderName), this, this);
+        mRecyclerView.setAdapter(mMediaPhotoAdapter);
     }
 
     @Override
@@ -96,7 +96,7 @@ public class MediaPhotoFragment extends BaseFragment implements ActionBar.OnNavi
     @Override
     public boolean onNavigationItemSelected(int itemPosition, long itemId) {
         mCurrentFolderName = mFolderNameList.get(itemPosition);
-        mPhotoAdapter.updateMediaFolder(mMediaFolderByNameMap.get(mCurrentFolderName));
+        mMediaPhotoAdapter.updateMediaFolder(mMediaFolderByNameMap.get(mCurrentFolderName));
         return true;
     }
 
@@ -123,7 +123,7 @@ public class MediaPhotoFragment extends BaseFragment implements ActionBar.OnNavi
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == BaseActivity.REQUEST_CODE && resultCode == BaseActivity.CODE_RESULT_CHANGED) {
-            mPhotoAdapter.notifyDataSetChanged();
+            mMediaPhotoAdapter.notifyDataSetChanged();
             if (SelectPhotoModel.getInstance().getCount() == 0) {
                 mMainActivity.getPreviewMenu().setTitle(getResources().getString(R.string.action_view));
             } else {
@@ -135,6 +135,6 @@ public class MediaPhotoFragment extends BaseFragment implements ActionBar.OnNavi
     }
 
     public void notifyAdapterDataChanged() {
-        mPhotoAdapter.notifyDataSetChanged();
+        mMediaPhotoAdapter.notifyDataSetChanged();
     }
 }

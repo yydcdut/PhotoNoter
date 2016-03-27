@@ -2,15 +2,19 @@ package com.yydcdut.noteplugin.model;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 
+import com.yydcdut.noteplugin.bean.FilePhoto;
 import com.yydcdut.noteplugin.bean.MediaFolder;
 import com.yydcdut.noteplugin.bean.MediaPhoto;
+import com.yydcdut.noteplugin.bean.TreeFile;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,4 +80,92 @@ public class PhotoModel {
         contextWeakReference.clear();
         return mMediaCache;
     }
+
+
+    public TreeFile findByPath() {
+        if (!hasSDCard()) {
+            return null;
+        }
+        TreeFile rootTreeFile = new FilePhoto(0, Environment.getExternalStorageDirectory().getAbsolutePath(), null);
+        String sdPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+//        for (File file : new File(sdPath).listFiles()) {
+//            TreeFile child = new FilePhoto(rootTreeFile.getLevel() + 1, file.getName(), rootTreeFile);
+//            rootTreeFile.addChild(child);
+//            ergodicFiles(child, file);
+//        }
+        ergodicFiles(rootTreeFile, new File(sdPath));
+        return rootTreeFile;
+    }
+
+    private boolean hasSDCard() {
+        String state = Environment.getExternalStorageState();
+        if (!Environment.MEDIA_MOUNTED.equals(state)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private void ergodicFiles(TreeFile root, File rootFile) {
+//        String currentPath = null;
+//        TreeFile currentTreeFile = new FilePhoto(root.getLevel() + 1, rootFile.getName(), root);
+//        TreeFile tmpNode = node;
+//        //确定路径
+//        while (tmpNode.getParent() != null) {
+//            if (currentPath == null) {
+//                currentPath = File.separator + tmpNode.getFileName();
+//            } else {
+//                currentPath = currentPath + File.separator + tmpNode.getFileName();
+//            }
+//            tmpNode = tmpNode.getParent();
+//        }
+        if (rootFile.isDirectory()) {
+            for (File file : rootFile.listFiles()) {
+                if (file.isDirectory()) {
+                    TreeFile child = new FilePhoto(root.getLevel() + 1, file.getName(), root);
+                    root.addChild(child);
+                    ergodicFiles(child, file);
+                } else {
+                    TreeFile child = new FilePhoto(root.getLevel() + 1, file.getName(), root);
+                    root.addChild(child);
+                    if (isPhoto(file)) {
+                        root.addCoverPhoto(file.getName());
+                    }
+                }
+            }
+        } else {
+        }
+
+    }
+
+    private boolean isPhoto(File file) {
+        String name = file.getName();
+        if (name.endsWith(".jpg") || name.endsWith(".png") || name.endsWith(".jpeg") || name.endsWith(".gif")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static Comparator<TreeFile> getComparator() {
+        return new Comparator<TreeFile>() {
+            @Override
+            public int compare(TreeFile lhs, TreeFile rhs) {
+                int maxLength = lhs.getFileName().length() > rhs.getFileName().length() ? rhs.getFileName().length() : lhs.getFileName().length();
+                for (int index = 0; index < maxLength; index++) {
+                    char left = lhs.getFileName().charAt(index);
+                    char right = rhs.getFileName().charAt(index);
+                    int comparator = left - right;
+                    if (comparator > 0) {
+                        return 1;
+                    } else if (comparator < 0) {
+                        return -1;
+                    }
+                }
+                return lhs.getFileName().length() > rhs.getFileName().length() ? 1 : -1;
+            }
+        };
+    }
+
+
 }

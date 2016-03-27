@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yydcdut.noteplugin.R;
-import com.yydcdut.noteplugin.adapter.vh.PhotoViewHolder;
+import com.yydcdut.noteplugin.adapter.vh.MediaPhotoViewHolder;
 import com.yydcdut.noteplugin.bean.MediaFolder;
 import com.yydcdut.noteplugin.bean.MediaPhoto;
 import com.yydcdut.noteplugin.model.SelectPhotoModel;
@@ -20,18 +20,16 @@ import java.util.List;
 /**
  * Created by yuyidong on 16/3/19.
  */
-public class PhotoAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
-    private Context mContext;
+public class MediaPhotoAdapter extends RecyclerView.Adapter<MediaPhotoViewHolder> {
     private int mSize;
     private List<MediaPhoto> mMediaPhotoList;
 
-    private PhotoViewHolder.OnItemClickListener mOnItemClickListener;
-    private PhotoViewHolder.OnItemSelectListener mOnItemSelectListener;
+    private MediaPhotoViewHolder.OnItemClickListener mOnItemClickListener;
+    private MediaPhotoViewHolder.OnItemSelectListener mOnItemSelectListener;
 
-    public PhotoAdapter(@NonNull Context context, @NonNull int size, @NonNull MediaFolder mediaFolder,
-                        @Nullable PhotoViewHolder.OnItemClickListener onItemClickListener,
-                        @Nullable PhotoViewHolder.OnItemSelectListener onItemSelectListener) {
-        mContext = context;
+    public MediaPhotoAdapter(@NonNull Context context, @NonNull int size, @NonNull MediaFolder mediaFolder,
+                             @Nullable MediaPhotoViewHolder.OnItemClickListener onItemClickListener,
+                             @Nullable MediaPhotoViewHolder.OnItemSelectListener onItemSelectListener) {
         mSize = size;
         mMediaPhotoList = mediaFolder.getMediaPhotoList();
         mOnItemClickListener = onItemClickListener;
@@ -39,13 +37,13 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
     }
 
     @Override
-    public PhotoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_photo, parent, false);
-        return new PhotoViewHolder(view, mSize, mOnItemClickListener, mOnItemSelectListener);
+    public MediaPhotoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_media_photo, parent, false);
+        return new MediaPhotoViewHolder(view, mSize, mOnItemClickListener, mOnItemSelectListener);
     }
 
     @Override
-    public void onBindViewHolder(PhotoViewHolder holder, int position) {
+    public void onBindViewHolder(MediaPhotoViewHolder holder, int position) {
         MediaPhoto mediaPhoto = mMediaPhotoList.get(position);
         if (SelectPhotoModel.getInstance().contains(mediaPhoto.getPath())) {
             holder.checkBox.setCheckedWithoutCallback(true);

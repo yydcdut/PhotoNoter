@@ -21,6 +21,7 @@ import com.yydcdut.noteplugin.R;
 import com.yydcdut.noteplugin.adapter.NavigationAdapter;
 import com.yydcdut.noteplugin.adapter.vh.NavFooterViewHolder;
 import com.yydcdut.noteplugin.bean.GalleryApp;
+import com.yydcdut.noteplugin.fragment.FilePhotoFragment;
 import com.yydcdut.noteplugin.fragment.MediaPhotoFragment;
 import com.yydcdut.noteplugin.model.SelectPhotoModel;
 import com.yydcdut.noteplugin.utils.AppCompat;
@@ -49,6 +50,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private MenuItem mPreviewMenu;
 
     private MediaPhotoFragment mMediaPhotoFragment;
+    private FilePhotoFragment mFilePhotoFragment;
 
     private NavigationAdapter mNavigationAdapter;
 
@@ -127,7 +129,17 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.nav_gallery) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            if (mMediaPhotoFragment == null) {
+                mMediaPhotoFragment = MediaPhotoFragment.newInstance();
+            }
+            fragmentManager.beginTransaction().replace(R.id.layout_photo, mMediaPhotoFragment).commit();
         } else if (id == R.id.nav_file) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            if (mFilePhotoFragment == null) {
+                mFilePhotoFragment = FilePhotoFragment.newInstance();
+            }
+            fragmentManager.beginTransaction().replace(R.id.layout_photo, mFilePhotoFragment).commit();
         }
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;

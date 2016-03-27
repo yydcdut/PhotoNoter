@@ -15,7 +15,7 @@ import butterknife.OnClick;
 /**
  * Created by yuyidong on 16/3/19.
  */
-public class PhotoViewHolder extends RecyclerView.ViewHolder implements PhotoCheckBox.OnPhotoCheckedChangeListener {
+public class MediaPhotoViewHolder extends RecyclerView.ViewHolder implements PhotoCheckBox.OnPhotoCheckedChangeListener {
     private OnItemClickListener mOnItemClickListener;
     private OnItemSelectListener mOnItemSelectListener;
 
@@ -28,7 +28,7 @@ public class PhotoViewHolder extends RecyclerView.ViewHolder implements PhotoChe
     @Bind(R.id.cb_item_photo)
     public PhotoCheckBox checkBox;
 
-    public PhotoViewHolder(View itemView, int size, OnItemClickListener onItemClickListener, OnItemSelectListener onItemSelectListener) {
+    public MediaPhotoViewHolder(View itemView, int size, OnItemClickListener onItemClickListener, OnItemSelectListener onItemSelectListener) {
         super(itemView);
         ButterKnife.bind(this, itemView);
         mOnItemClickListener = onItemClickListener;
