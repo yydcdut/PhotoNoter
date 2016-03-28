@@ -88,11 +88,6 @@ public class PhotoModel {
         }
         TreeFile rootTreeFile = new FilePhoto(0, Environment.getExternalStorageDirectory().getAbsolutePath(), null);
         String sdPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-//        for (File file : new File(sdPath).listFiles()) {
-//            TreeFile child = new FilePhoto(rootTreeFile.getLevel() + 1, file.getName(), rootTreeFile);
-//            rootTreeFile.addChild(child);
-//            ergodicFiles(child, file);
-//        }
         ergodicFiles(rootTreeFile, new File(sdPath));
         return rootTreeFile;
     }
@@ -107,18 +102,6 @@ public class PhotoModel {
     }
 
     private void ergodicFiles(TreeFile root, File rootFile) {
-//        String currentPath = null;
-//        TreeFile currentTreeFile = new FilePhoto(root.getLevel() + 1, rootFile.getName(), root);
-//        TreeFile tmpNode = node;
-//        //确定路径
-//        while (tmpNode.getParent() != null) {
-//            if (currentPath == null) {
-//                currentPath = File.separator + tmpNode.getFileName();
-//            } else {
-//                currentPath = currentPath + File.separator + tmpNode.getFileName();
-//            }
-//            tmpNode = tmpNode.getParent();
-//        }
         if (rootFile.isDirectory()) {
             for (File file : rootFile.listFiles()) {
                 if (file.isDirectory()) {
@@ -135,7 +118,6 @@ public class PhotoModel {
             }
         } else {
         }
-
     }
 
     private boolean isPhoto(File file) {
