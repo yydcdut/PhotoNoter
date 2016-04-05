@@ -10,6 +10,7 @@ import com.yydcdut.note.model.rx.RxCategory;
 import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.model.rx.RxSandBox;
 import com.yydcdut.note.utils.LocalStorageUtils;
+import com.yydcdut.note.views.gallery.impl.MediaPhotoFragment;
 import com.yydcdut.note.views.home.impl.AlbumFragment;
 import com.yydcdut.note.views.login.impl.UserDetailFragment;
 import com.yydcdut.note.views.note.impl.DetailFragment;
@@ -43,4 +44,6 @@ public interface FragmentComponent {
     void inject(UserDetailFragment userDetailFragment);
 
     void inject(DetailFragment detailFragment);
+
+    void inject(MediaPhotoFragment mediaPhotoFragment);
 }

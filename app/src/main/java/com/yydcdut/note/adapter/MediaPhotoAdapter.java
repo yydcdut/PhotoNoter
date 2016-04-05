@@ -1,6 +1,8 @@
 package com.yydcdut.note.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +18,7 @@ import com.yydcdut.note.model.gallery.SelectPhotoModel;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by yuyidong on 16/3/19.
@@ -24,6 +27,7 @@ public class MediaPhotoAdapter extends RecyclerView.Adapter<MediaPhotoViewHolder
     private int mSize;
     private List<MediaPhoto> mMediaPhotoList;
     private Context mContext;
+    private Random mRandom;
 
     private MediaPhotoViewHolder.OnItemClickListener mOnItemClickListener;
     private MediaPhotoViewHolder.OnItemSelectListener mOnItemSelectListener;
@@ -36,6 +40,7 @@ public class MediaPhotoAdapter extends RecyclerView.Adapter<MediaPhotoViewHolder
         mMediaPhotoList = mediaFolder.getMediaPhotoList();
         mOnItemClickListener = onItemClickListener;
         mOnItemSelectListener = onItemSelectListener;
+        mRandom = new Random();
     }
 
     @Override
@@ -52,7 +57,7 @@ public class MediaPhotoAdapter extends RecyclerView.Adapter<MediaPhotoViewHolder
         } else {
             holder.checkBox.setCheckedWithoutCallback(false);
         }
-        holder.imageView.setImageResource(R.drawable.ic_launcher);
+        holder.imageView.setImageDrawable(new ColorDrawable(Color.rgb(mRandom.nextInt(255), mRandom.nextInt(255), mRandom.nextInt(255))));
         ImageLoaderManager.displayImage("file:/" + mediaPhoto.getThumbPath(), holder.imageView, ImageLoaderManager.getGalleryOptions());
     }
 

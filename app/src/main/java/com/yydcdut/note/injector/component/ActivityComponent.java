@@ -12,6 +12,8 @@ import com.yydcdut.note.model.rx.RxSandBox;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.views.camera.impl.AdjustCameraActivity;
 import com.yydcdut.note.views.camera.impl.CameraActivity;
+import com.yydcdut.note.views.gallery.impl.GalleryActivity;
+import com.yydcdut.note.views.gallery.impl.PhotoDetailActivity;
 import com.yydcdut.note.views.home.impl.HomeActivity;
 import com.yydcdut.note.views.home.impl.IntroduceActivity;
 import com.yydcdut.note.views.home.impl.SplashActivity;
@@ -80,5 +82,9 @@ public interface ActivityComponent {
     void inject(CameraActivity cameraActivity);
 
     void inject(AdjustCameraActivity adjustCameraActivity);
+
+    void inject(GalleryActivity galleryActivity);
+
+    void inject(PhotoDetailActivity photoDetailActivity);
 
 }

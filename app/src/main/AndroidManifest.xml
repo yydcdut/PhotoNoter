@@ -95,12 +95,12 @@
             android:theme="@style/ThemeBlue"/>
         <activity
             android:label=""
-            android:name=".views.gallery.GalleryActivity"
+            android:name=".views.gallery.impl.GalleryActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ThemeBlue"/>
         <activity
             android:label=""
-            android:name=".views.gallery.PhotoDetailActivity"
+            android:name=".views.gallery.impl.PhotoDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ThemeBlue"/>
 

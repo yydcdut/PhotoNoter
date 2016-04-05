@@ -41,7 +41,7 @@ import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.Utils;
 import com.yydcdut.note.views.BaseFragment;
 import com.yydcdut.note.views.camera.impl.CameraActivity;
-import com.yydcdut.note.views.gallery.GalleryActivity;
+import com.yydcdut.note.views.gallery.impl.GalleryActivity;
 import com.yydcdut.note.views.home.IAlbumView;
 import com.yydcdut.note.views.note.impl.DetailActivity;
 import com.yydcdut.note.views.setting.impl.SettingActivity;

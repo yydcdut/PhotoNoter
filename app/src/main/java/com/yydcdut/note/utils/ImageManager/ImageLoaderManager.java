@@ -84,7 +84,7 @@ public class ImageLoaderManager {
     public static DisplayImageOptions getGalleryOptions() {
         if (sGalleryOptions == null) {
             BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inSampleSize = 5;
+            options.inSampleSize = 10;
             sGalleryOptions = new DisplayImageOptions.Builder()
                     .cacheInMemory(true)//设置下载的图片是否缓存在内存中
                     .considerExifParams(true)  //是否考虑JPEG图像EXIF参数（旋转，翻转）

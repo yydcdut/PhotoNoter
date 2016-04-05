@@ -1,10 +1,7 @@
-package com.yydcdut.note.views.gallery;
+package com.yydcdut.note.views.gallery.impl;
 
 import android.app.FragmentManager;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -21,12 +18,14 @@ import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.GalleryNavigationAdapter;
 import com.yydcdut.note.adapter.vh.GalleryNavFooterViewHolder;
 import com.yydcdut.note.bean.gallery.GalleryApp;
-import com.yydcdut.note.model.gallery.SelectPhotoModel;
+import com.yydcdut.note.presenters.gallery.impl.GalleryPresenterImpl;
 import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.views.BaseActivity;
+import com.yydcdut.note.views.gallery.IGalleryView;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -34,8 +33,11 @@ import butterknife.ButterKnife;
 /**
  * Created by yuyidong on 16/4/2.
  */
-public class GalleryActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,
-        GalleryNavFooterViewHolder.OnNavFooterItemClickListener {
+public class GalleryActivity extends BaseActivity implements IGalleryView,
+        NavigationView.OnNavigationItemSelectedListener, GalleryNavFooterViewHolder.OnNavFooterItemClickListener {
+    @Inject
+    GalleryPresenterImpl mGalleryPresenter;
+
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
 
@@ -67,13 +69,15 @@ public class GalleryActivity extends BaseActivity implements NavigationView.OnNa
     @Override
     public void initInjector() {
         ButterKnife.bind(this);
+        mActivityComponent.inject(this);
+        mGalleryPresenter.attachView(this);
     }
 
     @Override
     public void initUiAndListener() {
         initToolBar();
         initDrawer();
-        initThirdGalleryAppAdapter();
+        initThirdGalleryAppAdapter(mGalleryPresenter.getGalleryAppList());
         FragmentManager fragmentManager = getFragmentManager();
         mMediaPhotoFragment = MediaPhotoFragment.newInstance();
         fragmentManager.beginTransaction().replace(R.id.layout_photo, mMediaPhotoFragment).commit();
@@ -94,21 +98,7 @@ public class GalleryActivity extends BaseActivity implements NavigationView.OnNa
         mNavigationView.setNavigationItemSelectedListener(this);
     }
 
-    private void initThirdGalleryAppAdapter() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        PackageManager pm = getPackageManager();
-        List<ResolveInfo> info = pm.queryIntentActivities(intent, 0);
-        List<GalleryApp> galleryAppList = new ArrayList<>(info.size());
-        for (int i = 0; i < info.size(); i++) {
-            ActivityInfo activityInfo = info.get(i).activityInfo;
-            galleryAppList.add(new GalleryApp(
-                    activityInfo.loadIcon(getPackageManager()),
-                    activityInfo.packageName,
-                    activityInfo.loadLabel(getPackageManager()) + ""));
-        }
-
+    private void initThirdGalleryAppAdapter(List<GalleryApp> galleryAppList) {
         for (int i = 0; i < mNavigationView.getChildCount(); i++) {
             View view = mNavigationView.getChildAt(i);
             if (view instanceof RecyclerView) {
@@ -159,11 +149,7 @@ public class GalleryActivity extends BaseActivity implements NavigationView.OnNa
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_preview) {
-            if (SelectPhotoModel.getInstance().getCount() != 0) {
-                Intent intent = new Intent(this, PhotoDetailActivity.class);
-                intent.putExtra(BaseActivity.INTENT_PREVIEW_SELECTED, true);
-                startActivityForResult(intent, BaseActivity.REQUEST_CODE);
-            }
+            mGalleryPresenter.jump2SelectedDetailActivity();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -185,15 +171,26 @@ public class GalleryActivity extends BaseActivity implements NavigationView.OnNa
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == BaseActivity.REQUEST_CODE && resultCode == BaseActivity.CODE_RESULT_CHANGED) {
-            mMediaPhotoFragment.notifyAdapterDataChanged();
-            if (SelectPhotoModel.getInstance().getCount() == 0) {
-                mPreviewMenu.setTitle(getResources().getString(R.string.action_view));
-            } else {
-                mPreviewMenu.setTitle(getResources().getString(R.string.action_view) + "(" + SelectPhotoModel.getInstance().getCount() + ")");
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
+        mGalleryPresenter.onReturnData(requestCode, resultCode, data);
+        //// TODO: 16/4/5 第三方
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    @Override
+    public void jump2SelectedDetailActivity() {
+        Intent intent = new Intent(this, PhotoDetailActivity.class);
+        intent.putExtra(BaseActivity.INTENT_PREVIEW_SELECTED, true);
+        startActivityForResult(intent, BaseActivity.REQUEST_CODE);
+    }
+
+    @Override
+    public void setPreviewMenuTitle(String title) {
+        mPreviewMenu.setTitle(title);
+    }
+
+    @Override
+    public void notifyDataChanged(int... positions) {
+        mMediaPhotoFragment.notifyAdapterDataChanged();
     }
 }

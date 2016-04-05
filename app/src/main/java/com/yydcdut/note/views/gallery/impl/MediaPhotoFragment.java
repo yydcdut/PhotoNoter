@@ -1,4 +1,4 @@
-package com.yydcdut.note.views.gallery;
+package com.yydcdut.note.views.gallery.impl;
 
 import android.content.Intent;
 import android.os.Bundle;
