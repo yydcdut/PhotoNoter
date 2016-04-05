@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="ActivityTheme" parent="Theme"></style>
+
+    <style name="ActivityTheme" parent="Theme">
+        <item name="android:colorControlNormal">@android:color/white</item>
+    </style>
 
     <style name="AppCheckBox">
     </style>

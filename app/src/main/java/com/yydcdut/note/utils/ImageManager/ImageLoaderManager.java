@@ -2,6 +2,7 @@ package com.yydcdut.note.utils.ImageManager;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.widget.ImageView;
 
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -17,8 +18,18 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 public class ImageLoaderManager {
     private static DisplayImageOptions sOptions;
 
+    private static DisplayImageOptions sGalleryOptions;
+
     public static void displayImage(String uri, ImageView imageView) {
         ImageLoader.getInstance().displayImage(uri, imageView, sOptions);
+    }
+
+    public static void displayImage(String uri, ImageView imageView, DisplayImageOptions displayImageOptions) {
+        if (displayImageOptions == null) {
+            displayImage(uri, imageView);
+        } else {
+            ImageLoader.getInstance().displayImage(uri, imageView, displayImageOptions);
+        }
     }
 
     public static void init(Context context) {
@@ -29,6 +40,7 @@ public class ImageLoaderManager {
                 .tasksProcessingOrder(QueueProcessingType.LIFO)
                 .build();
         ImageLoader.getInstance().init(config);
+
         sOptions = new DisplayImageOptions.Builder()
 //                .showImageOnLoading(R.drawable.ic_launcher) //设置图片在下载期间显示的图片
 //                .showImageForEmptyUri(R.drawable.ic_launcher)//设置图片Uri为空或是错误的时候显示的图片
@@ -66,6 +78,22 @@ public class ImageLoaderManager {
                 .considerExifParams(true)
                 .bitmapConfig(Bitmap.Config.ARGB_8888)
                 .build());
+    }
+
+
+    public static DisplayImageOptions getGalleryOptions() {
+        if (sGalleryOptions == null) {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = 5;
+            sGalleryOptions = new DisplayImageOptions.Builder()
+                    .cacheInMemory(true)//设置下载的图片是否缓存在内存中
+                    .considerExifParams(true)  //是否考虑JPEG图像EXIF参数（旋转，翻转）
+                    .bitmapConfig(Bitmap.Config.RGB_565)//设置图片的解码类型//
+                    .decodingOptions(options)//设置图片的解码配置
+                    .build();//构建完成
+        }
+        return sGalleryOptions;
+
     }
 
 }

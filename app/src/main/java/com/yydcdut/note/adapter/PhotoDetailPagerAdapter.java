@@ -4,7 +4,7 @@ import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class PhotoDetailPagerAdapter extends PagerAdapter implements PhotoViewAt
     @Override
     public View instantiateItem(ViewGroup container, int position) {
         final PhotoView photoView = new PhotoView(container.getContext());
-        ImageLoader.getInstance().displayImage("file:/" + mPhotoPathList.get(position), photoView);
+        ImageLoaderManager.displayImage("file:/" + mPhotoPathList.get(position), photoView, ImageLoaderManager.getGalleryOptions());
         container.addView(photoView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         photoView.setOnPhotoTapListener(this);
         return photoView;

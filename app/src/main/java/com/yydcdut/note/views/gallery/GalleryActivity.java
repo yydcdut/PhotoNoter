@@ -157,6 +157,15 @@ public class GalleryActivity extends BaseActivity implements NavigationView.OnNa
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_preview) {
+            if (SelectPhotoModel.getInstance().getCount() != 0) {
+                Intent intent = new Intent(this, PhotoDetailActivity.class);
+                intent.putExtra(BaseActivity.INTENT_PREVIEW_SELECTED, true);
+                startActivityForResult(intent, BaseActivity.REQUEST_CODE);
+            }
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 

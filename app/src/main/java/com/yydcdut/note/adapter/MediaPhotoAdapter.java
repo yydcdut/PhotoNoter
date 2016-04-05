@@ -8,12 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.vh.MediaPhotoViewHolder;
 import com.yydcdut.note.bean.gallery.MediaFolder;
 import com.yydcdut.note.bean.gallery.MediaPhoto;
 import com.yydcdut.note.model.gallery.SelectPhotoModel;
+import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 
 import java.util.List;
 
@@ -53,7 +53,7 @@ public class MediaPhotoAdapter extends RecyclerView.Adapter<MediaPhotoViewHolder
             holder.checkBox.setCheckedWithoutCallback(false);
         }
         holder.imageView.setImageResource(R.drawable.ic_launcher);
-        ImageLoader.getInstance().displayImage("file:/" + mediaPhoto.getThumbPath(), holder.imageView);
+        ImageLoaderManager.displayImage("file:/" + mediaPhoto.getThumbPath(), holder.imageView, ImageLoaderManager.getGalleryOptions());
     }
 
     @Override

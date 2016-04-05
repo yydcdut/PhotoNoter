@@ -48,7 +48,7 @@ public class PhotoDetailActivity extends BaseActivity implements PhotoDetailPage
     @Bind(R.id.view_status_cover)
     View mStatusCoverView;
 
-    @Bind(R.id.layout_bar)
+    @Bind(R.id.appbar)
     View mAppBarLayout;
 
     @Bind(R.id.toolbar)
@@ -74,7 +74,7 @@ public class PhotoDetailActivity extends BaseActivity implements PhotoDetailPage
         if (AppCompat.AFTER_LOLLIPOP) {
             AppCompat.setFullWindow(getWindow());
         }
-        return 0;
+        return R.layout.activity_photo_detail;
     }
 
     @Override

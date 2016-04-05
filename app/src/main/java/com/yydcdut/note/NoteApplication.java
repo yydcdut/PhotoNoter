@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Environment;
-import android.support.multidex.MultiDex;
 
 import com.squareup.leakcanary.LeakCanary;
 import com.umeng.analytics.MobclickAgent;
@@ -34,11 +33,11 @@ public class NoteApplication extends Application {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         //开启dex进程的话也会进入application
-        if (isDexProcess()) {
-            return;
-        }
-        doInstallBeforeLollipop();
-        MultiDex.install(this);
+//        if (isDexProcess()) {
+//            return;
+//        }
+//        doInstallBeforeLollipop();
+//        MultiDex.install(this);
     }
 
     @Override
