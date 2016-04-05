@@ -14,16 +14,17 @@ import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.PhotoDetailPagerAdapter;
-import com.yydcdut.note.bean.gallery.MediaPhoto;
-import com.yydcdut.note.model.gallery.PhotoModel;
-import com.yydcdut.note.model.gallery.SelectPhotoModel;
+import com.yydcdut.note.presenters.gallery.IPhotoDetailPresenter;
+import com.yydcdut.note.presenters.gallery.impl.PhotoDetailPresenterImpl;
 import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.views.BaseActivity;
+import com.yydcdut.note.views.gallery.IPhotoDetailView;
 import com.yydcdut.note.widget.FixViewPager;
 import com.yydcdut.note.widget.PhotoCheckBox;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -33,14 +34,10 @@ import butterknife.OnPageChange;
 /**
  * Created by yuyidong on 16/4/4.
  */
-public class PhotoDetailActivity extends BaseActivity implements PhotoDetailPagerAdapter.OnPhotoClickListener,
-        PhotoCheckBox.OnPhotoCheckedChangeListener {
-    /* 当前的widget是否在显示 */
-    private boolean isWidgetShowed = true;
-    /* 当前动画是否在进行 */
-    private boolean isAnimationDoing = false;
-    /* 是不是浏览选中照片的模式 */
-    private boolean isPreviewSelected = false;
+public class PhotoDetailActivity extends BaseActivity implements IPhotoDetailView,
+        PhotoDetailPagerAdapter.OnPhotoClickListener, PhotoCheckBox.OnPhotoCheckedChangeListener {
+    @Inject
+    PhotoDetailPresenterImpl mPhotoDetailPresenter;
 
     @Bind(R.id.vp_detail)
     FixViewPager mViewPager;
@@ -80,13 +77,16 @@ public class PhotoDetailActivity extends BaseActivity implements PhotoDetailPage
     @Override
     public void initInjector() {
         ButterKnife.bind(this);
+        mActivityComponent.inject(this);
+        mPhotoDetailPresenter.bindData(getIntent().getBooleanExtra(INTENT_PREVIEW_SELECTED, false),
+                getIntent().getIntExtra(INTENT_PAGE, 0), getIntent().getStringExtra(INTENT_FOLDER));
+        mPhotoDetailPresenter.attachView(this);
     }
 
     @Override
     public void initUiAndListener() {
-        isPreviewSelected = getIntent().getBooleanExtra(INTENT_PREVIEW_SELECTED, false);
         initToolBarUI();
-        initViewPager();
+        mPhotoDetailPresenter.initViewPager();
         mPhotoCheckBox.setOnPhotoCheckedChangeListener(this);
     }
 
@@ -103,54 +103,55 @@ public class PhotoDetailActivity extends BaseActivity implements PhotoDetailPage
         }
     }
 
-    private void initViewPager() {
-        PhotoDetailPagerAdapter photoDetailPagerAdapter;
+    @Override
+    public void setAdapter(List<String> adapterPathList, int initPage) {
+        mAdapterPathList = adapterPathList;
+        PhotoDetailPagerAdapter photoDetailPagerAdapter = new PhotoDetailPagerAdapter(mAdapterPathList);
+        mViewPager.setAdapter(photoDetailPagerAdapter);
+        mViewPager.setCurrentItem(initPage);
+        photoDetailPagerAdapter.setOnPhotoClickListener(this);
+    }
+
+    @Override
+    public void initAdapterData(boolean isPreviewSelected, List<String> selectedPathList) {
         if (isPreviewSelected) {
-            mAdapterPathList = new ArrayList<>(SelectPhotoModel.getInstance().getCount());
-            for (int i = 0; i < SelectPhotoModel.getInstance().getCount(); i++) {
-                mAdapterPathList.add(SelectPhotoModel.getInstance().get(i));
-            }
-            photoDetailPagerAdapter = new PhotoDetailPagerAdapter(mAdapterPathList);
-            mViewPager.setAdapter(photoDetailPagerAdapter);
             mPhotoCheckBox.setCheckedWithoutCallback(true);
         } else {
-            int initPage = getIntent().getIntExtra(INTENT_PAGE, 0);
-            String folderName = getIntent().getStringExtra(INTENT_FOLDER);
-            List<MediaPhoto> mediaPhotoList = PhotoModel.getInstance().findByMedia(this).get(folderName).getMediaPhotoList();
-            mAdapterPathList = new ArrayList<>(mediaPhotoList.size());
-            for (MediaPhoto mediaPhoto : mediaPhotoList) {
-                mAdapterPathList.add(mediaPhoto.getPath());
-            }
-            photoDetailPagerAdapter = new PhotoDetailPagerAdapter(mAdapterPathList);
-            mViewPager.setAdapter(photoDetailPagerAdapter);
-            mViewPager.setCurrentItem(initPage);
-            for (int i = 0; i < SelectPhotoModel.getInstance().getCount(); i++) {
-                String selectedPath = SelectPhotoModel.getInstance().get(i);
-                if (selectedPath.equals(mAdapterPathList.get(initPage))) {
+            for (int i = 0; i < selectedPathList.size(); i++) {
+                String selectedPath = selectedPathList.get(i);
+                if (selectedPath.equals(mAdapterPathList.get(mViewPager.getCurrentItem()))) {
                     mPhotoCheckBox.setCheckedWithoutCallback(true);
                     break;
                 }
             }
         }
-        photoDetailPagerAdapter.setOnPhotoClickListener(this);
+    }
+
+    @Override
+    public void setCheckBoxSelectedWithoutCallback(boolean selected) {
+        mPhotoCheckBox.setCheckedWithoutCallback(selected);
     }
 
     @OnPageChange(value = R.id.vp_detail, callback = OnPageChange.Callback.PAGE_SELECTED)
     public void onViewPageSelected(int position) {
-        String path = mAdapterPathList.get(position);
-        if (SelectPhotoModel.getInstance().contains(path)) {
-            mPhotoCheckBox.setCheckedWithoutCallback(true);
-        } else {
-            mPhotoCheckBox.setCheckedWithoutCallback(false);
-        }
+        mPhotoDetailPresenter.onPagerChanged(position);
+    }
+
+    @Override
+    public void setToolbarTitle(String content) {
         mToolbar.setTitle((mViewPager.getCurrentItem() + 1) + "/" + mViewPager.getAdapter().getCount());
+    }
+
+    @Override
+    public void setMenuTitle(String content) {
+        mFinishMenuItem.setTitle(content);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_detail_photo, menu);
         mFinishMenuItem = menu.findItem(R.id.action_finish);
-        updateFinishMenuNumber(SelectPhotoModel.getInstance().getCount());
+        mPhotoDetailPresenter.initMenu();
         mToolbar.setTitle((mViewPager.getCurrentItem() + 1) + "/" + mViewPager.getAdapter().getCount());
         return true;
     }
@@ -174,35 +175,14 @@ public class PhotoDetailActivity extends BaseActivity implements PhotoDetailPage
         finish();
     }
 
-    public void updateFinishMenuNumber(int number) {
-        if (number == 0) {
-            mFinishMenuItem.setTitle(getResources().getString(R.string.action_finish));
-        } else {
-            mFinishMenuItem.setTitle(getResources().getString(R.string.action_finish) + "(" + number + ")");
-        }
-    }
-
     @Override
     public void onPhotoCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        String path = mAdapterPathList.get(mViewPager.getCurrentItem());
-        if (isChecked && !SelectPhotoModel.getInstance().contains(path)) {
-            SelectPhotoModel.getInstance().addPath(path);
-        } else if (!isChecked) {
-            SelectPhotoModel.getInstance().removePath(path);
-        }
-        updateFinishMenuNumber(SelectPhotoModel.getInstance().getCount());
+        mPhotoDetailPresenter.onChecked(isChecked);
     }
 
     @Override
     public void onPhotoClick(View view) {
-        if (isAnimationDoing) {
-            return;
-        }
-        if (isWidgetShowed) {
-            hideWidget();
-        } else {
-            showWidget();
-        }
+        mPhotoDetailPresenter.click2doAnimation();
     }
 
     @OnClick(R.id.txt_detail)
@@ -210,7 +190,8 @@ public class PhotoDetailActivity extends BaseActivity implements PhotoDetailPage
         mPhotoCheckBox.setChecked(!mPhotoCheckBox.isChecked());
     }
 
-    private void hideWidget() {
+    @Override
+    public void hideWidget(final IPhotoDetailPresenter.OnAnimationAdapter onAnimationAdapter) {
         AnimatorSet animation = new AnimatorSet();
         animation.setDuration(1000);
         animation.playTogether(
@@ -222,23 +203,24 @@ public class PhotoDetailActivity extends BaseActivity implements PhotoDetailPage
         animation.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
-                isAnimationDoing = true;
-                if (AppCompat.AFTER_LOLLIPOP) {
-                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                if (onAnimationAdapter != null) {
+                    onAnimationAdapter.onAnimationStarted(IPhotoDetailPresenter.STATE_HIDE);
                 }
             }
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                isAnimationDoing = false;
-                isWidgetShowed = false;
+                if (onAnimationAdapter != null) {
+                    onAnimationAdapter.onAnimationEnded(IPhotoDetailPresenter.STATE_HIDE);
+                }
             }
         });
         animation.start();
     }
 
-    private void showWidget() {
+
+    @Override
+    public void showWidget(final IPhotoDetailPresenter.OnAnimationAdapter onAnimationAdapter) {
         AnimatorSet animation = new AnimatorSet();
         animation.setDuration(1000);
         animation.playTogether(
@@ -250,19 +232,41 @@ public class PhotoDetailActivity extends BaseActivity implements PhotoDetailPage
         animation.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
-                isAnimationDoing = true;
+                if (onAnimationAdapter != null) {
+                    onAnimationAdapter.onAnimationStarted(IPhotoDetailPresenter.STATE_SHOW);
+                }
             }
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                isAnimationDoing = false;
-                isWidgetShowed = true;
-                if (AppCompat.AFTER_LOLLIPOP) {
-                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+                if (onAnimationAdapter != null) {
+                    onAnimationAdapter.onAnimationEnded(IPhotoDetailPresenter.STATE_SHOW);
                 }
             }
         });
         animation.start();
     }
+
+    @Override
+    public void showStatusBarTime() {
+        if (AppCompat.AFTER_LOLLIPOP) {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+        }
+    }
+
+    @Override
+    public void hideStatusBarTime() {
+        if (AppCompat.AFTER_LOLLIPOP) {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }
+    }
+
+    @Override
+    public int getCurrentPosition() {
+        return mViewPager.getCurrentItem();
+    }
+
 }
+
