@@ -38,6 +38,9 @@
     <color name="half_gray">#77808080</color>
     <color name="white_smoke">#F7F7F7</color>
 
+    <color name="little_black">#22000000</color>
+    <color name="half_black">#66000000</color>
+
 
     <color name="blue_colorPrimary">#2196F3</color>
     <color name="blue_colorPrimaryDark">#1976D2</color>

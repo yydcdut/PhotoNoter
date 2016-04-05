@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
     <string name="app_name">照片笔记</string>
     <string name="app_setting">设置</string>
     <string name="app_login">登录</string>
@@ -236,4 +239,7 @@
 
 
     <string name="function_offoline">该功能暂时下线</string>
+
+    <string name="action_view">预览</string>
+    <string name="action_finish">完成</string>
 </resources>

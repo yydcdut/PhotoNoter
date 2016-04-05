@@ -93,6 +93,16 @@
             android:name=".views.WebViewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ThemeBlue"/>
+        <activity
+            android:label=""
+            android:name=".views.gallery.GalleryActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/ThemeBlue"/>
+        <activity
+            android:label=""
+            android:name=".views.gallery.PhotoDetailActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/ThemeBlue"/>
 
         <service
             android:name=".service.CameraService"
@@ -176,6 +186,7 @@
     </application>
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.FLASHLIGHT"/>

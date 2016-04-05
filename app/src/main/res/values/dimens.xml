@@ -106,4 +106,7 @@
 
     <dimen name="ui_elevation">5dip</dimen>
 
+    <dimen name="checkbox_photo_padding_right">3dp</dimen>
+    <dimen name="checkbox_photo_padding_top">6dp</dimen>
+
 </resources>

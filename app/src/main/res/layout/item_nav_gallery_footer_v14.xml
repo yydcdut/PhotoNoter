@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.yydcdut.note.widget.MaterialRippleLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    app:mrl_rippleAlpha="0.2"
+    app:mrl_rippleColor="#585858"
+    app:mrl_rippleHover="true"
+    app:mrl_rippleOverlay="false">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/img_nav_footer"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="12dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="12dp">
+        </ImageView>
+
+        <TextView
+            android:id="@+id/txt_nav_footer"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginLeft="16dp"
+            android:gravity="center_vertical"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"/>
+
+    </LinearLayout>
+</com.yydcdut.note.widget.MaterialRippleLayout>

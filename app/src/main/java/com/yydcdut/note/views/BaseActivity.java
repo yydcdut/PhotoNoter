@@ -41,6 +41,16 @@ public abstract class BaseActivity extends AppCompatActivity implements IThemeVi
 
     public static final int REQUEST_NOTHING = 1;
 
+    public static final int REQUEST_CODE = 1;
+
+    public static final int CODE_RESULT_CHANGED = 1;
+    public static final int CODE_RESULT_NOT_CHANGED = -1;
+
+    public static final String INTENT_PAGE = "page";
+    public static final String INTENT_FOLDER = "folder";
+
+    public static final String INTENT_PREVIEW_SELECTED = "preview_selected";
+
     private ThemePresenter mThemePresenter;
     //不能为null
     protected IPresenter mIPresenter;

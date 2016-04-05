@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
     <string name="app_name">PhotoNoter</string>
     <string name="app_setting">Settings</string>
     <string name="app_login">Login</string>
@@ -241,5 +244,9 @@
     <string name="permission_cancel">Why? ヽ( ｀0´)ﾉ</string>
 
     <string name="function_offoline">Function is offline temporarily</string>
+
+    <!-- Galley -->
+    <string name="action_view">Preview</string>
+    <string name="action_finish">Finish</string>
 
 </resources>
