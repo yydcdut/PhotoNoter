@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 
 import com.yydcdut.note.R;
 import com.yydcdut.note.bean.gallery.MediaFolder;
+import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.gallery.PhotoModel;
 import com.yydcdut.note.model.gallery.SelectPhotoModel;
 import com.yydcdut.note.presenters.gallery.IMediaPhotoPresenter;
@@ -32,7 +33,7 @@ public class MediaPhotoPresenterImpl implements IMediaPhotoPresenter {
     private Context mContext;
 
     @Inject
-    public MediaPhotoPresenterImpl(Context context) {
+    public MediaPhotoPresenterImpl(@ContextLife("Activity") Context context) {
         mContext = context;
     }
 
