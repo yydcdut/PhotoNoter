@@ -172,11 +172,11 @@ public class RxPhotoNote {
                 });
     }
 
-    public Observable<List<PhotoNote>> deletePhotoNotes(List<PhotoNote> photoNoteList) {
-        if (photoNoteList.size() == 0) {
-            throw new IllegalArgumentException("参数的长度为0");
-        }
-        int categoryId = photoNoteList.get(0).getCategoryId();
+    public Observable<List<PhotoNote>> deletePhotoNotes(List<PhotoNote> photoNoteList, int categoryId) {
+//        if (photoNoteList.size() == 0) {
+//            throw new IllegalArgumentException("参数的长度为0");
+//        }
+//        int categoryId = photoNoteList.get(0).getCategoryId();
         return Observable.from(photoNoteList)
                 .subscribeOn(Schedulers.io())
                 .map(photoNote1 -> mPhotoNoteDB.delete(photoNote1))//做删除操作

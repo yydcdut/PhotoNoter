@@ -162,7 +162,7 @@ public class EditCategoryPresenterImpl implements IEditCategoryPresenter, Handle
                                         for (PhotoNote photoNote : photoNoteList) {
                                             FilePathUtils.deleteAllFiles(photoNote.getPhotoName());
                                         }
-                                        mRxPhotoNote.deletePhotoNotes(photoNoteList).subscribe();
+                                        mRxPhotoNote.deletePhotoNotes(photoNoteList, id).subscribe();
                                     });
                             mRxCategory.delete(id).subscribe(categories2 -> mHandler.sendEmptyMessage(1));
                         }

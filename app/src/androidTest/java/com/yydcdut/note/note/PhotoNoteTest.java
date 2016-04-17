@@ -198,7 +198,7 @@ public class PhotoNoteTest extends InstrumentationTestCase {
                                 arrayList.add(photoNote);
                             }
                         }
-                        mRxPhotoNote.deletePhotoNotes(arrayList)
+                        mRxPhotoNote.deletePhotoNotes(arrayList, 1)
                                 .subscribe(new Action1<List<PhotoNote>>() {
                                     @Override
                                     public void call(List<PhotoNote> photoNoteList) {
