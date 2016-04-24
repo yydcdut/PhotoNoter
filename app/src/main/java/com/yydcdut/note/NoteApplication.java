@@ -13,6 +13,7 @@ import com.umeng.analytics.MobclickAgent;
 import com.yydcdut.note.injector.component.ApplicationComponent;
 import com.yydcdut.note.injector.component.DaggerApplicationComponent;
 import com.yydcdut.note.injector.module.ApplicationModule;
+import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.Utils;
 import com.yydcdut.note.utils.YLog;
@@ -43,9 +44,9 @@ public class NoteApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        if (isDexProcess()) {
-            return;
-        }
+//        if (isDexProcess()) {
+//            return;
+//        }
 
         if (BuildConfig.LOG_DEBUG) {
             LeakCanary.install(this);
@@ -55,6 +56,9 @@ public class NoteApplication extends Application {
         initComponent();
         Utils.init(this);
         initImageLoader();
+        if (isOtherProcess("com.yydcdut.note:cameraphotos") || isOtherProcess("com.yydcdut.note:makephotos")) {
+            FilePathUtils.initEnvironment(this);
+        }
 
         //打点
         MobclickAgent.setDebugMode(BuildConfig.LOG_DEBUG);
@@ -161,6 +165,19 @@ public class NoteApplication extends Application {
         for (ActivityManager.RunningAppProcessInfo appProcess : activityManager.getRunningAppProcesses()) {
             if (pid == appProcess.pid) {
                 if (appProcess.processName.equals("com.yydcdut.note:dex")) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean isOtherProcess(String processName) {
+        int pid = android.os.Process.myPid();
+        ActivityManager activityManager = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningAppProcessInfo appProcess : activityManager.getRunningAppProcesses()) {
+            if (pid == appProcess.pid) {
+                if (appProcess.processName.equals(processName)) {
                     return true;
                 }
             }

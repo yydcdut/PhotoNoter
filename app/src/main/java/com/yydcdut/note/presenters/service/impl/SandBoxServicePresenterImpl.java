@@ -18,6 +18,7 @@ import com.yydcdut.note.presenters.service.ISandBoxServicePresenter;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.Utils;
+import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.views.IView;
 import com.yydcdut.note.views.service.ISandBoxServiceView;
 
@@ -38,6 +39,7 @@ import rx.Subscriber;
  * //todo  OOM
  */
 public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter {
+    private static final String TAG = SandBoxServicePresenterImpl.class.getSimpleName();
 
     private ISandBoxServiceView mSandBoxServiceView;
 
@@ -109,7 +111,8 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter {
         try {
             bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
         } catch (OutOfMemoryError e) {
-
+            e.printStackTrace();
+            YLog.e(TAG, e.getMessage());
         }
         String fileName = sandPhoto.getTime() + ".jpg";
         if (FilePathUtils.savePhoto(fileName, bitmap)) {
@@ -123,9 +126,10 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter {
             setExif(photoNote, sandPhoto.getSandExif(), sandPhoto.getCameraId(), sandPhoto.isMirror());
         } catch (IOException e) {
             e.printStackTrace();
+            YLog.e(TAG, e.getMessage());
         }
         deleteFromDBAndSDCard(sandPhoto);
-        bitmap.recycle();
+//        bitmap.recycle();
         System.gc();
     }
 
