@@ -162,7 +162,7 @@ dependencies {
     compile "com.android.support:design:${rootProject.ext.supportVersion}"
     compile "com.jakewharton:butterknife:7.0.1"
     compile "com.evernote:android-sdk:2.0.0-RC3"
-    compile "com.yydcdut.sdlv:sdlv:0.4.2@aar"
+    compile "com.yydcdut.sdlv:sdlv:0.5.0-beta"
     compile "com.google.dagger:dagger:${dagger2Version}"
     apt "com.google.dagger:dagger-compiler:${dagger2Version}"
     compile "io.reactivex:rxandroid:1.0.1"

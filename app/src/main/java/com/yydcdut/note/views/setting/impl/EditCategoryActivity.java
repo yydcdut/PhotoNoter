@@ -77,7 +77,7 @@ public class EditCategoryActivity extends BaseActivity implements IEditCategoryV
     }
 
     private void initListView() {
-        Menu menu = new Menu(new ColorDrawable(Color.WHITE), true);
+        Menu menu = new Menu(true, true);
         menu.addItem(new MenuItem.Builder().setWidth((int) getResources().getDimension(R.dimen.slv_item_bg_width) * 3 / 2)
                 .setBackground(new ColorDrawable(getResources().getColor(R.color.red_colorPrimary)))
                 .setText(getResources().getString(R.string.delete))
