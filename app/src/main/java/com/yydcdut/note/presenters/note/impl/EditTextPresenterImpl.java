@@ -146,7 +146,7 @@ public class EditTextPresenterImpl implements IEditTextPresenter, PermissionUtil
                                 .map(photoNoteList -> photoNoteList.get(mPosition))
                                 .doOnSubscribe(() -> mEditTextView.showProgressBar())
                                 .map(photoNote1 -> doUpdate2Evernote(photoNote1.getBigPhotoPathWithoutFile(), photoNote1.getPhotoName()))
-                                .subscribeOn(AndroidSchedulers.mainThread())
+                                .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(aBoolean1 -> {
                                     if (aBoolean1) {
                                         mEditTextView.showSnakeBar(mContext.getResources().getString(R.string.toast_success));
