@@ -41,7 +41,6 @@ import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.Utils;
 import com.yydcdut.note.views.BaseFragment;
 import com.yydcdut.note.views.camera.impl.CameraActivity;
-import com.yydcdut.note.views.gallery.impl.GalleryActivity;
 import com.yydcdut.note.views.home.IAlbumView;
 import com.yydcdut.note.views.note.impl.DetailActivity;
 import com.yydcdut.note.views.setting.impl.SettingActivity;
@@ -359,12 +358,12 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
 
     @OnClick(R.id.fab_local)
     public void clickFabLocal(View v) {
-//        Intent intent = new Intent();
-//        intent.setType("image/*");
-//        intent.setAction(Intent.ACTION_GET_CONTENT);
-//        startActivityForResult(intent, INTENT_REQUEST_LOCAL);
-        Intent intent = new Intent(getActivity(), GalleryActivity.class);
-        startActivity(intent);
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, INTENT_REQUEST_LOCAL);
+//        Intent intent = new Intent(getActivity(), GalleryActivity.class);
+//        startActivity(intent);
         //过1s自动关闭
         mMainHandler.postDelayed(new Runnable() {
             @Override
