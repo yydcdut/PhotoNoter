@@ -56,9 +56,7 @@ public class NoteApplication extends Application {
         initComponent();
         Utils.init(this);
         initImageLoader();
-        if (isOtherProcess("com.yydcdut.note:cameraphotos") || isOtherProcess("com.yydcdut.note:makephotos")) {
-            FilePathUtils.initEnvironment(this);
-        }
+        FilePathUtils.initEnvironment(this);
 
         //打点
         MobclickAgent.setDebugMode(BuildConfig.LOG_DEBUG);

@@ -161,7 +161,7 @@ public class SplashPresenterImpl implements ISplashPresenter, Handler.Callback,
     @Permission(PermissionUtils.CODE_STORAGE)
     private void initFiles() {
         if (PermissionUtils.hasPermission4Storage(mContext)) {
-            FilePathUtils.initEnvironment(mContext);
+            FilePathUtils.initDirs();
         } else {
             PermissionUtils.requestPermissions(mActivity, mContext.getResources().getString(R.string.permission_storage),
                     PermissionUtils.PERMISSION_STORAGE, PermissionUtils.CODE_STORAGE, null);

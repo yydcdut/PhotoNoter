@@ -42,6 +42,9 @@ public class FilePathUtils {
             FULL_PATH = Environment.getExternalStorageDirectory() + File.separator + DIR_NAME + File.separator;
         }
         FULL_SMALL_PATH = FULL_PATH + SMALL_PICTURE_DIR_NAME + File.separator;
+    }
+
+    public static void initDirs() {
         createDirIfNotExist();
         createSmallDirIfNotExist();
         createOtherImageDirIfNotExist();

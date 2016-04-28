@@ -150,7 +150,7 @@ public class IntroducePresenterImpl implements IIntroducePresenter, Handler.Call
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    FilePathUtils.initEnvironment(mContext);
+                    FilePathUtils.initDirs();
                     String[] outFileName = new String[]{
                             "s0.png",
                             "s1.png",
