@@ -41,7 +41,7 @@ public class RxGalleryPhotoModel {
         return Observable.create(new Observable.OnSubscribe<Map<String, MediaFolder>>() {
             @Override
             public void call(Subscriber<? super Map<String, MediaFolder>> subscriber) {
-                if (mMediaCache == null) {
+                if (mMediaCache == null || mMediaCache.size() == 0) {
                     mMediaCache = new HashMap<>();
                     MediaFolder mediaFolder4All = new MediaFolder(MediaFolder.ALL, new ArrayList<MediaPhoto>());
                     mMediaCache.put(MediaFolder.ALL, mediaFolder4All);
@@ -86,6 +86,11 @@ public class RxGalleryPhotoModel {
                 mediaFolder4All.getMediaPhotoList().add(mediaPhoto);
             }
         }
+    }
+
+    public void clear() {
+        mMediaCache.clear();
+        mMediaCache = null;
     }
 
 }

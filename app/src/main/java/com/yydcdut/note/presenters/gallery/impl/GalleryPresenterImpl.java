@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import com.yydcdut.note.R;
 import com.yydcdut.note.bean.gallery.GalleryApp;
 import com.yydcdut.note.injector.ContextLife;
+import com.yydcdut.note.model.gallery.RxGalleryPhotoModel;
 import com.yydcdut.note.model.gallery.SelectPhotoModel;
 import com.yydcdut.note.presenters.gallery.IGalleryPresenter;
 import com.yydcdut.note.views.BaseActivity;
@@ -25,6 +26,9 @@ import javax.inject.Inject;
  * Created by yuyidong on 16/4/5.
  */
 public class GalleryPresenterImpl implements IGalleryPresenter {
+    @Inject
+    RxGalleryPhotoModel mRxGalleryPhotoModel;
+
     private IGalleryView mIGalleryView;
 
     private Context mContext;
@@ -78,6 +82,6 @@ public class GalleryPresenterImpl implements IGalleryPresenter {
 
     @Override
     public void detachView() {
-
+        mRxGalleryPhotoModel.clear();
     }
 }
