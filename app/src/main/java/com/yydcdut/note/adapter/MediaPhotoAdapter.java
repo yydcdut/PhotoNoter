@@ -26,18 +26,20 @@ import java.util.Random;
 public class MediaPhotoAdapter extends RecyclerView.Adapter<MediaPhotoViewHolder> {
     private int mSize;
     private List<MediaPhoto> mMediaPhotoList;
+    private SelectPhotoModel mSelectPhotoModel;
     private Context mContext;
     private Random mRandom;
 
     private MediaPhotoViewHolder.OnItemClickListener mOnItemClickListener;
     private MediaPhotoViewHolder.OnItemSelectListener mOnItemSelectListener;
 
-    public MediaPhotoAdapter(@NonNull Context context, @NonNull int size, @NonNull MediaFolder mediaFolder,
+    public MediaPhotoAdapter(@NonNull Context context, @NonNull int size, @NonNull MediaFolder mediaFolder, @Nullable SelectPhotoModel selectPhotoModel,
                              @Nullable MediaPhotoViewHolder.OnItemClickListener onItemClickListener,
                              @Nullable MediaPhotoViewHolder.OnItemSelectListener onItemSelectListener) {
         mContext = context;
         mSize = size;
         mMediaPhotoList = mediaFolder.getMediaPhotoList();
+        mSelectPhotoModel = selectPhotoModel;
         mOnItemClickListener = onItemClickListener;
         mOnItemSelectListener = onItemSelectListener;
         mRandom = new Random();
@@ -52,7 +54,7 @@ public class MediaPhotoAdapter extends RecyclerView.Adapter<MediaPhotoViewHolder
     @Override
     public void onBindViewHolder(MediaPhotoViewHolder holder, int position) {
         MediaPhoto mediaPhoto = mMediaPhotoList.get(position);
-        if (SelectPhotoModel.getInstance().contains(mediaPhoto.getPath())) {
+        if (mSelectPhotoModel.contains(mediaPhoto.getPath())) {
             holder.checkBox.setCheckedWithoutCallback(true);
         } else {
             holder.checkBox.setCheckedWithoutCallback(false);

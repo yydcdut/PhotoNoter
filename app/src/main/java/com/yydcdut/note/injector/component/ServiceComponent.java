@@ -5,9 +5,12 @@ import android.content.Context;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.injector.PerService;
 import com.yydcdut.note.injector.module.ServiceModule;
+import com.yydcdut.note.model.gallery.RxGalleryPhotos;
+import com.yydcdut.note.model.gallery.SelectPhotoModel;
 import com.yydcdut.note.model.rx.RxCategory;
 import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.model.rx.RxSandBox;
+import com.yydcdut.note.model.rx.RxUser;
 import com.yydcdut.note.service.CameraService;
 import com.yydcdut.note.service.CheckService;
 import com.yydcdut.note.service.SandBoxService;
@@ -35,6 +38,12 @@ public interface ServiceComponent {
     RxSandBox getRxSandBox();
 
     LocalStorageUtils getLocalStorageUtils();
+
+    RxUser getRxUser();
+
+    RxGalleryPhotos getRxGalleryPhotos();
+
+    SelectPhotoModel getSelectPhotoModel();
 
     void inject(CameraService cameraService);
 

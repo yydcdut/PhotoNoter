@@ -3,22 +3,19 @@ package com.yydcdut.note.model.gallery;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Created by yuyidong on 16/3/23.
  */
 public class SelectPhotoModel {
     private List<String> mSelectPhotoList;
 
-    private SelectPhotoModel() {
+    @Singleton
+    @Inject
+    public SelectPhotoModel() {
         mSelectPhotoList = new ArrayList<>();
-    }
-
-    private static class Holder {
-        public static final SelectPhotoModel INSTANCE = new SelectPhotoModel();
-    }
-
-    public static SelectPhotoModel getInstance() {
-        return Holder.INSTANCE;
     }
 
     public boolean addPath(String path) {

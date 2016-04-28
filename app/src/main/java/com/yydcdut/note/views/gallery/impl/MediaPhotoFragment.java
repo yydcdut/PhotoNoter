@@ -14,6 +14,7 @@ import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.MediaPhotoAdapter;
 import com.yydcdut.note.adapter.vh.MediaPhotoViewHolder;
 import com.yydcdut.note.bean.gallery.MediaFolder;
+import com.yydcdut.note.model.gallery.SelectPhotoModel;
 import com.yydcdut.note.presenters.gallery.impl.MediaPhotoPresenterImpl;
 import com.yydcdut.note.views.BaseActivity;
 import com.yydcdut.note.views.BaseFragment;
@@ -82,9 +83,9 @@ public class MediaPhotoFragment extends BaseFragment implements IMediaPhotoView,
     }
 
     @Override
-    public void setMediaAdapter(MediaFolder mediaAdapter) {
+    public void setMediaAdapter(MediaFolder mediaFolder, SelectPhotoModel selectPhotoModel) {
         int size = getResources().getDisplayMetrics().widthPixels / 3;
-        mMediaPhotoAdapter = new MediaPhotoAdapter(getContext(), size, mediaAdapter, this, this);
+        mMediaPhotoAdapter = new MediaPhotoAdapter(getContext(), size, mediaFolder, selectPhotoModel, this, this);
         mRecyclerView.setAdapter(mMediaPhotoAdapter);
     }
 

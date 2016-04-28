@@ -10,7 +10,7 @@ import android.support.annotation.NonNull;
 import com.yydcdut.note.R;
 import com.yydcdut.note.bean.gallery.GalleryApp;
 import com.yydcdut.note.injector.ContextLife;
-import com.yydcdut.note.model.gallery.RxGalleryPhotoModel;
+import com.yydcdut.note.model.gallery.RxGalleryPhotos;
 import com.yydcdut.note.model.gallery.SelectPhotoModel;
 import com.yydcdut.note.presenters.gallery.IGalleryPresenter;
 import com.yydcdut.note.views.BaseActivity;
@@ -26,16 +26,19 @@ import javax.inject.Inject;
  * Created by yuyidong on 16/4/5.
  */
 public class GalleryPresenterImpl implements IGalleryPresenter {
-    @Inject
-    RxGalleryPhotoModel mRxGalleryPhotoModel;
+    private RxGalleryPhotos mRxGalleryPhotos;
+    private SelectPhotoModel mSelectPhotoModel;
 
     private IGalleryView mIGalleryView;
 
     private Context mContext;
 
     @Inject
-    public GalleryPresenterImpl(@ContextLife("Activity") Context context) {
+    public GalleryPresenterImpl(@ContextLife("Activity") Context context,
+                                RxGalleryPhotos rxGalleryPhotos, SelectPhotoModel selectPhotoModel) {
         mContext = context;
+        mRxGalleryPhotos = rxGalleryPhotos;
+        mSelectPhotoModel = selectPhotoModel;
     }
 
     @Override
@@ -63,7 +66,7 @@ public class GalleryPresenterImpl implements IGalleryPresenter {
 
     @Override
     public void jump2SelectedDetailActivity() {
-        if (SelectPhotoModel.getInstance().getCount() != 0) {
+        if (mSelectPhotoModel.getCount() != 0) {
             mIGalleryView.jump2SelectedDetailActivity();
         }
     }
@@ -72,16 +75,17 @@ public class GalleryPresenterImpl implements IGalleryPresenter {
     public void onReturnData(int requestCode, int resultCode, Intent data) {
         if (requestCode == BaseActivity.REQUEST_CODE && resultCode == BaseActivity.CODE_RESULT_CHANGED) {
             mIGalleryView.notifyDataChanged(0);//// TODO: 16/4/5  
-            if (SelectPhotoModel.getInstance().getCount() == 0) {
+            if (mSelectPhotoModel.getCount() == 0) {
                 mIGalleryView.setPreviewMenuTitle(mContext.getResources().getString(R.string.action_view));
             } else {
-                mIGalleryView.setPreviewMenuTitle(mContext.getResources().getString(R.string.action_view) + "(" + SelectPhotoModel.getInstance().getCount() + ")");
+                mIGalleryView.setPreviewMenuTitle(mContext.getResources().getString(R.string.action_view) + "(" + mSelectPhotoModel.getCount() + ")");
             }
         }
     }
 
     @Override
     public void detachView() {
-        mRxGalleryPhotoModel.clear();
+        mRxGalleryPhotos.clear();
+        mSelectPhotoModel.clear();
     }
 }

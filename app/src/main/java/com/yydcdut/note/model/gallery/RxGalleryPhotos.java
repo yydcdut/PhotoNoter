@@ -25,14 +25,14 @@ import rx.schedulers.Schedulers;
 /**
  * Created by yuyidong on 16/4/28.
  */
-public class RxGalleryPhotoModel {
+public class RxGalleryPhotos {
     private Map<String, MediaFolder> mMediaCache;
 
     private Context mContext;
 
     @Singleton
     @Inject
-    public RxGalleryPhotoModel(@ContextLife("Application") Context context) {
+    public RxGalleryPhotos(@ContextLife("Application") Context context) {
         mContext = context;
     }
 

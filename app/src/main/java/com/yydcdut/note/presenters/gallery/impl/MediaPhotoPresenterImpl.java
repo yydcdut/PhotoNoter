@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 import com.yydcdut.note.R;
 import com.yydcdut.note.bean.gallery.MediaFolder;
 import com.yydcdut.note.injector.ContextLife;
-import com.yydcdut.note.model.gallery.RxGalleryPhotoModel;
+import com.yydcdut.note.model.gallery.RxGalleryPhotos;
 import com.yydcdut.note.model.gallery.SelectPhotoModel;
 import com.yydcdut.note.presenters.gallery.IMediaPhotoPresenter;
 import com.yydcdut.note.views.BaseActivity;
@@ -34,12 +34,15 @@ public class MediaPhotoPresenterImpl implements IMediaPhotoPresenter {
 
     private Context mContext;
 
-    @Inject
-    RxGalleryPhotoModel mRxGalleryPhotoModel;
+    private RxGalleryPhotos mRxGalleryPhotos;
+    private SelectPhotoModel mSelectPhotoModel;
 
     @Inject
-    public MediaPhotoPresenterImpl(@ContextLife("Activity") Context context) {
+    public MediaPhotoPresenterImpl(@ContextLife("Activity") Context context,
+                                   RxGalleryPhotos rxGalleryPhotos, SelectPhotoModel selectPhotoModel) {
         mContext = context;
+        mRxGalleryPhotos = rxGalleryPhotos;
+        mSelectPhotoModel = selectPhotoModel;
     }
 
     @Override
@@ -49,7 +52,7 @@ public class MediaPhotoPresenterImpl implements IMediaPhotoPresenter {
     }
 
     private void initListNavigationData() {
-        mRxGalleryPhotoModel.findByMedia()
+        mRxGalleryPhotos.findByMedia()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(stringMediaFolderMap -> {
                     mMediaFolderByNameMap = stringMediaFolderMap;
@@ -61,7 +64,7 @@ public class MediaPhotoPresenterImpl implements IMediaPhotoPresenter {
                     mFolderNameList.add(0, MediaFolder.ALL);
                     mCurrentFolderName = MediaFolder.ALL;
                     mIMediaPhotoView.setListNavigationAdapter(mFolderNameList);
-                    mIMediaPhotoView.setMediaAdapter(mMediaFolderByNameMap.get(mCurrentFolderName));
+                    mIMediaPhotoView.setMediaAdapter(mMediaFolderByNameMap.get(mCurrentFolderName), mSelectPhotoModel);
                 });
     }
 
@@ -85,14 +88,14 @@ public class MediaPhotoPresenterImpl implements IMediaPhotoPresenter {
     public void onSelected(int position, boolean isSelected) {
         String path = mMediaFolderByNameMap.get(mCurrentFolderName).getMediaPhotoList().get(position).getPath();
         if (isSelected) {
-            SelectPhotoModel.getInstance().addPath(path);
+            mSelectPhotoModel.addPath(path);
         } else {
-            SelectPhotoModel.getInstance().removePath(path);
+            mSelectPhotoModel.removePath(path);
         }
-        if (SelectPhotoModel.getInstance().getCount() == 0) {
+        if (mSelectPhotoModel.getCount() == 0) {
             mIMediaPhotoView.setMenuTitle(mContext.getResources().getString(R.string.action_view));
         } else {
-            mIMediaPhotoView.setMenuTitle(mContext.getResources().getString(R.string.action_view) + "(" + SelectPhotoModel.getInstance().getCount() + ")");
+            mIMediaPhotoView.setMenuTitle(mContext.getResources().getString(R.string.action_view) + "(" + mSelectPhotoModel.getCount() + ")");
         }
     }
 
@@ -100,10 +103,10 @@ public class MediaPhotoPresenterImpl implements IMediaPhotoPresenter {
     public boolean onReturnData(int requestCode, int resultCode, Intent data) {
         if (requestCode == BaseActivity.REQUEST_CODE && resultCode == BaseActivity.CODE_RESULT_CHANGED) {
             mIMediaPhotoView.notifyDataChanged();
-            if (SelectPhotoModel.getInstance().getCount() == 0) {
+            if (mSelectPhotoModel.getCount() == 0) {
                 mIMediaPhotoView.setMenuTitle(mContext.getResources().getString(R.string.action_view));
             } else {
-                mIMediaPhotoView.setMenuTitle(mContext.getResources().getString(R.string.action_view) + "(" + SelectPhotoModel.getInstance().getCount() + ")");
+                mIMediaPhotoView.setMenuTitle(mContext.getResources().getString(R.string.action_view) + "(" + mSelectPhotoModel.getCount() + ")");
             }
             return true;
         }

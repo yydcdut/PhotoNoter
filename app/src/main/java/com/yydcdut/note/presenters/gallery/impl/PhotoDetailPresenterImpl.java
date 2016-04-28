@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import com.yydcdut.note.R;
 import com.yydcdut.note.bean.gallery.MediaPhoto;
 import com.yydcdut.note.injector.ContextLife;
-import com.yydcdut.note.model.gallery.RxGalleryPhotoModel;
+import com.yydcdut.note.model.gallery.RxGalleryPhotos;
 import com.yydcdut.note.model.gallery.SelectPhotoModel;
 import com.yydcdut.note.presenters.gallery.IPhotoDetailPresenter;
 import com.yydcdut.note.views.IView;
@@ -39,12 +39,15 @@ public class PhotoDetailPresenterImpl implements IPhotoDetailPresenter,
 
     private IPhotoDetailView mPhotoDetailView;
 
-    @Inject
-    RxGalleryPhotoModel mRxGalleryPhotoModel;
+    private RxGalleryPhotos mRxGalleryPhotos;
+    private SelectPhotoModel mSelectPhotoModel;
 
     @Inject
-    public PhotoDetailPresenterImpl(@ContextLife("Activity") Context context) {
+    public PhotoDetailPresenterImpl(@ContextLife("Activity") Context context,
+                                    RxGalleryPhotos rxGalleryPhotos, SelectPhotoModel selectPhotoModel) {
         mContext = context;
+        mRxGalleryPhotos = rxGalleryPhotos;
+        mSelectPhotoModel = selectPhotoModel;
     }
 
     @Override
@@ -63,15 +66,15 @@ public class PhotoDetailPresenterImpl implements IPhotoDetailPresenter,
     public void initViewPager() {
         if (isPreviewSelected) {
             List<String> selectedPathList = null;
-            mAdapterPathList = new ArrayList<>(SelectPhotoModel.getInstance().getCount());
-            for (int i = 0; i < SelectPhotoModel.getInstance().getCount(); i++) {
-                mAdapterPathList.add(SelectPhotoModel.getInstance().get(i));
+            mAdapterPathList = new ArrayList<>(mSelectPhotoModel.getCount());
+            for (int i = 0; i < mSelectPhotoModel.getCount(); i++) {
+                mAdapterPathList.add(mSelectPhotoModel.get(i));
             }
             mPhotoDetailView.setAdapter(mAdapterPathList, mInitPage);
             mPhotoDetailView.initAdapterData(isPreviewSelected, selectedPathList);
             mPhotoDetailView.setToolbarTitle((mPhotoDetailView.getCurrentPosition() + 1) + "/" + mAdapterPathList.size());
         } else {
-            mRxGalleryPhotoModel.findByMedia()
+            mRxGalleryPhotos.findByMedia()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(stringMediaFolderMap -> {
                         List<MediaPhoto> mediaPhotoList = stringMediaFolderMap.get(mFolderName).getMediaPhotoList();
@@ -80,9 +83,9 @@ public class PhotoDetailPresenterImpl implements IPhotoDetailPresenter,
                         for (MediaPhoto mediaPhoto : mediaPhotoList) {
                             mAdapterPathList.add(mediaPhoto.getPath());
                         }
-                        selectedPathList = new ArrayList<>(SelectPhotoModel.getInstance().getCount());
-                        for (int i = 0; i < SelectPhotoModel.getInstance().getCount(); i++) {
-                            selectedPathList.add(SelectPhotoModel.getInstance().get(i));
+                        selectedPathList = new ArrayList<>(mSelectPhotoModel.getCount());
+                        for (int i = 0; i < mSelectPhotoModel.getCount(); i++) {
+                            selectedPathList.add(mSelectPhotoModel.get(i));
                         }
                         mPhotoDetailView.setAdapter(mAdapterPathList, mInitPage);
                         mPhotoDetailView.initAdapterData(isPreviewSelected, selectedPathList);
@@ -94,7 +97,7 @@ public class PhotoDetailPresenterImpl implements IPhotoDetailPresenter,
     @Override
     public void onPagerChanged(int position) {
         String path = mAdapterPathList.get(position);
-        if (SelectPhotoModel.getInstance().contains(path)) {
+        if (mSelectPhotoModel.contains(path)) {
             mPhotoDetailView.setCheckBoxSelectedWithoutCallback(true);
         } else {
             mPhotoDetailView.setCheckBoxSelectedWithoutCallback(false);
@@ -104,18 +107,18 @@ public class PhotoDetailPresenterImpl implements IPhotoDetailPresenter,
 
     @Override
     public void initMenu() {
-        updateMenu(SelectPhotoModel.getInstance().getCount());
+        updateMenu(mSelectPhotoModel.getCount());
     }
 
     @Override
     public void onChecked(boolean checked) {
         String path = mAdapterPathList.get(mPhotoDetailView.getCurrentPosition());
-        if (checked && !SelectPhotoModel.getInstance().contains(path)) {
-            SelectPhotoModel.getInstance().addPath(path);
+        if (checked && !mSelectPhotoModel.contains(path)) {
+            mSelectPhotoModel.addPath(path);
         } else if (!checked) {
-            SelectPhotoModel.getInstance().removePath(path);
+            mSelectPhotoModel.removePath(path);
         }
-        updateMenu(SelectPhotoModel.getInstance().getCount());
+        updateMenu(mSelectPhotoModel.getCount());
     }
 
     private void updateMenu(int number) {

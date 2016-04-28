@@ -6,9 +6,12 @@ import android.content.Context;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.injector.PerFragment;
 import com.yydcdut.note.injector.module.FragmentModule;
+import com.yydcdut.note.model.gallery.RxGalleryPhotos;
+import com.yydcdut.note.model.gallery.SelectPhotoModel;
 import com.yydcdut.note.model.rx.RxCategory;
 import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.model.rx.RxSandBox;
+import com.yydcdut.note.model.rx.RxUser;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.views.gallery.impl.MediaPhotoFragment;
 import com.yydcdut.note.views.home.impl.AlbumFragment;
@@ -38,6 +41,12 @@ public interface FragmentComponent {
     RxSandBox getRxSandBox();
 
     LocalStorageUtils getLocalStorageUtils();
+
+    RxUser getRxUser();
+
+    RxGalleryPhotos getRxGalleryPhotos();
+
+    SelectPhotoModel getSelectPhotoModel();
 
     void inject(AlbumFragment albumFragment);
 

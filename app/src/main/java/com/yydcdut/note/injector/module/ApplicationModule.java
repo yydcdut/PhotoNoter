@@ -4,7 +4,8 @@ import android.content.Context;
 
 import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.injector.ContextLife;
-import com.yydcdut.note.model.gallery.RxGalleryPhotoModel;
+import com.yydcdut.note.model.gallery.RxGalleryPhotos;
+import com.yydcdut.note.model.gallery.SelectPhotoModel;
 import com.yydcdut.note.model.rx.RxCategory;
 import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.model.rx.RxSandBox;
@@ -26,7 +27,8 @@ public class ApplicationModule {
     private RxPhotoNote mRxPhotoNote;
     private RxSandBox mRxSandBox;
     private RxUser mRxUser;
-    private RxGalleryPhotoModel mRxGalleryPhotoModel;
+    private RxGalleryPhotos mRxGalleryPhotos;
+    private SelectPhotoModel mSelectPhotoModel;
     private LocalStorageUtils mLocalStorageUtils;
 
     public ApplicationModule(NoteApplication application) {
@@ -36,7 +38,8 @@ public class ApplicationModule {
         mRxPhotoNote = new RxPhotoNote(mApplication.getApplicationContext());
         mRxCategory = new RxCategory(mApplication.getApplicationContext());
         mRxUser = new RxUser(mApplication.getApplicationContext());
-        mRxGalleryPhotoModel = new RxGalleryPhotoModel(mApplication.getApplicationContext());
+        mRxGalleryPhotos = new RxGalleryPhotos(mApplication.getApplicationContext());
+        mSelectPhotoModel = new SelectPhotoModel();
     }
 
     @Provides
@@ -78,7 +81,13 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    public RxGalleryPhotoModel provideRxGalleryPhotoModel() {
-        return mRxGalleryPhotoModel;
+    public RxGalleryPhotos provideRxGalleryPhotos() {
+        return mRxGalleryPhotos;
+    }
+
+    @Provides
+    @Singleton
+    public SelectPhotoModel provideSelectPhotoModel() {
+        return mSelectPhotoModel;
     }
 }
