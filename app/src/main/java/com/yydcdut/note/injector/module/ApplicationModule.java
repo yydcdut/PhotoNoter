@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.injector.ContextLife;
+import com.yydcdut.note.model.gallery.RxGalleryPhotoModel;
 import com.yydcdut.note.model.rx.RxCategory;
 import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.model.rx.RxSandBox;
@@ -25,6 +26,7 @@ public class ApplicationModule {
     private RxPhotoNote mRxPhotoNote;
     private RxSandBox mRxSandBox;
     private RxUser mRxUser;
+    private RxGalleryPhotoModel mRxGalleryPhotoModel;
     private LocalStorageUtils mLocalStorageUtils;
 
     public ApplicationModule(NoteApplication application) {
@@ -34,6 +36,7 @@ public class ApplicationModule {
         mRxPhotoNote = new RxPhotoNote(mApplication.getApplicationContext());
         mRxCategory = new RxCategory(mApplication.getApplicationContext());
         mRxUser = new RxUser(mApplication.getApplicationContext());
+        mRxGalleryPhotoModel = new RxGalleryPhotoModel(mApplication.getApplicationContext());
     }
 
     @Provides
@@ -71,5 +74,11 @@ public class ApplicationModule {
     @Singleton
     public LocalStorageUtils provideLocalStorageUtils() {
         return mLocalStorageUtils;
+    }
+
+    @Provides
+    @Singleton
+    public RxGalleryPhotoModel provideRxGalleryPhotoModel() {
+        return mRxGalleryPhotoModel;
     }
 }

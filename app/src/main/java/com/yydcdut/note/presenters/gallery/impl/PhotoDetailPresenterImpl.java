@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import com.yydcdut.note.R;
 import com.yydcdut.note.bean.gallery.MediaPhoto;
 import com.yydcdut.note.injector.ContextLife;
-import com.yydcdut.note.model.gallery.PhotoModel;
+import com.yydcdut.note.model.gallery.RxGalleryPhotoModel;
 import com.yydcdut.note.model.gallery.SelectPhotoModel;
 import com.yydcdut.note.presenters.gallery.IPhotoDetailPresenter;
 import com.yydcdut.note.views.IView;
@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by yuyidong on 16/4/5.
@@ -38,6 +40,9 @@ public class PhotoDetailPresenterImpl implements IPhotoDetailPresenter,
     private IPhotoDetailView mPhotoDetailView;
 
     @Inject
+    RxGalleryPhotoModel mRxGalleryPhotoModel;
+
+    @Inject
     public PhotoDetailPresenterImpl(@ContextLife("Activity") Context context) {
         mContext = context;
     }
@@ -56,25 +61,34 @@ public class PhotoDetailPresenterImpl implements IPhotoDetailPresenter,
 
     @Override
     public void initViewPager() {
-        List<String> selectedPathList = null;
         if (isPreviewSelected) {
+            List<String> selectedPathList = null;
             mAdapterPathList = new ArrayList<>(SelectPhotoModel.getInstance().getCount());
             for (int i = 0; i < SelectPhotoModel.getInstance().getCount(); i++) {
                 mAdapterPathList.add(SelectPhotoModel.getInstance().get(i));
             }
+            mPhotoDetailView.setAdapter(mAdapterPathList, mInitPage);
+            mPhotoDetailView.initAdapterData(isPreviewSelected, selectedPathList);
+            mPhotoDetailView.setToolbarTitle((mPhotoDetailView.getCurrentPosition() + 1) + "/" + mAdapterPathList.size());
         } else {
-            List<MediaPhoto> mediaPhotoList = PhotoModel.getInstance().findByMedia(mContext).get(mFolderName).getMediaPhotoList();
-            mAdapterPathList = new ArrayList<>(mediaPhotoList.size());
-            for (MediaPhoto mediaPhoto : mediaPhotoList) {
-                mAdapterPathList.add(mediaPhoto.getPath());
-            }
-            selectedPathList = new ArrayList<>(SelectPhotoModel.getInstance().getCount());
-            for (int i = 0; i < SelectPhotoModel.getInstance().getCount(); i++) {
-                selectedPathList.add(SelectPhotoModel.getInstance().get(i));
-            }
+            mRxGalleryPhotoModel.findByMedia()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(stringMediaFolderMap -> {
+                        List<MediaPhoto> mediaPhotoList = stringMediaFolderMap.get(mFolderName).getMediaPhotoList();
+                        List<String> selectedPathList = null;
+                        mAdapterPathList = new ArrayList<>(mediaPhotoList.size());
+                        for (MediaPhoto mediaPhoto : mediaPhotoList) {
+                            mAdapterPathList.add(mediaPhoto.getPath());
+                        }
+                        selectedPathList = new ArrayList<>(SelectPhotoModel.getInstance().getCount());
+                        for (int i = 0; i < SelectPhotoModel.getInstance().getCount(); i++) {
+                            selectedPathList.add(SelectPhotoModel.getInstance().get(i));
+                        }
+                        mPhotoDetailView.setAdapter(mAdapterPathList, mInitPage);
+                        mPhotoDetailView.initAdapterData(isPreviewSelected, selectedPathList);
+                        mPhotoDetailView.setToolbarTitle((mPhotoDetailView.getCurrentPosition() + 1) + "/" + mAdapterPathList.size());
+                    });
         }
-        mPhotoDetailView.setAdapter(mAdapterPathList, mInitPage);
-        mPhotoDetailView.initAdapterData(isPreviewSelected, selectedPathList);
     }
 
     @Override

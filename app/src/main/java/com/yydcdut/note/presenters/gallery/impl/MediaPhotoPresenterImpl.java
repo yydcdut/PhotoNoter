@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 import com.yydcdut.note.R;
 import com.yydcdut.note.bean.gallery.MediaFolder;
 import com.yydcdut.note.injector.ContextLife;
-import com.yydcdut.note.model.gallery.PhotoModel;
+import com.yydcdut.note.model.gallery.RxGalleryPhotoModel;
 import com.yydcdut.note.model.gallery.SelectPhotoModel;
 import com.yydcdut.note.presenters.gallery.IMediaPhotoPresenter;
 import com.yydcdut.note.views.BaseActivity;
@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by yuyidong on 16/4/5.
@@ -33,6 +35,9 @@ public class MediaPhotoPresenterImpl implements IMediaPhotoPresenter {
     private Context mContext;
 
     @Inject
+    RxGalleryPhotoModel mRxGalleryPhotoModel;
+
+    @Inject
     public MediaPhotoPresenterImpl(@ContextLife("Activity") Context context) {
         mContext = context;
     }
@@ -41,23 +46,23 @@ public class MediaPhotoPresenterImpl implements IMediaPhotoPresenter {
     public void attachView(@NonNull IView iView) {
         mIMediaPhotoView = (IMediaPhotoView) iView;
         initListNavigationData();
-        initMediaData();
     }
 
     private void initListNavigationData() {
-        mMediaFolderByNameMap = PhotoModel.getInstance().findByMedia(mContext);
-        mFolderNameList = new ArrayList<>(mMediaFolderByNameMap.size());
-        for (Map.Entry<String, MediaFolder> entry : mMediaFolderByNameMap.entrySet()) {
-            mFolderNameList.add(entry.getKey());
-        }
-        mFolderNameList.remove(MediaFolder.ALL);
-        mFolderNameList.add(0, MediaFolder.ALL);
-        mCurrentFolderName = MediaFolder.ALL;
-        mIMediaPhotoView.setListNavigationAdapter(mFolderNameList);
-    }
-
-    private void initMediaData() {
-        mIMediaPhotoView.setMediaAdapter(mMediaFolderByNameMap.get(mCurrentFolderName));
+        mRxGalleryPhotoModel.findByMedia()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(stringMediaFolderMap -> {
+                    mMediaFolderByNameMap = stringMediaFolderMap;
+                    mFolderNameList = new ArrayList<>(mMediaFolderByNameMap.size());
+                    for (Map.Entry<String, MediaFolder> entry : mMediaFolderByNameMap.entrySet()) {
+                        mFolderNameList.add(entry.getKey());
+                    }
+                    mFolderNameList.remove(MediaFolder.ALL);
+                    mFolderNameList.add(0, MediaFolder.ALL);
+                    mCurrentFolderName = MediaFolder.ALL;
+                    mIMediaPhotoView.setListNavigationAdapter(mFolderNameList);
+                    mIMediaPhotoView.setMediaAdapter(mMediaFolderByNameMap.get(mCurrentFolderName));
+                });
     }
 
     @Override

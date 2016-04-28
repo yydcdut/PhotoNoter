@@ -1,6 +1,7 @@
 package com.yydcdut.note.views.gallery.impl;
 
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -139,7 +140,11 @@ public class PhotoDetailActivity extends BaseActivity implements IPhotoDetailVie
 
     @Override
     public void setToolbarTitle(String content) {
-        mToolbar.setTitle((mViewPager.getCurrentItem() + 1) + "/" + mViewPager.getAdapter().getCount());
+        if (TextUtils.isEmpty(content)) {
+            mToolbar.setTitle((mViewPager.getCurrentItem() + 1) + "/" + mViewPager.getAdapter().getCount());
+        } else {
+            mToolbar.setTitle(content);
+        }
     }
 
     @Override
@@ -152,7 +157,10 @@ public class PhotoDetailActivity extends BaseActivity implements IPhotoDetailVie
         getMenuInflater().inflate(R.menu.menu_detail_photo, menu);
         mFinishMenuItem = menu.findItem(R.id.action_finish);
         mPhotoDetailPresenter.initMenu();
-        mToolbar.setTitle((mViewPager.getCurrentItem() + 1) + "/" + mViewPager.getAdapter().getCount());
+        String title = mToolbar.getTitle().toString();
+        if (mViewPager.getAdapter() == null) {
+            setToolbarTitle("0/0");
+        }
         return true;
     }
 
