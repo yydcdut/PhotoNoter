@@ -157,7 +157,6 @@ public class PhotoDetailActivity extends BaseActivity implements IPhotoDetailVie
         getMenuInflater().inflate(R.menu.menu_detail_photo, menu);
         mFinishMenuItem = menu.findItem(R.id.action_finish);
         mPhotoDetailPresenter.initMenu();
-        String title = mToolbar.getTitle().toString();
         if (mViewPager.getAdapter() == null) {
             setToolbarTitle("0/0");
         }
@@ -172,6 +171,7 @@ public class PhotoDetailActivity extends BaseActivity implements IPhotoDetailVie
                 finish();
                 break;
             case R.id.action_finish:
+                finish();
                 break;
         }
         return true;
