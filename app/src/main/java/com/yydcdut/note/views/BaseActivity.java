@@ -38,8 +38,10 @@ public abstract class BaseActivity extends AppCompatActivity implements IThemeVi
     public static final int RESULT_DATA_QQ = 4;
     public static final int RESULT_DATA_EVERNOTE = 5;
     public static final int RESULT_DATA_USER = 6;
+    public static final int RESULT_DATA_IMAGE = 7;
 
     public static final int REQUEST_NOTHING = 1;
+    public static final int REQUEST_DATA_IMAGE = 2;
 
     public static final int REQUEST_CODE = 1;
 

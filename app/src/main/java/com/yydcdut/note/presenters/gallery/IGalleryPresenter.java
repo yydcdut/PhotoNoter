@@ -16,4 +16,7 @@ public interface IGalleryPresenter extends IPresenter {
     void jump2SelectedDetailActivity();
 
     void onReturnData(int requestCode, int resultCode, Intent data);
+
+    void finishActivityAndReturnData();
+
 }

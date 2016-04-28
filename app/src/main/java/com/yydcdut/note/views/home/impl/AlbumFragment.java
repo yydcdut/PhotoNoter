@@ -184,6 +184,8 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
             mAlbumPresenter.savePhotoFromLocal(data.getData());
         } else if (resultCode == Activity.RESULT_OK && requestCode == INTENT_REQUEST_CAMERA) {
             mAlbumPresenter.savePhotoFromSystemCamera();
+        } else if (resultCode == RESULT_DATA_IMAGE && requestCode == REQUEST_DATA_IMAGE) {
+            mAlbumPresenter.savePhotosFromGallery(data.getStringArrayListExtra(GalleryActivity.INTENT_DATA));
         } else {
             closeLayoutRevealColorView();
         }
@@ -364,7 +366,7 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
 //        intent.setAction(Intent.ACTION_GET_CONTENT);
 //        startActivityForResult(intent, INTENT_REQUEST_LOCAL);
         Intent intent = new Intent(getActivity(), GalleryActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_DATA_IMAGE);
         //过1s自动关闭
         mMainHandler.postDelayed(new Runnable() {
             @Override

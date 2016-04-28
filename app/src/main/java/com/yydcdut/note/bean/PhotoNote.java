@@ -198,6 +198,16 @@ public class PhotoNote implements IObject {
         }
     }
 
+    public Object mTag;
+
+    public Object getTag() {
+        return mTag;
+    }
+
+    public void setTag(Object tag) {
+        mTag = tag;
+    }
+
     @Override
     public String toString() {
         return "PhotoNote{" +
@@ -213,6 +223,7 @@ public class PhotoNote implements IObject {
                 ", categoryId=" + categoryId +
                 ", tag=" + tag +
                 ", mPaletteColor=" + mPaletteColor +
+                ", mTag=" + mTag +
                 '}';
     }
 }

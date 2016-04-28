@@ -93,6 +93,7 @@ public class RxPhotoNote {
                             public void onCompleted() {
                                 if (mCategoryId != -1) {
                                     subscriber.onNext(mCache.get(mCategoryId));
+                                    subscriber.onCompleted();
                                 }
                             }
 
@@ -139,13 +140,12 @@ public class RxPhotoNote {
                                     mCache.remove(mCategoryId);
                                     mCache.put(mCategoryId, mPhotoNoteDB.findByCategoryId(mCategoryId));
                                     subscriber.onNext(mCache.get(mCategoryId));
+                                    subscriber.onCompleted();
                                 }
-
                             }
 
                             @Override
                             public void onError(Throwable e) {
-
                             }
 
                             @Override
@@ -155,7 +155,6 @@ public class RxPhotoNote {
                         };
                     }
                 });
-
     }
 
     public Observable<PhotoNote> savePhotoNote(PhotoNote photoNote) {
@@ -190,6 +189,7 @@ public class RxPhotoNote {
                                 mCache.remove(categoryId);
                                 mCache.put(categoryId, mPhotoNoteDB.findByCategoryId(categoryId));
                                 subscriber.onNext(mCache.get(categoryId));
+                                subscriber.onCompleted();
                             }
 
                             @Override

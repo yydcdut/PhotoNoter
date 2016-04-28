@@ -34,6 +34,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -377,8 +378,8 @@ public class AlbumPresenterImpl implements IAlbumPresenter, PermissionUtils.OnPe
                 System.currentTimeMillis(), mCategoryId);
         mRxPhotoNote.savePhotoNote(photoNote)
                 .map(photoNote1 -> {
-                    //复制大图
                     try {
+                        //复制大图
                         FilePathUtils.copyFile(FilePathUtils.getTempFilePath(), photoNote1.getBigPhotoPathWithoutFile());
                         //保存小图
                         FilePathUtils.saveSmallPhotoFromBigPhoto(photoNote.getBigPhotoPathWithFile(), photoNote.getPhotoName());
@@ -415,6 +416,77 @@ public class AlbumPresenterImpl implements IAlbumPresenter, PermissionUtils.OnPe
                                         mAlbumView.notifyItemInserted(0);
                                         break;
                                 }
+                                mAlbumView.hideProgressBar();
+                            });
+                });
+    }
+
+    @Override
+    public void savePhotosFromGallery(ArrayList<String> pathList) {
+        List<PhotoNote> photoNotes = new ArrayList<>(pathList.size());
+        for (String path : pathList) {
+            PhotoNote photoNote = new PhotoNote(System.currentTimeMillis() + ".jpg", System.currentTimeMillis(),
+                    System.currentTimeMillis(), "", "", System.currentTimeMillis(),
+                    System.currentTimeMillis(), mCategoryId);
+            photoNote.setTag(path);
+            photoNotes.add(photoNote);
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        mRxPhotoNote.savePhotoNotes(photoNotes)
+                .flatMap(photoNotes1 -> Observable.from(photoNotes))//注意看这里是photoNotes
+                .map(photoNote -> {
+                    String path = (String) photoNote.getTag();
+                    if (!TextUtils.isEmpty(path)) {
+                        try {
+                            //复制大图
+                            FilePathUtils.copyFile(path, photoNote.getBigPhotoPathWithoutFile());
+                            //保存小图
+                            FilePathUtils.saveSmallPhotoFromBigPhoto(photoNote.getBigPhotoPathWithFile(), photoNote.getPhotoName());
+                            photoNote.setPaletteColor(Utils.getPaletteColor(ImageLoaderManager.loadImageSync(photoNote.getBigPhotoPathWithFile())));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    return photoNote;
+                })
+                .lift(new Observable.Operator<Integer, PhotoNote>() {
+                    @Override
+                    public Subscriber<? super PhotoNote> call(Subscriber<? super Integer> subscriber) {
+                        return new Subscriber<PhotoNote>() {
+                            @Override
+                            public void onCompleted() {
+                                subscriber.onNext(mCategoryId);
+                                subscriber.onCompleted();
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                            }
+
+                            @Override
+                            public void onNext(PhotoNote photoNote) {
+                            }
+                        };
+                    }
+                })
+                .doOnSubscribe(new Action0() {//// TODO: 16/4/28 lambda
+                    @Override
+                    public void call() {
+                        mAlbumView.showProgressBar();
+                    }
+                })
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe(integer -> {
+                    EventBus.getDefault().post(new PhotoNoteCreateEvent());
+                    mRxPhotoNote.refreshByCategoryId(mCategoryId, mAlbumSortKind)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(photoNoteList -> {
+                                mAlbumView.updateData(photoNoteList);
+                                mAlbumView.notifyDataSetChanged();
                                 mAlbumView.hideProgressBar();
                             });
                 });

@@ -88,4 +88,14 @@ public class GalleryPresenterImpl implements IGalleryPresenter {
         mRxGalleryPhotos.clear();
         mSelectPhotoModel.clear();
     }
+
+    @Override
+    public void finishActivityAndReturnData() {
+        ArrayList<String> list = new ArrayList<>(mSelectPhotoModel.getCount());
+        for (int i = 0; i < mSelectPhotoModel.getCount(); i++) {
+            list.add(mSelectPhotoModel.get(i));
+        }
+        mIGalleryView.finish(list);
+    }
+
 }

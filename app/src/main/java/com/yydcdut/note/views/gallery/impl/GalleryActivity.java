@@ -23,18 +23,21 @@ import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.views.BaseActivity;
 import com.yydcdut.note.views.gallery.IGalleryView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by yuyidong on 16/4/2.
  */
 public class GalleryActivity extends BaseActivity implements IGalleryView,
         NavigationView.OnNavigationItemSelectedListener, GalleryNavFooterViewHolder.OnNavFooterItemClickListener {
+    public static final String INTENT_DATA = "path";
     @Inject
     GalleryPresenterImpl mGalleryPresenter;
 
@@ -192,5 +195,18 @@ public class GalleryActivity extends BaseActivity implements IGalleryView,
     @Override
     public void notifyDataChanged(int... positions) {
         mMediaPhotoFragment.notifyAdapterDataChanged();
+    }
+
+    @Override
+    public void finish(ArrayList<String> data) {
+        Intent intent = new Intent();
+        intent.putStringArrayListExtra(INTENT_DATA, data);
+        setResult(RESULT_DATA_IMAGE, intent);
+        finish();
+    }
+
+    @OnClick(R.id.fab)
+    public void onFabClick(View view) {
+        mGalleryPresenter.finishActivityAndReturnData();
     }
 }

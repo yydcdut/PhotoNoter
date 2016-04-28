@@ -4,6 +4,8 @@ import android.net.Uri;
 
 import com.yydcdut.note.presenters.IPresenter;
 
+import java.util.ArrayList;
+
 /**
  * Created by yuyidong on 15/11/20.
  */
@@ -38,6 +40,8 @@ public interface IAlbumPresenter extends IPresenter {
     void savePhotoFromLocal(Uri imageUri);
 
     void savePhotoFromSystemCamera();
+
+    void savePhotosFromGallery(ArrayList<String> list);
 
     void jump2Camera();
 
