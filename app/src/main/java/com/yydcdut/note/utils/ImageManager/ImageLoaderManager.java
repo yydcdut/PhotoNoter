@@ -72,7 +72,7 @@ public class ImageLoaderManager {
         ImageLoader.getInstance().clearMemoryCache();
     }
 
-    public static void displayImageWihtoutCache(String uri, ImageView imageView) {
+    public static void displayImageWithoutCache(String uri, ImageView imageView) {
         ImageLoader.getInstance().displayImage(uri, imageView, new DisplayImageOptions.Builder()
                 .cacheInMemory(false)
                 .considerExifParams(true)

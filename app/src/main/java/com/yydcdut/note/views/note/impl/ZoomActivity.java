@@ -172,7 +172,7 @@ public class ZoomActivity extends BaseActivity implements IZoomView {
 
     @Override
     public void showImage(String path) {
-        ImageLoaderManager.displayImageWihtoutCache(path, mImage);
+        ImageLoaderManager.displayImageWithoutCache(path, mImage);
     }
 
     @Override
