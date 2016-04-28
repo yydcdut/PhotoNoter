@@ -1,7 +1,9 @@
 package com.yydcdut.note.views;
 
+import android.annotation.TargetApi;
 import android.content.res.TypedArray;
 import android.graphics.Point;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -57,6 +59,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IThemeVi
     //不能为null
     protected IPresenter mIPresenter;
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void setActivityTheme(int index) {
         super.setTheme(ThemeHelper.THEME.get(index).getStyle());
@@ -137,7 +140,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IThemeVi
         mThemePresenter = new ThemePresenter(getApplicationContext());
         mThemePresenter.attachView(this);
         mThemePresenter.setTheme();
-        boolean isSet = setWindowStatusBar(true && setStatusBar());
+        boolean isSet = setWindowStatusBar(setStatusBar());
         super.onCreate(savedInstanceState);
         int layout = setContentView();
         if (isSet) {
