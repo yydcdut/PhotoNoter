@@ -89,9 +89,10 @@ android {
     }
 
     productFlavors {
-        Store360 {
+        dev {}
+//        Store360 {
 //            useJack = true
-        }
+//        }
 //        QQ {}
 //        WanDouJia {}
 //        Flyme {}
