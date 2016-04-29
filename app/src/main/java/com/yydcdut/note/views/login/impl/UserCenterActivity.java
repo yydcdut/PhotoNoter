@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -24,6 +25,7 @@ import com.yydcdut.note.views.BaseActivity;
 import com.yydcdut.note.views.login.IUserCenterView;
 import com.yydcdut.note.widget.CircleProgressBarLayout;
 import com.yydcdut.note.widget.RoundedImageView;
+import com.yydcdut.note.widget.StatusBarView;
 import com.yydcdut.note.widget.UserCenterArrowView;
 import com.yydcdut.note.widget.fab2.snack.OnSnackBarActionListener;
 
@@ -87,8 +89,15 @@ public class UserCenterActivity extends BaseActivity implements IUserCenterView 
     public void initUiAndListener() {
         ButterKnife.bind(this);
         mUserCenterPresenter.attachView(this);
-        if (AppCompat.AFTER_LOLLIPOP) {
-            findViewById(R.id.layout_status).setBackgroundColor(AppCompat.getColor(android.R.color.darker_gray, this));
+        if (AppCompat.AFTER_KITKAT) {
+            ViewGroup decorView = (ViewGroup) getWindow().getDecorView();
+            for (int i = 0; i < decorView.getChildCount(); i++) {
+                View view = decorView.getChildAt(i);
+                if (view instanceof StatusBarView) {
+                    view.setBackgroundColor(AppCompat.getColor(android.R.color.darker_gray, this));
+                    break;
+                }
+            }
         }
         initToolBarUI();
         initOtherViewAndData();

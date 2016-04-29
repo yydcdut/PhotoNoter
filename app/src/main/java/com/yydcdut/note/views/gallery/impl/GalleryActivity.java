@@ -1,7 +1,10 @@
 package com.yydcdut.note.views.gallery.impl;
 
+import android.annotation.TargetApi;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -13,7 +16,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.GalleryNavigationAdapter;
@@ -21,8 +26,10 @@ import com.yydcdut.note.adapter.vh.GalleryNavFooterViewHolder;
 import com.yydcdut.note.bean.gallery.GalleryApp;
 import com.yydcdut.note.presenters.gallery.impl.GalleryPresenterImpl;
 import com.yydcdut.note.utils.AppCompat;
+import com.yydcdut.note.utils.ThemeHelper;
 import com.yydcdut.note.views.BaseActivity;
 import com.yydcdut.note.views.gallery.IGalleryView;
+import com.yydcdut.note.widget.StatusBarView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,6 +91,8 @@ public class GalleryActivity extends BaseActivity implements IGalleryView,
     public void initUiAndListener() {
         initToolBar();
         initDrawer();
+        int color = ThemeHelper.getPrimaryColor(this);
+        setDrawerStatusBar(color);
         initThirdGalleryAppAdapter(mGalleryPresenter.getGalleryAppList());
         FragmentManager fragmentManager = getFragmentManager();
         mMediaPhotoFragment = MediaPhotoFragment.newInstance();
@@ -103,6 +112,45 @@ public class GalleryActivity extends BaseActivity implements IGalleryView,
         toggle.syncState();
 
         mNavigationView.setNavigationItemSelectedListener(this);
+    }
+
+    /**
+     * 设置statusBar
+     *
+     * @param color
+     */
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void setDrawerStatusBar(int color) {
+        if (!AppCompat.AFTER_KITKAT) {
+            return;
+        }
+        if (AppCompat.AFTER_LOLLIPOP) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        } else {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+        StatusBarView statusBarView = createStatusBarView(color, 255);
+        ViewGroup contentLayout = (ViewGroup) mDrawerLayout.getChildAt(0);
+        contentLayout.addView(statusBarView, 0);
+        if (!(contentLayout instanceof LinearLayout) && contentLayout.getChildAt(1) != null) {
+            contentLayout.getChildAt(1).setPadding(0, getStatusBarSize(), 0, 0);
+        }
+        ViewGroup drawer = (ViewGroup) mDrawerLayout.getChildAt(1);
+        mDrawerLayout.setFitsSystemWindows(false);
+        contentLayout.setFitsSystemWindows(false);
+        contentLayout.setClipToPadding(true);
+        drawer.setFitsSystemWindows(false);
+        addTranslucentView(100);
+    }
+
+    private void addTranslucentView(int statusBarAlpha) {
+        ViewGroup contentView = (ViewGroup) findViewById(android.R.id.content);
+        if (contentView.getChildCount() > 1) {
+            contentView.removeViewAt(1);
+        }
+        contentView.addView(createStatusBarView(Color.TRANSPARENT, statusBarAlpha));
     }
 
     private void initThirdGalleryAppAdapter(List<GalleryApp> galleryAppList) {

@@ -25,8 +25,8 @@ public class ThemePresenter {
         mThemeView.setActivityTheme(mLocalStorageUtils.getThemeColor());
     }
 
-    public void setStatusBar(int layout) {
-        mThemeView.setStatusBarTranslation(mLocalStorageUtils.getStatusBarTranslation(), layout);
+    public void setStatusBar() {
+        mThemeView.setStatusBarTranslation(mLocalStorageUtils.getStatusBarTranslation());
     }
 
 }

@@ -58,6 +58,12 @@ public class AppCompat {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
 
+    public static final boolean AFTER_KITKAT = afterKitkat();
+
+    private static boolean afterKitkat() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+    }
+
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static void setElevation(View view, float elevation) {
         if (AFTER_LOLLIPOP) {

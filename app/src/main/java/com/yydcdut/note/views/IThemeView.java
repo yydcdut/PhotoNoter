@@ -7,5 +7,5 @@ public interface IThemeView {
 
     void setActivityTheme(int index);
 
-    void setStatusBarTranslation(boolean translation, int layout);
+    void setStatusBarTranslation(boolean translation);
 }

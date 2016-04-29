@@ -2,16 +2,18 @@ package com.yydcdut.note.views;
 
 import android.annotation.TargetApi;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.umeng.analytics.MobclickAgent;
 import com.yydcdut.note.NoteApplication;
@@ -25,6 +27,7 @@ import com.yydcdut.note.utils.ActivityCollector;
 import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.PermissionUtils;
 import com.yydcdut.note.utils.ThemeHelper;
+import com.yydcdut.note.widget.StatusBarView;
 
 import java.lang.reflect.Field;
 
@@ -64,25 +67,59 @@ public abstract class BaseActivity extends AppCompatActivity implements IThemeVi
     public void setActivityTheme(int index) {
         super.setTheme(ThemeHelper.THEME.get(index).getStyle());
         if (AppCompat.AFTER_LOLLIPOP) {
-            getWindow().setNavigationBarColor(getResources().getColor(ThemeHelper.THEME.get(index).getColorPrimary()));
+            //NavigationBar
+            getWindow().setNavigationBarColor(AppCompat.getColor(ThemeHelper.THEME.get(index).getColorPrimary(), this));
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
-    public void setStatusBarTranslation(boolean translation, int layout) {
-        View contentView = LayoutInflater.from(this).inflate(layout, null);
-        View totalContentView = null;
+    public void setStatusBarTranslation(boolean translation) {
+        int color = ThemeHelper.getDarkPrimaryColor(this);
         if (translation) {
-            totalContentView = LayoutInflater.from(this).inflate(R.layout.layout_status_bar_translation, null);
-        } else {
-            totalContentView = LayoutInflater.from(this).inflate(R.layout.layout_status_bar_immersive, null);
+            color = ThemeHelper.getPrimaryColor(this);
         }
-        FrameLayout frameLayout = (FrameLayout) totalContentView.findViewById(R.id.layout_content);
-        frameLayout.addView(contentView);
-        setContentView(totalContentView);
-        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) frameLayout.getLayoutParams();
-        layoutParams.topMargin = getStatusBarSize();
-        frameLayout.requestLayout();
+        if (AppCompat.AFTER_LOLLIPOP) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            getWindow().setStatusBarColor(color);
+        }
+        if (AppCompat.AFTER_KITKAT) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            View statusView = createStatusBarView(color, 255);
+            ViewGroup decorView = (ViewGroup) getWindow().getDecorView();
+            if (AppCompat.AFTER_LOLLIPOP) {
+                View view = decorView.getChildAt(0);
+                if (view instanceof FrameLayout) {
+                    FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) view.getLayoutParams();
+                    layoutParams.topMargin = getStatusBarSize();
+                    view.setLayoutParams(layoutParams);
+                }
+            }
+            decorView.addView(statusView);
+            setRootView();
+        }
+    }
+
+    protected StatusBarView createStatusBarView(int color, int alpha) {
+        StatusBarView statusBarView = new StatusBarView(this);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                getStatusBarSize());
+        statusBarView.setLayoutParams(params);
+        statusBarView.setBackgroundColor(Color.argb(alpha, Color.red(color), Color.green(color), Color.blue(color)));
+        return statusBarView;
+    }
+
+    /**
+     * 设置根布局参数
+     */
+    private void setRootView() {
+        ViewGroup rootView = (ViewGroup) ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
+        if (rootView == null) {
+            return;
+        }
+        rootView.setFitsSystemWindows(true);
+        rootView.setClipToPadding(true);
     }
 
     /**
@@ -144,10 +181,9 @@ public abstract class BaseActivity extends AppCompatActivity implements IThemeVi
         super.onCreate(savedInstanceState);
         int layout = setContentView();
         if (isSet) {
-            mThemePresenter.setStatusBar(layout);
-        } else {
-            setContentView(layout);
+            mThemePresenter.setStatusBar();
         }
+        setContentView(layout);
         initInjector();
         initUiAndListener();
         startActivityAnimation();

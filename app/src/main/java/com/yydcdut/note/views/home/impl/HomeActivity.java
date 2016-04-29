@@ -1,12 +1,14 @@
 package com.yydcdut.note.views.home.impl;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
-import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -14,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -21,6 +24,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -34,11 +38,13 @@ import com.yydcdut.note.presenters.home.impl.HomePresenterImpl;
 import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
+import com.yydcdut.note.utils.ThemeHelper;
 import com.yydcdut.note.views.BaseActivity;
 import com.yydcdut.note.views.home.IHomeView;
 import com.yydcdut.note.views.login.impl.LoginActivity;
 import com.yydcdut.note.views.login.impl.UserCenterActivity;
 import com.yydcdut.note.widget.RoundedImageView;
+import com.yydcdut.note.widget.StatusBarView;
 
 import java.util.List;
 
@@ -83,9 +89,6 @@ public class HomeActivity extends BaseActivity implements IHomeView, View.OnClic
 
     @Override
     public int setContentView() {
-        if (AppCompat.AFTER_LOLLIPOP) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }
         return R.layout.navigation_main;
     }
 
@@ -111,21 +114,14 @@ public class HomeActivity extends BaseActivity implements IHomeView, View.OnClic
     public void initUiAndListener() {
         ButterKnife.bind(this);
         mHomePresenter.attachView(this);
+        int color = ThemeHelper.getPrimaryColor(this);
+        setDrawerStatusBar(color);
         mMenuListView.setOnItemClickListener(new DrawerItemClickListener());
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        if (AppCompat.AFTER_LOLLIPOP) {
-            try {
-                TypedArray typedArray = this.getTheme().obtainStyledAttributes(new int[]{android.R.attr.colorPrimaryDark});
-                mDrawerLayout.setStatusBarBackground(typedArray.getResourceId(0, 0));
-            } catch (Exception e) {
-                e.getMessage();
-            }
-
-        }
         AppCompat.setElevation(mToolbar, getResources().getDimension(R.dimen.ui_elevation));
 
         mDrawerToggle = new ActionBarDrawerToggleCompat(this, mDrawerLayout, mToolbar);
@@ -139,6 +135,45 @@ public class HomeActivity extends BaseActivity implements IHomeView, View.OnClic
         mUserBackground.setImageDrawable(getResources().getDrawable(R.drawable.bg_user_background));
 
         mHomePresenter.setCheckCategoryPosition();
+    }
+
+    /**
+     * 设置statusBar
+     *
+     * @param color
+     */
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void setDrawerStatusBar(int color) {
+        if (!AppCompat.AFTER_KITKAT) {
+            return;
+        }
+        if (AppCompat.AFTER_LOLLIPOP) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        } else {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+        StatusBarView statusBarView = createStatusBarView(color, 255);
+        ViewGroup contentLayout = (ViewGroup) mDrawerLayout.getChildAt(0);
+        contentLayout.addView(statusBarView, 0);
+        if (!(contentLayout instanceof LinearLayout) && contentLayout.getChildAt(1) != null) {
+            contentLayout.getChildAt(1).setPadding(0, getStatusBarSize(), 0, 0);
+        }
+        ViewGroup drawer = (ViewGroup) mDrawerLayout.getChildAt(1);
+        mDrawerLayout.setFitsSystemWindows(false);
+        contentLayout.setFitsSystemWindows(false);
+        contentLayout.setClipToPadding(true);
+        drawer.setFitsSystemWindows(false);
+        addTranslucentView(60);
+    }
+
+    private void addTranslucentView(int statusBarAlpha) {
+        ViewGroup contentView = (ViewGroup) findViewById(android.R.id.content);
+        if (contentView.getChildCount() > 1) {
+            contentView.removeViewAt(1);
+        }
+        contentView.addView(createStatusBarView(Color.TRANSPARENT, statusBarAlpha));
     }
 
     /**
