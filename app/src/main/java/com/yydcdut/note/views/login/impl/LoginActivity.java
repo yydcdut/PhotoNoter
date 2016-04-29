@@ -1,5 +1,6 @@
 package com.yydcdut.note.views.login.impl;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
@@ -7,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.evernote.client.android.EvernoteSession;
+import com.yydcdut.note.BuildConfig;
 import com.yydcdut.note.R;
 import com.yydcdut.note.presenters.login.impl.LoginPresenterImpl;
 import com.yydcdut.note.utils.AppCompat;
@@ -56,12 +58,28 @@ public class LoginActivity extends BaseActivity implements ILoginView {
         mIPresenter = mLoginPresenter;
     }
 
+    private int mClickTimes = 0;
+
     private void initToolBarUI() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(getResources().getString(R.string.app_login));
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         AppCompat.setElevation(toolbar, getResources().getDimension(R.dimen.ui_elevation));
+        if (BuildConfig.DEBUG) {
+            toolbar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mClickTimes++;
+                    if (mClickTimes % 5 == 0) {
+                        Intent intent = new Intent();
+                        ComponentName componentName = new ComponentName("com.yydcdut.note", "com.yydcdut.note.test.TestUIActivity");
+                        intent.setComponent(componentName);
+                        startActivity(intent);
+                    }
+                }
+            });
+        }
     }
 
     @Override
