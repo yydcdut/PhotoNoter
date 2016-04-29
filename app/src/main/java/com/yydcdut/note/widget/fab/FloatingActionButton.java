@@ -30,6 +30,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.yydcdut.note.R;
+import com.yydcdut.note.utils.AppCompat;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -371,7 +372,7 @@ public class FloatingActionButton extends ImageButton {
         //LayerDrawable，叠层显示
         LayerDrawable layerDrawable = new LayerDrawable(
                 new Drawable[]{
-                        getResources().getDrawable(mSize == SIZE_NORMAL ? R.drawable.fab_bg_normal : R.drawable.fab_bg_mini),//最下面那层
+                        AppCompat.getDrawable(getContext(), mSize == SIZE_NORMAL ? R.drawable.fab_bg_normal : R.drawable.fab_bg_mini),//最下面那层
                         createFillDrawable(strokeWidth),
                         createOuterStrokeDrawable(strokeWidth),
                         getIconDrawable()
@@ -414,7 +415,7 @@ public class FloatingActionButton extends ImageButton {
         if (mIconDrawable != null) {
             return mIconDrawable;
         } else if (mIcon != 0) {
-            return getResources().getDrawable(mIcon);
+            return AppCompat.getDrawable(getContext(), mIcon);
         } else {
             return new ColorDrawable(Color.TRANSPARENT);
         }

@@ -1,11 +1,12 @@
 package com.yydcdut.note.utils;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -23,11 +24,20 @@ public class AppCompat {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
     }
 
-    public static int getColor(int id, Activity activity) {
+    public static int getColor(@ColorRes int id, Context context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return activity.getResources().getColor(id);
+            return context.getResources().getColor(id);
         } else {
-            return activity.getResources().getColor(id, activity.getTheme());
+            return context.getResources().getColor(id, context.getTheme());
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public static Drawable getDrawable(Context context, @DrawableRes int resId) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            return context.getResources().getDrawable(resId);
+        } else {
+            return context.getDrawable(resId);
         }
     }
 

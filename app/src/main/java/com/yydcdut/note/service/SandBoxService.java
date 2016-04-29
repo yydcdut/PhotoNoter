@@ -58,7 +58,7 @@ public class SandBoxService extends Service implements ISandBoxServiceView {
                     .setAutoCancel(false)
                     .setOngoing(true)
                     .setDefaults(Notification.DEFAULT_LIGHTS)
-                    .setSmallIcon(R.drawable.ic_launcher);
+                    .setSmallIcon(R.mipmap.ic_launcher);
             Notification notification = builder.build();
             notification.flags = Notification.FLAG_NO_CLEAR;
             mNotificationManager.notify(0, notification);

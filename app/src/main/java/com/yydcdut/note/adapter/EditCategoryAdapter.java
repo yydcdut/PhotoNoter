@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.yydcdut.note.R;
 import com.yydcdut.note.bean.Category;
+import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.RandomColor;
 import com.yydcdut.note.widget.TextDrawable;
 
@@ -47,11 +48,11 @@ public class EditCategoryAdapter extends BaseListAdapter<Category> {
             firstWord = "N";
         }
         if (mCurrentPosition == position) {
-            holder.imgLogo.setImageDrawable(TextDrawable.builder().buildRound(firstWord, getContext().getResources().getColor(R.color.red_colorPrimary)));
-            holder.txtName.setTextColor(getContext().getResources().getColor(R.color.red_colorPrimary));
+            holder.imgLogo.setImageDrawable(TextDrawable.builder().buildRound(firstWord, AppCompat.getColor(R.color.red_colorPrimary, getContext())));
+            holder.txtName.setTextColor(AppCompat.getColor(R.color.red_colorPrimary, getContext()));
         } else {
             holder.imgLogo.setImageDrawable(TextDrawable.builder().buildRound(firstWord, mColor.getColor(firstWord)));
-            holder.txtName.setTextColor(getContext().getResources().getColor(R.color.txt_gray));
+            holder.txtName.setTextColor(AppCompat.getColor(R.color.txt_gray, getContext()));
         }
         holder.txtName.setText(getGroup().get(position).getLabel());
         return convertView;

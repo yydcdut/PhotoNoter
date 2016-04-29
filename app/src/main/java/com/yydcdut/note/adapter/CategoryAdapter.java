@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.yydcdut.note.R;
 import com.yydcdut.note.bean.Category;
+import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.RandomColor;
 import com.yydcdut.note.widget.TextDrawable;
 
@@ -52,14 +53,14 @@ public class CategoryAdapter extends BaseListAdapter<Category> {
         holder.txtPicturesNum.setText(getGroup().get(position).getPhotosNumber() + "");
         if (getGroup().get(position).isCheck()) {
             convertView.setBackgroundResource(R.drawable.selector_check_item_navigation);
-            holder.imgLogo.setImageDrawable(TextDrawable.builder().buildRound(firstWord, getContext().getResources().getColor(R.color.red_colorPrimary)));
-            holder.txtName.setTextColor(getContext().getResources().getColor(R.color.red_colorPrimary));
-            holder.txtPicturesNum.setTextColor(getContext().getResources().getColor(R.color.red_colorPrimary));
+            holder.imgLogo.setImageDrawable(TextDrawable.builder().buildRound(firstWord, AppCompat.getColor(R.color.red_colorPrimary, getContext())));
+            holder.txtName.setTextColor(AppCompat.getColor(R.color.red_colorPrimary, getContext()));
+            holder.txtPicturesNum.setTextColor(AppCompat.getColor(R.color.red_colorPrimary, getContext()));
         } else {
             convertView.setBackgroundResource(R.drawable.selector_no_check_item_navigation);
             holder.imgLogo.setImageDrawable(TextDrawable.builder().buildRound(firstWord, mColor.getColor(firstWord)));
-            holder.txtName.setTextColor(getContext().getResources().getColor(R.color.txt_black));
-            holder.txtPicturesNum.setTextColor(getContext().getResources().getColor(R.color.txt_gray));
+            holder.txtName.setTextColor(AppCompat.getColor(R.color.txt_black, getContext()));
+            holder.txtPicturesNum.setTextColor(AppCompat.getColor(R.color.txt_gray, getContext()));
         }
         return convertView;
     }

@@ -130,9 +130,9 @@ public class IntroduceActivity extends BaseActivity implements IIntroduceView {
 
     private void resetDots(ImageView imageView) {
         for (ImageView imageView1 : mImageViewArray) {
-            imageView1.setImageDrawable(getResources().getDrawable(R.drawable.img_introduce_dot));
+            imageView1.setImageDrawable(AppCompat.getDrawable(this, R.drawable.img_introduce_dot));
         }
-        imageView.setImageDrawable(getResources().getDrawable(R.drawable.img_introduce_dot_foucs));
+        imageView.setImageDrawable(AppCompat.getDrawable(this, R.drawable.img_introduce_dot_foucs));
     }
 
     @OnClick(R.id.btn_introduce_start)

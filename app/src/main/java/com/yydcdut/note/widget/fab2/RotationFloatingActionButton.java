@@ -11,6 +11,7 @@ import android.util.AttributeSet;
 import android.view.animation.OvershootInterpolator;
 
 import com.yydcdut.note.R;
+import com.yydcdut.note.utils.AppCompat;
 
 
 /**
@@ -43,7 +44,7 @@ public class RotationFloatingActionButton extends FloatingActionButton {
 
     private void initDrawable(Drawable drawable) {
         if (drawable == null) {
-            drawable = getResources().getDrawable(R.drawable.ic_launcher);
+            drawable = AppCompat.getDrawable(getContext(), R.mipmap.ic_launcher);
         }
         mRotatingDrawable = new RotatingDrawable(drawable);
         final OvershootInterpolator interpolator = new OvershootInterpolator();
