@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.GalleryNavigationAdapter;
@@ -66,6 +67,9 @@ public class GalleryActivity extends BaseActivity implements IGalleryView,
 
     @Override
     public int setContentView() {
+        if (AppCompat.AFTER_LOLLIPOP) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
         return R.layout.activity_gallery;
     }
 

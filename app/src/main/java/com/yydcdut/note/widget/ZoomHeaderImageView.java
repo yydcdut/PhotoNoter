@@ -77,7 +77,7 @@ public class ZoomHeaderImageView extends FrameLayout implements Handler.Callback
                     ObjectAnimator.ofFloat(mImageView0, "alpha", 0.0f, 1.0f)
             );
         }
-        animatorSet.setDuration(600)
+        animatorSet.setDuration(400)
                 .addListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationStart(Animator animation) {
