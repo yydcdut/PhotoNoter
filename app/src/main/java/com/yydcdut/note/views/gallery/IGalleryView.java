@@ -15,6 +15,8 @@ public interface IGalleryView extends IView {
 
     void notifyDataChanged(int... positions);
 
-    void finish(ArrayList<String> data);
+    void finishWithData(ArrayList<String> data);
+
+    void finishWithoutData();
 
 }

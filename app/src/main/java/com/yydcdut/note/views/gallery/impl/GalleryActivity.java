@@ -250,10 +250,15 @@ public class GalleryActivity extends BaseActivity implements IGalleryView,
     }
 
     @Override
-    public void finish(ArrayList<String> data) {
+    public void finishWithData(ArrayList<String> data) {
         Intent intent = new Intent();
         intent.putStringArrayListExtra(INTENT_DATA, data);
         setResult(RESULT_DATA_IMAGE, intent);
+        finish();
+    }
+
+    @Override
+    public void finishWithoutData() {
         finish();
     }
 

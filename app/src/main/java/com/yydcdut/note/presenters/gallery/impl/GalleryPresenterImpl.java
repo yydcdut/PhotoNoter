@@ -91,11 +91,15 @@ public class GalleryPresenterImpl implements IGalleryPresenter {
 
     @Override
     public void finishActivityAndReturnData() {
-        ArrayList<String> list = new ArrayList<>(mSelectPhotoModel.getCount());
-        for (int i = 0; i < mSelectPhotoModel.getCount(); i++) {
-            list.add(mSelectPhotoModel.get(i));
+        if (mSelectPhotoModel.getCount() != 0) {
+            ArrayList<String> list = new ArrayList<>(mSelectPhotoModel.getCount());
+            for (int i = 0; i < mSelectPhotoModel.getCount(); i++) {
+                list.add(mSelectPhotoModel.get(i));
+            }
+            mIGalleryView.finishWithData(list);
+        } else {
+            mIGalleryView.finishWithoutData();
         }
-        mIGalleryView.finish(list);
     }
 
 }
