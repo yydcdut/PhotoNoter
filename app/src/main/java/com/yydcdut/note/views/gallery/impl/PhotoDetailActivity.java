@@ -82,6 +82,7 @@ public class PhotoDetailActivity extends BaseActivity implements IPhotoDetailVie
         mPhotoDetailPresenter.bindData(getIntent().getBooleanExtra(INTENT_PREVIEW_SELECTED, false),
                 getIntent().getIntExtra(INTENT_PAGE, 0), getIntent().getStringExtra(INTENT_FOLDER));
         mPhotoDetailPresenter.attachView(this);
+        mIPresenter = mPhotoDetailPresenter;
     }
 
     @Override
@@ -102,6 +103,7 @@ public class PhotoDetailActivity extends BaseActivity implements IPhotoDetailVie
         } else {
             mStatusCoverView.setVisibility(View.GONE);
         }
+        mToolbar.setTitle("0/0");
     }
 
     @Override
@@ -159,6 +161,8 @@ public class PhotoDetailActivity extends BaseActivity implements IPhotoDetailVie
         mPhotoDetailPresenter.initMenu();
         if (mViewPager.getAdapter() == null) {
             setToolbarTitle("0/0");
+        } else {
+            setToolbarTitle(null);
         }
         return true;
     }
@@ -167,10 +171,8 @@ public class PhotoDetailActivity extends BaseActivity implements IPhotoDetailVie
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                setResult(BaseActivity.CODE_RESULT_CHANGED);
-                finish();
-                break;
             case R.id.action_finish:
+                setResult(BaseActivity.CODE_RESULT_CHANGED);
                 finish();
                 break;
         }

@@ -27,6 +27,7 @@ import com.yydcdut.note.utils.ActivityCollector;
 import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.PermissionUtils;
 import com.yydcdut.note.utils.ThemeHelper;
+import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.widget.StatusBarView;
 
 import java.lang.reflect.Field;
@@ -267,6 +268,8 @@ public abstract class BaseActivity extends AppCompatActivity implements IThemeVi
         ActivityCollector.removeActivity(this);
         if (mIPresenter != null) {
             mIPresenter.detachView();
+        } else {
+            YLog.wtf("yuyidong", "this activity " + this.getClass().getSimpleName() + "  没有设置 IPresenter!!!");
         }
     }
 

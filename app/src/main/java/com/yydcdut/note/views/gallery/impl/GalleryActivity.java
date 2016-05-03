@@ -85,6 +85,7 @@ public class GalleryActivity extends BaseActivity implements IGalleryView,
         ButterKnife.bind(this);
         mActivityComponent.inject(this);
         mGalleryPresenter.attachView(this);
+        mIPresenter = mGalleryPresenter;
     }
 
     @Override
