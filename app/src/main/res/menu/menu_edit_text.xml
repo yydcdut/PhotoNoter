@@ -2,8 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/menu_arrow"
-        android:title="@string/show_or_hide"
-        app:actionProviderClass="com.yydcdut.note.widget.action.ArrowActionProvider"
+        android:id="@+id/menu_edit_title"
+        android:title="@string/edit_title"
+        android:icon="@drawable/ic_mode_edit_white_24dp"
         app:showAsAction="always"/>
 </menu>

@@ -48,10 +48,6 @@ public class RevealColorView extends ViewGroup {
 
     public RevealColorView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        //eclipse
-        if (isInEditMode()) {
-            return;
-        }
         //new出View来
         inkView = new View(context);
         //加到这个layout里面去
@@ -92,6 +88,9 @@ public class RevealColorView extends ViewGroup {
      * @param listener    监听器
      */
     public void reveal(final int x, final int y, final int color, final int startRadius, long duration, final Animator.AnimatorListener listener) {
+        if (isInEditMode()) {
+            return;
+        }
         //通过颜色来判断现在是否是打开的还是关闭
         if (color == inkColor) {
             return;

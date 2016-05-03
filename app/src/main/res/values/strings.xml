@@ -101,7 +101,7 @@
     <string name="rotation_0">Rotate 0°</string>
     <string name="refresh">Refresh</string>
     <string name="copy_url">Copy Url</string>
-    <string name="show_or_hide">Show Or Hide</string>
+    <string name="edit_title">Edit Title</string>
 
     <!-- drawer -->
     <string name="drawer_open">Open drawer navigation</string>

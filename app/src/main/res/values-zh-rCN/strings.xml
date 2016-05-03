@@ -40,7 +40,7 @@
     <string name="backup">上传云</string>
     <string name="effect">特效</string>
     <string name="edit">编辑</string>
-    <string name="show_or_hide">显示或隐藏</string>
+    <string name="edit_title">修改标题</string>
 
 
     <!-- dialog zoom detail-->

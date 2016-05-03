@@ -12,15 +12,17 @@ public interface IEditTextView extends IView {
 
     String getNoteContent();
 
-    void setNoteTitle(String title);
+    void setEditNoteTitle(String title);
 
     void setNoteContent(String content);
+
+    void updateNoteTitle(String title);
 
     void showProgressBar();
 
     void hideProgressBar();
 
-    void showSnakeBar(String messge);
+    void showSnakeBar(String message);
 
     void showSnakeBarWithAction(String message, String action, OnSnackBarActionListener listener);
 

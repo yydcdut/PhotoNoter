@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.support.v4.view.ActionProvider;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.view.Menu;
@@ -23,6 +21,7 @@ import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.yydcdut.note.R;
 import com.yydcdut.note.presenters.note.impl.EditTextPresenterImpl;
+import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.Utils;
 import com.yydcdut.note.views.BaseActivity;
@@ -31,7 +30,6 @@ import com.yydcdut.note.widget.CircleProgressBarLayout;
 import com.yydcdut.note.widget.KeyBoardResizeFrameLayout;
 import com.yydcdut.note.widget.RevealView;
 import com.yydcdut.note.widget.VoiceRippleView;
-import com.yydcdut.note.widget.action.ArrowActionProvider;
 import com.yydcdut.note.widget.fab2.FloatingMenuLayout;
 import com.yydcdut.note.widget.fab2.snack.OnSnackBarActionListener;
 import com.yydcdut.note.widget.fab2.snack.SnackHelper;
@@ -45,16 +43,15 @@ import butterknife.OnClick;
 /**
  * Created by yyd on 15-4-8.
  */
-public class EditTextActivity extends BaseActivity implements IEditTextView, View.OnClickListener,
-        KeyBoardResizeFrameLayout.OnKeyBoardShowListener, FloatingMenuLayout.OnFloatingActionsMenuUpdateListener
-        , ArrowActionProvider.OnActionProviderClickListener {
+public class EditTextActivity extends BaseActivity implements IEditTextView,
+        KeyBoardResizeFrameLayout.OnKeyBoardShowListener, FloatingMenuLayout.OnFloatingActionsMenuUpdateListener {
     private static final String TAG = EditTextActivity.class.getSimpleName();
-    /* title是否显示出来? */
-    private boolean mIsEditTextShow = true;
 
     /* Views */
-    @Bind(R.id.toolbar_edit)
+    @Bind(R.id.toolbar)
     Toolbar mToolbar;
+    @Bind(R.id.appbar)
+    View mAppBarLayout;
     @Bind(R.id.layout_edit_title)
     View mLayoutTitle;
     @Bind(R.id.et_edit_title)
@@ -128,14 +125,12 @@ public class EditTextActivity extends BaseActivity implements IEditTextView, Vie
     private void initToolBar() {
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_check_white_24dp);
+        AppCompat.setElevation(mToolbar, getResources().getDimension(R.dimen.ui_elevation));
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_edit_text, menu);
-        MenuItem item = menu.findItem(R.id.menu_arrow);
-        ArrowActionProvider arrowActionProvider = (ArrowActionProvider) MenuItemCompat.getActionProvider(item);
-        arrowActionProvider.setOnActionProviderClickListener(this);
         return true;
     }
 
@@ -150,8 +145,31 @@ public class EditTextActivity extends BaseActivity implements IEditTextView, Vie
                 mEditTextPresenter.saveText();
                 mEditTextPresenter.finishActivity(true);
                 break;
+            case R.id.menu_edit_title:
+                openEditTextAnimation();
+                break;
         }
         return true;
+    }
+
+    private void openEditTextAnimation() {
+        AnimatorSet animation = new AnimatorSet();
+        animation.setDuration(Const.DURATION);
+        animation.playTogether(
+                ObjectAnimator.ofFloat(mTitleEdit, "alpha", 0f, 1f),
+                ObjectAnimator.ofFloat(mLayoutTitle, "Y", -getActionBarSize() * 2, 0f)
+        );
+        animation.start();
+    }
+
+    private void closeEditTextAnimation() {
+        AnimatorSet animation = new AnimatorSet();
+        animation.setDuration(Const.DURATION);
+        animation.playTogether(
+                ObjectAnimator.ofFloat(mTitleEdit, "alpha", 1f, 0f),
+                ObjectAnimator.ofFloat(mLayoutTitle, "Y", 0f, -getActionBarSize() * 2)
+        );
+        animation.start();
     }
 
     @Override
@@ -164,7 +182,7 @@ public class EditTextActivity extends BaseActivity implements IEditTextView, Vie
         AnimatorSet animation = new AnimatorSet();
         animation.setDuration(Const.DURATION_ACTIVITY);
         animation.playTogether(
-                ObjectAnimator.ofFloat(mToolbar, "translationY", -actionBarHeight, 0),
+                ObjectAnimator.ofFloat(mAppBarLayout, "translationY", -actionBarHeight, 0),
                 ObjectAnimator.ofFloat(mLayoutTitle, "translationY", -actionBarHeight * 2, 0),
                 ObjectAnimator.ofFloat(mContentEdit, "translationY", contentEditHeight, 0),
                 ObjectAnimator.ofFloat(mFabMenuLayout, "translationY", contentEditHeight, 0)
@@ -172,39 +190,10 @@ public class EditTextActivity extends BaseActivity implements IEditTextView, Vie
         animation.start();
     }
 
-    private void openEditTextAnimation() {
-        AnimatorSet animation = new AnimatorSet();
-        animation.setDuration(Const.DURATION);
-        animation.playTogether(
-                ObjectAnimator.ofFloat(mTitleEdit, "alpha", 0f, 1f),
-                ObjectAnimator.ofFloat(mLayoutTitle, "Y", 0f, getActionBarSize())
-        );
-        animation.start();
-    }
-
-    private void closeEditTextAnimation() {
-        AnimatorSet animation = new AnimatorSet();
-        animation.setDuration(Const.DURATION);
-        animation.playTogether(
-                ObjectAnimator.ofFloat(mTitleEdit, "alpha", 1f, 0f),
-                ObjectAnimator.ofFloat(mLayoutTitle, "Y", getActionBarSize(), 0f)
-        );
-        animation.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mLayoutTitle.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-                mLayoutTitle.setVisibility(View.GONE);
-            }
-        });
-        animation.start();
-    }
-
-    @Override
-    public void onClick(View v) {
+    @OnClick(R.id.img_edit_title_ok)
+    public void clickFinishEditingTitle(View view) {
+        mEditTextPresenter.updateTitle();
+        closeEditTextAnimation();
     }
 
     @OnClick(R.id.fab_voice)
@@ -222,6 +211,11 @@ public class EditTextActivity extends BaseActivity implements IEditTextView, Vie
     @OnClick(R.id.fab_voice_stop)
     public void clickVoiceStart(View v) {
         mEditTextPresenter.stopVoice();
+    }
+
+    @OnClick(R.id.layout_voice)
+    public void clickVoiceLayout(View view) {
+        //do nothing
     }
 
     @Override
@@ -252,7 +246,7 @@ public class EditTextActivity extends BaseActivity implements IEditTextView, Vie
         AnimatorSet animation = new AnimatorSet();
         animation.setDuration(Const.DURATION_ACTIVITY);
         animation.playTogether(
-                ObjectAnimator.ofFloat(mToolbar, "translationY", 0, -actionBarHeight),
+                ObjectAnimator.ofFloat(mAppBarLayout, "translationY", 0, -actionBarHeight),
                 ObjectAnimator.ofFloat(mLayoutTitle, "translationY", 0, -actionBarHeight * 2),
                 ObjectAnimator.ofFloat(mContentEdit, "translationY", 0, contentEditHeight),
                 ObjectAnimator.ofFloat(mFabMenuLayout, "translationY", 0, contentEditHeight)
@@ -310,7 +304,6 @@ public class EditTextActivity extends BaseActivity implements IEditTextView, Vie
 
     private void revealVoiceAndStart() {
         mVoiceLayout.setVisibility(View.VISIBLE);
-        mVoiceLayout.setOnClickListener(this);
         Point p = getLocationInView(mVoiceRevealView, mFabPositionView);
         mVoiceRevealView.reveal(p.x, p.y, getResources().getColor(R.color.bg_background),
                 1, Const.DURATION, new RevealView.RevealAnimationListener() {
@@ -391,13 +384,18 @@ public class EditTextActivity extends BaseActivity implements IEditTextView, Vie
     }
 
     @Override
-    public void setNoteTitle(String title) {
+    public void setEditNoteTitle(String title) {
         mTitleEdit.setText(title);
     }
 
     @Override
     public void setNoteContent(String content) {
         mContentEdit.setText(content);
+    }
+
+    @Override
+    public void updateNoteTitle(String title) {
+        mToolbar.setTitle(title);
     }
 
     @Override
@@ -411,8 +409,8 @@ public class EditTextActivity extends BaseActivity implements IEditTextView, Vie
     }
 
     @Override
-    public void showSnakeBar(String messge) {
-        SnackHelper.make(mFabMenuLayout, messge, SnackHelper.LENGTH_SHORT).show(mFabMenuLayout);
+    public void showSnakeBar(String message) {
+        SnackHelper.make(mFabMenuLayout, message, SnackHelper.LENGTH_SHORT).show(mFabMenuLayout);
     }
 
     @Override
@@ -433,17 +431,5 @@ public class EditTextActivity extends BaseActivity implements IEditTextView, Vie
         super.onDestroy();
         mEditTextPresenter.detachView();
         mVoiceRippleView.stopAnimation();
-    }
-
-    @Override
-    public void onActionClick(ActionProvider actionProvider) {
-        if (mIsEditTextShow) {
-            mIsEditTextShow = false;
-            closeEditTextAnimation();
-        } else {
-            mIsEditTextShow = true;
-            openEditTextAnimation();
-            mLayoutTitle.setVisibility(View.VISIBLE);
-        }
     }
 }

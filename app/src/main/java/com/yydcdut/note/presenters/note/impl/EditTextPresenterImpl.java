@@ -112,7 +112,8 @@ public class EditTextPresenterImpl implements IEditTextPresenter, PermissionUtil
                 .map(photoNoteList -> photoNoteList.get(mPosition))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(photoNote -> {
-                    mEditTextView.setNoteTitle(photoNote.getTitle());
+                    mEditTextView.setEditNoteTitle(photoNote.getTitle());
+                    mEditTextView.updateNoteTitle(photoNote.getTitle());
                     mEditTextView.setNoteContent(photoNote.getContent());
                 });
     }
@@ -238,6 +239,11 @@ public class EditTextPresenterImpl implements IEditTextPresenter, PermissionUtil
             mIsFinishing = true;
             finishActivity(false);
         }
+    }
+
+    @Override
+    public void updateTitle() {
+        mEditTextView.updateNoteTitle(mEditTextView.getNoteTitle());
     }
 
     /**

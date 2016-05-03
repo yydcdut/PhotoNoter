@@ -8,70 +8,60 @@
     android:layout_height="match_parent"
     android:background="?attr/colorPrimary">
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
 
-        <RelativeLayout
+        <include layout="@layout/layout_toolbar_light"/>
+
+        <EditText
+            android:id="@+id/et_edit_content"
+            style="@null"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+            android:layout_height="fill_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/appbar"
+            android:background="@android:color/white"
+            android:gravity="left|top"
+            android:hint="@string/text_content"
+            android:padding="@dimen/activity_margin_small"
+            android:textColor="@color/black"
+            android:textSize="@dimen/txt_mid"/>
+    </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/layout_edit_title"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/toolbar_edit"
-                android:layout_marginBottom="@dimen/activity_vertical_margin_small"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:background="?attr/colorPrimary">
+    <RelativeLayout
+        android:id="@+id/layout_edit_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary">
 
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <EditText
-                        android:id="@+id/et_edit_title"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/text_title"
-                        android:textColor="@color/white"/>
-                </android.support.design.widget.TextInputLayout>
-            </RelativeLayout>
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar_edit"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                android:minHeight="?attr/actionBarSize">
-
-                <LinearLayout
-                    android:id="@+id/layout_toolbar"
-                    android:layout_width="fill_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    android:gravity="right|center_vertical"
-                    android:minHeight="?attr/actionBarSize"
-                    android:orientation="horizontal">
-                </LinearLayout>
-            </android.support.v7.widget.Toolbar>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_toLeftOf="@+id/img_edit_title_ok"
+            android:paddingTop="@dimen/activity_vertical_margin_small">
 
             <EditText
-                android:id="@+id/et_edit_content"
-                style="@null"
+                android:id="@+id/et_edit_title"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/layout_edit_title"
-                android:background="@android:color/white"
-                android:gravity="left|top"
-                android:hint="@string/text_content"
-                android:padding="@dimen/activity_margin_small"
-                android:textColor="@color/black"
-                android:textSize="@dimen/txt_mid"/>
-        </RelativeLayout>
-    </FrameLayout>
+                android:layout_height="wrap_content"
+                android:hint="@string/text_title"
+                android:singleLine="true"
+                android:textColor="@color/white"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <ImageView
+            android:id="@+id/img_edit_title_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:src="@drawable/ic_check_white_24dp"/>
+    </RelativeLayout>
 
     <com.yydcdut.note.widget.RevealView
         android:id="@+id/reveal_fab"
