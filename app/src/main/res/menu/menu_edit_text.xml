@@ -2,8 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/menu_edit_title"
-        android:title="@string/edit_title"
-        android:icon="@drawable/ic_mode_edit_white_24dp"
+        android:id="@+id/menu_markdown"
+        android:icon="@drawable/ic_markdown"
+        android:title="Markdown"
         app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/menu_edit_title"
+        android:icon="@drawable/ic_mode_edit_white_24dp"
+        android:title="@string/edit_title"
+        app:showAsAction="always"/>
+
 </menu>
