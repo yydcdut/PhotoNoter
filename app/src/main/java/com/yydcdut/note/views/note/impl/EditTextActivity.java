@@ -80,8 +80,6 @@ public class EditTextActivity extends BaseActivity implements IEditTextView,
     @Inject
     EditTextPresenterImpl mEditTextPresenter;
 
-    private static final String TAG_ARROW = "tag_arrow";
-
     @Override
     public boolean setStatusBar() {
         return true;
