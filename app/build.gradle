@@ -102,7 +102,13 @@ android {
     }
 
     productFlavors.all { flavor ->
-        flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
+        if (name.toLowerCase().equals("dev")) {//debug
+            flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name,
+                                           BAIDU_MAP_KEY      : 'pjFyNkykpYu1bIqYkQFGRnbx']
+        } else {//release
+            flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name,
+                                           BAIDU_MAP_KEY      : 'Mx338srYEciirSHk6xKMrAlm']
+        }
     }
 
     sourceSets { main { jni.srcDirs = ['src/main/jni'] } }
