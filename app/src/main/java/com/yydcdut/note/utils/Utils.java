@@ -4,6 +4,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.support.v7.graphics.Palette;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.LeadingMarginSpan;
 
 public class Utils {
 
@@ -55,5 +58,10 @@ public class Utils {
         } else {
             return vibrantSwatch.getRgb();
         }
+    }
+
+
+    public static void marginSSBLeft(SpannableStringBuilder ssb, int every) {
+        ssb.setSpan(new LeadingMarginSpan.Standard(every), 0, ssb.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
     }
 }

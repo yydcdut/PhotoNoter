@@ -9,8 +9,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.yydcdut.note.R;
-import com.yydcdut.note.markdown.grammar.BlockQuotesGrammar;
 import com.yydcdut.note.markdown.grammar.IGrammar;
+import com.yydcdut.note.markdown.grammar.OrderListGrammar;
+import com.yydcdut.note.utils.YLog;
 
 /**
  * Created by yuyidong on 16/4/29.
@@ -25,7 +26,7 @@ public class TestUIActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_test_ui);
         findViewById(R.id.btn_test).setOnClickListener(this);
         mEditText = (EditText) findViewById(R.id.edit_test);
-        mEditText.setText("> 11111]\n> 2222222\n> 33333333");
+        mEditText.setText("1. ssss \n2. addads");
         mTextView = (TextView) findViewById(R.id.txt_test);
     }
 
@@ -34,8 +35,10 @@ public class TestUIActivity extends AppCompatActivity implements View.OnClickLis
         String text = mEditText.getText().toString();
         String[] lines = text.split("\n");
         SpannableStringBuilder ssb = new SpannableStringBuilder();
-        IGrammar iGrammar = new BlockQuotesGrammar();
+        IGrammar iGrammar = new OrderListGrammar();
         for (int i = 0; i < lines.length; i++) {
+            boolean b = iGrammar.isMatch(lines[i]);
+            YLog.i("yuyidong", "b---->" + b);
             ssb.append("\n");
             ssb.append(iGrammar.format(lines[i]));
         }

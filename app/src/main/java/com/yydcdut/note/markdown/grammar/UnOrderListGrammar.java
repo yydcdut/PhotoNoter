@@ -1,18 +1,21 @@
 package com.yydcdut.note.markdown.grammar;
 
+import android.graphics.Color;
 import android.support.annotation.Nullable;
-import android.text.Layout;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.style.AlignmentSpan;
+import android.text.style.BulletSpan;
 
 /**
  * Created by yuyidong on 16/5/4.
  */
-public class CenterAlignGrammar implements IGrammar {
-    public static final String KEY0 = "[";
-    public static final String KEY1 = "]";
+public class UnOrderListGrammar implements IGrammar {
+    public static final String KEY0 = "* ";
+    public static final String KEY1 = "+ ";
+    public static final String KEY2 = "- ";
+
+    private static final int START_POSITION = 2;
 
     @Nullable
     @Override
@@ -20,15 +23,11 @@ public class CenterAlignGrammar implements IGrammar {
         if (TextUtils.isEmpty(text)) {
             return new SpannableStringBuilder("");
         }
-        if (!text.contains(KEY0) && !text.contains(KEY1)) {
-            return new SpannableStringBuilder(text);
-        }
         if (!isMatch(text)) {
             return new SpannableStringBuilder(text);
         }
-        SpannableStringBuilder ssb = new SpannableStringBuilder();
-        ssb.append(text.substring(1, text.length() - 1));
-        ssb.setSpan(new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER), 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        SpannableStringBuilder ssb = new SpannableStringBuilder(text.substring(START_POSITION, text.length()));
+        ssb.setSpan(new BulletSpan(10, Color.BLACK), 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return ssb;
     }
 
@@ -37,6 +36,8 @@ public class CenterAlignGrammar implements IGrammar {
         if (TextUtils.isEmpty(text)) {
             return false;
         }
-        return text.startsWith(KEY0) && text.endsWith(KEY1);
+        return text.startsWith(KEY0) ||
+                text.startsWith(KEY1) ||
+                text.startsWith(KEY2);
     }
 }

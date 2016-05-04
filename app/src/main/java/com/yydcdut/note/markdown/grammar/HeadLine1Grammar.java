@@ -6,6 +6,8 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.RelativeSizeSpan;
 
+import com.yydcdut.note.utils.Utils;
+
 /**
  * Created by yuyidong on 16/5/3.
  */
@@ -26,6 +28,7 @@ public class HeadLine1Grammar implements IGrammar {
         }
         SpannableStringBuilder ssb = new SpannableStringBuilder(text.substring(KEY.length(), text.length()));
         ssb.setSpan(new RelativeSizeSpan(1.5f), 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        Utils.marginSSBLeft(ssb, 10);
         return ssb;
     }
 
@@ -34,9 +37,8 @@ public class HeadLine1Grammar implements IGrammar {
         if (TextUtils.isEmpty(text)) {
             return false;
         }
-        if (!text.startsWith(KEY)) {
-            return false;
-        }
-        return true;
+        return text.startsWith(KEY);
     }
+
+
 }
