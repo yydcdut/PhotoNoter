@@ -27,7 +27,6 @@ public class GrammarMultiChains implements IResponsibilityChain {
         if (mGrammar.isMatch(ssb.toString())) {
             mGrammar.format(ssb);
             YLog.i("yuyidong", "处理--->" + mGrammar.toString() + "  ssb--->" + ssb.toString());
-            return true;
         }
         if (mNextHandleGrammarList != null) {
             boolean handled = false;
@@ -51,6 +50,7 @@ public class GrammarMultiChains implements IResponsibilityChain {
     }
 
     @Override
+    @Deprecated
     public boolean setNextHandleGrammar(@Nullable IResponsibilityChain nextHandleGrammar) {
         return false;
     }

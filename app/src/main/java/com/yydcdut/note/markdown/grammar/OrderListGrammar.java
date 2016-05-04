@@ -59,15 +59,6 @@ class OrderListGrammar implements IGrammar {
         if (!isMatch(text)) {
             return ssb;
         }
-        int dotPosition = 0;
-        for (int i = 0; i < text.length(); i++) {
-            char c = text.charAt(i);
-            if (c == '.') {
-                dotPosition = i;
-                break;
-            }
-        }
-        ssb.delete(0, dotPosition + 1);
         ssb.setSpan(new BulletSpan(10, Color.TRANSPARENT), 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return ssb;
     }

@@ -37,6 +37,7 @@ public class GrammarSingleChain implements IResponsibilityChain {
     }
 
     @Override
+    @Deprecated
     public boolean addNextHandleGrammar(@Nullable IResponsibilityChain nextHandleGrammar) {
         return false;
     }

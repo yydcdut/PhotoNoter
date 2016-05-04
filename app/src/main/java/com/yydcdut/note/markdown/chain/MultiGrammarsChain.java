@@ -44,6 +44,7 @@ public class MultiGrammarsChain implements IResponsibilityChain {
     }
 
     @Override
+    @Deprecated
     public boolean addNextHandleGrammar(@Nullable IResponsibilityChain nextHandleGrammar) {
         return false;
     }

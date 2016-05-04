@@ -39,7 +39,7 @@ class HeadLine2Grammar implements IGrammar {
             return ssb;
         }
         ssb.delete(0, KEY.length());
-        ssb.setSpan(new RelativeSizeSpan(1.5f), 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ssb.setSpan(new RelativeSizeSpan(1.3f), 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         Utils.marginSSBLeft(ssb, 10);
         return ssb;
     }
