@@ -10,7 +10,7 @@ import android.text.style.BulletSpan;
 /**
  * Created by yuyidong on 16/5/4.
  */
-public class UnOrderListGrammar implements IGrammar {
+class UnOrderListGrammar implements IGrammar {
     public static final String KEY0 = "* ";
     public static final String KEY1 = "+ ";
     public static final String KEY2 = "- ";
@@ -39,5 +39,11 @@ public class UnOrderListGrammar implements IGrammar {
         return text.startsWith(KEY0) ||
                 text.startsWith(KEY1) ||
                 text.startsWith(KEY2);
+    }
+
+    @Nullable
+    @Override
+    public SpannableStringBuilder format(@Nullable SpannableStringBuilder ssb) {
+        return ssb;
     }
 }

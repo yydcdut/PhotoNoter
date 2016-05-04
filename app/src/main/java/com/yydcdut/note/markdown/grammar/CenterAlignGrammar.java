@@ -10,7 +10,7 @@ import android.text.style.AlignmentSpan;
 /**
  * Created by yuyidong on 16/5/4.
  */
-public class CenterAlignGrammar implements IGrammar {
+class CenterAlignGrammar implements IGrammar {
     public static final String KEY0 = "[";
     public static final String KEY1 = "]";
 
@@ -38,5 +38,11 @@ public class CenterAlignGrammar implements IGrammar {
             return false;
         }
         return text.startsWith(KEY0) && text.endsWith(KEY1);
+    }
+
+    @Nullable
+    @Override
+    public SpannableStringBuilder format(@Nullable SpannableStringBuilder ssb) {
+        return ssb;
     }
 }

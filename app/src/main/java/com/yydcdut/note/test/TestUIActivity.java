@@ -9,8 +9,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.yydcdut.note.R;
+import com.yydcdut.note.markdown.grammar.BoldGrammar;
 import com.yydcdut.note.markdown.grammar.IGrammar;
-import com.yydcdut.note.markdown.grammar.OrderListGrammar;
 import com.yydcdut.note.utils.YLog;
 
 /**
@@ -26,8 +26,8 @@ public class TestUIActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_test_ui);
         findViewById(R.id.btn_test).setOnClickListener(this);
         mEditText = (EditText) findViewById(R.id.edit_test);
-        mEditText.setText("1. ssss \n2. addads");
         mTextView = (TextView) findViewById(R.id.txt_test);
+        mEditText.setText("33**11**22");
     }
 
     @Override
@@ -35,7 +35,7 @@ public class TestUIActivity extends AppCompatActivity implements View.OnClickLis
         String text = mEditText.getText().toString();
         String[] lines = text.split("\n");
         SpannableStringBuilder ssb = new SpannableStringBuilder();
-        IGrammar iGrammar = new OrderListGrammar();
+        IGrammar iGrammar = new BoldGrammar();
         for (int i = 0; i < lines.length; i++) {
             boolean b = iGrammar.isMatch(lines[i]);
             YLog.i("yuyidong", "b---->" + b);
@@ -43,6 +43,7 @@ public class TestUIActivity extends AppCompatActivity implements View.OnClickLis
             ssb.append(iGrammar.format(lines[i]));
         }
         mTextView.setText(ssb, TextView.BufferType.SPANNABLE);
+        YLog.i("yuyidong", "ssb--->" + ssb.length() + "   ssb.toDS--->" + ssb.toString().length());
 
 //        String[] lines = text.split("\\n");
 //        for (int i = 0; i < lines.length; i++) {

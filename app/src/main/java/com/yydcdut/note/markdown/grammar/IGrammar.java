@@ -11,4 +11,7 @@ public interface IGrammar {
     SpannableStringBuilder format(@Nullable String text);
 
     boolean isMatch(@Nullable String text);
+
+    @Nullable
+    SpannableStringBuilder format(@Nullable SpannableStringBuilder ssb);
 }

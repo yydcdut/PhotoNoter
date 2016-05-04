@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 /**
  * Created by yuyidong on 16/5/3.
  */
-public class ItalicGrammar implements IGrammar {
+class ItalicGrammar implements IGrammar {
     public static final String KEY = "*";
 
     @Nullable
@@ -49,6 +49,12 @@ public class ItalicGrammar implements IGrammar {
         }
         Pattern pattern = Pattern.compile(".*[\\*]{1}.*[\\*]{1}.*");
         return pattern.matcher(text).matches();
+    }
+
+    @Nullable
+    @Override
+    public SpannableStringBuilder format(@Nullable SpannableStringBuilder ssb) {
+        return ssb;
     }
 
     private SpannableStringBuilder simple0() {

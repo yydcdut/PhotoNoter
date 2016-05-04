@@ -51,6 +51,12 @@ public class BoldGrammar implements IGrammar {
         return pattern.matcher(text).matches();
     }
 
+    @Nullable
+    @Override
+    public SpannableStringBuilder format(@Nullable SpannableStringBuilder ssb) {
+        return ssb;
+    }
+
     private SpannableStringBuilder simple0() {
         SpannableStringBuilder ssb = new SpannableStringBuilder("");
         ssb.setSpan(new StyleSpan(Typeface.BOLD), 0, 0, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

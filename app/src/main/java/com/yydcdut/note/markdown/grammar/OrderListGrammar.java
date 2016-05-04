@@ -10,7 +10,7 @@ import android.text.style.BulletSpan;
 /**
  * Created by yuyidong on 16/5/4.
  */
-public class OrderListGrammar implements IGrammar {
+class OrderListGrammar implements IGrammar {
     @Nullable
     @Override
     public SpannableStringBuilder format(@Nullable String text) {
@@ -58,5 +58,11 @@ public class OrderListGrammar implements IGrammar {
         } else {
             return false;
         }
+    }
+
+    @Nullable
+    @Override
+    public SpannableStringBuilder format(@Nullable SpannableStringBuilder ssb) {
+        return ssb;
     }
 }

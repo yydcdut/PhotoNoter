@@ -12,7 +12,7 @@ import com.yydcdut.note.utils.Utils;
 /**
  * Created by yuyidong on 16/5/4.
  */
-public class BlockQuotesGrammar implements IGrammar {
+class BlockQuotesGrammar implements IGrammar {
     public static final String KEY = "> ";
 
     @Nullable
@@ -40,5 +40,11 @@ public class BlockQuotesGrammar implements IGrammar {
             return false;
         }
         return true;
+    }
+
+    @Nullable
+    @Override
+    public SpannableStringBuilder format(@Nullable SpannableStringBuilder ssb) {
+        return ssb;
     }
 }

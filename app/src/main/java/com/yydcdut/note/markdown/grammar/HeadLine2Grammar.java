@@ -11,7 +11,7 @@ import com.yydcdut.note.utils.Utils;
 /**
  * Created by yuyidong on 16/5/3.
  */
-public class HeadLine2Grammar implements IGrammar {
+class HeadLine2Grammar implements IGrammar {
     public static final String KEY = "## ";
 
     @Nullable
@@ -38,5 +38,11 @@ public class HeadLine2Grammar implements IGrammar {
             return false;
         }
         return text.startsWith(KEY);
+    }
+
+    @Nullable
+    @Override
+    public SpannableStringBuilder format(@Nullable SpannableStringBuilder ssb) {
+        return ssb;
     }
 }
