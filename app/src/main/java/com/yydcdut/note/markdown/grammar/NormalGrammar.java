@@ -7,11 +7,6 @@ import android.text.SpannableStringBuilder;
  * Created by yuyidong on 16/5/4.
  */
 public class NormalGrammar implements IGrammar {
-    @Nullable
-    @Override
-    public SpannableStringBuilder format(@Nullable String text) {
-        return new SpannableStringBuilder(text);
-    }
 
     @Override
     public boolean isMatch(@Nullable String text) {
@@ -22,5 +17,10 @@ public class NormalGrammar implements IGrammar {
     @Override
     public SpannableStringBuilder format(@Nullable SpannableStringBuilder ssb) {
         return ssb;
+    }
+
+    @Override
+    public String toString() {
+        return "NormalGrammar{}";
     }
 }

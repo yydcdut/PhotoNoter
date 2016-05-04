@@ -22,12 +22,15 @@ public class GrammarSingleChain implements IResponsibilityChain {
     @Override
     public boolean handleGrammar(@Nullable SpannableStringBuilder ssb) {
         if (mGrammar.isMatch(ssb.toString())) {
+            mGrammar.format(ssb);
+            YLog.i("yuyidong", "处理--->" + mGrammar.toString() + "  ssb--->" + ssb.toString());
             return true;
         } else {
             if (mNextHandleGrammar != null) {
+                YLog.i("yuyidong", getClass().getSimpleName() + "   " + mGrammar.getClass().getSimpleName() + "  无法处理");
                 return mNextHandleGrammar.handleGrammar(ssb);
             } else {
-                YLog.e("yuyidong", "责任链中没有下一任了");
+                YLog.e("yuyidong", "责任链中没有下一任了,这个责任链是--->" + toString());
                 return false;
             }
         }
@@ -35,14 +38,20 @@ public class GrammarSingleChain implements IResponsibilityChain {
 
     @Override
     public boolean addNextHandleGrammar(@Nullable IResponsibilityChain nextHandleGrammar) {
+        return false;
+    }
+
+    @Override
+    public boolean setNextHandleGrammar(@Nullable IResponsibilityChain nextHandleGrammar) {
         mNextHandleGrammar = nextHandleGrammar;
         return true;
     }
 
     @Override
-    public boolean setNextHandleGrammar(@Nullable IResponsibilityChain nextHandleGrammar) {
-        return false;
+    public String toString() {
+        return "GrammarSingleChain{" +
+                "mGrammar=" + mGrammar +
+                ", mNextHandleGrammar=" + mNextHandleGrammar +
+                '}';
     }
-
-
 }

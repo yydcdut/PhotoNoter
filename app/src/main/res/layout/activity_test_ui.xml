@@ -24,12 +24,19 @@
             android:layout_weight="3"
             android:gravity="left|top"/>
 
-        <TextView
-            android:id="@+id/txt_test"
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="2"/>
+            android:layout_weight="2">
+
+            <TextView
+                android:id="@+id/txt_test"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"/>
+
+        </ScrollView>
+
     </LinearLayout>
 
 

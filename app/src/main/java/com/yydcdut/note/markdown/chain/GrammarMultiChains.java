@@ -25,6 +25,8 @@ public class GrammarMultiChains implements IResponsibilityChain {
     @Override
     public boolean handleGrammar(@Nullable SpannableStringBuilder ssb) {
         if (mGrammar.isMatch(ssb.toString())) {
+            mGrammar.format(ssb);
+            YLog.i("yuyidong", "处理--->" + mGrammar.toString() + "  ssb--->" + ssb.toString());
             return true;
         }
         if (mNextHandleGrammarList != null) {
@@ -34,7 +36,7 @@ public class GrammarMultiChains implements IResponsibilityChain {
             }
             return handled;
         } else {
-            YLog.e("yuyidong", "责任链中没有下一任了");
+            YLog.e("yuyidong", "责任链中没有下一任了,这个责任链是--->" + toString());
             return false;
         }
     }
@@ -51,5 +53,13 @@ public class GrammarMultiChains implements IResponsibilityChain {
     @Override
     public boolean setNextHandleGrammar(@Nullable IResponsibilityChain nextHandleGrammar) {
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return "GrammarMultiChains{" +
+                "mGrammar=" + mGrammar +
+                ", mNextHandleGrammarList=" + mNextHandleGrammarList +
+                '}';
     }
 }

@@ -17,20 +17,6 @@ class UnOrderListGrammar implements IGrammar {
 
     private static final int START_POSITION = 2;
 
-    @Nullable
-    @Override
-    public SpannableStringBuilder format(@Nullable String text) {
-        if (TextUtils.isEmpty(text)) {
-            return new SpannableStringBuilder("");
-        }
-        if (!isMatch(text)) {
-            return new SpannableStringBuilder(text);
-        }
-        SpannableStringBuilder ssb = new SpannableStringBuilder(text.substring(START_POSITION, text.length()));
-        ssb.setSpan(new BulletSpan(10, Color.BLACK), 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        return ssb;
-    }
-
     @Override
     public boolean isMatch(@Nullable String text) {
         if (TextUtils.isEmpty(text)) {
@@ -44,6 +30,23 @@ class UnOrderListGrammar implements IGrammar {
     @Nullable
     @Override
     public SpannableStringBuilder format(@Nullable SpannableStringBuilder ssb) {
+        if (ssb == null) {
+            return new SpannableStringBuilder("");
+        }
+        String text = ssb.toString();
+        if (TextUtils.isEmpty(text)) {
+            return ssb;
+        }
+        if (!isMatch(text)) {
+            return ssb;
+        }
+        ssb.delete(0, START_POSITION);
+        ssb.setSpan(new BulletSpan(10, Color.BLACK), 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return ssb;
+    }
+
+    @Override
+    public String toString() {
+        return "UnOrderListGrammar{}";
     }
 }

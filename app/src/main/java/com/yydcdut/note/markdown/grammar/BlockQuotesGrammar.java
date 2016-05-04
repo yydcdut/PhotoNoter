@@ -15,22 +15,6 @@ import com.yydcdut.note.utils.Utils;
 class BlockQuotesGrammar implements IGrammar {
     public static final String KEY = "> ";
 
-    @Nullable
-    @Override
-    public SpannableStringBuilder format(@Nullable String text) {
-        if (TextUtils.isEmpty(text)) {
-            return new SpannableStringBuilder("");
-        }
-        if (!isMatch(text)) {
-            return new SpannableStringBuilder(text);
-        }
-        SpannableStringBuilder ssb = new SpannableStringBuilder();
-        ssb.append(text.substring(KEY.length(), text.length()));
-        ssb.setSpan(new QuoteSpan(Color.GRAY), 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        Utils.marginSSBLeft(ssb, 20);
-        return ssb;
-    }
-
     @Override
     public boolean isMatch(@Nullable String text) {
         if (TextUtils.isEmpty(text)) {
@@ -45,6 +29,24 @@ class BlockQuotesGrammar implements IGrammar {
     @Nullable
     @Override
     public SpannableStringBuilder format(@Nullable SpannableStringBuilder ssb) {
+        if (ssb == null) {
+            return new SpannableStringBuilder("");
+        }
+        String text = ssb.toString();
+        if (TextUtils.isEmpty(text)) {
+            return new SpannableStringBuilder("");
+        }
+        if (!isMatch(text)) {
+            return ssb;
+        }
+        ssb.delete(0, KEY.length() - 1);
+        ssb.setSpan(new QuoteSpan(Color.GRAY), 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        Utils.marginSSBLeft(ssb, 20);
         return ssb;
+    }
+
+    @Override
+    public String toString() {
+        return "BlockQuotesGrammar{}";
     }
 }

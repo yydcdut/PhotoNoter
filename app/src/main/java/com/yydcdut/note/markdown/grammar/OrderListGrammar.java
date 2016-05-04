@@ -11,20 +11,6 @@ import android.text.style.BulletSpan;
  * Created by yuyidong on 16/5/4.
  */
 class OrderListGrammar implements IGrammar {
-    @Nullable
-    @Override
-    public SpannableStringBuilder format(@Nullable String text) {
-        if (TextUtils.isEmpty(text)) {
-            return new SpannableStringBuilder("");
-        }
-        if (!isMatch(text)) {
-            return new SpannableStringBuilder(text);
-        }
-        SpannableStringBuilder ssb = new SpannableStringBuilder();
-        ssb.append(text);
-        ssb.setSpan(new BulletSpan(10, Color.TRANSPARENT), 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        return ssb;
-    }
 
     @Override
     public boolean isMatch(@Nullable String text) {
@@ -63,6 +49,31 @@ class OrderListGrammar implements IGrammar {
     @Nullable
     @Override
     public SpannableStringBuilder format(@Nullable SpannableStringBuilder ssb) {
+        if (ssb == null) {
+            return new SpannableStringBuilder("");
+        }
+        String text = ssb.toString();
+        if (TextUtils.isEmpty(text)) {
+            return ssb;
+        }
+        if (!isMatch(text)) {
+            return ssb;
+        }
+        int dotPosition = 0;
+        for (int i = 0; i < text.length(); i++) {
+            char c = text.charAt(i);
+            if (c == '.') {
+                dotPosition = i;
+                break;
+            }
+        }
+        ssb.delete(0, dotPosition + 1);
+        ssb.setSpan(new BulletSpan(10, Color.TRANSPARENT), 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return ssb;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderListGrammar{}";
     }
 }

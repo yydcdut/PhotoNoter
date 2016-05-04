@@ -15,30 +15,6 @@ import java.util.regex.Pattern;
 class ItalicGrammar implements IGrammar {
     public static final String KEY = "*";
 
-    @Nullable
-    @Override
-    public SpannableStringBuilder format(@Nullable String text) {
-        if (TextUtils.isEmpty(text)) {
-            return new SpannableStringBuilder("");
-        }
-        if (!text.contains(KEY)) {
-            return new SpannableStringBuilder(text);
-        }
-        if (!isMatch(text)) {
-            return new SpannableStringBuilder(text);
-        }
-        Pattern pattern = Pattern.compile("[*]*[*]");
-        String[] strings = pattern.split(text);
-        if (strings.length == 0) {//情况：**
-            return simple0();
-        } else if (strings.length == 2) {//情况：*text*或者text0*text1*
-            return simple2(strings);
-        } else if (strings.length >= 3) {//情况：有两个以上的*
-            return complex(text);
-        }
-        return new SpannableStringBuilder(text);
-    }
-
     @Override
     public boolean isMatch(@Nullable String text) {
         if (TextUtils.isEmpty(text)) {
@@ -54,46 +30,52 @@ class ItalicGrammar implements IGrammar {
     @Nullable
     @Override
     public SpannableStringBuilder format(@Nullable SpannableStringBuilder ssb) {
-        return ssb;
+        if (ssb == null) {
+            return new SpannableStringBuilder("");
+        }
+        String text = ssb.toString();
+        if (TextUtils.isEmpty(text)) {
+            return new SpannableStringBuilder("");
+        }
+        if (!text.contains(KEY)) {
+            return ssb;
+        }
+        if (!isMatch(text)) {
+            return ssb;
+        }
+        return complex(text, ssb);
     }
 
-    private SpannableStringBuilder simple0() {
-        SpannableStringBuilder ssb = new SpannableStringBuilder("");
-        ssb.setSpan(new StyleSpan(Typeface.ITALIC), 0, 0, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        return ssb;
-    }
-
-    private SpannableStringBuilder simple2(String[] texts) {
-        SpannableStringBuilder ssb = new SpannableStringBuilder(texts[0]);
-        int index = ssb.length();
-        ssb.append(texts[1]);
-        ssb.setSpan(new StyleSpan(Typeface.ITALIC), index, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        return ssb;
-    }
-
-    private SpannableStringBuilder complex(String text) {
-        SpannableStringBuilder ssb = new SpannableStringBuilder();
+    private SpannableStringBuilder complex(String text, SpannableStringBuilder ssb) {
+        SpannableStringBuilder tmp = new SpannableStringBuilder();
         String tmpTotal = text;
         while (true) {
             int positionHeader = tmpTotal.indexOf(KEY);
             if (positionHeader == -1) {
-                ssb.append(tmpTotal.substring(0, tmpTotal.length()));
+                tmp.append(tmpTotal.substring(0, tmpTotal.length()));
                 break;
             }
-            ssb.append(tmpTotal.substring(0, positionHeader));
-            int index = ssb.length();
+            tmp.append(tmpTotal.substring(0, positionHeader));
+            int index = tmp.length();
             tmpTotal = tmpTotal.substring(positionHeader + KEY.length(), tmpTotal.length());
             int positionFooter = tmpTotal.indexOf(KEY);
             if (positionFooter != -1) {
-                ssb.append(tmpTotal.substring(0, positionFooter));
-                ssb.setSpan(new StyleSpan(Typeface.ITALIC), index, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                ssb.delete(tmp.length(), tmp.length() + KEY.length());
+                tmp.append(tmpTotal.substring(0, positionFooter));
+                ssb.setSpan(new StyleSpan(Typeface.BOLD), index, tmp.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                ssb.delete(tmp.length(), tmp.length() + KEY.length());
             } else {
-                ssb.append(KEY);
-                ssb.append(tmpTotal.substring(0, tmpTotal.length()));
+                tmp.append(KEY);
+                tmp.append(tmpTotal.substring(0, tmpTotal.length()));
                 break;
             }
             tmpTotal = tmpTotal.substring(positionFooter + KEY.length(), tmpTotal.length());
         }
         return ssb;
+    }
+
+    @Override
+    public String toString() {
+        return "ItalicGrammar{}";
     }
 }

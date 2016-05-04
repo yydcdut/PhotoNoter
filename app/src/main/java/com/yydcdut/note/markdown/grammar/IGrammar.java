@@ -7,8 +7,6 @@ import android.text.SpannableStringBuilder;
  * Created by yuyidong on 16/5/3.
  */
 public interface IGrammar {
-    @Nullable
-    SpannableStringBuilder format(@Nullable String text);
 
     boolean isMatch(@Nullable String text);
 

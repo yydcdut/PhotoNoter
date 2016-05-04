@@ -14,24 +14,6 @@ class CenterAlignGrammar implements IGrammar {
     public static final String KEY0 = "[";
     public static final String KEY1 = "]";
 
-    @Nullable
-    @Override
-    public SpannableStringBuilder format(@Nullable String text) {
-        if (TextUtils.isEmpty(text)) {
-            return new SpannableStringBuilder("");
-        }
-        if (!text.contains(KEY0) && !text.contains(KEY1)) {
-            return new SpannableStringBuilder(text);
-        }
-        if (!isMatch(text)) {
-            return new SpannableStringBuilder(text);
-        }
-        SpannableStringBuilder ssb = new SpannableStringBuilder();
-        ssb.append(text.substring(1, text.length() - 1));
-        ssb.setSpan(new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER), 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        return ssb;
-    }
-
     @Override
     public boolean isMatch(@Nullable String text) {
         if (TextUtils.isEmpty(text)) {
@@ -43,6 +25,26 @@ class CenterAlignGrammar implements IGrammar {
     @Nullable
     @Override
     public SpannableStringBuilder format(@Nullable SpannableStringBuilder ssb) {
+        if (ssb == null) {
+            return new SpannableStringBuilder("");
+        }
+        String text = ssb.toString();
+        if (TextUtils.isEmpty(text)) {
+            return ssb;
+        }
+        if (!text.contains(KEY0) && !text.contains(KEY1)) {
+            return ssb;
+        }
+        if (!isMatch(text)) {
+            return ssb;
+        }
+        ssb.delete(0, 1).delete(ssb.length() - 1, ssb.length());
+        ssb.setSpan(new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER), 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return ssb;
+    }
+
+    @Override
+    public String toString() {
+        return "CenterAlignGrammar{}";
     }
 }
