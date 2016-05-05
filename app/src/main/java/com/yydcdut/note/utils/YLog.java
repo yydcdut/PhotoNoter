@@ -72,10 +72,16 @@ public class YLog {
         stringBuilder.append("[ (").append(className).append(":").append(lineNumber).append(")#").append(methodName).append(" ] ");
 
 
-
 //        return String.format(Locale.US, "[%d] %s: %s",
 //                Thread.currentThread().getId(), caller, msg);
         return String.format(Locale.US, "[%d] %s: %s",
                 Thread.currentThread().getId(), stringBuilder.toString(), msg);
+    }
+
+    public static void printStackTrace(Class clazz, Throwable throwable) {
+        if (DEBUG) {
+            throwable.printStackTrace();
+            Log.wtf(clazz.getName(), throwable.getMessage());
+        }
     }
 }

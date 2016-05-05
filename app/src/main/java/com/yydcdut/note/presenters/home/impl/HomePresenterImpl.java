@@ -14,6 +14,7 @@ import com.yydcdut.note.bus.CategoryMoveEvent;
 import com.yydcdut.note.bus.CategoryUpdateEvent;
 import com.yydcdut.note.bus.PhotoNoteCreateEvent;
 import com.yydcdut.note.bus.PhotoNoteDeleteEvent;
+import com.yydcdut.note.bus.UserImageEvent;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.compare.ComparatorFactory;
 import com.yydcdut.note.model.rx.RxCategory;
@@ -21,6 +22,8 @@ import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.model.rx.RxUser;
 import com.yydcdut.note.presenters.home.IHomePresenter;
 import com.yydcdut.note.utils.Const;
+import com.yydcdut.note.utils.FilePathUtils;
+import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.PermissionUtils;
 import com.yydcdut.note.utils.permission.Permission;
 import com.yydcdut.note.views.IView;
@@ -318,6 +321,17 @@ public class HomePresenterImpl implements IHomePresenter, PermissionUtils.OnPerm
                                             mHomeView.updateCategoryList(categories);
                                         });
                             });
+                });
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onGetUserImageEvent(UserImageEvent userImageEvent) {
+        mRxUser.getQQ()
+                .subscribe(iUser -> {
+                    if (iUser != null) {
+                        FilePathUtils.saveImage(FilePathUtils.getQQImagePath(),
+                                ImageLoaderManager.loadImageSync(iUser.getNetImagePath()));
+                    }
                 });
     }
 

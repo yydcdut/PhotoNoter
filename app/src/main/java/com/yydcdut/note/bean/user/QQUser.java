@@ -1,6 +1,9 @@
 package com.yydcdut.note.bean.user;
 
+import com.yydcdut.note.bus.UserImageEvent;
 import com.yydcdut.note.utils.FilePathUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 
@@ -29,9 +32,7 @@ public class QQUser implements IUser {
         if (new File(FilePathUtils.getQQImagePath()).exists()) {
             return "file://" + FilePathUtils.getQQImagePath();
         } else {
-            //todo 这个发个post出去
-//            FilePathUtils.saveImage(FilePathUtils.getQQImagePath(),
-//                    ImageLoaderManager.loadImageSync(getNetImagePath()));
+            EventBus.getDefault().post(new UserImageEvent());
             return getNetImagePath();
         }
     }

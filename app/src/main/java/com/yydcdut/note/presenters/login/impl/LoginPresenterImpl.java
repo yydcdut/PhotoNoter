@@ -76,6 +76,7 @@ public class LoginPresenterImpl implements ILoginPresenter {
 
                                     @Override
                                     public void onError(Throwable e) {
+                                        YLog.printStackTrace(LoginPresenterImpl.class, e);
                                         mLoginView.hideProgressBar();
                                         mLoginView.showSnackBarWithAction(mContext.getResources().getString(R.string.toast_fail),
                                                 mContext.getResources().getString(R.string.toast_retry),
