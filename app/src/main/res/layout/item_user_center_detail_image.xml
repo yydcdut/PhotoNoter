@@ -23,7 +23,7 @@
         android:layout_toLeftOf="@+id/txt_item_user"
         android:layout_toRightOf="@+id/img_item_icon"
         android:gravity="center_vertical"
-        android:text="AD合家安康睡你的觉卡"
+        android:text=""
         android:textColor="@color/txt_alpha_gray"
         android:textSize="@dimen/txt_mid"
         android:textStyle="bold"/>
@@ -37,6 +37,6 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="@dimen/dimen_24dip"
         android:gravity="center"
-        android:src="@drawable/ic_contacts_gray_24dp"/>
+        android:src="@drawable/ic_backup_white_24dp"/>
 
 </RelativeLayout>
