@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.media.ExifInterface;
 import android.support.annotation.NonNull;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 
 import com.yydcdut.note.R;
 import com.yydcdut.note.injector.ContextLife;
+import com.yydcdut.note.markdown.MarkdownParser;
 import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.presenters.note.IDetailPresenter;
 import com.yydcdut.note.utils.FilePathUtils;
@@ -36,6 +38,7 @@ public class DetailPresenterImpl implements IDetailPresenter,
     private Activity mActivity;
     private RxPhotoNote mRxPhotoNote;
     private LocalStorageUtils mLocalStorageUtils;
+    private MarkdownParser mMarkdownParser;
 
     /* Data */
     private int mCategoryId;
@@ -46,11 +49,13 @@ public class DetailPresenterImpl implements IDetailPresenter,
 
     @Inject
     public DetailPresenterImpl(@ContextLife("Activity") Context context, Activity activity,
-                               RxPhotoNote rxPhotoNote, LocalStorageUtils localStorageUtils) {
+                               RxPhotoNote rxPhotoNote, LocalStorageUtils localStorageUtils,
+                               MarkdownParser markdownParser) {
         mContext = context;
         mActivity = activity;
         mRxPhotoNote = rxPhotoNote;
         mLocalStorageUtils = localStorageUtils;
+        mMarkdownParser = markdownParser;
     }
 
     @Override
@@ -113,7 +118,8 @@ public class DetailPresenterImpl implements IDetailPresenter,
                     }
                     String createdTime = decodeTimeInDetail(photoNote1.getCreatedNoteTime());
                     String editedTime = decodeTimeInDetail(photoNote1.getEditedNoteTime());
-                    mIDetailView.showNote(title, content, createdTime, editedTime);
+                    SpannableStringBuilder contentBuilder = mMarkdownParser.parse(content);
+                    mIDetailView.showNote(title, contentBuilder, createdTime, editedTime);
                 });
         mIDetailView.showFabIcon(R.drawable.ic_text_format_white_24dp);
     }

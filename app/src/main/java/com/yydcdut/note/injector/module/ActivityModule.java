@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.injector.PerActivity;
+import com.yydcdut.note.markdown.MarkdownParser;
 
 import dagger.Module;
 import dagger.Provides;
@@ -15,9 +16,11 @@ import dagger.Provides;
 @Module
 public class ActivityModule {
     private Activity mActivity;
+    private MarkdownParser mMarkdownParser;
 
     public ActivityModule(Activity activity) {
         mActivity = activity;
+        mMarkdownParser = new MarkdownParser();
     }
 
     @Provides
@@ -32,4 +35,10 @@ public class ActivityModule {
     public Activity provideActivity() {
         return mActivity;
     }
+
+    @Provides
+    public MarkdownParser provideMarkdownParser() {
+        return mMarkdownParser;
+    }
+
 }

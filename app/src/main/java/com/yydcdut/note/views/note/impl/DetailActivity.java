@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.support.annotation.DrawableRes;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableStringBuilder;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -230,14 +231,14 @@ public class DetailActivity extends BaseActivity implements IDetailView,
     }
 
     @Override
-    public void showNote(String title, String content, String createdTime, String editedTime) {
+    public void showNote(String title, SpannableStringBuilder content, String createdTime, String editedTime) {
         mTitleLabelView.setVisibility(View.VISIBLE);
         mTitleView.setVisibility(View.VISIBLE);
         mContentLabelView.setText(getResources().getString(R.string.text_content));
         mDateLabelView.setVisibility(View.VISIBLE);
         mDateLayoutView.setVisibility(View.VISIBLE);
         mTitleView.setText(title);
-        mContentView.setText(content);
+        mContentView.setText(content, TextView.BufferType.SPANNABLE);
         mCreateView.setText(createdTime);
         mEditView.setText(editedTime);
     }

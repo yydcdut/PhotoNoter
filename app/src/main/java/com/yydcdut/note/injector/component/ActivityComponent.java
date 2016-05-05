@@ -6,6 +6,7 @@ import android.content.Context;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.injector.PerActivity;
 import com.yydcdut.note.injector.module.ActivityModule;
+import com.yydcdut.note.markdown.MarkdownParser;
 import com.yydcdut.note.model.gallery.RxGalleryPhotos;
 import com.yydcdut.note.model.gallery.SelectPhotoModel;
 import com.yydcdut.note.model.rx.RxCategory;
@@ -61,6 +62,8 @@ public interface ActivityComponent {
     RxGalleryPhotos getRxGalleryPhotos();
 
     SelectPhotoModel getSelectPhotoModel();
+
+    MarkdownParser getMarkdownParser();
 
     void inject(HomeActivity homeActivity);
 

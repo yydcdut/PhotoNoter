@@ -71,7 +71,8 @@ public class TestUIActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View v) {
         String text = mEditText.getText().toString();
-        MarkdownParser.parse(mTextView, text);
+        MarkdownParser markdownParser = new MarkdownParser();
+        mTextView.setText(markdownParser.parse(text), TextView.BufferType.SPANNABLE);
 
 
 //        SpannableStringBuilder s0 = new SpannableStringBuilder("hi");

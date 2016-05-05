@@ -1,6 +1,7 @@
 package com.yydcdut.note.views.note;
 
 import android.support.annotation.DrawableRes;
+import android.text.SpannableStringBuilder;
 
 import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.views.IView;
@@ -18,7 +19,7 @@ public interface IDetailView extends IView {
 
     int getCurrentPosition();
 
-    void showNote(String title, String content, String createdTime, String editedTime);
+    void showNote(String title, SpannableStringBuilder content, String createdTime, String editedTime);
 
     void showExif(String exif);
 
