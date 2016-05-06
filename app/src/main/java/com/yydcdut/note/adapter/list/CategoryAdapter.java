@@ -1,11 +1,11 @@
-package com.yydcdut.note.adapter;
+package com.yydcdut.note.adapter.list;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 
 import com.yydcdut.note.R;
-import com.yydcdut.note.adapter.vh.CategoryVH;
+import com.yydcdut.note.adapter.list.vh.CategoryVH;
 import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.RandomColor;
@@ -16,10 +16,10 @@ import java.util.List;
 /**
  * Created by yuyidong on 16/5/6.
  */
-public class CategoryAdapter2 extends VHAdapter<Category, CategoryVH> {
+public class CategoryAdapter extends VHAdapter<Category, CategoryVH> {
     RandomColor mColor;
 
-    public CategoryAdapter2(@NonNull Context context, @NonNull List<Category> data) {
+    public CategoryAdapter(@NonNull Context context, @NonNull List<Category> data) {
         super(context, data);
         mColor = RandomColor.MATERIAL;
     }

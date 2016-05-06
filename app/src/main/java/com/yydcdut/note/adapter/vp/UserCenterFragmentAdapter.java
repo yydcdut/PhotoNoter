@@ -1,4 +1,4 @@
-package com.yydcdut.note.adapter;
+package com.yydcdut.note.adapter.vp;
 
 import android.app.Fragment;
 import android.app.FragmentManager;

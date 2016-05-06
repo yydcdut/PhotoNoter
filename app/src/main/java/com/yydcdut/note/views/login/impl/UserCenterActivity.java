@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.evernote.client.android.EvernoteSession;
 import com.yydcdut.note.R;
-import com.yydcdut.note.adapter.UserCenterFragmentAdapter;
+import com.yydcdut.note.adapter.vp.UserCenterFragmentAdapter;
 import com.yydcdut.note.presenters.login.impl.UserCenterPresenterImpl;
 import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;

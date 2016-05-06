@@ -1,4 +1,4 @@
-package com.yydcdut.note.adapter.vh;
+package com.yydcdut.note.adapter.recycler.vh;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;

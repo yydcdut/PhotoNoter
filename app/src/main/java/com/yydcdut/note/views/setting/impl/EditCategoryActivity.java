@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.yydcdut.note.R;
-import com.yydcdut.note.adapter.EditCategoryAdapter;
+import com.yydcdut.note.adapter.list.EditCategoryAdapter;
 import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.presenters.setting.impl.EditCategoryPresenterImpl;
 import com.yydcdut.note.utils.AppCompat;

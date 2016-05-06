@@ -1,4 +1,4 @@
-package com.yydcdut.note.adapter;
+package com.yydcdut.note.adapter.recycler;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.yydcdut.note.R;
-import com.yydcdut.note.adapter.vh.MediaPhotoViewHolder;
+import com.yydcdut.note.adapter.recycler.vh.MediaPhotoViewHolder;
 import com.yydcdut.note.bean.gallery.MediaFolder;
 import com.yydcdut.note.bean.gallery.MediaPhoto;
 import com.yydcdut.note.model.gallery.SelectPhotoModel;

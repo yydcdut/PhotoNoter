@@ -9,7 +9,7 @@ import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.yydcdut.note.R;
-import com.yydcdut.note.adapter.IntroducePagerAdapter;
+import com.yydcdut.note.adapter.vp.IntroducePagerAdapter;
 import com.yydcdut.note.presenters.home.impl.IntroducePresenterImpl;
 import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.views.BaseActivity;

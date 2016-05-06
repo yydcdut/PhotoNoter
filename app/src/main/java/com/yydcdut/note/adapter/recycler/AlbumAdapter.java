@@ -1,4 +1,4 @@
-package com.yydcdut.note.adapter;
+package com.yydcdut.note.adapter.recycler;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.yydcdut.note.R;
-import com.yydcdut.note.adapter.vh.PhotoViewHolder;
+import com.yydcdut.note.adapter.recycler.vh.PhotoViewHolder;
 import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;

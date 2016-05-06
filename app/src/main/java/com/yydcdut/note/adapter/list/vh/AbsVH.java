@@ -1,4 +1,4 @@
-package com.yydcdut.note.adapter.vh;
+package com.yydcdut.note.adapter.list.vh;
 
 import android.support.annotation.NonNull;
 import android.view.View;

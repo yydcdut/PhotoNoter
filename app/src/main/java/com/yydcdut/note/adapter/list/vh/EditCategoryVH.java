@@ -1,5 +1,6 @@
-package com.yydcdut.note.adapter.vh;
+package com.yydcdut.note.adapter.list.vh;
 
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,16 +13,15 @@ import butterknife.ButterKnife;
 /**
  * Created by yuyidong on 16/5/6.
  */
-public class CategoryVH extends AbsVH {
-    @Bind(R.id.icon)
+public class EditCategoryVH extends AbsVH {
+    @Bind(R.id.img_item_edit_category)
     public ImageView imgLogo;
-    @Bind(R.id.title)
+    @Bind(R.id.txt_item_edit_category)
     public TextView txtName;
-    @Bind(R.id.counter)
-    public TextView txtPicturesNum;
 
-    public CategoryVH(View itemView) {
+    public EditCategoryVH(@NonNull View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
     }
+
 }

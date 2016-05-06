@@ -31,7 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yydcdut.note.R;
-import com.yydcdut.note.adapter.CategoryAdapter2;
+import com.yydcdut.note.adapter.list.CategoryAdapter;
 import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.presenters.home.IHomePresenter;
 import com.yydcdut.note.presenters.home.impl.HomePresenterImpl;
@@ -58,7 +58,7 @@ public class HomeActivity extends BaseActivity implements IHomeView, View.OnClic
     private long mLastBackTime = 0;//退出程序用
 
     private AlbumFragment mFragment;//相册的fragment
-    private CategoryAdapter2 mCategoryAdapter;
+    private CategoryAdapter mCategoryAdapter;
     /* User header */
     public TextView mUserName;
     public RoundedImageView mUserPhoto;
@@ -410,7 +410,7 @@ public class HomeActivity extends BaseActivity implements IHomeView, View.OnClic
 
     @Override
     public void setCategoryList(List<Category> list) {
-        mCategoryAdapter = new CategoryAdapter2(this, list);
+        mCategoryAdapter = new CategoryAdapter(this, list);
         mMenuListView.setAdapter(mCategoryAdapter);
     }
 

@@ -14,7 +14,7 @@ import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.yydcdut.note.R;
-import com.yydcdut.note.adapter.PhotoDetailPagerAdapter;
+import com.yydcdut.note.adapter.vp.PhotoDetailPagerAdapter;
 import com.yydcdut.note.presenters.gallery.IPhotoDetailPresenter;
 import com.yydcdut.note.presenters.gallery.impl.PhotoDetailPresenterImpl;
 import com.yydcdut.note.utils.AppCompat;

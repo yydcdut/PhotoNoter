@@ -3,7 +3,7 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@android:color/transparent"
+                android:background="@drawable/bg_white_2_gray"
                 tools:ignore="MissingPrefix">
 
     <RelativeLayout
@@ -22,7 +22,7 @@
             android:alpha="0.54"/>
 
         <TextView
-            android:id="@+id/txt_item_edit_categoty"
+            android:id="@+id/txt_item_edit_category"
             android:layout_width="match_parent"
             android:layout_height="@dimen/slv_item_height"
             android:layout_centerVertical="true"

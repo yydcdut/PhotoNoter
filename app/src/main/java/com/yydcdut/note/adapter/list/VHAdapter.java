@@ -1,4 +1,4 @@
-package com.yydcdut.note.adapter;
+package com.yydcdut.note.adapter.list;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.yydcdut.note.adapter.vh.AbsVH;
+import com.yydcdut.note.adapter.list.vh.AbsVH;
 
 import java.util.List;
 

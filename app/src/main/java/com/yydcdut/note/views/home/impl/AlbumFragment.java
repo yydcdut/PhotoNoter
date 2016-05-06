@@ -30,8 +30,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.yydcdut.note.R;
-import com.yydcdut.note.adapter.AlbumAdapter;
-import com.yydcdut.note.adapter.vh.PhotoViewHolder;
+import com.yydcdut.note.adapter.recycler.AlbumAdapter;
+import com.yydcdut.note.adapter.recycler.vh.PhotoViewHolder;
 import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.presenters.home.impl.AlbumPresenterImpl;
