@@ -5,6 +5,7 @@
         android:id="@+id/menu_markdown"
         android:icon="@drawable/ic_markdown"
         android:title="Markdown"
+        android:visible="false"
         app:showAsAction="always"/>
 
     <item
