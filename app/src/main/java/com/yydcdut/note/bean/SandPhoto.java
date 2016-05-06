@@ -3,7 +3,7 @@ package com.yydcdut.note.bean;
 /**
  * Created by yuyidong on 15/8/10.
  */
-public class SandPhoto implements IObject {
+public class SandPhoto {
     public static final int ID_NULL = -1;
 
     private long id;

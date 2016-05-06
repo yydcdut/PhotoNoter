@@ -9,7 +9,7 @@ import java.util.Random;
 /**
  * Created by yyd on 15-3-29.
  */
-public class PhotoNote implements IObject {
+public class PhotoNote {
     public static final int NO_ID = -1;
     /**
      * ID

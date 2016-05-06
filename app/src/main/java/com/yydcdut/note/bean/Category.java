@@ -3,7 +3,7 @@ package com.yydcdut.note.bean;
 /**
  * Created by yuyidong on 15/7/8.
  */
-public class Category implements IObject {
+public class Category {
 
     private final int id;
     private String label;
