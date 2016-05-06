@@ -1,6 +1,4 @@
-import java.util.jar.JarEntry
 import java.util.jar.JarFile
-import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 task autoSplitDex << {
@@ -270,8 +268,8 @@ def getDependentJava(File file, Set<String> packageJavaSet) {
             packageJavaSet.add(packageJava.substring(0, packageJava.length() - 1))
         }
     }
-    String lastOne = packageJavas[packageJavas.length - 1]
-    String lastPackage = lastOne.split("\n")[0]
+    def lastOne = packageJavas[packageJavas.length - 1]
+    def lastPackage = lastOne.split("\n")[0]
     if (lastPackage.trim().startsWith("java") || (lastPackage.trim().startsWith("android") && !lastPackage.trim().startsWith("android.support"))
             || lastPackage.trim().startsWith(" ") || lastPackage.trim().startsWith("static")) {
         // do nothing
@@ -311,11 +309,11 @@ def addBuildSelf(String buildPath, String currentPath, Set<String> packageJavaSe
 def unZip(String jarFilePath) {
     def outJarPath = getJarUnzipFile(jarFilePath)
     def jarFile = new JarFile(jarFilePath)
-    Enumeration<JarEntry> jarEntries = jarFile.entries()
+    def jarEntries = jarFile.entries()
     while (jarEntries.hasMoreElements()) {
-        JarEntry jarEntry = jarEntries.nextElement()
-        String outFileName = outJarPath + jarEntry.getName()
-        File f = new File(outFileName)
+        def jarEntry = jarEntries.nextElement()
+        def outFileName = outJarPath + jarEntry.getName()
+        def f = new File(outFileName)
         makeSupDir(outFileName)
         if (jarEntry.isDirectory()) {
             continue;
@@ -329,12 +327,12 @@ def unZip(String jarFilePath) {
  * @param outFileName
  */
 def makeSupDir(String outFileName) {
-    Pattern p = Pattern.compile("[/\\\\" + File.separator + "]");
-    Matcher m = p.matcher(outFileName);
+    def p = Pattern.compile("[/\\\\" + File.separator + "]");
+    def m = p.matcher(outFileName);
     while (m.find()) {
-        int index = m.start();
-        String subDir = outFileName.substring(0, index);
-        File subDirFile = new File(subDir);
+        def index = m.start();
+        def subDir = outFileName.substring(0, index);
+        def subDirFile = new File(subDir);
         if (!subDirFile.exists())
             subDirFile.mkdir();
     }
@@ -346,15 +344,15 @@ def makeSupDir(String outFileName) {
  * @return
  */
 def getJarUnzipFile(String jarFilePath) {
-    Pattern pattern = Pattern.compile('allclasses.jar$|classes.jar$');//debug|release
-    Matcher matcher = pattern.matcher(jarFilePath);
-    String path = matcher.replaceAll("");
+    def pattern = Pattern.compile('allclasses.jar$|classes.jar$');//debug|release
+    def matcher = pattern.matcher(jarFilePath);
+    def path = matcher.replaceAll("");
     def totalPath = "${path}photonoter/"
     def file = new File(totalPath)
     if (!file.exists()) {
         file.mkdir()
     }
-    return "${file.getAbsolutePath()}${File.separator}"
+    "${file.getAbsolutePath()}${File.separator}"
 }
 
 /**
@@ -424,12 +422,12 @@ def readFile(File file) {
         sb.append(new String(bytes, 0, len))
     }
     fis.close()
-    return sb.toString()
+    sb.toString()
 }
 
 def readFile(String path) {
     def file = new File(path)
-    return readFile(file)
+    readFile(file)
 }
 
 /**
@@ -440,9 +438,9 @@ def readFile(String path) {
  */
 def readByLine(String path, OnReadingLineCallback callback) {
     if (callback != null) {
-        Reader fileReader = new FileReader(new File(path))
-        BufferedReader br = new BufferedReader(fileReader)
-        String line = br.readLine()
+        def fileReader = new FileReader(new File(path))
+        def br = new BufferedReader(fileReader)
+        def line = br.readLine()
         while (line != null) {
             callback.onLine(line);
             line = br.readLine();
@@ -467,9 +465,12 @@ interface OnReadingLineCallback {
  */
 def writeFileIfNotExist(String existCheckPath, String path, Set<String> set) {
     def content = readFile(existCheckPath)
-    OutputStream os = new FileOutputStream(path, true);
+    def os = new FileOutputStream(path, true);
     for (Iterator<String> iterator = set.iterator(); iterator.hasNext();) {
-        String clazz = iterator.next().replace(".", File.separator)
+        def classclazz = iterator.next()
+        def clazz = classclazz.replace(".class")
+        clazz = clazz.replace(".", File.separator)
+        clazz = clazz + ".class"
         if (content.contains(clazz)) {
             continue;
         }
