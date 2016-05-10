@@ -231,16 +231,20 @@ public class DetailActivity extends BaseActivity implements IDetailView,
     }
 
     @Override
-    public void showNote(String title, SpannableStringBuilder content, String createdTime, String editedTime) {
+    public void showNoteWithoutContent(String title, String createdTime, String editedTime) {
         mTitleLabelView.setVisibility(View.VISIBLE);
         mTitleView.setVisibility(View.VISIBLE);
         mContentLabelView.setText(getResources().getString(R.string.text_content));
         mDateLabelView.setVisibility(View.VISIBLE);
         mDateLayoutView.setVisibility(View.VISIBLE);
         mTitleView.setText(title);
-        mContentView.setText(content, TextView.BufferType.SPANNABLE);
         mCreateView.setText(createdTime);
         mEditView.setText(editedTime);
+    }
+
+    @Override
+    public void showContent(SpannableStringBuilder ssb) {
+        mContentView.setText(ssb, TextView.BufferType.SPANNABLE);
     }
 
     @Override

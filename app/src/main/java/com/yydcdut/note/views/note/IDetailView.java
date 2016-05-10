@@ -19,7 +19,9 @@ public interface IDetailView extends IView {
 
     int getCurrentPosition();
 
-    void showNote(String title, SpannableStringBuilder content, String createdTime, String editedTime);
+    void showNoteWithoutContent(String title, String createdTime, String editedTime);
+
+    void showContent(SpannableStringBuilder ssb);
 
     void showExif(String exif);
 
@@ -37,5 +39,5 @@ public interface IDetailView extends IView {
 
     void showFabIcon(@DrawableRes int iconRes);
 
-    public void showSnackBar(String content);
+    void showSnackBar(String content);
 }

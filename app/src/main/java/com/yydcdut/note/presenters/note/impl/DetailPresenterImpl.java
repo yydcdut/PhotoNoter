@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.media.ExifInterface;
 import android.support.annotation.NonNull;
-import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 
 import com.yydcdut.note.R;
@@ -118,9 +117,13 @@ public class DetailPresenterImpl implements IDetailPresenter,
                     }
                     String createdTime = decodeTimeInDetail(photoNote1.getCreatedNoteTime());
                     String editedTime = decodeTimeInDetail(photoNote1.getEditedNoteTime());
-                    SpannableStringBuilder contentBuilder = mMarkdownParser.parse(content);
-                    mIDetailView.showNote(title, contentBuilder, createdTime, editedTime);
+                    mIDetailView.showNoteWithoutContent(title, createdTime, editedTime);
                 });
+        mRxPhotoNote.findByCategoryId(mCategoryId, mComparator)
+                .map(photoNotes -> photoNotes.get(position))
+                .map(photoNote -> mMarkdownParser.parse(photoNote.getContent()))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(spannableStringBuilder -> mIDetailView.showContent(spannableStringBuilder));
         mIDetailView.showFabIcon(R.drawable.ic_text_format_white_24dp);
     }
 
