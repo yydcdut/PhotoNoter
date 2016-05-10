@@ -4,7 +4,6 @@ import android.support.annotation.Nullable;
 import android.text.SpannableStringBuilder;
 
 import com.yydcdut.note.markdown.grammar.IGrammar;
-import com.yydcdut.note.utils.YLog;
 
 /**
  * Created by yuyidong on 16/5/4.
@@ -23,14 +22,14 @@ public class GrammarSingleChain implements IResponsibilityChain {
     public boolean handleGrammar(@Nullable SpannableStringBuilder ssb) {
         if (mGrammar.isMatch(ssb.toString())) {
             mGrammar.format(ssb);
-            YLog.i("yuyidong", "处理--->" + mGrammar.toString() + "  ssb--->" + ssb.toString());
+//            YLog.i("yuyidong", "处理--->" + mGrammar.toString() + "  ssb--->" + ssb.toString());
             return true;
         } else {
             if (mNextHandleGrammar != null) {
-                YLog.i("yuyidong", getClass().getSimpleName() + "   " + mGrammar.getClass().getSimpleName() + "  无法处理");
+//                YLog.i("yuyidong", getClass().getSimpleName() + "   " + mGrammar.getClass().getSimpleName() + "  无法处理");
                 return mNextHandleGrammar.handleGrammar(ssb);
             } else {
-                YLog.e("yuyidong", "责任链中没有下一任了,这个责任链是--->" + toString());
+//                YLog.e("yuyidong", "责任链中没有下一任了,这个责任链是--->" + toString());
                 return false;
             }
         }

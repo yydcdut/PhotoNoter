@@ -11,9 +11,9 @@ import android.text.style.BulletSpan;
  * Created by yuyidong on 16/5/4.
  */
 class UnOrderListGrammar implements IGrammar {
-    public static final String KEY0 = "* ";
-    public static final String KEY1 = "+ ";
-    public static final String KEY2 = "- ";
+    private static final String KEY0 = "* ";
+    private static final String KEY1 = "+ ";
+    private static final String KEY2 = "- ";
 
     private static final int START_POSITION = 2;
 

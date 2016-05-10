@@ -12,7 +12,7 @@ import com.yydcdut.note.utils.Utils;
  * Created by yuyidong on 16/5/3.
  */
 class HeadLine2Grammar implements IGrammar {
-    public static final String KEY = "## ";
+    private static final String KEY = "## ";
 
     @Override
     public boolean isMatch(@Nullable String text) {

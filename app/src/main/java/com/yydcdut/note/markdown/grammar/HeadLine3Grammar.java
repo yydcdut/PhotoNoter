@@ -13,7 +13,7 @@ import com.yydcdut.note.utils.YLog;
  * Created by yuyidong on 16/5/3.
  */
 class HeadLine3Grammar implements IGrammar {
-    public static final String KEY = "### ";
+    private static final String KEY = "### ";
 
     @Override
     public boolean isMatch(@Nullable String text) {
