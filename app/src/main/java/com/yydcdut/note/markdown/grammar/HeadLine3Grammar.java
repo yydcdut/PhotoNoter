@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import android.text.style.RelativeSizeSpan;
 
 import com.yydcdut.note.utils.Utils;
-import com.yydcdut.note.utils.YLog;
 
 /**
  * Created by yuyidong on 16/5/3.
@@ -26,7 +25,7 @@ class HeadLine3Grammar implements IGrammar {
     @Nullable
     @Override
     public SpannableStringBuilder format(@Nullable SpannableStringBuilder ssb) {
-        YLog.i("yuyidong", "ssb---->" + ssb);
+//        YLog.i("yuyidong", "ssb---->" + ssb);
         if (ssb == null) {
             return new SpannableStringBuilder("");
         }
