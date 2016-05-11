@@ -176,7 +176,7 @@ public class EditTextActivity extends BaseActivity implements IEditTextView,
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         int screenHeight = dm.heightPixels;
-        int contentEditHeight = screenHeight - actionBarHeight * 2;
+        int contentEditHeight = screenHeight - actionBarHeight;
         AnimatorSet animation = new AnimatorSet();
         animation.setDuration(Const.DURATION_ACTIVITY);
         animation.playTogether(
@@ -240,7 +240,7 @@ public class EditTextActivity extends BaseActivity implements IEditTextView,
     public void finishActivityWithAnimation(final boolean saved, final int categoryId, final int position, final int comparator) {
         int actionBarHeight = getActionBarSize();
         int screenHeight = Utils.sScreenHeight;
-        int contentEditHeight = screenHeight - actionBarHeight * 2;
+        int contentEditHeight = screenHeight - actionBarHeight;
         AnimatorSet animation = new AnimatorSet();
         animation.setDuration(Const.DURATION_ACTIVITY);
         animation.playTogether(
