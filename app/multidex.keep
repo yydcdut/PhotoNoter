@@ -1054,6 +1054,7 @@ com/yydcdut/note/presenters/home/impl/HomePresenterImpl$$Lambda$2.class
 com/yydcdut/note/views/gallery/impl/MediaPhotoFragment$$ViewBinder.class
 com/yydcdut/note/views/login/impl/UserCenterActivity$$ViewBinder$1.class
 android/support/v7/app/ActionBarDrawerToggle$ToolbarCompatDelegate.class
+com/squareup/leakcanary/internal/DisplayLeakActivity$LoadLeaks$1.class
 com/yydcdut/note/model/rx/RxPhotoNote$$Lambda$21.class
 com/yydcdut/note/presenters/setting/impl/SettingPresenterImpl$$Lambda$2.class
 com/yydcdut/note/injector/module/ApplicationModule_ProvideLocalStorageUtilsFactory.class
@@ -1303,6 +1304,7 @@ com/yydcdut/note/model/rx/RxPhotoNote$$Lambda$20.class
 com/yydcdut/note/presenters/home/impl/AlbumPresenterImpl$$Lambda$13.class
 com/yydcdut/note/model/rx/RxUser$$Lambda$1.class
 android/support/v4/app/NotificationCompat$Extender.class
+com/github/moduth/blockcanary/ui/DisplayBlockActivity$LoadBlocks$1.class
 android/support/v4/app/NotificationCompatExtras.class
 com/yydcdut/note/presenters/setting/impl/SettingPresenterImpl$$Lambda$1.class
 com/yydcdut/note/presenters/home/impl/AlbumPresenterImpl_Factory.class
@@ -1333,6 +1335,7 @@ com/yydcdut/note/presenters/login/impl/UserDetailFragPresenterImpl$$Lambda$9.cla
 com/yydcdut/note/presenters/camera/impl/AdjustCameraPresenterImpl$1.class
 com/yydcdut/note/presenters/gallery/impl/PhotoDetailPresenterImpl$$Lambda$1.class
 com/yydcdut/note/presenters/home/impl/AlbumPresenterImpl$$Lambda$14.class
+com/github/moduth/blockcanary/ui/DisplayBlockActivity$LoadBlocks$2.class
 com/yydcdut/note/injector/component/DaggerActivityComponent$8.class
 com/yydcdut/note/presenters/home/impl/AlbumPresenterImpl$$Lambda$17.class
 com/yydcdut/note/widget/fab2/snack/SnackHelper$1.class
@@ -1442,6 +1445,7 @@ android/support/v4/app/NotificationCompat$InboxStyle.class
 com/yydcdut/note/presenters/note/impl/ZoomPresenterImpl$$Lambda$2.class
 com/yydcdut/note/views/setting/impl/FeedbackActivity_MembersInjector.class
 com/yydcdut/note/presenters/camera/impl/CameraPresenterImpl$5$1.class
+com/squareup/leakcanary/internal/DisplayLeakActivity$LoadLeaks$3.class
 com/yydcdut/note/presenters/note/impl/DetailFragPresenterImpl$$Lambda$1.class
 com/yydcdut/note/presenters/setting/impl/SettingPresenterImpl$3.class
 com/yydcdut/note/model/camera/impl/CameraModelImpl$PictureCallBack.class
@@ -1558,7 +1562,9 @@ android/support/v4/app/NotificationCompat$NotificationCompatImplHoneycomb.class
 com/yydcdut/note/presenters/home/impl/AlbumPresenterImpl$6.class
 android/support/design/widget/SnackbarManager$1.class
 com/frogermcs/androiddevmetrics/AndroidDevMetrics$Builder.class
+com/evernote/client/android/EvernoteOAuthActivity$WebViewFragment$1.class
 com/yydcdut/note/utils/PermissionUtils$6.class
+com/evernote/client/android/login/EvernoteLoginActivity$2$1.class
 com/yydcdut/note/model/rx/RxPhotoNote$$Lambda$16.class
 com/yydcdut/note/model/rx/RxPhotoNote$$Lambda$7.class
 org/greenrobot/eventbus/SubscriberExceptionEvent.class
@@ -1572,6 +1578,7 @@ com/yydcdut/note/presenters/login/impl/UserCenterPresenterImpl_Factory.class
 com/yydcdut/note/presenters/setting/impl/AboutAppPresenterImpl_Factory.class
 com/yydcdut/note/R$integer.class
 android/support/v4/app/NotificationCompatGingerbread.class
+com/squareup/leakcanary/internal/DisplayLeakActivity$LoadLeaks$2.class
 com/yydcdut/note/injector/module/ServiceModule_ProvideContextFactory.class
 android/support/v4/app/NotificationCompat$NotificationCompatImplGingerbread.class
 com/yydcdut/note/model/rx/RxFeedBack$2$1.class
