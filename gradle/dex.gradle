@@ -16,6 +16,8 @@ task autoSplitDex << {
         flavor = flavorAndBuildType.substring(0, flavorAndBuildType.length() - "release".length())
         buildType = "release"
     }
+    //todo for test
+    flavor = flavor.toLowerCase()
 
     //src/main/java/
     def srcPath = "${projectDir}${File.separator}" +
@@ -31,14 +33,27 @@ task autoSplitDex << {
             "apt${File.separator}" +
             "${flavor}${File.separator}" +
             "${buildType}${File.separator}"
-    //build/intermediates/multi-dex/Store360/debug/allclasses.jar
+//    //build/intermediates/multi-dex/Store360/debug/allclasses.jar
+//    def jarDebugPath = "${projectDir}${File.separator}" +
+//            "build${File.separator}" +
+//            "intermediates${File.separator}" +
+//            "multi-dex${File.separator}" +
+//            "${flavor}${File.separator}" +
+//            "${buildType}${File.separator}" +
+//            "allclasses.jar"
+    //build/transforms/jarMerging/Store360/debug/jars/1/1f/combined.jar
     def jarDebugPath = "${projectDir}${File.separator}" +
             "build${File.separator}" +
             "intermediates${File.separator}" +
-            "multi-dex${File.separator}" +
+            "transforms${File.separator}" +
+            "jarMerging${File.separator}" +
             "${flavor}${File.separator}" +
             "${buildType}${File.separator}" +
-            "allclasses.jar"
+            "jars${File.separator}" +
+            "1${File.separator}" +
+            "1f${File.separator}" +
+            "combined.jar"
+
     //build/intermediates/classes-proguard/Store360/release/classes.jar
     def jarReleasePath = "${projectDir}${File.separator}" +
             "build${File.separator}" +
@@ -86,7 +101,7 @@ task autoSplitDex << {
             getDependentJava(file, packageJavaSet)
         }
         //把自己也加进去
-        packageJavaSet.add(iterator.next())
+        packageJavaSet.add(packageName)
     }
     //找到ButterKnife和Dagger2生成的代码
     addAllBuildDependency(buildSourcePath, packageJavaSet)
@@ -255,7 +270,7 @@ def getJavaFileInDir(File dirOrFile, Set<String> packageJavaSet) {
  */
 def getDependentJava(File file, Set<String> packageJavaSet) {
     def content = readFile(file)
-    def pattern = Pattern.compile("import *");
+    def pattern = Pattern.compile("import *");//todo import *$ , XXXXXLINE
     def packageJavas = pattern.split(content);
     for (int i = 1; i < packageJavas.length - 1; i++) {
         def packageJava = packageJavas[i].trim()
@@ -468,7 +483,7 @@ def writeFileIfNotExist(String existCheckPath, String path, Set<String> set) {
     def os = new FileOutputStream(path, true);
     for (Iterator<String> iterator = set.iterator(); iterator.hasNext();) {
         def classclazz = iterator.next()
-        def clazz = classclazz.replace(".class")
+        def clazz = classclazz.replace(".class", "")
         clazz = clazz.replace(".", File.separator)
         clazz = clazz + ".class"
         if (content.contains(clazz)) {
