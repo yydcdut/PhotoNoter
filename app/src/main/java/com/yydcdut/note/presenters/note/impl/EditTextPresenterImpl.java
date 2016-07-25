@@ -39,6 +39,8 @@ import com.yydcdut.note.utils.permission.Permission;
 import com.yydcdut.note.views.IView;
 import com.yydcdut.note.views.note.IEditTextView;
 import com.yydcdut.note.widget.fab2.snack.OnSnackBarActionListener;
+import com.yydcdut.rxmarkdown.RxMarkdown;
+import com.yydcdut.rxmarkdown.factory.EditFactory;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -115,6 +117,15 @@ public class EditTextPresenterImpl implements IEditTextPresenter, PermissionUtil
                     mEditTextView.setEditNoteTitle(photoNote.getTitle());
                     mEditTextView.updateNoteTitle(photoNote.getTitle());
                     mEditTextView.setNoteContent(photoNote.getContent());
+                    RxMarkdown.live(mEditTextView.getRxMDEditText())
+                            .factory(EditFactory.create())
+                            .intoObservable()
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe((charSequence -> {
+                            }), (throwable -> {
+                                YLog.e(throwable);
+                                mEditTextView.setNoteContent(photoNote.getContent());
+                            }));
                 });
     }
 

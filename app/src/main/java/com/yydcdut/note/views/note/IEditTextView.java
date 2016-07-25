@@ -2,6 +2,7 @@ package com.yydcdut.note.views.note;
 
 import com.yydcdut.note.views.IView;
 import com.yydcdut.note.widget.fab2.snack.OnSnackBarActionListener;
+import com.yydcdut.rxmarkdown.RxMDEditText;
 
 /**
  * Created by yuyidong on 15/11/15.
@@ -15,6 +16,8 @@ public interface IEditTextView extends IView {
     void setEditNoteTitle(String title);
 
     void setNoteContent(String content);
+
+    RxMDEditText getRxMDEditText();
 
     void updateNoteTitle(String title);
 

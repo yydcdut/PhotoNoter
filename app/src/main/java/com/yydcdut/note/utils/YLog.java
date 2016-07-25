@@ -36,6 +36,12 @@ public class YLog {
         }
     }
 
+    public static void e(Throwable throwable) {
+        if (DEBUG) {
+            Log.e("Throwable", throwable.getMessage());
+        }
+    }
+
     public static void wtf(String tag, String msg) {
         if (DEBUG) {
             Log.wtf(tag, buildMessage(msg));

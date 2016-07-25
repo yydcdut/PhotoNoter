@@ -33,6 +33,7 @@ import com.yydcdut.note.widget.VoiceRippleView;
 import com.yydcdut.note.widget.fab2.FloatingMenuLayout;
 import com.yydcdut.note.widget.fab2.snack.OnSnackBarActionListener;
 import com.yydcdut.note.widget.fab2.snack.SnackHelper;
+import com.yydcdut.rxmarkdown.RxMDEditText;
 
 import javax.inject.Inject;
 
@@ -57,7 +58,7 @@ public class EditTextActivity extends BaseActivity implements IEditTextView,
     @Bind(R.id.et_edit_title)
     EditText mTitleEdit;
     @Bind(R.id.et_edit_content)
-    EditText mContentEdit;
+    RxMDEditText mContentEdit;
     @Bind(R.id.layout_fab_edittext)
     FloatingMenuLayout mFabMenuLayout;
     @Bind(R.id.img_ripple_fab)
@@ -389,6 +390,11 @@ public class EditTextActivity extends BaseActivity implements IEditTextView,
     @Override
     public void setNoteContent(String content) {
         mContentEdit.setText(content);
+    }
+
+    @Override
+    public RxMDEditText getRxMDEditText() {
+        return mContentEdit;
     }
 
     @Override

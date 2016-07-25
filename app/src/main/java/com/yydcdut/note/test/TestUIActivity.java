@@ -8,7 +8,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.yydcdut.note.R;
-import com.yydcdut.note.markdown.MarkdownParser;
 
 /**
  * Created by yuyidong on 16/4/29.
@@ -70,37 +69,5 @@ public class TestUIActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        String text = mEditText.getText().toString();
-        MarkdownParser markdownParser = new MarkdownParser();
-        mTextView.setText(markdownParser.parse(text), TextView.BufferType.SPANNABLE);
-
-
-//        SpannableStringBuilder s0 = new SpannableStringBuilder("hi");
-//        s0.setSpan(new RelativeSizeSpan(1.5f), 0, s0.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//
-//        SpannableStringBuilder s1 = new SpannableStringBuilder("\nxxxxxxxx");
-//        s1.setSpan(new RelativeSizeSpan(0.8f), 0, s1.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//
-//        SpannableStringBuilder s2 = new SpannableStringBuilder();
-//        s2.append(s0);
-//        s2.append(s1);
-//        mTextView.setText(s2,TextView.BufferType.SPANNABLE);
-
-//        String[] lines = text.split("\n");
-//        SpannableStringBuilder ssb = new SpannableStringBuilder();
-//        IGrammar iGrammar = GrammarFactory.getGrammar(GrammarFactory.GRAMMAR_HEADER_LINE_1);
-//        for (int i = 0; i < lines.length; i++) {
-//            boolean b = iGrammar.isMatch(lines[i]);
-//            YLog.i("yuyidong", "b---->" + b);
-//            ssb.append("\n");
-//            ssb.append(iGrammar.format(new SpannableStringBuilder(lines[i])));
-//        }
-//        mTextView.setText(ssb, TextView.BufferType.SPANNABLE);
-//        YLog.i("yuyidong", "ssb--->" + ssb.length() + "   ssb.toDS--->" + ssb.toString().length());
-
-//        String[] lines = text.split("\\n");
-//        for (int i = 0; i < lines.length; i++) {
-//            YLog.i(TAG, lines[i] + "    xxxx");
-//        }
     }
 }

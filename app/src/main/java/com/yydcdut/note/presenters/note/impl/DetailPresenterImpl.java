@@ -4,19 +4,22 @@ import android.app.Activity;
 import android.content.Context;
 import android.media.ExifInterface;
 import android.support.annotation.NonNull;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 
 import com.yydcdut.note.R;
 import com.yydcdut.note.injector.ContextLife;
-import com.yydcdut.note.markdown.MarkdownParser;
 import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.presenters.note.IDetailPresenter;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.PermissionUtils;
+import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.utils.permission.Permission;
 import com.yydcdut.note.views.IView;
 import com.yydcdut.note.views.note.IDetailView;
+import com.yydcdut.rxmarkdown.RxMarkdown;
+import com.yydcdut.rxmarkdown.factory.TextFactory;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -37,7 +40,6 @@ public class DetailPresenterImpl implements IDetailPresenter,
     private Activity mActivity;
     private RxPhotoNote mRxPhotoNote;
     private LocalStorageUtils mLocalStorageUtils;
-    private MarkdownParser mMarkdownParser;
 
     /* Data */
     private int mCategoryId;
@@ -48,13 +50,11 @@ public class DetailPresenterImpl implements IDetailPresenter,
 
     @Inject
     public DetailPresenterImpl(@ContextLife("Activity") Context context, Activity activity,
-                               RxPhotoNote rxPhotoNote, LocalStorageUtils localStorageUtils,
-                               MarkdownParser markdownParser) {
+                               RxPhotoNote rxPhotoNote, LocalStorageUtils localStorageUtils) {
         mContext = context;
         mActivity = activity;
         mRxPhotoNote = rxPhotoNote;
         mLocalStorageUtils = localStorageUtils;
-        mMarkdownParser = markdownParser;
     }
 
     @Override
@@ -121,9 +121,14 @@ public class DetailPresenterImpl implements IDetailPresenter,
                 });
         mRxPhotoNote.findByCategoryId(mCategoryId, mComparator)
                 .map(photoNotes -> photoNotes.get(position))
-                .map(photoNote -> mMarkdownParser.parse(photoNote.getContent()))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(spannableStringBuilder -> mIDetailView.showContent(spannableStringBuilder));
+                .subscribe((photoNote -> {
+                    RxMarkdown.with(photoNote.getContent(), mContext)
+                            .factory(TextFactory.create())
+                            .intoObservable()
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe((charSequence -> mIDetailView.showContent((SpannableStringBuilder) charSequence)),
+                                    (throwable -> YLog.e(throwable)));
+                }), (throwable -> YLog.e(throwable)));
         mIDetailView.showFabIcon(R.drawable.ic_text_format_white_24dp);
     }
 

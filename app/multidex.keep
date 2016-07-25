@@ -248,7 +248,6 @@ android/support/v4/media/MediaBrowserCompat$MediaItem$1.class
 com/frogermcs/androiddevmetrics/AndroidDevMetrics.class
 android/support/design/widget/ViewOffsetBehavior.class
 com/yydcdut/note/views/setting/impl/EditCategoryActivity$2.class
-com/yydcdut/note/markdown/chain/GrammarSingleChain.class
 android/support/v7/widget/RecyclerView$RecyclerListener.class
 android/support/v4/widget/SimpleCursorAdapter.class
 android/support/design/internal/ScrimInsetsFrameLayout.class
@@ -340,6 +339,7 @@ com/evernote/client/android/login/EvernoteLoginFragment.class
 android/support/design/widget/TabLayout$ViewPagerOnTabSelectedListener.class
 android/support/v7/app/ActionBar$NavigationMode.class
 butterknife/OnItemLongClick.class
+com/yydcdut/rxmarkdown/RxMDTextView.class
 android/support/v4/app/BaseFragmentActivityHoneycomb.class
 org/aspectj/runtime/reflect/ConstructorSignatureImpl.class
 android/support/v4/app/ActivityCompatApi23$RequestPermissionsRequestCodeValidator.class
@@ -646,7 +646,6 @@ android/support/v8/renderscript/RSDriverException.class
 android/support/v7/view/ActionMode$Callback.class
 android/support/v4/app/SharedElementCallback.class
 org/aspectj/lang/JoinPoint.class
-com/yydcdut/note/markdown/chain/MultiGrammarsChain.class
 android/support/v4/app/FragmentManager$BackStackEntry.class
 com/evernote/client/conn/mobile/TEvernoteHttpClient.class
 android/support/v4/view/ViewCompat$HCViewCompatImpl.class
@@ -739,7 +738,6 @@ com/yydcdut/note/widget/MaterialProgressDrawable$2.class
 android/support/design/widget/Snackbar$1.class
 android/support/v7/widget/TintTypedArray.class
 com/frogermcs/androiddevmetrics/R.class
-com/yydcdut/note/markdown/MarkdownParser.class
 com/squareup/leakcanary/LeakTraceElement.class
 com/yydcdut/note/widget/fab/FloatingActionButton.class
 com/yydcdut/note/views/IThemeView.class
@@ -797,7 +795,6 @@ android/support/design/widget/CoordinatorLayout$DefaultBehavior.class
 dagger/Module.class
 com/yydcdut/note/adapter/vp/DetailPagerAdapter.class
 android/support/design/widget/AppBarLayout.class
-com/yydcdut/note/markdown/chain/GrammarMultiChains.class
 com/baidu/mapapi/map/MapView.class
 com/yydcdut/note/R$id.class
 com/yydcdut/note/presenters/setting/impl/SettingPresenterImpl.class
@@ -913,6 +910,7 @@ net/vrallev/android/task/TaskResult.class
 android/support/annotation/LayoutRes.class
 android/support/design/widget/AppBarLayout$LayoutParams.class
 com/yydcdut/note/views/home/impl/HomeActivity$1.class
+com/yydcdut/rxmarkdown/RxMDEditText.class
 android/support/v7/widget/Toolbar$1.class
 android/support/v4/app/Fragment.class
 com/yydcdut/note/views/setting/impl/SettingActivity$5.class
@@ -1085,6 +1083,7 @@ android/support/v4/app/NotificationCompat$BigPictureStyle.class
 com/yydcdut/note/presenters/home/impl/HomePresenterImpl$$Lambda$19.class
 android/support/v4/view/ViewPager$ItemInfo.class
 android/support/v4/app/NotificationCompatApi20$Builder.class
+com/yydcdut/note/presenters/note/impl/EditTextPresenterImpl$$Lambda$11.class
 com/yydcdut/note/model/rx/RxCategory$$Lambda$18.class
 android/support/v4/app/NotificationCompatApi21$Builder.class
 com/yydcdut/note/presenters/login/impl/UserDetailFragPresenterImpl$$Lambda$1.class
@@ -1092,6 +1091,7 @@ com/yydcdut/note/views/note/impl/EditTextActivity_MembersInjector.class
 com/yydcdut/note/presenters/home/impl/AlbumPresenterImpl$2.class
 com/nineoldandroids/animation/ValueAnimator$3.class
 com/yydcdut/note/injector/component/DaggerServiceComponent$6.class
+com/yydcdut/note/presenters/note/impl/ZoomPresenterImpl$$Lambda$9.class
 com/yydcdut/note/views/home/impl/AlbumFragment$4.class
 com/yydcdut/note/model/rx/RxPhotoNote$$Lambda$4.class
 com/yydcdut/note/bus/CategoryCreateEvent.class
@@ -1113,6 +1113,7 @@ com/yydcdut/note/model/rx/RxFeedBack$3.class
 android/support/v7/widget/RecyclerViewAccessibilityDelegate$1.class
 com/yydcdut/note/presenters/home/impl/IntroducePresenterImpl_Factory.class
 com/yydcdut/note/model/rx/RxCategory$$Lambda$6.class
+com/yydcdut/note/presenters/note/impl/EditTextPresenterImpl$$Lambda$10.class
 android/support/v7/widget/RecyclerView$SmoothScroller$Action.class
 com/yydcdut/note/injector/module/ApplicationModule_ProvideRxGalleryPhotosFactory.class
 com/yydcdut/note/presenters/note/impl/EditTextPresenterImpl$1.class
@@ -1186,7 +1187,6 @@ com/yydcdut/note/adapter/recycler/vh/PhotoViewHolder$$ViewBinder.class
 com/baidu/mapapi/map/BaiduMap$SnapshotReadyCallback.class
 com/evernote/client/android/EvernoteSession$EvernoteService.class
 com/yydcdut/note/presenters/home/impl/HomePresenterImpl$$Lambda$14.class
-com/yydcdut/note/presenters/note/impl/ZoomPresenterImpl$$Lambda$3.class
 com/yydcdut/note/views/home/impl/AlbumFragment$$ViewBinder$2.class
 com/yydcdut/note/model/rx/RxCategory$4.class
 com/baidu/mapapi/map/BaiduMap$OnMapStatusChangeListener.class
@@ -1372,6 +1372,7 @@ com/yydcdut/note/model/rx/RxUser$8.class
 com/baidu/mapapi/map/BaiduMap$OnMapDrawFrameCallback.class
 com/yydcdut/note/model/rx/RxCategory$$Lambda$3.class
 android/support/design/widget/FloatingActionButtonImpl$InternalVisibilityChangedListener.class
+com/yydcdut/note/presenters/note/impl/DetailPresenterImpl$$Lambda$10.class
 org/greenrobot/eventbus/EventBus.class
 com/yydcdut/note/presenters/camera/impl/AdjustCameraPresenterImpl$2.class
 com/baidu/mapapi/map/BaiduMap$OnMapClickListener.class
@@ -1399,7 +1400,6 @@ dagger/internal/MembersInjectors.class
 com/yydcdut/note/model/rx/RxUser$3.class
 com/yydcdut/note/presenters/camera/impl/CameraPresenterImpl$5.class
 com/yydcdut/note/presenters/home/impl/HomePresenterImpl$$Lambda$17.class
-com/yydcdut/note/markdown/MarkdownParser_Factory.class
 com/yydcdut/note/views/note/impl/DetailActivity$$ViewBinder$3.class
 android/support/design/widget/FloatingActionButtonEclairMr1$BaseShadowAnimation.class
 com/yydcdut/note/injector/component/DaggerFragmentComponent$1.class
@@ -1442,7 +1442,6 @@ android/support/v4/app/NotificationCompatIceCreamSandwich.class
 android/support/design/widget/FloatingActionButton$2.class
 com/yydcdut/note/views/gallery/impl/PhotoDetailActivity$$ViewBinder$1.class
 android/support/v4/app/NotificationCompat$InboxStyle.class
-com/yydcdut/note/presenters/note/impl/ZoomPresenterImpl$$Lambda$2.class
 com/yydcdut/note/views/setting/impl/FeedbackActivity_MembersInjector.class
 com/yydcdut/note/presenters/camera/impl/CameraPresenterImpl$5$1.class
 com/squareup/leakcanary/internal/DisplayLeakActivity$LoadLeaks$3.class
@@ -1492,6 +1491,7 @@ com/nostra13/universalimageloader/core/ImageLoaderEngine$1.class
 com/yydcdut/sdlv/SlideAndDragListView$OnListScrollListener.class
 android/support/v4/app/NotificationCompat$NotificationCompatImplKitKat.class
 com/yydcdut/note/presenters/login/impl/LoginPresenterImpl_Factory.class
+com/yydcdut/rxmarkdown/RxMDEditText$1.class
 com/yydcdut/note/model/rx/RxUser$4$1.class
 com/yydcdut/note/injector/component/DaggerFragmentComponent$Builder.class
 com/yydcdut/note/views/login/impl/LoginActivity$$ViewBinder$1.class
@@ -1538,6 +1538,7 @@ com/yydcdut/note/presenters/note/impl/DetailPresenterImpl$$Lambda$5.class
 com/yydcdut/note/utils/PermissionUtils$1.class
 android/support/v4/view/GravityCompatJellybeanMr1.class
 com/yydcdut/note/presenters/home/impl/HomePresenterImpl$$Lambda$18.class
+com/yydcdut/note/presenters/note/impl/ZoomPresenterImpl$$Lambda$10.class
 com/yydcdut/note/views/WebViewActivity$$ViewBinder.class
 com/yydcdut/note/views/note/impl/DetailActivity$$ViewBinder$4.class
 com/nostra13/universalimageloader/core/ImageLoaderEngine.class
@@ -1605,7 +1606,6 @@ android/support/design/widget/Snackbar$5$1.class
 com/yydcdut/note/model/rx/RxFeedBack_Factory.class
 android/support/design/widget/FloatingActionButton$Behavior$1.class
 com/yydcdut/note/utils/PermissionUtils$3.class
-com/yydcdut/note/injector/module/ActivityModule_ProvideMarkdownParserFactory.class
 com/yydcdut/note/injector/component/DaggerServiceComponent$7.class
 com/yydcdut/note/model/rx/RxPhotoNote$$Lambda$14.class
 com/yydcdut/note/model/rx/RxPhotoNote$$Lambda$5.class
@@ -1666,6 +1666,7 @@ android/support/v4/widget/DrawerLayout$SavedState.class
 com/yydcdut/note/presenters/home/impl/AlbumPresenterImpl$$Lambda$24.class
 com/yydcdut/note/presenters/home/impl/AlbumPresenterImpl$5.class
 android/support/v4/app/NotificationCompat$NotificationCompatImplApi21.class
+com/yydcdut/note/presenters/note/impl/DetailPresenterImpl$$Lambda$9.class
 com/yydcdut/note/model/gallery/RxGalleryPhotos$1.class
 com/yydcdut/note/presenters/home/impl/AlbumPresenterImpl$8.class
 com/yydcdut/note/views/note/impl/EditTextActivity$$ViewBinder$1.class

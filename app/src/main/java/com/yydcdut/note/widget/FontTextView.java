@@ -4,14 +4,14 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
 import com.yydcdut.note.R;
+import com.yydcdut.rxmarkdown.RxMDTextView;
 
 /**
  * Created by yuyidong on 15-3-30.
  */
-public class FontTextView extends TextView {
+public class FontTextView extends RxMDTextView {
     private boolean isFixed = false;
 
     public FontTextView(Context context) {

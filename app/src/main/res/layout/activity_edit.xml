@@ -14,7 +14,7 @@
 
         <include layout="@layout/layout_toolbar_light"/>
 
-        <EditText
+        <com.yydcdut.rxmarkdown.RxMDEditText
             android:id="@+id/et_edit_content"
             style="@null"
             android:layout_width="fill_parent"
