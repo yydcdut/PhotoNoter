@@ -21,6 +21,7 @@ import com.yydcdut.note.R;
 import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.presenters.note.IMapPresenter;
+import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.views.IView;
 import com.yydcdut.note.views.note.IMapView;
 
@@ -94,9 +95,9 @@ public class MapPresenterImpl implements IMapPresenter, OnGetGeoCoderResultListe
                     try {
                         gps(photoNote.getBigPhotoPathWithoutFile());
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        YLog.e(e);
                     }
-                });
+                }, (throwable -> YLog.e(throwable)));
     }
 
     @Override

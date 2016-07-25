@@ -1,6 +1,5 @@
 package com.yydcdut.note.views.setting.impl;
 
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.design.widget.Snackbar;
@@ -157,18 +156,12 @@ public class EditCategoryActivity extends BaseActivity implements IEditCategoryV
                 .setTitle(R.string.rename)
                 .setCancelable(false)
                 .setView(v)
-                .setPositiveButton(R.string.dialog_btn_ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mEditCategoryPresenter.renameCategory(position, editText.getText().toString());
-                        dialog.dismiss();
-                    }
+                .setPositiveButton(R.string.dialog_btn_ok, (dialog, which) -> {
+                    mEditCategoryPresenter.renameCategory(position, editText.getText().toString());
+                    dialog.dismiss();
                 })
-                .setNegativeButton(R.string.dialog_btn_cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
+                .setNegativeButton(R.string.dialog_btn_cancel, (dialog, which) -> {
+                    dialog.dismiss();
                 })
                 .show();
     }
@@ -179,8 +172,8 @@ public class EditCategoryActivity extends BaseActivity implements IEditCategoryV
     }
 
     @Override
-    public void showSnackbar(String messgae) {
-        Snackbar.make(mListView, messgae, Snackbar.LENGTH_SHORT).show();
+    public void showSnackbar(String message) {
+        Snackbar.make(mListView, message, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.yydcdut.note.views.setting.impl;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -521,12 +520,7 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
 
     @Override
     public void showThemeColorChooser(int index) {
-        new ColorChooserDialog().show(this, index, new ColorChooserDialog.Callback() {
-            @Override
-            public void onColorSelection(int index, int color, int darker) {
-                mSettingPresenter.onThemeSelected(index);
-            }
-        });
+        new ColorChooserDialog().show(this, index, (indexCallback, color, darker) -> mSettingPresenter.onThemeSelected(indexCallback));
     }
 
     @Override
@@ -563,12 +557,9 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
                 .setItems(new String[]{
                                 getResources().getString(R.string.status_bar_immersive),
                                 getResources().getString(R.string.status_bar_translation)},
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                boolean translate = which == 0 ? false : true;
-                                mSettingPresenter.onStatusBarStyleSelected(translate);
-                            }
+                        (dialog, which) -> {
+                            boolean translate = which == 0 ? false : true;
+                            mSettingPresenter.onStatusBarStyleSelected(translate);
                         }).show();
     }
 
@@ -576,12 +567,9 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
     public void showCameraIdsChooser() throws JSONException {
         String[] items = new String[]{getResources().getString(R.string.camera_back), getResources().getString(R.string.camera_front)};
         new AlertDialog.Builder(SettingActivity.this, R.style.note_dialog)
-                .setItems(items, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        mSettingPresenter.onCameraIdsSelected(which);
-                    }
+                .setItems(items, (dialog, which) -> {
+                    dialog.dismiss();
+                    mSettingPresenter.onCameraIdsSelected(which);
                 })
                 .show();
     }
@@ -597,12 +585,7 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
             sizeArray[i] = list.get(i).toString();
         }
         new AlertDialog.Builder(SettingActivity.this, R.style.note_dialog)
-                .setItems(sizeArray, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mSettingPresenter.onPictureSizeSelected(cameraId, which);
-                    }
-                })
+                .setItems(sizeArray, (dialog, which) -> mSettingPresenter.onPictureSizeSelected(cameraId, which))
                 .show();
     }
 

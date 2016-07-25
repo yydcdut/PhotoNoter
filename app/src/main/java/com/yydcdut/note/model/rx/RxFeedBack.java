@@ -3,7 +3,9 @@ package com.yydcdut.note.model.rx;
 import android.text.TextUtils;
 
 import com.yydcdut.note.presenters.setting.IFeedbackPresenter;
+import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.LocalStorageUtils;
+import com.yydcdut.note.utils.YLog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -111,13 +113,13 @@ public class RxFeedBack {
                             subscriber.onNext(uid);
                         }
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        YLog.e(e);
                         subscriber.onError(e);
                     } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
+                        YLog.e(e);
                         subscriber.onError(e);
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        YLog.e(e);
                         subscriber.onError(e);
                     } finally {
                         subscriber.onCompleted();
@@ -159,7 +161,7 @@ public class RxFeedBack {
                                     mDeviceInfo.put("uid", s);
                                     subscriber.onNext(mDeviceInfo);
                                 } catch (JSONException e) {
-                                    e.printStackTrace();
+                                    YLog.e(e);
                                     subscriber.onError(e);
                                 }
                             }
@@ -186,7 +188,7 @@ public class RxFeedBack {
                                     JSONObject json = httpConnection(jsonObject, "http://fb.umeng.com/api/v2/feedback/reply/new");
                                     subscriber.onNext(json);
                                 } catch (IOException e) {
-                                    e.printStackTrace();
+                                    YLog.e(e);
                                     subscriber.onError(e);
                                 }
                             }
@@ -207,7 +209,7 @@ public class RxFeedBack {
                 map.put("created_at", Long.valueOf(created_id));
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            YLog.e(e);
         }
         return map;
     }
@@ -225,9 +227,9 @@ public class RxFeedBack {
             httpURLConnection.disconnect();
             return json;
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            YLog.e(e);
         } catch (JSONException e1) {
-            e1.printStackTrace();
+            YLog.e(e1);
         }
         return null;
     }
@@ -251,9 +253,9 @@ public class RxFeedBack {
             httpURLConnection.disconnect();
             return responseJson;
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            YLog.e(e);
         } catch (JSONException jsonException) {
-            jsonException.printStackTrace();
+            YLog.e(jsonException);
         }
         return null;
     }
@@ -266,8 +268,7 @@ public class RxFeedBack {
         while ((buffer = bufferedReader.readLine()) != null) {
             sb.append(buffer);
         }
-
-        bufferedReader.close();
+        FilePathUtils.closeStream(bufferedReader);
         return new JSONObject(sb.toString());
     }
 
@@ -281,7 +282,7 @@ public class RxFeedBack {
                     return true;
                 }
             } catch (JSONException var3) {
-                var3.printStackTrace();
+                YLog.e(var3);
             }
             return false;
         }

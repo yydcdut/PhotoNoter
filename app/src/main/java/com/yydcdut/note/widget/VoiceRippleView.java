@@ -6,6 +6,8 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
+import com.yydcdut.note.utils.YLog;
+
 /**
  * Created by yuyidong on 15/11/11.
  */
@@ -79,7 +81,7 @@ public class VoiceRippleView extends ImageView implements Runnable, Handler.Call
                     try {
                         mObject.wait();
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        YLog.e(e);
                     }
                 }
             } else {
@@ -129,7 +131,7 @@ public class VoiceRippleView extends ImageView implements Runnable, Handler.Call
         try {
             Thread.sleep(time);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            YLog.e(e);
         }
     }
 }

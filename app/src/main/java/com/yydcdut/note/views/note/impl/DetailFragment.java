@@ -12,6 +12,7 @@ import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.PhoneUtils;
 import com.yydcdut.note.utils.RxImageBlur;
+import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.views.BaseFragment;
 import com.yydcdut.note.views.note.IDetailFragView;
 import com.yydcdut.note.widget.AutoFitImageView;
@@ -112,7 +113,8 @@ public class DetailFragment extends BaseFragment implements IDetailFragView {
                 .radius(radius)
                 .blur(bitmap)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(drawable -> mAutoFitBlurView.setImageDrawable(drawable));
+                .subscribe(drawable -> mAutoFitBlurView.setImageDrawable(drawable)
+                        , (throwable -> YLog.e(throwable)));
     }
 
     @Override

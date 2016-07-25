@@ -27,10 +27,10 @@ import butterknife.OnClick;
  * Created by yuyidong on 15-3-25.
  */
 public class LoginActivity extends BaseActivity implements ILoginView {
+    private static final String TAG = LoginActivity.class.getSimpleName();
+
     @Inject
     LoginPresenterImpl mLoginPresenter;
-
-    private static final String TAG = LoginActivity.class.getSimpleName();
 
     @Bind(R.id.layout_progress)
     CircleProgressBarLayout mCircleProgressBar;
@@ -67,16 +67,13 @@ public class LoginActivity extends BaseActivity implements ILoginView {
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         AppCompat.setElevation(toolbar, getResources().getDimension(R.dimen.ui_elevation));
         if (BuildConfig.DEBUG) {
-            toolbar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mClickTimes++;
-                    if (mClickTimes % 5 == 0) {
-                        Intent intent = new Intent();
-                        ComponentName componentName = new ComponentName("com.yydcdut.note", "com.yydcdut.note.test.TestUIActivity");
-                        intent.setComponent(componentName);
-                        startActivity(intent);
-                    }
+            toolbar.setOnClickListener((v) -> {
+                mClickTimes++;
+                if (mClickTimes % 5 == 0) {
+                    Intent intent = new Intent();
+                    ComponentName componentName = new ComponentName("com.yydcdut.note", "com.yydcdut.note.test.TestUIActivity");
+                    intent.setComponent(componentName);
+                    startActivity(intent);
                 }
             });
         }
@@ -130,12 +127,9 @@ public class LoginActivity extends BaseActivity implements ILoginView {
     @Override
     public void showSnackBarWithAction(String message, String action, final OnSnackBarActionListener listener) {
         Snackbar.make(findViewById(R.id.cl_login), message, Snackbar.LENGTH_SHORT)
-                .setAction(action, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (listener != null) {
-                            listener.onClick();
-                        }
+                .setAction(action, (v) -> {
+                    if (listener != null) {
+                        listener.onClick();
                     }
                 }).show();
     }

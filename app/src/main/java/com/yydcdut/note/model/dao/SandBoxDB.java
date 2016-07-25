@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.yydcdut.note.bean.SandExif;
 import com.yydcdut.note.bean.SandPhoto;
 import com.yydcdut.note.model.sqlite.SandSQLite;
+import com.yydcdut.note.utils.YLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,7 @@ public class SandBoxDB {
             try {
                 categoryId = Integer.parseInt(categoryIdString);
             } catch (Exception e) {
+                YLog.e(e);
                 categoryId = -1;
             }
             String isMirrorString = cursor.getString(cursor.getColumnIndex("mirror"));
@@ -80,6 +82,7 @@ public class SandBoxDB {
             try {
                 categoryId = Integer.parseInt(categoryIdString);
             } catch (Exception e) {
+                YLog.e(e);
                 categoryId = -1;
             }
             String isMirrorString = cursor.getString(cursor.getColumnIndex("mirror"));
@@ -123,6 +126,7 @@ public class SandBoxDB {
             try {
                 categoryId = Integer.parseInt(categoryIdString);
             } catch (Exception e) {
+                YLog.e(e);
                 categoryId = -1;
             }
             String isMirrorString = cursor.getString(cursor.getColumnIndex("mirror"));

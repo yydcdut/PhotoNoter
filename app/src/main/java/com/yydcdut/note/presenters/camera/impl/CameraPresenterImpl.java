@@ -276,7 +276,7 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
         try {
             size = mLocalStorageUtils.getPictureSize(mCurrentCameraId);
         } catch (JSONException e) {
-            e.printStackTrace();
+            YLog.e(e);
         }
         return size;
     }
@@ -295,10 +295,10 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
             mLocalStorageUtils.setPictureSizes(currentCameraId, list);
             mLocalStorageUtils.setPictureSize(currentCameraId, size);
         } catch (JSONException e) {
-            e.printStackTrace();
+            YLog.e(e);
         } catch (NullPointerException e) {
             //mCameraSettingModel有可能为空
-            e.printStackTrace();
+            YLog.e(e);
         }
         return size;
     }
@@ -652,16 +652,9 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
             outputStream.flush();
         } catch (IOException e) {
             bool = false;
-            e.printStackTrace();
+            YLog.e(e);
         } finally {
-            if (outputStream != null) {
-                try {
-                    outputStream.close();
-                } catch (IOException e) {
-                    bool = false;
-                    e.printStackTrace();
-                }
-            }
+            FilePathUtils.closeStream(outputStream);
         }
 
         int orientation = 0;//todo 这个还没做，下个版本做
@@ -699,7 +692,7 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
                     orientation, latitude, longitude, whiteBalance, flash, imageLength, imageWidth,
                     make, model, imageFormat);
         } catch (RemoteException e) {
-            e.printStackTrace();
+            YLog.e(e);
             bool = false;
         }
         return bool;

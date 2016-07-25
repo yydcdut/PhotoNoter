@@ -12,6 +12,7 @@ import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.Utils;
+import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.views.IView;
 import com.yydcdut.note.views.note.IZoomView;
 
@@ -47,7 +48,8 @@ public class ZoomPresenterImpl implements IZoomPresenter {
         mRxPhotoNote.findByCategoryId(mCategoryId, mComparator)
                 .map(photoNoteList -> photoNoteList.get(mPosition))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(photoNote -> mZoomView.showImage(photoNote.getBigPhotoPathWithFile()));
+                .subscribe(photoNote -> mZoomView.showImage(photoNote.getBigPhotoPathWithFile()),
+                        (throwable -> YLog.e(throwable)));
 
     }
 
@@ -89,7 +91,8 @@ public class ZoomPresenterImpl implements IZoomPresenter {
         mRxPhotoNote.findByCategoryId(mCategoryId, mComparator)
                 .map(photoNoteList -> photoNoteList.get(mPosition))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(photoNote -> mZoomView.showImage(photoNote.getBigPhotoPathWithFile()));
+                .subscribe(photoNote -> mZoomView.showImage(photoNote.getBigPhotoPathWithFile()),
+                        (throwable -> YLog.e(throwable)));
     }
 
     @Override
@@ -107,7 +110,7 @@ public class ZoomPresenterImpl implements IZoomPresenter {
                                 sendBroadcast();
                                 mZoomView.hideProgressBar();
                                 mIsChanged = true;
-                            });
+                            }, (throwable -> YLog.e(throwable)));
                 });
     }
 

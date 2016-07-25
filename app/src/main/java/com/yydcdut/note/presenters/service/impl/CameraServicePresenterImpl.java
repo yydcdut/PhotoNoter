@@ -16,6 +16,7 @@ import com.yydcdut.note.presenters.service.ICameraServicePresenter;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.Utils;
+import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.views.IView;
 import com.yydcdut.note.views.service.ICameraServiceView;
 
@@ -58,7 +59,6 @@ public class CameraServicePresenterImpl implements ICameraServicePresenter {
 
     @Override
     public void detachView() {
-
     }
 
     @Override
@@ -82,7 +82,7 @@ public class CameraServicePresenterImpl implements ICameraServicePresenter {
                         mQueue.offer(sandPhoto);
                         mObject.notifyAll();
                     }
-                });
+                }, (throwable -> YLog.e(throwable)));
     }
 
     /**
@@ -99,7 +99,7 @@ public class CameraServicePresenterImpl implements ICameraServicePresenter {
                         try {
                             mObject.wait();
                         } catch (InterruptedException e) {
-                            e.printStackTrace();
+                            YLog.e(e);
                         }
                     }
                 } else {
@@ -147,11 +147,11 @@ public class CameraServicePresenterImpl implements ICameraServicePresenter {
                     try {
                         setExif(photoNote, sandPhoto.getSandExif(), sandPhoto.getCameraId(), sandPhoto.isMirror());
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        YLog.e(e);
                     }
                     deleteFromDBAndSDCard(sandPhoto);
                     mCameraServiceView.sendBroadCast();
-                });
+                }, (throwable -> YLog.e(throwable)));
         //todo bitmap可以重复利用?
         bitmap.recycle();
         System.gc();
@@ -162,11 +162,7 @@ public class CameraServicePresenterImpl implements ICameraServicePresenter {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         yuv.compressToJpeg(new Rect(0, 0, width, height), 100, bos);
         byte[] bytes = bos.toByteArray();
-        try {
-            bos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        FilePathUtils.closeStream(bos);
         return bytes;
     }
 
@@ -183,20 +179,13 @@ public class CameraServicePresenterImpl implements ICameraServicePresenter {
             inputStream = new FileInputStream(file);
             inputStream.read(data);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            YLog.e(e);
             bool = false;
         } catch (IOException e) {
-            e.printStackTrace();
+            YLog.e(e);
             bool = false;
         } finally {
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    bool = false;
-                }
-            }
+            FilePathUtils.closeStream(inputStream);
         }
         if (!bool) {
             return null;
@@ -252,8 +241,7 @@ public class CameraServicePresenterImpl implements ICameraServicePresenter {
     private void deleteFromDBAndSDCard(SandPhoto sandPhoto) {
         String path = FilePathUtils.getSandBoxDir() + sandPhoto.getFileName();
         mRxSandBox.deleteOne(sandPhoto)
-                .subscribe(integer -> {
-                    new File(path).delete();
-                });
+                .subscribe(integer -> new File(path).delete(),
+                        (throwable -> YLog.e(throwable)));
     }
 }

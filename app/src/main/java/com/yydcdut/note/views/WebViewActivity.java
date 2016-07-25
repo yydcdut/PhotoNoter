@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import com.yydcdut.note.R;
 import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.Const;
+import com.yydcdut.note.utils.YLog;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -130,6 +131,7 @@ public class WebViewActivity extends BaseActivity {
                     try {
                         copy2ClipBoard(url2);
                     } catch (Exception e) {
+                        YLog.e(e);
                     }
                     break;
             }

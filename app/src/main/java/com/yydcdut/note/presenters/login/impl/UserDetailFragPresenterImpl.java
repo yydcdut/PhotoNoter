@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 
-import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.yydcdut.note.R;
@@ -19,6 +17,7 @@ import com.yydcdut.note.presenters.login.IUserDetailFragPresenter;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.NetworkUtils;
+import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.views.IView;
 import com.yydcdut.note.views.login.IUserDetailFragView;
 
@@ -80,7 +79,7 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter {
                             } else {
                                 mUserDetailFragView.addQQView(aBoolean, mContext.getResources().getString(R.string.not_login));
                             }
-                        });
+                        }, (throwable -> YLog.e(throwable)));
                 mRxUser.isLoginEvernote()
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(aBoolean -> {
@@ -91,17 +90,17 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter {
                             } else {
                                 mUserDetailFragView.addEvernoteView(false, mContext.getResources().getString(R.string.not_login));
                             }
-                        });
+                        }, (throwable -> YLog.e(throwable)));
                 mUserDetailFragView.addUseStorageView(getFolderStorage());
                 mRxPhotoNote.getAllPhotoNotesNumber()
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(integer -> mUserDetailFragView.addNoteNumberView(integer + ""));
+                        .subscribe(integer -> mUserDetailFragView.addNoteNumberView(integer + ""), (throwable -> YLog.e(throwable)));
                 mRxSandBox.getNumber()
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(integer -> mUserDetailFragView.addSandBoxNumber(integer + ""));
+                        .subscribe(integer -> mUserDetailFragView.addSandBoxNumber(integer + ""), (throwable -> YLog.e(throwable)));
                 mRxPhotoNote.getWordsNumber()
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(integer -> mUserDetailFragView.addWordNumber(integer + ""));
+                        .subscribe(integer -> mUserDetailFragView.addWordNumber(integer + ""), (throwable -> YLog.e(throwable)));
                 mUserDetailFragView.addCloud(getCloud());
 
                 break;
@@ -124,7 +123,7 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter {
     public boolean checkInternet() {
         if (!NetworkUtils.isNetworkConnected(mContext)) {
             //没有网络
-            mUserDetailFragView.showSnakebar(mContext.getResources().getString(R.string.toast_no_connection));
+            mUserDetailFragView.showSnackbar(mContext.getResources().getString(R.string.toast_no_connection));
             return false;
         }
         return true;
@@ -152,17 +151,17 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter {
 
                                     @Override
                                     public void onError(Throwable e) {
-                                        mUserDetailFragView.showSnakebar(mContext.getResources().getString(R.string.toast_fail));
+                                        mUserDetailFragView.showSnackbar(mContext.getResources().getString(R.string.toast_fail));
                                     }
 
                                     @Override
                                     public void onNext(IUser iUser) {
                                         mUserDetailFragView.showQQ(iUser.getName(), iUser.getImagePath());
-                                        mUserDetailFragView.showSnakebar(mContext.getResources().getString(R.string.toast_success));
+                                        mUserDetailFragView.showSnackbar(mContext.getResources().getString(R.string.toast_success));
                                     }
                                 });
                     }
-                });
+                }, (throwable -> YLog.e(throwable)));
     }
 
     @Override
@@ -176,7 +175,7 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter {
                     } else {
                         mRxUser.loginEvernote(mActivity);
                     }
-                });
+                }, (throwable -> YLog.e(throwable)));
     }
 
     private String getFolderStorage() {
@@ -205,13 +204,10 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter {
 
     private String getLocation() {
         mLocationClient = new LocationClient(mContext);
-        mLocationClient.registerLocationListener(new BDLocationListener() {
-            @Override
-            public void onReceiveLocation(BDLocation bdLocation) {
-                mLocation = bdLocation.getAddress().address;
-                mUserDetailFragView.updateLocation(mLocation);
-                mLocationClient.stop();
-            }
+        mLocationClient.registerLocationListener((bdLocation) -> {
+            mLocation = bdLocation.getAddress().address;
+            mUserDetailFragView.updateLocation(mLocation);
+            mLocationClient.stop();
         });
         LocationClientOption option = new LocationClientOption();
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备

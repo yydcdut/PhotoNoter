@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -122,12 +121,7 @@ public class PermissionUtils {
                 .setTitle(R.string.permission_title)
                 .setMessage(explanation)
                 .setCancelable(false)
-                .setPositiveButton(R.string.dialog_btn_ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        ActivityCompat.requestPermissions(activity, permissions, code);
-                    }
-                })
+                .setPositiveButton(R.string.dialog_btn_ok, (dialogInterface, which) -> ActivityCompat.requestPermissions(activity, permissions, code))
                 .create();
         dialog.show();
     }
@@ -139,12 +133,7 @@ public class PermissionUtils {
                 .setTitle(R.string.permission_title)
                 .setMessage(explanation)
                 .setCancelable(false)
-                .setPositiveButton(R.string.dialog_btn_ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        FragmentCompat.requestPermissions(fragment, permissions, code);
-                    }
-                })
+                .setPositiveButton(R.string.dialog_btn_ok, (dialogCallback, which) -> FragmentCompat.requestPermissions(fragment, permissions, code))
                 .create();
         dialog.show();
     }
@@ -164,18 +153,11 @@ public class PermissionUtils {
                     .setTitle(R.string.permission_title)
                     .setMessage(explanation)
                     .setCancelable(false)
-                    .setPositiveButton(R.string.dialog_btn_ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions(activity, permissions, code);
-                        }
-                    })
-                    .setNegativeButton(R.string.dialog_btn_cancel, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (listener != null) {
-                                listener.onDenied(code);
-                            }
+                    .setPositiveButton(R.string.dialog_btn_ok, (dialogCallback, which) ->
+                            ActivityCompat.requestPermissions(activity, permissions, code))
+                    .setNegativeButton(R.string.dialog_btn_cancel, (dialogCallback2, which) -> {
+                        if (listener != null) {
+                            listener.onDenied(code);
                         }
                     })
                     .create();
@@ -200,18 +182,10 @@ public class PermissionUtils {
                     .setTitle(R.string.permission_title)
                     .setMessage(explanation)
                     .setCancelable(false)
-                    .setPositiveButton(R.string.dialog_btn_ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            FragmentCompat.requestPermissions(fragment, permissions, code);
-                        }
-                    })
-                    .setNegativeButton(R.string.dialog_btn_cancel, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (listener != null) {
-                                listener.onDenied(code);
-                            }
+                    .setPositiveButton(R.string.dialog_btn_ok, (dialogInterface, which) -> FragmentCompat.requestPermissions(fragment, permissions, code))
+                    .setNegativeButton(R.string.dialog_btn_cancel, (dialogInterface, which) -> {
+                        if (listener != null) {
+                            listener.onDenied(code);
                         }
                     })
                     .create();
@@ -267,9 +241,9 @@ public class PermissionUtils {
                         }
                         method.invoke(iPresenter);
                     } catch (IllegalAccessException e) {
-                        YLog.e(TAG, "IllegalAccessException--->" + e);
+                        YLog.e(e);
                     } catch (InvocationTargetException e) {
-                        YLog.e(TAG, "InvocationTargetException--->" + e);
+                        YLog.e(e);
                     }
                 }
             }

@@ -39,6 +39,7 @@ import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.ThemeHelper;
+import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.views.BaseActivity;
 import com.yydcdut.note.views.home.IHomeView;
 import com.yydcdut.note.views.login.impl.LoginActivity;
@@ -360,6 +361,7 @@ public class HomeActivity extends BaseActivity implements IHomeView, View.OnClic
                 }
             } catch (Exception e) {
                 //有时候mFragment会为空
+                YLog.e(e);
             }
         }
     }

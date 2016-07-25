@@ -108,7 +108,6 @@ public class FeedbackActivity extends BaseActivity implements IFeedbackView {
     @Override
     public void showContactTitle() {
         mToolbar.setTitle(getResources().getString(R.string.about_contact));
-
     }
 
     @Override
@@ -121,12 +120,7 @@ public class FeedbackActivity extends BaseActivity implements IFeedbackView {
         mProgressLayout.hide();
         mOkView.setVisibility(View.VISIBLE);
         mOkView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_scale_small_2_big));
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                finish();
-            }
-        }, 600);
+        new Handler().postDelayed(() -> finish(), 600);
     }
 
     @Override
@@ -151,13 +145,10 @@ public class FeedbackActivity extends BaseActivity implements IFeedbackView {
             }
         });
         valueAnimator.start();
-        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                PointF point = (PointF) animation.getAnimatedValue();
-                mFab.setX(point.x);
-                mFab.setY(point.y);
-            }
+        valueAnimator.addUpdateListener((animation) -> {
+            PointF point = (PointF) animation.getAnimatedValue();
+            mFab.setX(point.x);
+            mFab.setY(point.y);
         });
         valueAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
@@ -183,12 +174,7 @@ public class FeedbackActivity extends BaseActivity implements IFeedbackView {
     public void clickSendFeedback(View v) {
         boolean wannaStartAnimation = mFeedbackPresenter.checkFeendback();
         if (wannaStartAnimation) {
-            startSendingAnimation(new RevealView.RevealAnimationListener() {
-                @Override
-                public void finish() {
-                    mFeedbackPresenter.sendFeedback(mEmailText.getText().toString(), mContentText.getText().toString());
-                }
-            });
+            startSendingAnimation(() -> mFeedbackPresenter.sendFeedback(mEmailText.getText().toString(), mContentText.getText().toString()));
         }
     }
 

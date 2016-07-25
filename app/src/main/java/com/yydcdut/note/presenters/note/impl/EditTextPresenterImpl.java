@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.evernote.client.android.EvernoteSession;
 import com.evernote.client.android.EvernoteUtil;
@@ -33,12 +32,12 @@ import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.model.rx.RxUser;
 import com.yydcdut.note.presenters.note.IEditTextPresenter;
+import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.PermissionUtils;
 import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.utils.permission.Permission;
 import com.yydcdut.note.views.IView;
 import com.yydcdut.note.views.note.IEditTextView;
-import com.yydcdut.note.widget.fab2.snack.OnSnackBarActionListener;
 import com.yydcdut.rxmarkdown.RxMarkdown;
 import com.yydcdut.rxmarkdown.factory.EditFactory;
 
@@ -65,6 +64,7 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class EditTextPresenterImpl implements IEditTextPresenter, PermissionUtils.OnPermissionCallBacks {
     private static final String TAG = EditTextPresenterImpl.class.getSimpleName();
+
     private Context mContext;
     private Activity mActivity;
     private RxPhotoNote mRxPhotoNote;
@@ -144,8 +144,9 @@ public class EditTextPresenterImpl implements IEditTextPresenter, PermissionUtil
                     photoNote.setTitle(mEditTextView.getNoteTitle());
                     photoNote.setContent(mEditTextView.getNoteContent());
                     photoNote.setEditedNoteTime(System.currentTimeMillis());
-                    mRxPhotoNote.updatePhotoNote(photoNote).subscribe();
-                });
+                    mRxPhotoNote.updatePhotoNote(photoNote).subscribe(photoNotes -> {
+                    }, (throwable -> YLog.e(throwable)));
+                }, (throwable -> YLog.e(throwable)));
     }
 
     @Override
@@ -166,7 +167,7 @@ public class EditTextPresenterImpl implements IEditTextPresenter, PermissionUtil
                                         mEditTextView.showSnakeBar(mContext.getResources().getString(R.string.toast_fail));
                                     }
                                     mEditTextView.hideProgressBar();
-                                });
+                                }, (throwable -> YLog.e(throwable)));
                     } else {
                         mEditTextView.showSnakeBar(mContext.getResources().getString(R.string.not_login));
                     }
@@ -228,21 +229,13 @@ public class EditTextPresenterImpl implements IEditTextPresenter, PermissionUtil
             }
             mLastTime = System.currentTimeMillis();
             mEditTextView.setFabMenuLayoutClickable(false);
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mEditTextView.setFabMenuLayoutClickable(true);
-                }
-            }, 2000);
+            mHandler.postDelayed(() -> mEditTextView.setFabMenuLayoutClickable(true), 2000);
             mEditTextView.showSnakeBarWithAction(mContext.getResources().getString(R.string.toast_exit),
-                    mContext.getResources().getString(R.string.toast_save), new OnSnackBarActionListener() {
-                        @Override
-                        public void onClick() {
-                            mIsFinishing = true;
-                            saveText();
-                            finishActivity(true);
-                        }
-                    });
+                    mContext.getResources().getString(R.string.toast_save), (() -> {
+                        mIsFinishing = true;
+                        saveText();
+                        finishActivity(true);
+                    }));
             return;
         }
 
@@ -260,14 +253,10 @@ public class EditTextPresenterImpl implements IEditTextPresenter, PermissionUtil
     /**
      * 初始化监听器。
      */
-    private InitListener mInitListener = new InitListener() {
-
-        @Override
-        public void onInit(int code) {
-            YLog.d(TAG, "SpeechRecognizer init() code = " + code);
-            if (code != ErrorCode.SUCCESS) {
-                YLog.d(TAG, "初始化失败，错误码：" + code);
-            }
+    private InitListener mInitListener = (code) -> {
+        YLog.d(TAG, "SpeechRecognizer init() code = " + code);
+        if (code != ErrorCode.SUCCESS) {
+            YLog.d(TAG, "初始化失败，错误码：" + code);
         }
     };
 
@@ -298,7 +287,7 @@ public class EditTextPresenterImpl implements IEditTextPresenter, PermissionUtil
 
         @Override
         public void onResult(RecognizerResult results, boolean isLast) {
-            Log.d(TAG, results.getResultString());
+            YLog.d(TAG, results.getResultString());
             mEditTextView.setNoteContent(mContentString + getResultString(results));
         }
 
@@ -326,7 +315,7 @@ public class EditTextPresenterImpl implements IEditTextPresenter, PermissionUtil
                 JSONObject resultJson = new JSONObject(results.getResultString());
                 sn = resultJson.optString("sn");
             } catch (JSONException e) {
-                e.printStackTrace();
+                YLog.e(e);
             }
 
             mIatResults.put(sn, text);
@@ -359,7 +348,7 @@ public class EditTextPresenterImpl implements IEditTextPresenter, PermissionUtil
 //				}
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                YLog.e(e);
             }
             return ret.toString();
         }
@@ -426,34 +415,23 @@ public class EditTextPresenterImpl implements IEditTextPresenter, PermissionUtil
                 try {
                     noteStoreClient.createNote(note);
                 } catch (EDAMNotFoundException e) {
-                    e.printStackTrace();
+                    YLog.e(e);
                 }
 
             } catch (IOException e) {
-                e.printStackTrace();
-                YLog.i("yuyidong", "IOException--->" + e.getMessage());
+                YLog.e(e);
                 isSuccess = false;
             } finally {
-                if (in != null) {
-                    try {
-                        in.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        isSuccess = false;
-                    }
-                }
+                FilePathUtils.closeStream(in);
             }
         } catch (EDAMUserException e) {
-            e.printStackTrace();
-            YLog.i("yuyidong", "EDAMUserException--->" + e.getMessage());
+            YLog.e(e);
             isSuccess = false;
         } catch (EDAMSystemException e) {
-            e.printStackTrace();
-            YLog.i("yuyidong", "EDAMSystemException--->" + e.getMessage());
+            YLog.e(e);
             isSuccess = false;
         } catch (TException e) {
-            e.printStackTrace();
-            YLog.i("yuyidong", "TException--->" + e.getMessage());
+            YLog.e(e);
             isSuccess = false;
         }
         return isSuccess;

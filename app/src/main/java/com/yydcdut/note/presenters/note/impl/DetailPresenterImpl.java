@@ -34,6 +34,7 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class DetailPresenterImpl implements IDetailPresenter,
         PermissionUtils.OnPermissionCallBacks {
+
     private IDetailView mIDetailView;
 
     private Context mContext;
@@ -67,7 +68,7 @@ public class DetailPresenterImpl implements IDetailPresenter,
                     mIDetailView.setViewPagerAdapter(photoNoteList, mInitPosition, mComparator);
                     showNote(mInitPosition);
                     mIDetailView.initAnimationView();
-                });
+                }, (throwable -> YLog.e(throwable)));
     }
 
     @Override
@@ -91,9 +92,9 @@ public class DetailPresenterImpl implements IDetailPresenter,
                         String exif = getExifInformation(photoNote.getBigPhotoPathWithoutFile());
                         mIDetailView.showExif(exif);
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        YLog.e(e);
                     }
-                });
+                }, (throwable -> YLog.e(throwable)));
         mIDetailView.showFabIcon(R.drawable.ic_pin_drop_white_24dp);
     }
 
@@ -118,7 +119,7 @@ public class DetailPresenterImpl implements IDetailPresenter,
                     String createdTime = decodeTimeInDetail(photoNote1.getCreatedNoteTime());
                     String editedTime = decodeTimeInDetail(photoNote1.getEditedNoteTime());
                     mIDetailView.showNoteWithoutContent(title, createdTime, editedTime);
-                });
+                }, (throwable -> YLog.e(throwable)));
         mRxPhotoNote.findByCategoryId(mCategoryId, mComparator)
                 .map(photoNotes -> photoNotes.get(position))
                 .subscribe((photoNote -> {
@@ -209,7 +210,7 @@ public class DetailPresenterImpl implements IDetailPresenter,
                     break;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            YLog.e(e);
         }
         return size;
     }

@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
@@ -296,13 +295,10 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
                 mAlbumPresenter.movePhotos2AnotherCategory();
                 break;
             case R.id.menu_setting:
-                showLayoutRevealColorView(new RevealView.RevealAnimationListener() {
-                    @Override
-                    public void finish() {
-                        Intent intent = new Intent(getContext(), SettingActivity.class);
-                        startActivityForResult(intent, REQUEST_NOTHING);
-                        getActivity().overridePendingTransition(R.anim.activity_no_animation, R.anim.activity_no_animation);
-                    }
+                showLayoutRevealColorView(() -> {
+                    Intent intent = new Intent(getContext(), SettingActivity.class);
+                    startActivityForResult(intent, REQUEST_NOTHING);
+                    getActivity().overridePendingTransition(R.anim.activity_no_animation, R.anim.activity_no_animation);
                 });
                 break;
             case R.id.menu_select:
@@ -329,18 +325,8 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
                 .setTitle(R.string.dialog_title_new)
                 .setCancelable(false)
                 .setView(v)
-                .setPositiveButton(R.string.dialog_btn_ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mAlbumPresenter.createCategory(editText.getText().toString());
-                    }
-                })
-                .setNegativeButton(R.string.dialog_btn_cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
+                .setPositiveButton(R.string.dialog_btn_ok, (dialog, which) -> mAlbumPresenter.createCategory(editText.getText().toString()))
+                .setNegativeButton(R.string.dialog_btn_cancel, (dialog, which) -> dialog.dismiss())
                 .show();
     }
 
@@ -348,13 +334,10 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
     public void clickFabCamera(View v) {
         mAlbumPresenter.jump2Camera();
         //过10s自动关闭
-        mMainHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (mFloatingActionsMenu != null && mFloatingActionsMenu.isExpanded()) {
-                    mFloatingActionsMenu.collapse(false);
-                    hideAlbumRevealColorView(getLocationInView(mAlbumRevealView, mFloatingView));
-                }
+        mMainHandler.postDelayed(() -> {
+            if (mFloatingActionsMenu != null && mFloatingActionsMenu.isExpanded()) {
+                mFloatingActionsMenu.collapse(false);
+                hideAlbumRevealColorView(getLocationInView(mAlbumRevealView, mFloatingView));
             }
         }, 10000);
     }
@@ -368,12 +351,9 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
         Intent intent = new Intent(getActivity(), GalleryActivity.class);
         startActivityForResult(intent, REQUEST_DATA_IMAGE);
         //过1s自动关闭
-        mMainHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mFloatingActionsMenu.collapse(false);
-                hideAlbumRevealColorView(getLocationInView(mAlbumRevealView, mFloatingView));
-            }
+        mMainHandler.postDelayed(() -> {
+            mFloatingActionsMenu.collapse(false);
+            hideAlbumRevealColorView(getLocationInView(mAlbumRevealView, mFloatingView));
         }, 1000);
     }
 
@@ -447,19 +427,15 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
     /**
      * floatingActionButton打开的时候不能点击后面的gridview
      */
-    private View.OnTouchListener mEmptyTouch = new View.OnTouchListener() {
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            if (v.getId() == R.id.reveal_album) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    Point point = new Point((int) event.getX(), (int) event.getY());
-                    mFloatingActionsMenu.collapse(false);
-                    hideAlbumRevealColorView(point);
-                }
+    private View.OnTouchListener mEmptyTouch = (v, event) -> {
+        if (v.getId() == R.id.reveal_album) {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                Point point = new Point((int) event.getX(), (int) event.getY());
+                mFloatingActionsMenu.collapse(false);
+                hideAlbumRevealColorView(point);
             }
-            return true;
         }
+        return true;
     };
 
     /**
@@ -607,12 +583,9 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
     public void showMovePhotos2AnotherCategoryDialog(final String[] categoryIdStringArray, final String[] categoryLabelArray) {
         new AlertDialog.Builder(getContext(), R.style.note_dialog)
                 .setTitle(R.string.dialog_title_move)
-                .setItems(categoryLabelArray, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mAlbumPresenter.changePhotosCategory(Integer.parseInt(categoryIdStringArray[which]));
-                        menuPreviewMode();
-                    }
+                .setItems(categoryLabelArray, (dialog, which) -> {
+                    mAlbumPresenter.changePhotosCategory(Integer.parseInt(categoryIdStringArray[which]));
+                    menuPreviewMode();
                 })
                 .show();
     }

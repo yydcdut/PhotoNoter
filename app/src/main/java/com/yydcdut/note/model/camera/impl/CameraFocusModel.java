@@ -64,7 +64,7 @@ public class CameraFocusModel implements ICameraFocus {
             try {
                 mCamera.setParameters(parameters);
             } catch (Exception e) {
-                YLog.i(TAG, "triggerFocus   setParameters fail");
+                YLog.e(e);
             }
             mCamera.autoFocus(mAutoFocusCallback);
         }

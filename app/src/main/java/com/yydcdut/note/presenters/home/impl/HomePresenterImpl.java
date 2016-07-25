@@ -25,6 +25,7 @@ import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.PermissionUtils;
+import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.utils.permission.Permission;
 import com.yydcdut.note.views.IView;
 import com.yydcdut.note.views.home.IHomeView;
@@ -103,7 +104,7 @@ public class HomePresenterImpl implements IHomePresenter, PermissionUtils.OnPerm
                     if (!checkSuccessful) {
                         mHomeView.setCheckPosition(0);
                     }
-                });
+                }, (throwable -> YLog.e(throwable)));
     }
 
     @Override
@@ -116,8 +117,8 @@ public class HomePresenterImpl implements IHomePresenter, PermissionUtils.OnPerm
                                 mHomeView.notifyCategoryDataChanged();
                                 mCategoryId = categories1.get(position).getId();
                                 mHomeView.changeFragment(mCategoryId);
-                            });
-                });
+                            }, (throwable -> YLog.e(throwable)));
+                }, (throwable -> YLog.e(throwable)));
     }
 
     @Override
@@ -128,14 +129,14 @@ public class HomePresenterImpl implements IHomePresenter, PermissionUtils.OnPerm
                     mHomeView.notifyCategoryDataChanged();
                     mCategoryId = category.getId();
                     mHomeView.changePhotos4Category(mCategoryId);
-                });
+                }, (throwable -> YLog.e(throwable)));
     }
 
     @Override
     public void setAdapter() {
         mRxCategory.getAllCategories()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(categories -> mHomeView.setCategoryList(categories));
+                .subscribe(categories -> mHomeView.setCategoryList(categories), (throwable -> YLog.e(throwable)));
     }
 
     @Override
@@ -150,7 +151,7 @@ public class HomePresenterImpl implements IHomePresenter, PermissionUtils.OnPerm
                             } else {
                                 mHomeView.jump2LoginActivity();
                             }
-                        });
+                        }, (throwable -> YLog.e(throwable)));
                 break;
             case USER_TWO:
                 mRxUser.isLoginEvernote()
@@ -161,7 +162,7 @@ public class HomePresenterImpl implements IHomePresenter, PermissionUtils.OnPerm
                             } else {
                                 mHomeView.jump2LoginActivity();
                             }
-                        });
+                        }, (throwable -> YLog.e(throwable)));
                 break;
         }
     }
@@ -183,7 +184,7 @@ public class HomePresenterImpl implements IHomePresenter, PermissionUtils.OnPerm
                     } else {
                         mHomeView.updateQQInfo(false, null, null);
                     }
-                });
+                }, (throwable -> YLog.e(throwable)));
     }
 
     @Override
@@ -196,7 +197,7 @@ public class HomePresenterImpl implements IHomePresenter, PermissionUtils.OnPerm
                     } else {
                         mHomeView.updateEvernoteInfo(false);
                     }
-                });
+                }, (throwable -> YLog.e(throwable)));
 
     }
 
@@ -211,7 +212,7 @@ public class HomePresenterImpl implements IHomePresenter, PermissionUtils.OnPerm
                                 mCategoryId = category.getId();
                             }
                         }
-                    });
+                    }, (throwable -> YLog.e(throwable)));
         }
 
         //从另外个进程过来的数据
@@ -225,8 +226,8 @@ public class HomePresenterImpl implements IHomePresenter, PermissionUtils.OnPerm
                                             .observeOn(AndroidSchedulers.mainThread())
                                             .subscribe(categories -> {
                                                 mHomeView.notifyCategoryDataChanged();
-                                            });
-                                });
+                                            }, (throwable -> YLog.e(throwable)));
+                                }, (throwable -> YLog.e(throwable)));
                     });
         }
 
@@ -234,7 +235,8 @@ public class HomePresenterImpl implements IHomePresenter, PermissionUtils.OnPerm
         if (broadcast_service) {
             mRxCategory.getAllCategories()
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(categories -> mHomeView.updateCategoryList(categories));
+                    .subscribe(categories -> mHomeView.updateCategoryList(categories),
+                            (throwable -> YLog.e(throwable)));
         }
     }
 
@@ -248,28 +250,28 @@ public class HomePresenterImpl implements IHomePresenter, PermissionUtils.OnPerm
     public void onCategoryCreateEvent(CategoryCreateEvent categoryCreateEvent) {
         mRxCategory.getAllCategories()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(categories -> mHomeView.updateCategoryList(categories));
+                .subscribe(categories -> mHomeView.updateCategoryList(categories), (throwable -> YLog.e(throwable)));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCategoryUpdateEvent(CategoryUpdateEvent categoryUpdateEvent) {
         mRxCategory.getAllCategories()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(categories -> mHomeView.updateCategoryList(categories));
+                .subscribe(categories -> mHomeView.updateCategoryList(categories), (throwable -> YLog.e(throwable)));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCategoryMoveEvent(CategoryMoveEvent categoryMoveEvent) {
         mRxCategory.getAllCategories()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(categories -> mHomeView.updateCategoryList(categories));
+                .subscribe(categories -> mHomeView.updateCategoryList(categories), (throwable -> YLog.e(throwable)));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCategoryRenameEvent(CategoryEditEvent categoryEditEvent) {
         mRxCategory.getAllCategories()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(categories -> mHomeView.updateCategoryList(categories));
+                .subscribe(categories -> mHomeView.updateCategoryList(categories), (throwable -> YLog.e(throwable)));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -288,7 +290,7 @@ public class HomePresenterImpl implements IHomePresenter, PermissionUtils.OnPerm
                     if (mCategoryId != beforeCategoryId) {
                         mHomeView.changePhotos4Category(mCategoryId);
                     }
-                });
+                }, (throwable -> YLog.e(throwable)));
 
     }
 
@@ -303,8 +305,8 @@ public class HomePresenterImpl implements IHomePresenter, PermissionUtils.OnPerm
                                         .observeOn(AndroidSchedulers.mainThread())
                                         .subscribe(categories -> {
                                             mHomeView.updateCategoryList(categories);
-                                        });
-                            });
+                                        }, (throwable -> YLog.e(throwable)));
+                            }, (throwable -> YLog.e(throwable)));
                 });
     }
 
@@ -319,9 +321,9 @@ public class HomePresenterImpl implements IHomePresenter, PermissionUtils.OnPerm
                                         .observeOn(AndroidSchedulers.mainThread())
                                         .subscribe(categories -> {
                                             mHomeView.updateCategoryList(categories);
-                                        });
-                            });
-                });
+                                        }, (throwable -> YLog.e(throwable)));
+                            }, (throwable -> YLog.e(throwable)));
+                }, (throwable -> YLog.e(throwable)));
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
@@ -332,7 +334,7 @@ public class HomePresenterImpl implements IHomePresenter, PermissionUtils.OnPerm
                         FilePathUtils.saveImage(FilePathUtils.getQQImagePath(),
                                 ImageLoaderManager.loadImageSync(iUser.getNetImagePath()));
                     }
-                });
+                }, (throwable -> YLog.e(throwable)));
     }
 
     /**

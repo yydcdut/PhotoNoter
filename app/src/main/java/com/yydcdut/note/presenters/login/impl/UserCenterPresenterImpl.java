@@ -9,9 +9,9 @@ import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.rx.RxUser;
 import com.yydcdut.note.presenters.login.IUserCenterPresenter;
 import com.yydcdut.note.utils.NetworkUtils;
+import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.views.IView;
 import com.yydcdut.note.views.login.IUserCenterView;
-import com.yydcdut.note.widget.fab2.snack.OnSnackBarActionListener;
 
 import javax.inject.Inject;
 
@@ -36,9 +36,9 @@ public class UserCenterPresenterImpl implements IUserCenterPresenter {
         mInitState = new boolean[2];
         mRxUser = rxUser;
         mRxUser.isLoginQQ()
-                .subscribe(aBoolean -> mInitState[0] = aBoolean);
+                .subscribe(aBoolean -> mInitState[0] = aBoolean, (throwable -> YLog.e(throwable)));
         mRxUser.isLoginEvernote()
-                .subscribe(aBoolean -> mInitState[1] = aBoolean);
+                .subscribe(aBoolean -> mInitState[1] = aBoolean, (throwable -> YLog.e(throwable)));
 
     }
 
@@ -83,13 +83,7 @@ public class UserCenterPresenterImpl implements IUserCenterPresenter {
                                     @Override
                                     public void onError(Throwable e) {
                                         mUserCenterView.showSnackBarWithAction(mContext.getResources().getString(R.string.toast_fail),
-                                                mContext.getResources().getString(R.string.toast_retry),
-                                                new OnSnackBarActionListener() {
-                                                    @Override
-                                                    public void onClick() {
-                                                        loginQQ();
-                                                    }
-                                                });
+                                                mContext.getResources().getString(R.string.toast_retry), (() -> loginQQ()));
                                     }
 
                                     @Override
@@ -100,7 +94,7 @@ public class UserCenterPresenterImpl implements IUserCenterPresenter {
                                     }
                                 });
                     }
-                });
+                }, (throwable -> YLog.e(throwable)));
     }
 
     @Override
@@ -110,7 +104,7 @@ public class UserCenterPresenterImpl implements IUserCenterPresenter {
                     if (!aBoolean) {
                         mRxUser.loginEvernote(mActivity).subscribe();
                     }
-                });
+                }, (throwable -> YLog.e(throwable)));
     }
 
     @Override
@@ -126,16 +120,11 @@ public class UserCenterPresenterImpl implements IUserCenterPresenter {
                             mUserCenterView.showEvernoteInFrag(true, mContext.getResources().getString(R.string.user_failed));
                         }
                         mUserCenterView.showSnackBar(mContext.getResources().getString(R.string.toast_success));
-                    });
+                    }, (throwable -> YLog.e(throwable)));
         } else {
             mUserCenterView.showSnackBarWithAction(mContext.getResources().getString(R.string.toast_fail),
-                    mContext.getResources().getString(R.string.toast_retry),
-                    new OnSnackBarActionListener() {
-                        @Override
-                        public void onClick() {
-                            mRxUser.loginEvernote(mActivity).subscribe();
-                        }
-                    });
+                    mContext.getResources().getString(R.string.toast_retry), (() -> mRxUser.loginEvernote(mActivity).subscribe((aBoolean -> {
+                    }), (throwable -> YLog.e(throwable)))));
         }
     }
 
@@ -143,28 +132,15 @@ public class UserCenterPresenterImpl implements IUserCenterPresenter {
     public void initQQ() {
         mRxUser.getQQ()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<IUser>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        mUserCenterView.showQQInfo(null, null);
-                    }
-
-                    @Override
-                    public void onNext(IUser iUser) {
-                        mUserCenterView.showQQInfo(iUser.getName(), iUser.getImagePath());
-                    }
-                });
+                .subscribe(iUser -> mUserCenterView.showQQInfo(iUser.getName(), iUser.getImagePath()),
+                        (throwable -> YLog.e(throwable)));
     }
 
     @Override
     public void initEvernote() {
         mRxUser.isLoginEvernote()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(aBoolean -> mUserCenterView.showEvernote(aBoolean));
+                .subscribe(aBoolean -> mUserCenterView.showEvernote(aBoolean), (throwable -> YLog.e(throwable)));
     }
 
     @Override
@@ -183,6 +159,6 @@ public class UserCenterPresenterImpl implements IUserCenterPresenter {
                                     }
                                 });
                     }
-                });
+                }, (throwable -> YLog.e(throwable)));
     }
 }

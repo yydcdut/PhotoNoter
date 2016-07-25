@@ -11,6 +11,7 @@ import android.os.StatFs;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 
 import java.io.BufferedOutputStream;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -201,16 +202,9 @@ public class FilePathUtils {
             bos.flush();// 输出
         } catch (IOException e) {
             bool = false;
-            e.printStackTrace();
+            YLog.e(e);
         } finally {
-            try {
-                if (bos != null) {
-                    bos.close();// 关闭
-                }
-            } catch (IOException e) {
-                bool = false;
-                e.printStackTrace();
-            }
+            closeStream(bos);
         }
         return bool;
     }
@@ -244,16 +238,9 @@ public class FilePathUtils {
             bos.flush();// 输出
         } catch (IOException e) {
             bool = false;
-            e.printStackTrace();
+            YLog.e(e);
         } finally {
-            try {
-                if (bos != null) {
-                    bos.close();// 关闭
-                }
-            } catch (IOException e) {
-                bool = false;
-                e.printStackTrace();
-            }
+            closeStream(bos);
         }
 
         return bool;
@@ -280,16 +267,9 @@ public class FilePathUtils {
             bos.flush();// 输出
         } catch (IOException e) {
             bool = false;
-            e.printStackTrace();
+            YLog.e(e);
         } finally {
-            try {
-                if (bos != null) {
-                    bos.close();// 关闭
-                }
-            } catch (IOException e) {
-                bool = false;
-                e.printStackTrace();
-            }
+            closeStream(bos);
         }
         return bool;
     }
@@ -447,9 +427,8 @@ public class FilePathUtils {
         while ((length = inputStream.read(buffer)) > 0) {
             outputStream.write(buffer, 0, length);
         }
-
-        inputStream.close();
-        outputStream.close();
+        closeStream(inputStream);
+        closeStream(outputStream);
     }
 
     /**
@@ -469,9 +448,8 @@ public class FilePathUtils {
         while ((length = inputStream.read(buffer)) > 0) {
             outputStream.write(buffer, 0, length);
         }
-
-        inputStream.close();
-        outputStream.close();
+        closeStream(inputStream);
+        closeStream(outputStream);
     }
 
     /**
@@ -502,16 +480,9 @@ public class FilePathUtils {
             bos.flush();// 输出
         } catch (IOException e) {
             bool = false;
-            e.printStackTrace();
+            YLog.e(e);
         } finally {
-            try {
-                if (bos != null) {
-                    bos.close();// 关闭
-                }
-            } catch (IOException e) {
-                bool = false;
-                e.printStackTrace();
-            }
+            closeStream(bos);
         }
         return bool;
     }
@@ -520,5 +491,13 @@ public class FilePathUtils {
         return FULL_PATH + SANDBOX_DIR_NAME + File.separator;
     }
 
-
+    public static void closeStream(Closeable closeable) {
+        if (closeable != null) {
+            try {
+                closeable.close();
+            } catch (IOException e) {
+                YLog.e(e);
+            }
+        }
+    }
 }

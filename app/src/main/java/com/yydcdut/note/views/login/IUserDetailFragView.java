@@ -36,6 +36,6 @@ public interface IUserDetailFragView extends IView {
 
     void showQQ(String name, String path);
 
-    void showSnakebar(String message);
+    void showSnackbar(String message);
 
 }

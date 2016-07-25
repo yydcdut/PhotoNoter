@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 
 import com.yydcdut.note.R;
-import com.yydcdut.note.bean.user.IUser;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.rx.RxUser;
 import com.yydcdut.note.presenters.login.ILoginPresenter;
@@ -12,11 +11,9 @@ import com.yydcdut.note.utils.NetworkUtils;
 import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.views.IView;
 import com.yydcdut.note.views.login.ILoginView;
-import com.yydcdut.note.widget.fab2.snack.OnSnackBarActionListener;
 
 import javax.inject.Inject;
 
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -69,33 +66,16 @@ public class LoginPresenterImpl implements ILoginPresenter {
                                 .doOnSubscribe(() -> mLoginView.showProgressBar())
                                 .subscribeOn(AndroidSchedulers.mainThread())
                                 .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(new Subscriber<IUser>() {
-                                    @Override
-                                    public void onCompleted() {
-                                    }
-
-                                    @Override
-                                    public void onError(Throwable e) {
-                                        YLog.printStackTrace(LoginPresenterImpl.class, e);
-                                        mLoginView.hideProgressBar();
-                                        mLoginView.showSnackBarWithAction(mContext.getResources().getString(R.string.toast_fail),
-                                                mContext.getResources().getString(R.string.toast_retry),
-                                                new OnSnackBarActionListener() {
-                                                    @Override
-                                                    public void onClick() {
-                                                        loginQQ();
-                                                    }
-                                                });
-                                    }
-
-                                    @Override
-                                    public void onNext(IUser iUser) {
-                                        mLoginView.hideProgressBar();
-                                        mLoginView.finishActivityWithResult(RESULT_DATA_QQ);
-                                    }
-                                });
+                                .subscribe((iUser -> {
+                                    mLoginView.hideProgressBar();
+                                    mLoginView.finishActivityWithResult(RESULT_DATA_QQ);
+                                }), ((throwable -> {
+                                    YLog.e(throwable);
+                                    mLoginView.hideProgressBar();
+                                    mLoginView.showSnackBarWithAction(mContext.getResources().getString(R.string.toast_fail), mContext.getResources().getString(R.string.toast_retry), (() -> loginQQ()));
+                                })));
                     }
-                });
+                }, (throwable -> YLog.e(throwable)));
     }
 
     @Override
@@ -108,7 +88,7 @@ public class LoginPresenterImpl implements ILoginPresenter {
                     } else {
                         mRxUser.loginEvernote(mActivity).subscribe();
                     }
-                });
+                }, (throwable -> YLog.e(throwable)));
     }
 
     @Override
@@ -116,39 +96,19 @@ public class LoginPresenterImpl implements ILoginPresenter {
         if (successful) {
             mRxUser.saveEvernote()
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Subscriber<IUser>() {
-                        @Override
-                        public void onCompleted() {
-
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            YLog.i("yuyidong", e.getMessage());
-                            mLoginView.showSnackBarWithAction(mContext.getResources().getString(R.string.toast_fail),
-                                    mContext.getResources().getString(R.string.toast_retry),
-                                    new OnSnackBarActionListener() {
-                                        @Override
-                                        public void onClick() {
-                                            mRxUser.loginEvernote(mActivity).subscribe();
-                                        }
-                                    });
-                        }
-
-                        @Override
-                        public void onNext(IUser iUser) {
-                            mLoginView.finishActivityWithResult(RESULT_DATA_EVERNOTE);
-                        }
-                    });
+                    .subscribe((iUser -> mLoginView.finishActivityWithResult(RESULT_DATA_EVERNOTE)),
+                            (throwable -> {
+                                YLog.e(throwable);
+                                mLoginView.showSnackBarWithAction(mContext.getResources().getString(R.string.toast_fail),
+                                        mContext.getResources().getString(R.string.toast_retry),
+                                        (() -> mRxUser.loginEvernote(mActivity).subscribe((bool) -> {
+                                                }, (throwable1 -> YLog.e(throwable1))
+                                        )));
+                            }));
         } else {
             mLoginView.showSnackBarWithAction(mContext.getResources().getString(R.string.toast_fail),
-                    mContext.getResources().getString(R.string.toast_retry),
-                    new OnSnackBarActionListener() {
-                        @Override
-                        public void onClick() {
-                            mRxUser.loginEvernote(mActivity).subscribe();
-                        }
-                    });
+                    mContext.getResources().getString(R.string.toast_retry), (() -> mRxUser.loginEvernote(mActivity).subscribe((bool) -> {
+                    }, (throwable -> YLog.e(throwable)))));
         }
     }
 }

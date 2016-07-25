@@ -15,6 +15,7 @@ import com.yydcdut.note.model.rx.RxCategory;
 import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.presenters.setting.IEditCategoryPresenter;
 import com.yydcdut.note.utils.FilePathUtils;
+import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.views.IView;
 import com.yydcdut.note.views.setting.IEditCategoryView;
 
@@ -28,7 +29,6 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -76,12 +76,14 @@ public class EditCategoryPresenterImpl implements IEditCategoryPresenter, Handle
 
         mRxCategory.getAllCategories()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(categories -> mEditCategoryView.showCategoryList(categories));
+                .subscribe(categories -> mEditCategoryView.showCategoryList(categories),
+                        (throwable -> YLog.e(throwable)));
     }
 
     @Override
     public void detachView() {
-        mRxCategory.refreshCategories().subscribe();
+        mRxCategory.refreshCategories().subscribe((categories -> {
+        }), (throwable -> YLog.e(throwable)));
         mRenameCategoryLabelMap.clear();
         mDeleteCategoryIdList.clear();
     }
@@ -99,7 +101,7 @@ public class EditCategoryPresenterImpl implements IEditCategoryPresenter, Handle
                     mRenameCategoryLabelMap.put(category1.getId(), newLabel);
                     category1.setLabel(newLabel);
                     mEditCategoryView.updateListView();
-                });
+                }, (throwable -> YLog.e(throwable)));
     }
 
     @Override
@@ -114,7 +116,7 @@ public class EditCategoryPresenterImpl implements IEditCategoryPresenter, Handle
                 .subscribe(category1 -> {
                     mDeleteCategoryIdList.add(category1.getId());
                     mEditCategoryView.updateListView();
-                });
+                }, (throwable -> YLog.e(throwable)));
     }
 
     @Override
@@ -124,7 +126,7 @@ public class EditCategoryPresenterImpl implements IEditCategoryPresenter, Handle
     }
 
     private void sortCategories() {
-        mRxCategory.updateOrder().subscribe(categories -> mHandler.sendEmptyMessage(1));
+        mRxCategory.updateOrder().subscribe(categories -> mHandler.sendEmptyMessage(1), (throwable -> YLog.e(throwable)));
     }
 
     /**
@@ -140,9 +142,9 @@ public class EditCategoryPresenterImpl implements IEditCategoryPresenter, Handle
                             Integer categoryId = entry.getKey();
                             String newLabel = entry.getValue();
                             mRxCategory.updateLabel(categoryId, newLabel)
-                                    .subscribe(categories -> mHandler.sendEmptyMessage(1));
+                                    .subscribe(categories -> mHandler.sendEmptyMessage(1), (throwable -> YLog.e(throwable)));
                         }
-                    });
+                    }, (throwable -> YLog.e(throwable)));
         } else {
             mHandler.sendEmptyMessage(MESSAGE_RENAME_NONE);
         }
@@ -162,11 +164,13 @@ public class EditCategoryPresenterImpl implements IEditCategoryPresenter, Handle
                                         for (PhotoNote photoNote : photoNoteList) {
                                             FilePathUtils.deleteAllFiles(photoNote.getPhotoName());
                                         }
-                                        mRxPhotoNote.deletePhotoNotes(photoNoteList, id).subscribe();
-                                    });
-                            mRxCategory.delete(id).subscribe(categories2 -> mHandler.sendEmptyMessage(1));
+                                        mRxPhotoNote.deletePhotoNotes(photoNoteList, id).subscribe((photoNoteList2 -> {
+                                        }), (throwable -> YLog.e(throwable)));
+                                    }, (throwable -> YLog.e(throwable)));
+                            mRxCategory.delete(id).subscribe(categories2 -> mHandler.sendEmptyMessage(1),
+                                    (throwable -> YLog.e(throwable)));
                         }
-                    });
+                    }, (throwable -> YLog.e(throwable)));
         } else {
             mHandler.sendEmptyMessage(MESSAGE_DELETE_NONE);
         }
@@ -201,30 +205,20 @@ public class EditCategoryPresenterImpl implements IEditCategoryPresenter, Handle
             sortCategories();
         } else if (mCurrentMessage == mRenameCategoryLabelMap.size() + mDeleteCategoryIdList.size() + 1) {
             mRxCategory.getAllCategories()
-                    .subscribe(new Subscriber<List<Category>>() {
-                        @Override
-                        public void onCompleted() {
-                            mHandler.sendEmptyMessage(MESSAGE_FINISH);
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                        }
-
-                        @Override
-                        public void onNext(List<Category> categories) {
-                            //todo 删除图片,删除PhotoNote
-                            boolean checked = false;
-                            for (Category category : categories) {
-                                checked |= category.isCheck();
-                            }
-                            if (!checked && categories.size() > 0) {
-                                categories.get(0).setCheck(true);
-                                mRxCategory.updateCategory(categories.get(0)).subscribe();
-                            }
-                            //todo 当所有的都没有了怎么办
-                        }
-                    });
+                    .subscribe((categories -> {
+                                //todo 删除图片,删除PhotoNote
+                                boolean checked = false;
+                                for (Category category : categories) {
+                                    checked |= category.isCheck();
+                                }
+                                if (!checked && categories.size() > 0) {
+                                    categories.get(0).setCheck(true);
+                                    mRxCategory.updateCategory(categories.get(0)).subscribe();
+                                }
+                                //todo 当所有的都没有了怎么办
+                            }),
+                            (throwable -> YLog.e(throwable)),
+                            () -> mHandler.sendEmptyMessage(MESSAGE_FINISH));
         }
         return false;
     }

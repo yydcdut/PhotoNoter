@@ -18,7 +18,7 @@ public interface IEditCategoryView extends IView {
 
     void updateListView();
 
-    void showSnackbar(String messgae);
+    void showSnackbar(String message);
 
     void showCategoryList(List<Category> categoryList);
 }

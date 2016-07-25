@@ -32,7 +32,6 @@ import java.io.InputStream;
 import javax.inject.Inject;
 
 import rx.Observable;
-import rx.Subscriber;
 
 /**
  * Created by yuyidong on 15/11/22.
@@ -69,22 +68,9 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter {
 
         mRxSandBox.findAll()
                 .flatMap(sandPhotos -> Observable.from(sandPhotos))
-                .subscribe(new Subscriber<SandPhoto>() {
-                    @Override
-                    public void onCompleted() {
-                        mHandler.sendEmptyMessageDelayed(0, 4000);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(SandPhoto sandPhoto) {
-                        makePhoto(sandPhoto);
-                    }
-                });
+                .subscribe((sandPhoto -> makePhoto(sandPhoto)),
+                        (throwable -> YLog.e(throwable)),
+                        (() -> mHandler.sendEmptyMessageDelayed(0, 4000)));
     }
 
     /**
@@ -111,8 +97,7 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter {
         try {
             bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
         } catch (OutOfMemoryError e) {
-            e.printStackTrace();
-            YLog.e(TAG, e.getMessage());
+            YLog.e(e);
         }
         String fileName = sandPhoto.getTime() + ".jpg";
         if (FilePathUtils.savePhoto(fileName, bitmap)) {
@@ -121,12 +106,12 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter {
         PhotoNote photoNote = new PhotoNote(fileName, sandPhoto.getTime(), sandPhoto.getTime(), "", "",
                 sandPhoto.getTime(), sandPhoto.getTime(), sandPhoto.getCategoryId());
         photoNote.setPaletteColor(Utils.getPaletteColor(bitmap));
-        mRxPhotoNote.savePhotoNote(photoNote).subscribe();
+        mRxPhotoNote.savePhotoNote(photoNote).subscribe(photoNote1 -> {
+        }, (throwable -> YLog.e(throwable)));
         try {
             setExif(photoNote, sandPhoto.getSandExif(), sandPhoto.getCameraId(), sandPhoto.isMirror());
         } catch (IOException e) {
-            e.printStackTrace();
-            YLog.e(TAG, e.getMessage());
+            YLog.e(e);
         }
         deleteFromDBAndSDCard(sandPhoto);
 //        bitmap.recycle();
@@ -138,11 +123,7 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         yuv.compressToJpeg(new Rect(0, 0, width, height), 100, bos);
         byte[] bytes = bos.toByteArray();
-        try {
-            bos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        FilePathUtils.closeStream(bos);
         return bytes;
     }
 
@@ -186,20 +167,13 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter {
             inputStream = new FileInputStream(file);
             inputStream.read(data);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            YLog.e(e);
             bool = false;
         } catch (IOException e) {
-            e.printStackTrace();
+            YLog.e(e);
             bool = false;
         } finally {
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    bool = false;
-                }
-            }
+            FilePathUtils.closeStream(inputStream);
         }
         if (!bool) {
             return null;
@@ -217,13 +191,13 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter {
     private void deleteFromDBAndSDCard(SandPhoto sandPhoto) {
         String path = FilePathUtils.getSandBoxDir() + sandPhoto.getFileName();
         mRxSandBox.deleteOne(sandPhoto)
-                .subscribe(integer -> new File(path).delete());
+                .subscribe(integer -> new File(path).delete(),
+                        (throwable -> YLog.e(throwable)));
     }
 
 
     @Override
     public void detachView() {
-
     }
 
     private void finishSandBoxService() {

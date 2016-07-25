@@ -15,6 +15,7 @@ import com.yydcdut.note.presenters.camera.IAdjustCameraPresenter;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.Utils;
+import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.utils.camera.param.Size;
 import com.yydcdut.note.views.IView;
 import com.yydcdut.note.views.camera.IAdjustCameraView;
@@ -144,10 +145,10 @@ public class AdjustCameraPresenterImpl implements IAdjustCameraPresenter {
             mLocalStorageUtils.setPictureSizes(currentCameraId, list);
             mLocalStorageUtils.setPictureSize(currentCameraId, size);
         } catch (JSONException e) {
-            e.printStackTrace();
+            YLog.e(e);
         } catch (NullPointerException e) {
             //mCameraSettingModel有可能为空
-            e.printStackTrace();
+            YLog.e(e);
         }
         return size;
     }
@@ -157,7 +158,7 @@ public class AdjustCameraPresenterImpl implements IAdjustCameraPresenter {
         try {
             bool = mLocalStorageUtils.getPictureSize(mCameraId) != null;
         } catch (JSONException e) {
-            e.printStackTrace();
+            YLog.e(e);
         }
         return bool;
     }

@@ -222,7 +222,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IThemeVi
             x = Integer.parseInt(field.get(obj).toString());
             sbar = getResources().getDimensionPixelSize(x);
         } catch (Exception e1) {
-            e1.printStackTrace();
+            YLog.e(e1);
         }
         return sbar;
     }

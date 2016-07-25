@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.yydcdut.note.utils.FilePathUtils;
+import com.yydcdut.note.utils.YLog;
 
 import java.io.File;
 import java.io.IOException;
@@ -184,7 +185,7 @@ public class SandSQLite extends SQLiteOpenHelper {
                 try {
                     isFileCreateSuccess = dbFile.createNewFile();//创建文件
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    YLog.e(e);
                 }
             } else {
                 isFileCreateSuccess = true;

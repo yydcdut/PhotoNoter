@@ -486,17 +486,13 @@ public class DetailActivity extends BaseActivity implements IDetailView,
         }
         mIsIgnoreBackPress = true;
         final Point p = getLocationInView(mRevealView, mFab);
-        mRevealView.reveal(p.x, p.y, getThemeColor(), mFab.getHeight() / 2, Const.DURATION, new RevealView.RevealAnimationListener() {
-
-            @Override
-            public void finish() {
-                if (mTitleLabelView.getVisibility() != View.VISIBLE) {
+        mRevealView.reveal(p.x, p.y, getThemeColor(), mFab.getHeight() / 2, Const.DURATION, () -> {
+            if (mTitleLabelView.getVisibility() != View.VISIBLE) {
 //                    mDetailPresenter.jump2MapActivity();
-                } else {
-                    mDetailPresenter.jump2EditTextActivity();
-                }
-                mIsIgnoreBackPress = false;
+            } else {
+                mDetailPresenter.jump2EditTextActivity();
             }
+            mIsIgnoreBackPress = false;
         });
     }
 
@@ -506,12 +502,7 @@ public class DetailActivity extends BaseActivity implements IDetailView,
     public void closeRevealColorView() {
         mIsIgnoreBackPress = true;
         final Point p = getLocationInView(mRevealView, mFab);
-        mRevealView.hide(p.x, p.y, Color.TRANSPARENT, Const.RADIUS, Const.DURATION, new RevealView.RevealAnimationListener() {
-            @Override
-            public void finish() {
-                mIsIgnoreBackPress = false;
-            }
-        });
+        mRevealView.hide(p.x, p.y, Color.TRANSPARENT, Const.RADIUS, Const.DURATION, () -> mIsIgnoreBackPress = false);
     }
 
     @Override

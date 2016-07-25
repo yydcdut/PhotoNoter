@@ -13,6 +13,7 @@ import com.yydcdut.note.model.rx.RxCategory;
 import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.FilePathUtils;
+import com.yydcdut.note.utils.YLog;
 
 import rx.schedulers.Schedulers;
 
@@ -55,7 +56,7 @@ public class CheckService extends IntentService {
                                         category.setPhotosNumber(photoNoteList1.size());
                                         mRxCategory.updateCategory(category).subscribe();
                                     }
-                                });
+                                }, (throwable -> YLog.e(throwable)));
                     }
                 });
     }
@@ -88,7 +89,7 @@ public class CheckService extends IntentService {
                                                 break;
                                         }
                                     }
-                                });
+                                }, (throwable -> YLog.e(throwable)));
                     }
                 });
     }
@@ -97,7 +98,8 @@ public class CheckService extends IntentService {
         String fileName = photoNote.getPhotoName();
         mRxPhotoNote.deletePhotoNote(photoNote)
                 .observeOn(Schedulers.io())
-                .subscribe(photoNoteList -> FilePathUtils.deleteAllFiles(fileName));
+                .subscribe(photoNoteList -> FilePathUtils.deleteAllFiles(fileName),
+                        (throwable -> YLog.e(throwable)));
     }
 
     @Override

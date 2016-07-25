@@ -61,6 +61,7 @@ public class CameraModelImpl implements ICameraModel {
                 cameraId = Integer.parseInt(id);
             } catch (Exception e) {
                 //String转int失败,id不是数字
+                YLog.e(e);
             }
             mCamera = Camera.open(cameraId);
             mCamera.setDisplayOrientation(orientation);
@@ -103,7 +104,7 @@ public class CameraModelImpl implements ICameraModel {
                     }
 
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    YLog.e(e);
                     callback.onPreviewError();
                     return;
                 }
@@ -154,6 +155,7 @@ public class CameraModelImpl implements ICameraModel {
                     mCamera.takePicture(null, null, new PictureCallBack(time, pictureReturnCallback));
                     mCameraState = STATE_CAMERA_CAPTURE;
                 } catch (Exception e) {
+                    YLog.e(e);
                     pictureReturnCallback.onPictureTaken(false, null, 0l);
                 }
             } else {

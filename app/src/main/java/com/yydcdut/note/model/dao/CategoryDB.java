@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.model.sqlite.AbsNotesDBModel;
 import com.yydcdut.note.model.sqlite.NotesSQLite;
+import com.yydcdut.note.utils.YLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +78,7 @@ public class CategoryDB extends AbsNotesDBModel {
             }
             db.setTransactionSuccessful();
         } catch (Exception e) {
+            YLog.e(e);
             return -1;
         } finally {
             db.endTransaction();
@@ -102,6 +104,7 @@ public class CategoryDB extends AbsNotesDBModel {
             }
             db.setTransactionSuccessful();
         } catch (Exception e) {
+            YLog.e(e);
             return -1;
         } finally {
             db.endTransaction(); //处理完成

@@ -9,6 +9,7 @@ import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.gallery.RxGalleryPhotos;
 import com.yydcdut.note.model.gallery.SelectPhotoModel;
 import com.yydcdut.note.presenters.gallery.IPhotoDetailPresenter;
+import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.views.IView;
 import com.yydcdut.note.views.gallery.IPhotoDetailView;
 
@@ -90,7 +91,7 @@ public class PhotoDetailPresenterImpl implements IPhotoDetailPresenter,
                         mPhotoDetailView.setAdapter(mAdapterPathList, mInitPage);
                         mPhotoDetailView.initAdapterData(isPreviewSelected, selectedPathList);
                         mPhotoDetailView.setToolbarTitle((mPhotoDetailView.getCurrentPosition() + 1) + "/" + mAdapterPathList.size());
-                    });
+                    }, (throwable -> YLog.e(throwable)));
         }
     }
 

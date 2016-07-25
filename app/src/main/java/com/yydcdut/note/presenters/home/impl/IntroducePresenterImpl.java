@@ -21,6 +21,7 @@ import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.PermissionUtils;
 import com.yydcdut.note.utils.Utils;
+import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.utils.permission.Permission;
 import com.yydcdut.note.views.IView;
 import com.yydcdut.note.views.home.IIntroduceView;
@@ -116,22 +117,19 @@ public class IntroducePresenterImpl implements IIntroducePresenter, Handler.Call
     }
 
     private void initAlbumNumber() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                int screenWidth = Utils.sScreenWidth;
-                int num = 2;
-                if (screenWidth <= 480) {
-                    num = 2;
-                } else if (screenWidth <= 720) {
-                    num = 3;
-                } else if (screenWidth <= 1080) {
-                    num = 4;
-                } else {
-                    num = 5;
-                }
-                mLocalStorageUtils.setAlbumItemNumber(num);
+        new Thread(() -> {
+            int screenWidth = Utils.sScreenWidth;
+            int num = 2;
+            if (screenWidth <= 480) {
+                num = 2;
+            } else if (screenWidth <= 720) {
+                num = 3;
+            } else if (screenWidth <= 1080) {
+                num = 4;
+            } else {
+                num = 5;
             }
+            mLocalStorageUtils.setAlbumItemNumber(num);
         }).start();
     }
 
@@ -141,50 +139,49 @@ public class IntroducePresenterImpl implements IIntroducePresenter, Handler.Call
      */
     private void initDefaultCategory() {
         mRxCategory.saveCategory("App介绍", 16, 0, true)
-                .subscribe(categories -> mHandler.sendEmptyMessage(ADD));
+                .subscribe(categories -> mHandler.sendEmptyMessage(ADD),
+                        (throwable -> YLog.e(throwable)));
     }
 
     @Permission(PermissionUtils.CODE_STORAGE)
     private void initDefaultPhotoNote() {
         boolean hasPermission = PermissionUtils.hasPermission4Storage(mContext);
         if (hasPermission) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    FilePathUtils.initDirs();
-                    String[] outFileName = new String[]{
-                            "intro_all.jpg",
-                            "intro_md.jpg"
-                    };
-                    String[] titles = new String[]{
-                            Const.INTRODUCE_TITLE,
-                            Const.MARKDOWN_TITLE
-                    };
-                    String[] contents = new String[]{
-                            Const.INTRODUCE_CONTENT,
-                            Const.MARKDOWN_CONTENT
-                    };
-                    boolean bool = false;
-                    try {
-                        bool = takePhotosToSdCard(outFileName);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    if (!bool) {
-                        //如果没有成功，就走这里，不走存PhotoNote的逻辑了
-                        mHandler.sendEmptyMessage(ADD);
-                        return;
-                    }
-                    ArrayList<PhotoNote> arrayList = new ArrayList<PhotoNote>(outFileName.length);
-                    for (int i = 0; i < outFileName.length; i++) {
-                        PhotoNote photoNote = new PhotoNote(outFileName[i], System.currentTimeMillis(), System.currentTimeMillis(),
-                                titles[i], contents[i], System.currentTimeMillis(), System.currentTimeMillis(), (int) mCategoryId);
-                        photoNote.setPaletteColor(Utils.getPaletteColor(ImageLoaderManager.loadImageSync(photoNote.getBigPhotoPathWithFile())));
-                        arrayList.add(photoNote);
-                    }
-                    mRxPhotoNote.savePhotoNotes(arrayList)
-                            .subscribe(photoNoteList -> mHandler.sendEmptyMessage(ADD));
+            new Thread(() -> {
+                FilePathUtils.initDirs();
+                String[] outFileName = new String[]{
+                        "intro_all.jpg",
+                        "intro_md.jpg"
+                };
+                String[] titles = new String[]{
+                        Const.INTRODUCE_TITLE,
+                        Const.MARKDOWN_TITLE
+                };
+                String[] contents = new String[]{
+                        Const.INTRODUCE_CONTENT,
+                        Const.MARKDOWN_CONTENT
+                };
+                boolean bool = false;
+                try {
+                    bool = takePhotosToSdCard(outFileName);
+                } catch (IOException e) {
+                    YLog.e(e);
                 }
+                if (!bool) {
+                    //如果没有成功，就走这里，不走存PhotoNote的逻辑了
+                    mHandler.sendEmptyMessage(ADD);
+                    return;
+                }
+                ArrayList<PhotoNote> arrayList = new ArrayList<PhotoNote>(outFileName.length);
+                for (int i = 0; i < outFileName.length; i++) {
+                    PhotoNote photoNote = new PhotoNote(outFileName[i], System.currentTimeMillis(), System.currentTimeMillis(),
+                            titles[i], contents[i], System.currentTimeMillis(), System.currentTimeMillis(), (int) mCategoryId);
+                    photoNote.setPaletteColor(Utils.getPaletteColor(ImageLoaderManager.loadImageSync(photoNote.getBigPhotoPathWithFile())));
+                    arrayList.add(photoNote);
+                }
+                mRxPhotoNote.savePhotoNotes(arrayList)
+                        .subscribe(photoNoteList -> mHandler.sendEmptyMessage(ADD),
+                                (throwable -> YLog.e(throwable)));
             }).start();
         } else {
             PermissionUtils.requestPermissionsWithDialog(mActivity, mContext.getString(R.string.permission_storage_init),

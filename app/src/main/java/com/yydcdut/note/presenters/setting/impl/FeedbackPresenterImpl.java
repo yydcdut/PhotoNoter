@@ -9,18 +9,17 @@ import com.yydcdut.note.model.rx.RxFeedBack;
 import com.yydcdut.note.presenters.setting.IFeedbackPresenter;
 import com.yydcdut.note.utils.NetworkUtils;
 import com.yydcdut.note.utils.PhoneUtils;
+import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.views.IView;
 import com.yydcdut.note.views.setting.IFeedbackView;
 
 import org.json.JSONException;
 
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -88,24 +87,9 @@ public class FeedbackPresenterImpl implements IFeedbackPresenter {
                     .setFeedBackId(System.currentTimeMillis() + "")
                     .doObservable()
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Subscriber<Map<String, String>>() {
-                        @Override
-                        public void onCompleted() {
-
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-
-                        }
-
-                        @Override
-                        public void onNext(Map<String, String> stringStringMap) {
-                            mFeedbackView.hideLoadingAndFinish();
-                        }
-                    });
+                    .subscribe(stringStringMap -> mFeedbackView.hideLoadingAndFinish(), (throwable -> YLog.e(throwable)));
         } catch (JSONException e) {
-            e.printStackTrace();
+            YLog.e(e);
             //todo 出错怎么办
         }
     }

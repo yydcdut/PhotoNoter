@@ -133,17 +133,13 @@ public class UserCenterActivity extends BaseActivity implements IUserCenterView 
         return true;
     }
 
-    private Toolbar.OnMenuItemClickListener onToolBarMenuItemClick = new Toolbar.OnMenuItemClickListener() {
-
-        @Override
-        public boolean onMenuItemClick(MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.menu_share:
+    private Toolbar.OnMenuItemClickListener onToolBarMenuItemClick = (item) -> {
+        switch (item.getItemId()) {
+            case R.id.menu_share:
 //                    Toast.makeText(UserCenterActivity.this, ":11111", Toast.LENGTH_SHORT).show();
-                    break;
-            }
-            return true;
+                break;
         }
+        return true;
     };
 
 
@@ -346,12 +342,9 @@ public class UserCenterActivity extends BaseActivity implements IUserCenterView 
     @Override
     public void showSnackBarWithAction(String message, String action, final OnSnackBarActionListener listener) {
         Snackbar.make(mViewPager, message, Snackbar.LENGTH_SHORT)
-                .setAction(action, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (listener != null) {
-                            listener.onClick();
-                        }
+                .setAction(action, (v) -> {
+                    if (listener != null) {
+                        listener.onClick();
                     }
                 }).show();
     }

@@ -240,7 +240,7 @@ public class UserDetailFragment extends BaseFragment implements IUserDetailFragV
     }
 
     @Override
-    public void showSnakebar(String message) {
+    public void showSnackbar(String message) {
         Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
     }
 

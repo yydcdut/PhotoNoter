@@ -10,6 +10,7 @@ import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.gallery.RxGalleryPhotos;
 import com.yydcdut.note.model.gallery.SelectPhotoModel;
 import com.yydcdut.note.presenters.gallery.IMediaPhotoPresenter;
+import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.views.BaseActivity;
 import com.yydcdut.note.views.IView;
 import com.yydcdut.note.views.gallery.IMediaPhotoView;
@@ -65,7 +66,7 @@ public class MediaPhotoPresenterImpl implements IMediaPhotoPresenter {
                     mCurrentFolderName = MediaFolder.ALL;
                     mIMediaPhotoView.setListNavigationAdapter(mFolderNameList);
                     mIMediaPhotoView.setMediaAdapter(mMediaFolderByNameMap.get(mCurrentFolderName), mSelectPhotoModel);
-                });
+                }, (throwable -> YLog.e(throwable)));
     }
 
     @Override

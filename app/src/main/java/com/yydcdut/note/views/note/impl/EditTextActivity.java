@@ -8,7 +8,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -111,12 +110,9 @@ public class EditTextActivity extends BaseActivity implements IEditTextView,
 
     void initOtherUI() {
         ((KeyBoardResizeFrameLayout) findViewById(R.id.layout_root)).setOnKeyboardShowListener(this);
-        mFabRevealView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                mFabMenuLayout.close();
-                return true;
-            }
+        mFabRevealView.setOnTouchListener((v, event) -> {
+            mFabMenuLayout.close();
+            return true;
         });
         mVoiceLayout.setVisibility(View.INVISIBLE);
     }
@@ -305,33 +301,30 @@ public class EditTextActivity extends BaseActivity implements IEditTextView,
         mVoiceLayout.setVisibility(View.VISIBLE);
         Point p = getLocationInView(mVoiceRevealView, mFabPositionView);
         mVoiceRevealView.reveal(p.x, p.y, getResources().getColor(R.color.bg_background),
-                1, Const.DURATION, new RevealView.RevealAnimationListener() {
-                    @Override
-                    public void finish() {
-                        mVoiceFabLayout.setVisibility(View.VISIBLE);
-                        mVoiceTextView.setVisibility(View.VISIBLE);
-                        Animation animation = AnimationUtils.loadAnimation(EditTextActivity.this, R.anim.anim_scale_small_2_big);
-                        animation.setDuration(300l);
-                        animation.setAnimationListener(new Animation.AnimationListener() {
-                            @Override
-                            public void onAnimationStart(Animation animation) {
+                1, Const.DURATION, () -> {
+                    mVoiceFabLayout.setVisibility(View.VISIBLE);
+                    mVoiceTextView.setVisibility(View.VISIBLE);
+                    Animation animation = AnimationUtils.loadAnimation(EditTextActivity.this, R.anim.anim_scale_small_2_big);
+                    animation.setDuration(300l);
+                    animation.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
 
-                            }
+                        }
 
-                            @Override
-                            public void onAnimationEnd(Animation animation) {
-                                mVoiceRippleView.startAnimation();
-                                mEditTextPresenter.startVoice();
-                            }
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            mVoiceRippleView.startAnimation();
+                            mEditTextPresenter.startVoice();
+                        }
 
-                            @Override
-                            public void onAnimationRepeat(Animation animation) {
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
 
-                            }
-                        });
-                        mVoiceFabLayout.startAnimation(animation);
-                        mVoiceTextView.setAnimation(AnimationUtils.loadAnimation(EditTextActivity.this, R.anim.anim_alpha_in));
-                    }
+                        }
+                    });
+                    mVoiceFabLayout.startAnimation(animation);
+                    mVoiceTextView.setAnimation(AnimationUtils.loadAnimation(EditTextActivity.this, R.anim.anim_alpha_in));
                 });
     }
 
@@ -351,18 +344,14 @@ public class EditTextActivity extends BaseActivity implements IEditTextView,
                 mVoiceFabLayout.setVisibility(View.GONE);
                 mVoiceTextView.setVisibility(View.GONE);
                 Point p = getLocationInView(mVoiceRevealView, mFabPositionView);
-                mVoiceRevealView.hide(p.x, p.y, Color.TRANSPARENT, 0, Const.DURATION, new RevealView.RevealAnimationListener() {
-                    @Override
-                    public void finish() {
-                        mVoiceLayout.setOnClickListener(null);
-                        mVoiceLayout.setVisibility(View.INVISIBLE);
-                    }
+                mVoiceRevealView.hide(p.x, p.y, Color.TRANSPARENT, 0, Const.DURATION, () -> {
+                    mVoiceLayout.setOnClickListener(null);
+                    mVoiceLayout.setVisibility(View.INVISIBLE);
                 });
             }
 
             @Override
             public void onAnimationRepeat(Animation animation) {
-
             }
         });
     }
@@ -420,12 +409,9 @@ public class EditTextActivity extends BaseActivity implements IEditTextView,
     @Override
     public void showSnakeBarWithAction(String message, String action, final OnSnackBarActionListener listener) {
         SnackHelper.make(mFabMenuLayout, message, SnackHelper.LENGTH_LONG)
-                .setAction(action, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (listener != null) {
-                            listener.onClick();
-                        }
+                .setAction(action, (v) -> {
+                    if (listener != null) {
+                        listener.onClick();
                     }
                 }).show(mFabMenuLayout);
     }

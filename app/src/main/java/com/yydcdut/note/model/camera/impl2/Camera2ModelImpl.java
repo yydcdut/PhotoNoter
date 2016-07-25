@@ -116,7 +116,7 @@ public class Camera2ModelImpl implements ICameraModel, Camera2SettingModel.OnPar
                         mJpegPictureCallback = new PictureCallback();
                         mJpgImageReader.setOnImageAvailableListener(mJpegPictureCallback, null);
                     } catch (CameraAccessException e) {
-                        e.printStackTrace();
+                        YLog.e(e);
                     }
                     callback.onOpen(mCamera2PreviewModel, mCamera2SettingModel);
                 }
@@ -137,7 +137,7 @@ public class Camera2ModelImpl implements ICameraModel, Camera2SettingModel.OnPar
                 }
             }, null);
         } catch (CameraAccessException e) {
-            e.printStackTrace();
+            YLog.e(e);
             callback.onError();
         }
     }
@@ -193,7 +193,7 @@ public class Camera2ModelImpl implements ICameraModel, Camera2SettingModel.OnPar
             try {
                 mSession.setRepeatingRequest(builder.build(), mCameraCaptureSessionCaptureCallback4Preview, null);
             } catch (CameraAccessException e) {
-                e.printStackTrace();
+                YLog.e(e);
             }
         }
     }
@@ -229,7 +229,7 @@ public class Camera2ModelImpl implements ICameraModel, Camera2SettingModel.OnPar
                                     mSession.setRepeatingRequest(previewRequest, mCameraCaptureSessionCaptureCallback4Preview, null);
                                     mCameraState = STATE_CAMERA_PREVIEW;
                                 } catch (CameraAccessException e) {
-                                    e.printStackTrace();
+                                    YLog.e(e);
                                 }
 
                                 mCamera2FocusModel = new Camera2FocusModel(mCamera2SettingModel.isFocusSupported(),
@@ -245,7 +245,7 @@ public class Camera2ModelImpl implements ICameraModel, Camera2SettingModel.OnPar
                             }
                         }, null);
             } catch (CameraAccessException e) {
-                e.printStackTrace();
+                YLog.e(e);
                 success = false;
             }
             if (!success) {
@@ -262,7 +262,7 @@ public class Camera2ModelImpl implements ICameraModel, Camera2SettingModel.OnPar
                     mSession.setRepeatingRequest(previewRequest, mCameraCaptureSessionCaptureCallback4Preview, null);
                     mCameraState = STATE_CAMERA_PREVIEW;
                 } catch (CameraAccessException e) {
-                    e.printStackTrace();
+                    YLog.e(e);
                 }
             }
         }
@@ -274,7 +274,7 @@ public class Camera2ModelImpl implements ICameraModel, Camera2SettingModel.OnPar
                     mSession.stopRepeating();
                     mCameraState = STATE_CAMERA_OPEN;
                 } catch (CameraAccessException e) {
-                    e.printStackTrace();
+                    YLog.e(e);
                 }
             }
         }
@@ -326,7 +326,7 @@ public class Camera2ModelImpl implements ICameraModel, Camera2SettingModel.OnPar
                     mSession.stopRepeating();
                     mSession.capture(captureBuilder.build(), mCameraCaptureSessionCaptureCallback4Capture, null);
                 } catch (CameraAccessException e) {
-                    e.printStackTrace();
+                    YLog.e(e);
                 }
             }
             return time;
@@ -459,7 +459,7 @@ public class Camera2ModelImpl implements ICameraModel, Camera2SettingModel.OnPar
         try {
             number = ((CameraManager) context.getSystemService(Context.CAMERA_SERVICE)).getCameraIdList().length;
         } catch (CameraAccessException e) {
-            e.printStackTrace();
+            YLog.e(e);
         }
         return number;
     }

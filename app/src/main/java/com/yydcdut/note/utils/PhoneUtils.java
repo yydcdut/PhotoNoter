@@ -43,7 +43,7 @@ public class PhoneUtils {
         try {
             version = manager.getPackageInfo(context.getPackageName(), 0).versionName;
         } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+            YLog.e(e);
             version = context.getResources().getString(R.string.detail_unknown);
         }
         return version;
@@ -103,10 +103,11 @@ public class PhoneUtils {
                 try {
                     var2 = new BufferedReader(var1, 1024);
                     var0 = var2.readLine();
-                    var2.close();
-                    var1.close();
                 } catch (IOException var4) {
                     YLog.e(TAG, "Could not read from file /proc/cpuinfo--->" + var4);
+                } finally {
+                    FilePathUtils.closeStream(var1);
+                    FilePathUtils.closeStream(var2);
                 }
             }
         } catch (FileNotFoundException var5) {
@@ -156,7 +157,7 @@ public class PhoneUtils {
             TelephonyManager var1 = (TelephonyManager) var0.getSystemService(Context.TELEPHONY_SERVICE);
             return var1 == null ? "Unknown" : var1.getNetworkOperatorName();
         } catch (Exception var2) {
-            var2.printStackTrace();
+            YLog.e(var2);
             return "Unknown";
         }
     }
@@ -190,7 +191,7 @@ public class PhoneUtils {
                 return var1;
             }
         } catch (Exception var6) {
-            var6.printStackTrace();
+            YLog.e(var6);
         }
 
         return var1;
@@ -326,7 +327,7 @@ public class PhoneUtils {
             var2.setAccessible(true);
             return var2.getInt(var0);
         } catch (Exception var3) {
-            var3.printStackTrace();
+            YLog.e(var3);
             return -1;
         }
     }
@@ -350,7 +351,7 @@ public class PhoneUtils {
             }
         } catch (Exception var6) {
             YLog.e(TAG, "Could not read UMENG_CHANNEL meta-data from AndroidManifest.xml.");
-            var6.printStackTrace();
+            YLog.e(var6);
         }
 
         return var1;
@@ -404,17 +405,11 @@ public class PhoneUtils {
                 content = line;
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            YLog.e(e);
         } catch (IOException e) {
-            e.printStackTrace();
+            YLog.e(e);
         } finally {
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            FilePathUtils.closeStream(br);
         }
         // beginIndex
         int begin = content.indexOf(':');

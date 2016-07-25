@@ -10,12 +10,12 @@ import android.support.annotation.NonNull;
 import com.yydcdut.note.R;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.rx.RxSandBox;
-import com.yydcdut.note.model.rx.SubscriberAdapter;
 import com.yydcdut.note.presenters.home.ISplashPresenter;
 import com.yydcdut.note.service.CheckService;
 import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.PermissionUtils;
+import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.utils.permission.Permission;
 import com.yydcdut.note.views.IView;
 import com.yydcdut.note.views.home.ISplashView;
@@ -60,6 +60,7 @@ public class SplashPresenterImpl implements ISplashPresenter, Handler.Callback,
         try {
             checkDisks();
         } catch (Exception e) {
+            YLog.e(e);
             //混淆之后这里有bug Testing
             /*
             #1084	03-02 16:08:54.619	14414	E	AndroidRuntime	 Caused by: java.lang.NullPointerException
@@ -140,21 +141,15 @@ public class SplashPresenterImpl implements ISplashPresenter, Handler.Callback,
                             file.getName().toLowerCase().endsWith(".png") ||
                             file.getName().toLowerCase().endsWith(".jpeg"))
                     .count()
-                    .subscribe(new SubscriberAdapter<Integer>() {
-                        @Override
-                        public void onNext(Integer fileNumber) {
-                            mRxSandBox.getNumber()
-                                    .subscribe(new SubscriberAdapter<Integer>() {
-                                        @Override
-                                        public void onNext(Integer integer) {
-                                            if (fileNumber != integer) {
-                                                Intent checkIntent = new Intent(mContext, CheckService.class);
-                                                mContext.startService(checkIntent);
-                                            }
-                                        }
-                                    });
-                        }
-                    });
+                    .subscribe((fileNumber -> {
+                        mRxSandBox.getNumber()
+                                .subscribe((integer -> {
+                                    if (fileNumber != integer) {
+                                        Intent checkIntent = new Intent(mContext, CheckService.class);
+                                        mContext.startService(checkIntent);
+                                    }
+                                }), (throwable -> YLog.e(throwable)));
+                    }), (throwable -> YLog.e(throwable)));
         }
     }
 

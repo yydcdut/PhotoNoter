@@ -5,6 +5,8 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
+import com.yydcdut.note.utils.YLog;
+
 /**
  * Created by yuyidong on 16/3/24.
  */
@@ -22,7 +24,7 @@ public class FixViewPager extends ViewPager {
         try {
             return super.onInterceptTouchEvent(ev);
         } catch (Exception e) {
-            e.printStackTrace();
+            YLog.e(e);
             return false;
         }
     }

@@ -30,6 +30,8 @@ import com.yydcdut.note.bean.user.IUser;
 import com.yydcdut.note.bean.user.QQUser;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.rx.exception.RxException;
+import com.yydcdut.note.utils.FilePathUtils;
+import com.yydcdut.note.utils.YLog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -276,7 +278,7 @@ public class RxUser {
                 name = json.getString("nickname");
                 image = json.getString("figureurl_qq_2");
             } catch (JSONException e) {
-                e.printStackTrace();
+                YLog.e(e);
             }
             SharedPreferences.Editor editor = mSharedPreferences.edit();
             editor.putString(Q_NAME, name);
@@ -395,13 +397,13 @@ public class RxUser {
                         editor.commit();
                         subscriber.onNext(mEvernoteUser);
                     } catch (EDAMUserException e) {
-                        e.printStackTrace();
+                        YLog.e(e);
                         subscriber.onError(e);
                     } catch (EDAMSystemException e) {
-                        e.printStackTrace();
+                        YLog.e(e);
                         subscriber.onError(e);
                     } catch (TException e) {
-                        e.printStackTrace();
+                        YLog.e(e);
                         subscriber.onError(e);
                     }
                 } else {
@@ -430,13 +432,13 @@ public class RxUser {
                     List<Notebook> notebookList = noteStoreClient.listNotebooks();
                     subscriber.onNext(notebookList);
                 } catch (EDAMUserException e) {
-                    e.printStackTrace();
+                    YLog.e(e);
                     subscriber.onError(e);
                 } catch (EDAMSystemException e) {
-                    e.printStackTrace();
+                    YLog.e(e);
                     subscriber.onError(e);
                 } catch (TException e) {
-                    e.printStackTrace();
+                    YLog.e(e);
                     subscriber.onError(e);
                 }
                 subscriber.onCompleted();
@@ -461,13 +463,13 @@ public class RxUser {
                                         Notebook appNoteBook = noteStoreClient.createNotebook(notebook);
                                         subscriber.onNext(appNoteBook.getGuid());
                                     } catch (EDAMUserException e) {
-                                        e.printStackTrace();
+                                        YLog.e(e);
                                         subscriber.onError(e);
                                     } catch (EDAMSystemException e) {
-                                        e.printStackTrace();
+                                        YLog.e(e);
                                         subscriber.onError(e);
                                     } catch (TException e) {
-                                        e.printStackTrace();
+                                        YLog.e(e);
                                         subscriber.onError(e);
                                     }
                                 }
@@ -534,31 +536,25 @@ public class RxUser {
                                     EvernoteNoteStoreClient noteStoreClient = mEvernoteSession.getEvernoteClientFactory().getNoteStoreClient();
                                     noteStoreClient.createNote(note);
                                 } catch (FileNotFoundException e) {
-                                    e.printStackTrace();
+                                    YLog.e(e);
                                     subscriber.onError(e);
                                 } catch (IOException e) {
-                                    e.printStackTrace();
+                                    YLog.e(e);
                                     subscriber.onError(e);
                                 } catch (EDAMNotFoundException e) {
-                                    e.printStackTrace();
+                                    YLog.e(e);
                                     subscriber.onError(e);
                                 } catch (TException e) {
-                                    e.printStackTrace();
+                                    YLog.e(e);
                                     subscriber.onError(e);
                                 } catch (EDAMUserException e) {
-                                    e.printStackTrace();
+                                    YLog.e(e);
                                     subscriber.onError(e);
                                 } catch (EDAMSystemException e) {
-                                    e.printStackTrace();
+                                    YLog.e(e);
                                     subscriber.onError(e);
                                 } finally {
-                                    if (in != null) {
-                                        try {
-                                            in.close();
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
+                                    FilePathUtils.closeStream(in);
                                 }
                                 subscriber.onNext(true);
                             }

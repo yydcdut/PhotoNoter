@@ -26,6 +26,7 @@ import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.PermissionUtils;
 import com.yydcdut.note.utils.Utils;
+import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.utils.permission.Permission;
 import com.yydcdut.note.views.IView;
 import com.yydcdut.note.views.home.IAlbumView;
@@ -45,8 +46,6 @@ import javax.inject.Inject;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
-import rx.functions.Action1;
 
 /**
  * Created by yuyidong on 15/11/20.
@@ -85,7 +84,8 @@ public class AlbumPresenterImpl implements IAlbumPresenter, PermissionUtils.OnPe
         mAlbumView = (IAlbumView) iView;
         mRxPhotoNote.findByCategoryId(mCategoryId, mAlbumSortKind)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(photoNoteList -> mAlbumView.setAdapter(photoNoteList));
+                .subscribe(photoNoteList -> mAlbumView.setAdapter(photoNoteList),
+                        (throwable -> YLog.e(throwable)));
         changeTitle();
     }
 
@@ -94,7 +94,8 @@ public class AlbumPresenterImpl implements IAlbumPresenter, PermissionUtils.OnPe
                 .flatMap(categories -> Observable.from(categories))
                 .filter(category -> category.getId() == mCategoryId)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(category1 -> mAlbumView.setToolBarTitle(category1.getLabel()));
+                .subscribe(category1 -> mAlbumView.setToolBarTitle(category1.getLabel()),
+                        (throwable -> YLog.e(throwable)));
     }
 
     @Override
@@ -112,17 +113,14 @@ public class AlbumPresenterImpl implements IAlbumPresenter, PermissionUtils.OnPe
         /**
          * 主要针对于拍完照回到这个界面之后判断沙盒里面还要数据没
          */
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                //todo RxJava有delay的方法，写这的时候还不知道怎么用，等重构完回来改
-                mRxSandBox.getNumber()
-                        .subscribe(integer -> {
-                            if (integer > 0) {
-                                mAlbumView.startSandBoxService();
-                            }
-                        });
-            }
+        new Handler().postDelayed(() -> {
+            //todo RxJava有delay的方法，写这的时候还不知道怎么用，等重构完回来改
+            mRxSandBox.getNumber()
+                    .subscribe(integer -> {
+                        if (integer > 0) {
+                            mAlbumView.startSandBoxService();
+                        }
+                    }, (throwable -> YLog.e(throwable)));
         }, 3000);
     }
 
@@ -156,9 +154,8 @@ public class AlbumPresenterImpl implements IAlbumPresenter, PermissionUtils.OnPe
         if (broadcast_process || broadcast_service) {
             mRxPhotoNote.refreshByCategoryId(mCategoryId, mAlbumSortKind)
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(photoNoteList -> {
-                        mAlbumView.updateData(photoNoteList);
-                    });
+                    .subscribe(photoNoteList -> mAlbumView.updateData(photoNoteList),
+                            (throwable -> YLog.e(throwable)));
         } else if (broadcast_photo) {
             mAlbumView.notifyDataSetChanged();
         }
@@ -168,7 +165,8 @@ public class AlbumPresenterImpl implements IAlbumPresenter, PermissionUtils.OnPe
     public void sortData() {
         mRxPhotoNote.findByCategoryId(mCategoryId, mAlbumSortKind)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(photoNoteList -> mAlbumView.notifyDataSetChanged());
+                .subscribe(photoNoteList -> mAlbumView.notifyDataSetChanged(),
+                        (throwable -> YLog.e(throwable)));
     }
 
     @Override
@@ -176,9 +174,8 @@ public class AlbumPresenterImpl implements IAlbumPresenter, PermissionUtils.OnPe
         mCategoryId = categoryId;
         mRxPhotoNote.findByCategoryId(mCategoryId, mAlbumSortKind)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(photoNoteList -> {
-                    mAlbumView.updateData(photoNoteList);
-                });
+                .subscribe(photoNoteList -> mAlbumView.updateData(photoNoteList),
+                        (throwable -> YLog.e(throwable)));
         changeTitle();
     }
 
@@ -194,7 +191,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter, PermissionUtils.OnPe
                         categoryLabelArray[i] = categories.get(i).getLabel();
                     }
                     mAlbumView.showMovePhotos2AnotherCategoryDialog(categoryIdStringArray, categoryLabelArray);
-                });
+                }, (throwable -> YLog.e(throwable)));
     }
 
     @Override
@@ -216,7 +213,8 @@ public class AlbumPresenterImpl implements IAlbumPresenter, PermissionUtils.OnPe
                         for (Map.Entry<Integer, PhotoNote> entry : map.entrySet()) {
                             photoNoteList.remove(entry.getValue());
                             mAlbumView.notifyItemRemoved(entry.getKey() - times);//todo 这个在这里合适吗？觉得严重的不合适
-                            mRxPhotoNote.updatePhotoNote(entry.getValue()).subscribe();
+                            mRxPhotoNote.updatePhotoNote(entry.getValue()).subscribe((photoNotes -> {
+                            }), (throwable -> YLog.e(throwable)));
                             times++;
                         }
                         return map.size();
@@ -224,16 +222,16 @@ public class AlbumPresenterImpl implements IAlbumPresenter, PermissionUtils.OnPe
                     .subscribe(integer -> {
                         mRxCategory.updateChangeCategory(mCategoryId, toCategoryId, integer)
                                 .subscribe(categories -> {
-                                    mRxPhotoNote.refreshByCategoryId(mCategoryId, ComparatorFactory.FACTORY_NOT_SORT).subscribe(new Action1<List<PhotoNote>>() {
-                                        @Override
-                                        public void call(List<PhotoNote> photoNoteList) {
-                                            mAlbumView.updateDataNoChange(photoNoteList);
-                                        }
-                                    });
-                                    mRxPhotoNote.refreshByCategoryId(toCategoryId, ComparatorFactory.FACTORY_NOT_SORT).subscribe();
+                                    mRxPhotoNote.refreshByCategoryId(mCategoryId, ComparatorFactory.FACTORY_NOT_SORT).subscribe(
+                                            (photoNoteList) -> mAlbumView.updateDataNoChange(photoNoteList),
+                                            (throwable -> YLog.e(throwable)));
+                                    mRxPhotoNote.refreshByCategoryId(toCategoryId, ComparatorFactory.FACTORY_NOT_SORT).subscribe(
+                                            photoNotes -> {
+                                            }, (throwable -> YLog.e(throwable))
+                                    );
                                     EventBus.getDefault().post(new CategoryMoveEvent());
-                                });
-                    });
+                                }, (throwable -> YLog.e(throwable)));
+                    }, (throwable -> YLog.e(throwable)));
         }
     }
 
@@ -255,25 +253,14 @@ public class AlbumPresenterImpl implements IAlbumPresenter, PermissionUtils.OnPe
                         photoNoteList.remove(entry.getValue());
                         mAlbumView.notifyItemRemoved(entry.getKey() - times);
                         times++;
-                        mRxPhotoNote.deletePhotoNote(entry.getValue()).subscribe(new Subscriber<List<PhotoNote>>() {
-                            @Override
-                            public void onCompleted() {
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-
-                            }
-
-                            @Override
-                            public void onNext(List<PhotoNote> photoNoteList) {
-                                FilePathUtils.deleteAllFiles(entry.getValue().getPhotoName());
-                                mAlbumView.updateDataNoChange(photoNoteList);
-                            }
-                        });
+                        mRxPhotoNote.deletePhotoNote(entry.getValue())
+                                .subscribe(photoNotes -> {
+                                    FilePathUtils.deleteAllFiles(entry.getValue().getPhotoName());
+                                    mAlbumView.updateDataNoChange(photoNoteList);
+                                }, (throwable -> YLog.e(throwable)));
                     }
                     EventBus.getDefault().post(new PhotoNoteDeleteEvent());
-                });
+                }, (throwable -> YLog.e(throwable)));
     }
 
     /**
@@ -312,11 +299,11 @@ public class AlbumPresenterImpl implements IAlbumPresenter, PermissionUtils.OnPe
                                     if (!success) {
                                         mAlbumView.showToast(mContext.getResources().getString(R.string.toast_fail));
                                     }
-                                });
+                                }, (throwable -> YLog.e(throwable)));
                     } else {
                         mAlbumView.showToast(mContext.getResources().getString(R.string.toast_fail));
                     }
-                });
+                }, (throwable -> YLog.e(throwable)));
     }
 
 
@@ -334,20 +321,16 @@ public class AlbumPresenterImpl implements IAlbumPresenter, PermissionUtils.OnPe
                         //保存小图
                         FilePathUtils.saveSmallPhotoFromBigPhoto(photoNote1.getBigPhotoPathWithFile(), photoNote1.getPhotoName());
                     } catch (FileNotFoundException e) {
-                        e.printStackTrace();
+                        YLog.e(e);
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        YLog.e(e);
                     }
                     photoNote1.setPaletteColor(Utils.getPaletteColor(ImageLoaderManager.loadImageSync(photoNote.getBigPhotoPathWithFile())));
-                    mRxPhotoNote.updatePhotoNote(photoNote1).subscribe();
+                    mRxPhotoNote.updatePhotoNote(photoNote1).subscribe(photoNotes -> {
+                    }, (throwable -> YLog.e(throwable)));
                     return photoNote1;
                 })
-                .doOnSubscribe(new Action0() {//TODO FIXME lambda
-                    @Override
-                    public void call() {
-                        mAlbumView.showProgressBar();
-                    }
-                })
+                .doOnSubscribe(() -> mAlbumView.showProgressBar())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(photoNote2 -> {
                     EventBus.getDefault().post(new PhotoNoteCreateEvent());
@@ -368,7 +351,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter, PermissionUtils.OnPe
                                 }
                                 mAlbumView.hideProgressBar();
                             });
-                });
+                }, (throwable -> YLog.e(throwable)));
     }
 
     @Override
@@ -384,20 +367,16 @@ public class AlbumPresenterImpl implements IAlbumPresenter, PermissionUtils.OnPe
                         //保存小图
                         FilePathUtils.saveSmallPhotoFromBigPhoto(photoNote.getBigPhotoPathWithFile(), photoNote.getPhotoName());
                     } catch (FileNotFoundException e) {
-                        e.printStackTrace();
+                        YLog.e(e);
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        YLog.e(e);
                     }
                     photoNote1.setPaletteColor(Utils.getPaletteColor(ImageLoaderManager.loadImageSync(photoNote.getBigPhotoPathWithFile())));
-                    mRxPhotoNote.updatePhotoNote(photoNote1).subscribe();
+                    mRxPhotoNote.updatePhotoNote(photoNote1).subscribe(photoNotes -> {
+                    }, (throwable -> YLog.e(throwable)));
                     return photoNote1;
                 })
-                .doOnSubscribe(new Action0() {//todo // FIXME: 15/11/29 lambda
-                    @Override
-                    public void call() {
-                        mAlbumView.showProgressBar();
-                    }
-                })
+                .doOnSubscribe(() -> mAlbumView.showProgressBar())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(photoNote2 -> {
                     EventBus.getDefault().post(new PhotoNoteCreateEvent());
@@ -418,7 +397,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter, PermissionUtils.OnPe
                                 }
                                 mAlbumView.hideProgressBar();
                             });
-                });
+                }, (throwable -> YLog.e(throwable)));
     }
 
     @Override
@@ -433,7 +412,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter, PermissionUtils.OnPe
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                YLog.e(e);
             }
         }
         mRxPhotoNote.savePhotoNotes(photoNotes)
@@ -448,7 +427,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter, PermissionUtils.OnPe
                             FilePathUtils.saveSmallPhotoFromBigPhoto(photoNote.getBigPhotoPathWithFile(), photoNote.getPhotoName());
                             photoNote.setPaletteColor(Utils.getPaletteColor(ImageLoaderManager.loadImageSync(photoNote.getBigPhotoPathWithFile())));
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            YLog.e(e);
                         }
                     }
                     return photoNote;
@@ -473,12 +452,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter, PermissionUtils.OnPe
                         };
                     }
                 })
-                .doOnSubscribe(new Action0() {//// TODO: 16/4/28 lambda
-                    @Override
-                    public void call() {
-                        mAlbumView.showProgressBar();
-                    }
-                })
+                .doOnSubscribe(() -> mAlbumView.showProgressBar())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(integer -> {
                     EventBus.getDefault().post(new PhotoNoteCreateEvent());
@@ -488,8 +462,8 @@ public class AlbumPresenterImpl implements IAlbumPresenter, PermissionUtils.OnPe
                                 mAlbumView.updateData(photoNoteList);
                                 mAlbumView.notifyDataSetChanged();
                                 mAlbumView.hideProgressBar();
-                            });
-                });
+                            }, (throwable -> YLog.e(throwable)));
+                }, (throwable -> YLog.e(throwable)));
     }
 
     @Override

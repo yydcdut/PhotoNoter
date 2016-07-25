@@ -188,7 +188,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             cause.printStackTrace(printWriter);
             cause = cause.getCause();
         }
-        printWriter.close();
+        FilePathUtils.closeStream(printWriter);
         String result = writer.toString();
         sb.append(result);
         YLog.i("result", result);
@@ -204,7 +204,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
                 }
                 FileOutputStream fos = new FileOutputStream(path + fileName);
                 fos.write(sb.toString().getBytes());
-                fos.close();
+                FilePathUtils.closeStream(fos);
             }
             return fileName;
         } catch (Exception e) {

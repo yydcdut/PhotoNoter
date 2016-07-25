@@ -15,6 +15,7 @@ import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.LocalStorageUtils;
 import com.yydcdut.note.utils.PermissionUtils;
+import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.utils.camera.param.Size;
 import com.yydcdut.note.utils.permission.Permission;
 import com.yydcdut.note.views.IView;
@@ -24,7 +25,6 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -73,25 +73,24 @@ public class SettingPresenterImpl implements ISettingPresenter, PermissionUtils.
                     if (aBoolean) {
                         mRxUser.getQQ()
                                 .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(iUser -> mSettingView.initQQ(true,
-                                        iUser.getName(), iUser.getImagePath()));
+                                .subscribe(iUser -> mSettingView.initQQ(true, iUser.getName(), iUser.getImagePath()),
+                                        (throwable -> YLog.e(throwable)));
                     }
-                });
+                }, (throwable -> YLog.e(throwable)));
         mRxUser.isLoginEvernote()
                 .subscribe(aBoolean -> {
                     if (aBoolean) {
                         mRxUser.getEvernote()
                                 .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(iUser -> mSettingView.initEvernote(true, iUser.getName()));
+                                .subscribe(iUser -> mSettingView.initEvernote(true, iUser.getName()),
+                                        (throwable -> YLog.e(throwable)));
                     }
-                });
+                }, (throwable -> YLog.e(throwable)));
     }
 
     @Override
     public void detachView() {
-
     }
-
 
     @Override
     public void onClickSettingItem(String tag) {
@@ -192,7 +191,7 @@ public class SettingPresenterImpl implements ISettingPresenter, PermissionUtils.
             Size size = list.get(index);
             mLocalStorageUtils.setPictureSize(cameraId, size);
         } catch (JSONException e) {
-            e.printStackTrace();
+            YLog.e(e);
             mSettingView.showSnackbar(mContext.getString(R.string.toast_fail));
         }
     }
@@ -217,7 +216,7 @@ public class SettingPresenterImpl implements ISettingPresenter, PermissionUtils.
             }
             mSettingView.showPictureSizeChooser(cameraId, list, targetSize);
         } catch (JSONException e) {
-            e.printStackTrace();
+            YLog.e(e);
             mSettingView.showSnackbar(mContext.getString(R.string.toast_fail));
         }
     }
@@ -281,17 +280,12 @@ public class SettingPresenterImpl implements ISettingPresenter, PermissionUtils.
         for (int i = 0; i < cameraIds.length; i++) {
             try {
                 List<Size> sizeList = getPictureSizeJsonArray(cameraIds[i]);
-                Collections.sort(sizeList, new Comparator<Size>() {
-                    @Override
-                    public int compare(Size lhs, Size rhs) {
-                        return -(lhs.getWidth() * lhs.getHeight() - rhs.getWidth() * rhs.getHeight());
-                    }
-                });
+                Collections.sort(sizeList, (Size lhs, Size rhs) -> -(lhs.getWidth() * lhs.getHeight() - rhs.getWidth() * rhs.getHeight()));
                 mLocalStorageUtils.setPictureSizes(String.valueOf(cameraIds[i]), sizeList);
                 Size suitableSize = sizeList.get(0);
                 mLocalStorageUtils.setPictureSize(String.valueOf(cameraIds[i]), suitableSize);
             } catch (JSONException e) {
-                e.printStackTrace();
+                YLog.e(e);
             }
         }
     }
@@ -322,14 +316,14 @@ public class SettingPresenterImpl implements ISettingPresenter, PermissionUtils.
             try {
                 initCameraNumberAndPictureSize();
             } catch (JSONException e) {
-                e.printStackTrace();
+                YLog.e(e);
             }
             int numbers = mCameraModel.getCameraNumber(mContext);
             if (numbers == 2) {
                 try {
                     mSettingView.showCameraIdsChooser();
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    YLog.e(e);
                     mSettingView.showSnackbar(mContext.getString(R.string.toast_fail));
                 }
             } else {
@@ -348,17 +342,13 @@ public class SettingPresenterImpl implements ISettingPresenter, PermissionUtils.
             try {
                 initCameraNumberAndPictureSize();
             } catch (JSONException e) {
-                e.printStackTrace();
+                YLog.e(e);
             }
             mSettingView.jump2CameraFixActivity();
         } else {
             PermissionUtils.requestPermissions(mActivity, mContext.getString(R.string.permission_camera),
-                    PermissionUtils.PERMISSION_CAMERA, PermissionUtils.CODE_ADJUST_CAMERA, new PermissionUtils.OnRequestPermissionDeniedByUserListener() {
-                        @Override
-                        public void onDenied(int requestCode) {
-                            mSettingView.showSnackbar(mContext.getString(R.string.permission_cancel));
-                        }
-                    });
+                    PermissionUtils.PERMISSION_CAMERA, PermissionUtils.CODE_ADJUST_CAMERA,
+                    ((requestCode) -> mSettingView.showSnackbar(mContext.getString(R.string.permission_cancel))));
         }
     }
 
@@ -369,16 +359,11 @@ public class SettingPresenterImpl implements ISettingPresenter, PermissionUtils.
     @Override
     public void onPermissionsDenied(List<String> permissions) {
         PermissionUtils.requestPermissions(mActivity, mContext.getString(R.string.permission_storage_init),
-                PermissionUtils.PERMISSION_CAMERA, PermissionUtils.CODE_CAMERA, new PermissionUtils.OnRequestPermissionDeniedByUserListener() {
-                    @Override
-                    public void onDenied(int requestCode) {
-                        mSettingView.showSnackbar(mContext.getString(R.string.permission_cancel));
-                    }
-                });
+                PermissionUtils.PERMISSION_CAMERA, PermissionUtils.CODE_CAMERA,
+                (requestCode) -> mSettingView.showSnackbar(mContext.getString(R.string.permission_cancel)));
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
     }
 }

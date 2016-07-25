@@ -5,6 +5,7 @@ import android.media.ExifInterface;
 import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.presenters.note.IDetailFragPresenter;
 import com.yydcdut.note.utils.FilePathUtils;
+import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.views.IView;
 import com.yydcdut.note.views.note.IDetailFragView;
 
@@ -18,6 +19,7 @@ import rx.android.schedulers.AndroidSchedulers;
  * Created by yuyidong on 15/11/16.
  */
 public class DetailFragPresenterImpl implements IDetailFragPresenter {
+
     private IDetailFragView mDetailFragView;
 
     /* data */
@@ -57,7 +59,7 @@ public class DetailFragPresenterImpl implements IDetailFragPresenter {
                 .subscribe(photoNote -> {
                     int[] size = getSize(photoNote.getBigPhotoPathWithoutFile());
                     mDetailFragView.showImage(size[0], size[1], photoNote.getSmallPhotoPathWithFile());
-                });
+                }, (throwable -> YLog.e(throwable)));
     }
 
     @Override
@@ -80,10 +82,8 @@ public class DetailFragPresenterImpl implements IDetailFragPresenter {
                     break;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            YLog.e(e);
         }
         return size;
     }
-
-
 }
