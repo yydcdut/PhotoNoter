@@ -7,9 +7,9 @@ import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.media.ExifInterface;
 
-import com.yydcdut.note.bean.PhotoNote;
-import com.yydcdut.note.bean.SandExif;
-import com.yydcdut.note.bean.SandPhoto;
+import com.yydcdut.note.entity.PhotoNote;
+import com.yydcdut.note.entity.SandExif;
+import com.yydcdut.note.entity.SandPhoto;
 import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.model.rx.RxSandBox;
 import com.yydcdut.note.presenters.service.ICameraServicePresenter;

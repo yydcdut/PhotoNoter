@@ -3,8 +3,8 @@ package com.yydcdut.note.note;
 import android.graphics.ImageFormat;
 import android.test.InstrumentationTestCase;
 
-import com.yydcdut.note.bean.SandExif;
-import com.yydcdut.note.bean.SandPhoto;
+import com.yydcdut.note.entity.SandExif;
+import com.yydcdut.note.entity.SandPhoto;
 import com.yydcdut.note.model.rx.RxSandBox;
 import com.yydcdut.note.utils.YLog;
 

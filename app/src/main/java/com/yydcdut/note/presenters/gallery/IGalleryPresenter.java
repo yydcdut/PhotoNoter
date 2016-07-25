@@ -2,7 +2,7 @@ package com.yydcdut.note.presenters.gallery;
 
 import android.content.Intent;
 
-import com.yydcdut.note.bean.gallery.GalleryApp;
+import com.yydcdut.note.entity.gallery.GalleryApp;
 import com.yydcdut.note.presenters.IPresenter;
 
 import java.util.List;

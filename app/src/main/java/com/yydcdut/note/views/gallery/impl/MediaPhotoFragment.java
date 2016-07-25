@@ -13,7 +13,7 @@ import android.widget.ArrayAdapter;
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.recycler.MediaPhotoAdapter;
 import com.yydcdut.note.adapter.recycler.vh.MediaPhotoViewHolder;
-import com.yydcdut.note.bean.gallery.MediaFolder;
+import com.yydcdut.note.entity.gallery.MediaFolder;
 import com.yydcdut.note.model.gallery.SelectPhotoModel;
 import com.yydcdut.note.presenters.gallery.impl.MediaPhotoPresenterImpl;
 import com.yydcdut.note.views.BaseActivity;

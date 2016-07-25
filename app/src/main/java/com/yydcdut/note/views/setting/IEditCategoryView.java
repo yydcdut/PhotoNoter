@@ -1,6 +1,6 @@
 package com.yydcdut.note.views.setting;
 
-import com.yydcdut.note.bean.Category;
+import com.yydcdut.note.entity.Category;
 import com.yydcdut.note.views.IView;
 
 import java.util.List;

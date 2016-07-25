@@ -2,7 +2,7 @@ package com.yydcdut.note.model.rx;
 
 import android.content.Context;
 
-import com.yydcdut.note.bean.PhotoNote;
+import com.yydcdut.note.entity.PhotoNote;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.compare.ComparatorFactory;
 import com.yydcdut.note.model.dao.PhotoNoteDB;

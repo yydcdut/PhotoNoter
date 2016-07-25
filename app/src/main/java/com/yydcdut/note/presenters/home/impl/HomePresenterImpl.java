@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 
 import com.yydcdut.note.R;
-import com.yydcdut.note.bean.Category;
 import com.yydcdut.note.bus.CategoryCreateEvent;
 import com.yydcdut.note.bus.CategoryDeleteEvent;
 import com.yydcdut.note.bus.CategoryEditEvent;
@@ -15,6 +14,7 @@ import com.yydcdut.note.bus.CategoryUpdateEvent;
 import com.yydcdut.note.bus.PhotoNoteCreateEvent;
 import com.yydcdut.note.bus.PhotoNoteDeleteEvent;
 import com.yydcdut.note.bus.UserImageEvent;
+import com.yydcdut.note.entity.Category;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.compare.ComparatorFactory;
 import com.yydcdut.note.model.rx.RxCategory;

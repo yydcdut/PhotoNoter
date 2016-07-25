@@ -2,7 +2,7 @@ package com.yydcdut.note.note;
 
 import android.test.InstrumentationTestCase;
 
-import com.yydcdut.note.bean.Category;
+import com.yydcdut.note.entity.Category;
 import com.yydcdut.note.model.dao.CategoryDB;
 import com.yydcdut.note.model.rx.RxCategory;
 import com.yydcdut.note.utils.YLog;

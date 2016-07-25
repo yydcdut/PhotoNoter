@@ -2,7 +2,7 @@ package com.yydcdut.note.note;
 
 import android.test.InstrumentationTestCase;
 
-import com.yydcdut.note.bean.PhotoNote;
+import com.yydcdut.note.entity.PhotoNote;
 import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.utils.YLog;
 

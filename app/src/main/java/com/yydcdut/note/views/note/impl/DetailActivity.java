@@ -26,7 +26,7 @@ import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.vp.DetailPagerAdapter;
-import com.yydcdut.note.bean.PhotoNote;
+import com.yydcdut.note.entity.PhotoNote;
 import com.yydcdut.note.presenters.note.impl.DetailPresenterImpl;
 import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.Const;

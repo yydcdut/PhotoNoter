@@ -7,7 +7,7 @@ import android.os.Build;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.yydcdut.note.R;
-import com.yydcdut.note.bean.user.IUser;
+import com.yydcdut.note.entity.user.IUser;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.rx.RxCategory;
 import com.yydcdut.note.model.rx.RxPhotoNote;

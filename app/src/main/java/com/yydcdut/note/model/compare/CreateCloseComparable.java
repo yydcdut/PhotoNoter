@@ -1,6 +1,6 @@
 package com.yydcdut.note.model.compare;
 
-import com.yydcdut.note.bean.PhotoNote;
+import com.yydcdut.note.entity.PhotoNote;
 
 import java.util.Comparator;
 

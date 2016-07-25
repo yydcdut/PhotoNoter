@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.recycler.vh.PhotoViewHolder;
-import com.yydcdut.note.bean.PhotoNote;
+import com.yydcdut.note.entity.PhotoNote;
 import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 

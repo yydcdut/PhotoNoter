@@ -32,7 +32,7 @@ import android.widget.Toast;
 
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.list.CategoryAdapter;
-import com.yydcdut.note.bean.Category;
+import com.yydcdut.note.entity.Category;
 import com.yydcdut.note.presenters.home.IHomePresenter;
 import com.yydcdut.note.presenters.home.impl.HomePresenterImpl;
 import com.yydcdut.note.utils.AppCompat;

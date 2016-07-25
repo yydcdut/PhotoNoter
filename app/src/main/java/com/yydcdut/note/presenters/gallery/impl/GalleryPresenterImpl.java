@@ -8,7 +8,7 @@ import android.content.pm.ResolveInfo;
 import android.support.annotation.NonNull;
 
 import com.yydcdut.note.R;
-import com.yydcdut.note.bean.gallery.GalleryApp;
+import com.yydcdut.note.entity.gallery.GalleryApp;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.gallery.RxGalleryPhotos;
 import com.yydcdut.note.model.gallery.SelectPhotoModel;

@@ -5,10 +5,10 @@ import android.os.Handler;
 import android.os.Message;
 
 import com.yydcdut.note.R;
-import com.yydcdut.note.bean.Category;
-import com.yydcdut.note.bean.PhotoNote;
 import com.yydcdut.note.bus.CategoryDeleteEvent;
 import com.yydcdut.note.bus.CategoryEditEvent;
+import com.yydcdut.note.entity.Category;
+import com.yydcdut.note.entity.PhotoNote;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.compare.ComparatorFactory;
 import com.yydcdut.note.model.rx.RxCategory;

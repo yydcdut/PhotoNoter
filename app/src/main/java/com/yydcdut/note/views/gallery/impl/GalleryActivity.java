@@ -23,7 +23,7 @@ import android.widget.LinearLayout;
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.recycler.GalleryNavigationAdapter;
 import com.yydcdut.note.adapter.recycler.vh.GalleryNavFooterViewHolder;
-import com.yydcdut.note.bean.gallery.GalleryApp;
+import com.yydcdut.note.entity.gallery.GalleryApp;
 import com.yydcdut.note.presenters.gallery.impl.GalleryPresenterImpl;
 import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.ThemeHelper;

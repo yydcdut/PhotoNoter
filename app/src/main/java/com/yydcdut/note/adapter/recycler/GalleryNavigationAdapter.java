@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.recycler.vh.GalleryNavFooterViewHolder;
-import com.yydcdut.note.bean.gallery.GalleryApp;
+import com.yydcdut.note.entity.gallery.GalleryApp;
 
 import java.util.List;
 

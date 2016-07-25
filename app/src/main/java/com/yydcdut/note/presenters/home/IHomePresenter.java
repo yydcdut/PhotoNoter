@@ -1,6 +1,6 @@
 package com.yydcdut.note.presenters.home;
 
-import com.yydcdut.note.bean.Category;
+import com.yydcdut.note.entity.Category;
 import com.yydcdut.note.presenters.IPresenter;
 
 /**

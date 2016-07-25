@@ -6,8 +6,8 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 
 import com.yydcdut.note.NoteApplication;
-import com.yydcdut.note.bean.Category;
-import com.yydcdut.note.bean.PhotoNote;
+import com.yydcdut.note.entity.Category;
+import com.yydcdut.note.entity.PhotoNote;
 import com.yydcdut.note.model.compare.ComparatorFactory;
 import com.yydcdut.note.model.rx.RxCategory;
 import com.yydcdut.note.model.rx.RxPhotoNote;

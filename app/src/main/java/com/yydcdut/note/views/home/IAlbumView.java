@@ -1,7 +1,7 @@
 package com.yydcdut.note.views.home;
 
-import com.yydcdut.note.bean.Category;
-import com.yydcdut.note.bean.PhotoNote;
+import com.yydcdut.note.entity.Category;
+import com.yydcdut.note.entity.PhotoNote;
 import com.yydcdut.note.views.IView;
 
 import java.util.List;

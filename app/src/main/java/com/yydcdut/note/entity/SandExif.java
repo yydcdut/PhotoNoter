@@ -1,4 +1,4 @@
-package com.yydcdut.note.bean;
+package com.yydcdut.note.entity;
 
 /**
  * Created by yuyidong on 15/11/5.

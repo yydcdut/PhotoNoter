@@ -1,6 +1,6 @@
 package com.yydcdut.note.views.gallery;
 
-import com.yydcdut.note.bean.gallery.MediaFolder;
+import com.yydcdut.note.entity.gallery.MediaFolder;
 import com.yydcdut.note.model.gallery.SelectPhotoModel;
 import com.yydcdut.note.views.IView;
 

@@ -12,8 +12,8 @@ import android.view.ViewGroup;
 
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.recycler.vh.MediaPhotoViewHolder;
-import com.yydcdut.note.bean.gallery.MediaFolder;
-import com.yydcdut.note.bean.gallery.MediaPhoto;
+import com.yydcdut.note.entity.gallery.MediaFolder;
+import com.yydcdut.note.entity.gallery.MediaPhoto;
 import com.yydcdut.note.model.gallery.SelectPhotoModel;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 

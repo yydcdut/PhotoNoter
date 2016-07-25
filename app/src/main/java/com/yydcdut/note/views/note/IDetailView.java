@@ -3,7 +3,7 @@ package com.yydcdut.note.views.note;
 import android.support.annotation.DrawableRes;
 import android.text.SpannableStringBuilder;
 
-import com.yydcdut.note.bean.PhotoNote;
+import com.yydcdut.note.entity.PhotoNote;
 import com.yydcdut.note.views.IView;
 
 import java.util.List;

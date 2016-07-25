@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.list.vh.CategoryVH;
-import com.yydcdut.note.bean.Category;
+import com.yydcdut.note.entity.Category;
 import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.RandomColor;
 import com.yydcdut.note.widget.TextDrawable;

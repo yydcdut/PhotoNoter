@@ -1,4 +1,4 @@
-package com.yydcdut.note.bean.gallery;
+package com.yydcdut.note.entity.gallery;
 
 import android.graphics.drawable.Drawable;
 

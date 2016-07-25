@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 
 import com.yydcdut.note.R;
-import com.yydcdut.note.bean.user.IUser;
+import com.yydcdut.note.entity.user.IUser;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.rx.RxUser;
 import com.yydcdut.note.presenters.login.IUserCenterPresenter;

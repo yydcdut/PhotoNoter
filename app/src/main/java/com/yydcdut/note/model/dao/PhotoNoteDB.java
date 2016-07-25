@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.yydcdut.note.bean.PhotoNote;
+import com.yydcdut.note.entity.PhotoNote;
 import com.yydcdut.note.model.sqlite.AbsNotesDBModel;
 import com.yydcdut.note.model.sqlite.NotesSQLite;
 import com.yydcdut.note.utils.YLog;

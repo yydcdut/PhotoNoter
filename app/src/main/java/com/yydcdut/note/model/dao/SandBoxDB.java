@@ -5,8 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.yydcdut.note.bean.SandExif;
-import com.yydcdut.note.bean.SandPhoto;
+import com.yydcdut.note.entity.SandExif;
+import com.yydcdut.note.entity.SandPhoto;
 import com.yydcdut.note.model.sqlite.SandSQLite;
 import com.yydcdut.note.utils.YLog;
 

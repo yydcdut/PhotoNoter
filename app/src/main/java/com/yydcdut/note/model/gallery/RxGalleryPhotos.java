@@ -5,8 +5,8 @@ import android.database.Cursor;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 
-import com.yydcdut.note.bean.gallery.MediaFolder;
-import com.yydcdut.note.bean.gallery.MediaPhoto;
+import com.yydcdut.note.entity.gallery.MediaFolder;
+import com.yydcdut.note.entity.gallery.MediaPhoto;
 import com.yydcdut.note.injector.ContextLife;
 
 import java.io.File;

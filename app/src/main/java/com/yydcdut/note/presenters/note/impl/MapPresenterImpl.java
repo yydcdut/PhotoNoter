@@ -18,7 +18,7 @@ import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.yydcdut.note.R;
-import com.yydcdut.note.bean.PhotoNote;
+import com.yydcdut.note.entity.PhotoNote;
 import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.presenters.note.IMapPresenter;
 import com.yydcdut.note.utils.YLog;

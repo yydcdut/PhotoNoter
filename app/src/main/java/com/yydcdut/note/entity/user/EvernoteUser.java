@@ -1,4 +1,4 @@
-package com.yydcdut.note.bean.user;
+package com.yydcdut.note.entity.user;
 
 import com.yydcdut.note.R;
 

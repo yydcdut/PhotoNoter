@@ -10,7 +10,7 @@ import android.support.annotation.NonNull;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yydcdut.note.R;
-import com.yydcdut.note.bean.PhotoNote;
+import com.yydcdut.note.entity.PhotoNote;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.rx.RxCategory;
 import com.yydcdut.note.model.rx.RxPhotoNote;
