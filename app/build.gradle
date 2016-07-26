@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'com.frogermcs.androiddevmetrics'
 apply from: '../gradle/dex.gradle'
 
 android {
@@ -185,7 +186,5 @@ dependencies {
     releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:${leakcanaryVersion}"
     debugCompile "com.github.moduth:blockcanary:${blockcanaryVersion}"
     releaseCompile "com.github.moduth:blockcanary-no-op:${blockcanaryVersion}"
-    debugCompile "com.frogermcs.androiddevmetrics:androiddevmetrics-runtime:${metricsVersion}"
-    releaseCompile "com.frogermcs.androiddevmetrics:androiddevmetrics-runtime-noop:${metricsVersion}"
 }
 

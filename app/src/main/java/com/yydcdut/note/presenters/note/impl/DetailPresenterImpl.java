@@ -119,17 +119,12 @@ public class DetailPresenterImpl implements IDetailPresenter,
                     String createdTime = decodeTimeInDetail(photoNote1.getCreatedNoteTime());
                     String editedTime = decodeTimeInDetail(photoNote1.getEditedNoteTime());
                     mIDetailView.showNoteWithoutContent(title, createdTime, editedTime);
-                }, (throwable -> YLog.e(throwable)));
-        mRxPhotoNote.findByCategoryId(mCategoryId, mComparator)
-                .map(photoNotes -> photoNotes.get(position))
-                .subscribe((photoNote -> {
-                    RxMarkdown.with(photoNote.getContent(), mContext)
+                    RxMarkdown.with(content, mContext)
                             .factory(TextFactory.create())
                             .intoObservable()
-                            .observeOn(AndroidSchedulers.mainThread())
                             .subscribe((charSequence -> mIDetailView.showContent((SpannableStringBuilder) charSequence)),
                                     (throwable -> YLog.e(throwable)));
-                }), (throwable -> YLog.e(throwable)));
+                }, (throwable -> YLog.e(throwable)));
         mIDetailView.showFabIcon(R.drawable.ic_text_format_white_24dp);
     }
 
