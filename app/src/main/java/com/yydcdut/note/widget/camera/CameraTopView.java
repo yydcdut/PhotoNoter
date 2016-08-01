@@ -9,13 +9,18 @@ import android.widget.LinearLayout;
 
 import com.yydcdut.note.R;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Created by yuyidong on 16/2/8.
  */
 public class CameraTopView extends LinearLayout implements View.OnClickListener,
         AnimationTopLayout.OnAnimationHalfFinishListener {
-    private AnimationTopLayout[] mItemLayoutView;
-    private ImageView[] mItemImageView;
+    @Bind({R.id.layout_back, R.id.layout_flash, R.id.layout_ratio, R.id.layout_timer, R.id.layout_grid, R.id.layout_camera_id})
+    AnimationTopLayout[] mItemLayoutView;
+    @Bind({R.id.btn_back, R.id.btn_flash, R.id.btn_ratio, R.id.btn_timer, R.id.btn_grid, R.id.btn_camera_id})
+    ImageView[] mItemImageView;
 
     private int[] mFlashDrawableRes;
     private int mFlashState;
@@ -34,9 +39,12 @@ public class CameraTopView extends LinearLayout implements View.OnClickListener,
 
     public CameraTopView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        LayoutInflater.from(context).inflate(R.layout.layout_camera_top, this, true);
-        mItemLayoutView = new AnimationTopLayout[6];
-        mItemImageView = new ImageView[6];
+        View view = LayoutInflater.from(context).inflate(R.layout.layout_camera_top, this, true);
+        ButterKnife.bind(this, view);
+        for (View child : mItemImageView) {
+            child.setOnClickListener(this);
+        }
+        initSomeState();
     }
 
     /**
@@ -57,27 +65,6 @@ public class CameraTopView extends LinearLayout implements View.OnClickListener,
         mItemLayoutView[2].setOnAnimationHalfFinishListener(this);
         mItemLayoutView[3].setOnAnimationHalfFinishListener(this);
         mItemLayoutView[4].setOnAnimationHalfFinishListener(this);
-    }
-
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
-        mItemLayoutView[0] = (AnimationTopLayout) findViewById(R.id.layout_back);
-        mItemLayoutView[1] = (AnimationTopLayout) findViewById(R.id.layout_flash);
-        mItemLayoutView[2] = (AnimationTopLayout) findViewById(R.id.layout_ratio);
-        mItemLayoutView[3] = (AnimationTopLayout) findViewById(R.id.layout_timer);
-        mItemLayoutView[4] = (AnimationTopLayout) findViewById(R.id.layout_grid);
-        mItemLayoutView[5] = (AnimationTopLayout) findViewById(R.id.layout_camera_id);
-        mItemImageView[0] = (ImageView) findViewById(R.id.btn_back);
-        mItemImageView[1] = (ImageView) findViewById(R.id.btn_flash);
-        mItemImageView[2] = (ImageView) findViewById(R.id.btn_ratio);
-        mItemImageView[3] = (ImageView) findViewById(R.id.btn_timer);
-        mItemImageView[4] = (ImageView) findViewById(R.id.btn_grid);
-        mItemImageView[5] = (ImageView) findViewById(R.id.btn_camera_id);
-        for (View view : mItemImageView) {
-            view.setOnClickListener(this);
-        }
-        initSomeState();
     }
 
     /**

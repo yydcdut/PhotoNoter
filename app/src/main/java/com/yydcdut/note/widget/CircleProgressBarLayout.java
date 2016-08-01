@@ -11,11 +11,16 @@ import android.widget.FrameLayout;
 
 import com.yydcdut.note.R;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Created by yuyidong on 15/7/28.
  */
 public class CircleProgressBarLayout extends FrameLayout implements View.OnTouchListener {
-    private CircleProgressBar mCircleProgressBar;
+
+    @Bind(R.id.pb_loading)
+    CircleProgressBar mCircleProgressBar;
 
     public CircleProgressBarLayout(Context context) {
         this(context, null);
@@ -27,15 +32,10 @@ public class CircleProgressBarLayout extends FrameLayout implements View.OnTouch
 
     public CircleProgressBarLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        LayoutInflater.from(getContext()).inflate(R.layout.layout_circleprogreebar, this, true);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.layout_circleprogreebar, this, true);
+        ButterKnife.bind(this, view);
         hide();
         setOnTouchListener(this);
-    }
-
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
-        mCircleProgressBar = (CircleProgressBar) findViewById(R.id.pb_loading);
         mCircleProgressBar.setColorSchemeColors(getThemeColor());
     }
 
@@ -69,5 +69,11 @@ public class CircleProgressBarLayout extends FrameLayout implements View.OnTouch
         int color = a.getColor(indexOfAttrColor, -1);
         a.recycle();
         return color;
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        ButterKnife.unbind(this);
     }
 }

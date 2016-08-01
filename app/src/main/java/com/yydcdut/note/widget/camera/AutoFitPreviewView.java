@@ -6,36 +6,35 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.TextureView;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import com.yydcdut.note.R;
 import com.yydcdut.note.utils.AppCompat;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Created by yuyidong on 16/2/3.
  */
 public class AutoFitPreviewView extends FrameLayout implements
         SurfaceHolder.Callback, TextureView.SurfaceTextureListener {
-
-    private AutoFitSurfaceView mAutoFitSurfaceView;
-    private AutoFitTextureView mAutoFitTextureView;
+    @Bind(R.id.sv_camera)
+    AutoFitSurfaceView mAutoFitSurfaceView;
+    @Bind(R.id.ttv_camera)
+    AutoFitTextureView mAutoFitTextureView;
 
     private PreviewSurface mHolderSurface;
     private PreviewSurface mTextureSurface;
 
     public AutoFitPreviewView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        LayoutInflater.from(context).inflate(R.layout.layout_preview, this, true);
-    }
-
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
+        View view = LayoutInflater.from(context).inflate(R.layout.layout_preview, this, true);
+        ButterKnife.bind(this, view);
         if (AppCompat.AFTER_ICE_CREAM) {
-            mAutoFitTextureView = (AutoFitTextureView) findViewById(R.id.ttv_camera);
             mAutoFitTextureView.setVisibility(VISIBLE);
         } else {
-            mAutoFitSurfaceView = (AutoFitSurfaceView) findViewById(R.id.sv_camera);
             mAutoFitSurfaceView.setVisibility(VISIBLE);
         }
     }
@@ -144,5 +143,11 @@ public class AutoFitPreviewView extends FrameLayout implements
         public SurfaceTexture getSurfaceTexture() {
             return mSurfaceTexture;
         }
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        ButterKnife.unbind(this);
     }
 }
