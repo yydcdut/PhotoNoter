@@ -176,9 +176,10 @@
         <!-- ************ Baidu Begin ************ -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="${BAIDU_MAP_KEY}"/>
-        <!-- release Mx338srYEciirSHk6xKMrAlm -->
-        <!-- debug pjFyNkykpYu1bIqYkQFGRnbx -->
+            android:value="pjFyNkykpYu1bIqYkQFGRnbx"/>
+        <!--<meta-data-->
+        <!--android:name="com.baidu.lbsapi.API_KEY"-->
+        <!--android:value="${BAIDU_MAP_KEY}"/>-->
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"

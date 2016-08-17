@@ -106,14 +106,18 @@ android {
 //        BaiDu {}
     }
 
+//    productFlavors.all { flavor ->
+//        if (name.toLowerCase().equals("dev")) {//debug
+//            flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name,
+//                                           BAIDU_MAP_KEY      : 'pjFyNkykpYu1bIqYkQFGRnbx']
+//        } else {//release
+//            flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name,
+//                                           BAIDU_MAP_KEY      : 'Mx338srYEciirSHk6xKMrAlm']
+//        }
+//    }
+
     productFlavors.all { flavor ->
-        if (name.toLowerCase().equals("dev")) {//debug
-            flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name,
-                                           BAIDU_MAP_KEY      : 'pjFyNkykpYu1bIqYkQFGRnbx']
-        } else {//release
-            flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name,
-                                           BAIDU_MAP_KEY      : 'Mx338srYEciirSHk6xKMrAlm']
-        }
+        flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
     }
 
     sourceSets { main { jni.srcDirs = ['src/main/jni'] } }
@@ -132,19 +136,19 @@ android {
 //    }
 //}
 
-tasks.whenTaskAdded { task ->
+//tasks.whenTaskAdded { task ->
 //    if (task.name.startsWith("create") && task.name.endsWith("MainDexClassList")) {
-    if (task.name.startsWith("transformClassesWithMultidexlistFor")) {
-        task.doLast {
+//    if (task.name.startsWith("transformClassesWithMultidexlistFor")) {
+//        task.doLast {
 //            def flavorAndBuildType = task.name.substring("create".length(), task.name.length() - "MainDexClassList".length())
-            def flavorAndBuildType = task.name.substring("transformClassesWithMultidexlistFor".length(), task.name.length())
-            autoSplitDex.configure {
-                description = flavorAndBuildType
-            }
-            autoSplitDex.execute()
-        }
-    }
-}
+//            def flavorAndBuildType = task.name.substring("transformClassesWithMultidexlistFor".length(), task.name.length())
+//            autoSplitDex.configure {
+//                description = flavorAndBuildType
+//            }
+//            autoSplitDex.execute()
+//        }
+//    }
+//}
 
 
 ext {
@@ -166,7 +170,7 @@ dependencies {
     compile "com.jakewharton:butterknife:7.0.1"
     compile "com.evernote:android-sdk:2.0.0-RC3"
     compile "com.yydcdut.sdlv:sdlv:0.5.4"
-    compile 'com.yydcdut:rxmarkdown:0.0.3'
+    compile 'com.yydcdut:rxmarkdown:0.0.4'
     compile "com.google.dagger:dagger:${dagger2Version}"
     apt "com.google.dagger:dagger-compiler:${dagger2Version}"
     compile "io.reactivex:rxandroid:1.2.0"
