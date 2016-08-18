@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HorizontalScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/img_header1"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_white_2_gray"
+            android:scaleType="center"
+            android:src="@drawable/ic_filter_1_black_24dp"/>
+
+        <ImageView
+            android:id="@+id/img_header2"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_white_2_gray"
+            android:scaleType="center"
+            android:src="@drawable/ic_filter_2_black_24dp"/>
+
+        <ImageView
+            android:id="@+id/img_header3"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_white_2_gray"
+            android:scaleType="center"
+            android:src="@drawable/ic_filter_3_black_24dp"/>
+
+        <ImageView
+            android:id="@+id/img_header4"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_white_2_gray"
+            android:scaleType="center"
+            android:src="@drawable/ic_filter_4_black_24dp"/>
+
+        <ImageView
+            android:id="@+id/img_header5"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_white_2_gray"
+            android:scaleType="center"
+            android:src="@drawable/ic_filter_5_black_24dp"/>
+
+        <ImageView
+            android:id="@+id/img_header6"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_white_2_gray"
+            android:scaleType="center"
+            android:src="@drawable/ic_filter_6_black_24dp"/>
+
+        <ImageView
+            android:id="@+id/img_bold"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_white_2_gray"
+            android:scaleType="center"
+            android:src="@drawable/ic_format_bold_black_24dp"/>
+
+        <ImageView
+            android:id="@+id/img_italic"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_white_2_gray"
+            android:scaleType="center"
+            android:src="@drawable/ic_format_italic_black_24dp"/>
+
+        <ImageView
+            android:id="@+id/img_center_align"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_white_2_gray"
+            android:scaleType="center"
+            android:src="@drawable/ic_format_align_center_black_24dp"/>
+
+        <ImageView
+            android:id="@+id/img_horizontal_rules"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_white_2_gray"
+            android:scaleType="center"
+            android:src="@drawable/ic_more_horiz_black_24dp"/>
+
+        <ImageView
+            android:id="@+id/img_todo"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_white_2_gray"
+            android:scaleType="center"
+            android:src="@drawable/ic_crop_free_black_24dp"/>
+
+        <ImageView
+            android:id="@+id/img_todo_done"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_white_2_gray"
+            android:scaleType="center"
+            android:src="@drawable/ic_center_focus_strong_black_24dp"/>
+
+        <ImageView
+            android:id="@+id/img_strike_through"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_white_2_gray"
+            android:scaleType="center"
+            android:src="@drawable/ic_format_strikethrough_black_24dp"/>
+
+        <ImageView
+            android:id="@+id/img_inline_code"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_white_2_gray"
+            android:scaleType="center"
+            android:src="@drawable/ic_image_aspect_ratio_black_24dp"/>
+
+        <ImageView
+            android:id="@+id/img_code"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_white_2_gray"
+            android:scaleType="center"
+            android:src="@drawable/ic_format_quote_black_24dp"/>
+
+        <ImageView
+            android:id="@+id/img_block_quote"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_white_2_gray"
+            android:scaleType="center"
+            android:src="@drawable/ic_chevron_right_black_24dp"/>
+
+        <ImageView
+            android:id="@+id/img_unorder_list"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_white_2_gray"
+            android:scaleType="center"
+            android:src="@drawable/ic_format_list_bulleted_black_24dp"/>
+
+        <ImageView
+            android:id="@+id/img_order_list"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_white_2_gray"
+            android:scaleType="center"
+            android:src="@drawable/ic_format_list_numbered_black_24dp"/>
+
+        <ImageView
+            android:id="@+id/img_link"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_white_2_gray"
+            android:scaleType="center"
+            android:src="@drawable/ic_insert_link_black_24dp"/>
+
+        <ImageView
+            android:id="@+id/img_photo"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_white_2_gray"
+            android:scaleType="center"
+            android:src="@drawable/ic_insert_photo_black_24dp"/>
+    </LinearLayout>
+
+</HorizontalScrollView>

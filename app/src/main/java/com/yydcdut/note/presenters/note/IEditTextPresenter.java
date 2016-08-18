@@ -20,6 +20,6 @@ public interface IEditTextPresenter extends IPresenter {
 
     void onBackPressEvent();
 
-    void updateTitle();
+    void doMarkdownPreview();
 
 }

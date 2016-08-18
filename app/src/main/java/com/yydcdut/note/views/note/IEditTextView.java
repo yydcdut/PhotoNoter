@@ -1,13 +1,16 @@
 package com.yydcdut.note.views.note;
 
 import com.yydcdut.note.views.IView;
-import com.yydcdut.note.widget.fab2.snack.OnSnackBarActionListener;
+import com.yydcdut.note.widget.fab.OnSnackBarActionListener;
+import com.yydcdut.rxmarkdown.RxMDConfiguration;
 import com.yydcdut.rxmarkdown.RxMDEditText;
 
 /**
  * Created by yuyidong on 15/11/15.
  */
 public interface IEditTextView extends IView {
+
+    void initEditView(RxMDConfiguration rxMDConfiguration);
 
     String getNoteTitle();
 
@@ -18,8 +21,6 @@ public interface IEditTextView extends IView {
     void setNoteContent(String content);
 
     RxMDEditText getRxMDEditText();
-
-    void updateNoteTitle(String title);
 
     void showProgressBar();
 
@@ -42,5 +43,7 @@ public interface IEditTextView extends IView {
     void setFabMenuLayoutClickable(boolean clickable);
 
     void finishActivityWithAnimation(boolean saved, int categoryId, int position, int comparator);
+
+    void clearMarkdownPreview();
 
 }

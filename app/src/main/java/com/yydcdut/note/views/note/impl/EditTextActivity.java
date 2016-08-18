@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,12 +26,13 @@ import com.yydcdut.note.utils.Utils;
 import com.yydcdut.note.views.BaseActivity;
 import com.yydcdut.note.views.note.IEditTextView;
 import com.yydcdut.note.widget.CircleProgressBarLayout;
+import com.yydcdut.note.widget.HorizontalEditScrollView;
 import com.yydcdut.note.widget.KeyBoardResizeFrameLayout;
 import com.yydcdut.note.widget.RevealView;
 import com.yydcdut.note.widget.VoiceRippleView;
-import com.yydcdut.note.widget.fab2.FloatingMenuLayout;
-import com.yydcdut.note.widget.fab2.snack.OnSnackBarActionListener;
-import com.yydcdut.note.widget.fab2.snack.SnackHelper;
+import com.yydcdut.note.widget.fab.FloatingActionsMenu;
+import com.yydcdut.note.widget.fab.OnSnackBarActionListener;
+import com.yydcdut.rxmarkdown.RxMDConfiguration;
 import com.yydcdut.rxmarkdown.RxMDEditText;
 
 import javax.inject.Inject;
@@ -44,22 +45,19 @@ import butterknife.OnClick;
  * Created by yyd on 15-4-8.
  */
 public class EditTextActivity extends BaseActivity implements IEditTextView,
-        KeyBoardResizeFrameLayout.OnKeyBoardShowListener, FloatingMenuLayout.OnFloatingActionsMenuUpdateListener {
+        KeyBoardResizeFrameLayout.OnKeyBoardShowListener, FloatingActionsMenu.OnFloatingActionsMenuUpdateListener {
     private static final String TAG = EditTextActivity.class.getSimpleName();
 
-    /* Views */
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
     @Bind(R.id.appbar)
     View mAppBarLayout;
-    @Bind(R.id.layout_edit_title)
-    View mLayoutTitle;
     @Bind(R.id.et_edit_title)
     EditText mTitleEdit;
     @Bind(R.id.et_edit_content)
     RxMDEditText mContentEdit;
     @Bind(R.id.layout_fab_edittext)
-    FloatingMenuLayout mFabMenuLayout;
+    FloatingActionsMenu mFabMenuLayout;
     @Bind(R.id.img_ripple_fab)
     VoiceRippleView mVoiceRippleView;
     @Bind(R.id.layout_fab_voice_start)
@@ -76,13 +74,17 @@ public class EditTextActivity extends BaseActivity implements IEditTextView,
     RevealView mVoiceRevealView;
     @Bind(R.id.view_fab_location)
     View mFabPositionView;
+    @Bind(R.id.til_edit_title)
+    View mTitleTextInputLayout;
+    @Bind(R.id.scroll_edit_markdown)
+    HorizontalEditScrollView mHorizontalEditScrollView;
 
     @Inject
     EditTextPresenterImpl mEditTextPresenter;
 
     @Override
     public boolean setStatusBar() {
-        return true;
+        return false;
     }
 
     @Override
@@ -106,12 +108,14 @@ public class EditTextActivity extends BaseActivity implements IEditTextView,
         initToolBar();
         initFloating();
         initOtherUI();
+        AppCompat.setElevation(mTitleTextInputLayout, getResources().getDimension(R.dimen.checkbox_photo_padding_right));
+        AppCompat.setElevation(mHorizontalEditScrollView, getResources().getDimension(R.dimen.checkbox_photo_padding_right));
     }
 
     void initOtherUI() {
         ((KeyBoardResizeFrameLayout) findViewById(R.id.layout_root)).setOnKeyboardShowListener(this);
         mFabRevealView.setOnTouchListener((v, event) -> {
-            mFabMenuLayout.close();
+            mFabMenuLayout.collapse();
             return true;
         });
         mVoiceLayout.setVisibility(View.INVISIBLE);
@@ -121,6 +125,7 @@ public class EditTextActivity extends BaseActivity implements IEditTextView,
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_check_white_24dp);
         AppCompat.setElevation(mToolbar, getResources().getDimension(R.dimen.ui_elevation));
+        mToolbar.setTitle(" ");
     }
 
     @Override
@@ -140,66 +145,39 @@ public class EditTextActivity extends BaseActivity implements IEditTextView,
                 mEditTextPresenter.saveText();
                 mEditTextPresenter.finishActivity(true);
                 break;
-            case R.id.menu_edit_title:
-                openEditTextAnimation();
+            case R.id.menu_markdown:
+                mEditTextPresenter.doMarkdownPreview();
                 break;
         }
         return true;
     }
 
-    private void openEditTextAnimation() {
-        AnimatorSet animation = new AnimatorSet();
-        animation.setDuration(Const.DURATION);
-        animation.playTogether(
-                ObjectAnimator.ofFloat(mTitleEdit, "alpha", 0f, 1f),
-                ObjectAnimator.ofFloat(mLayoutTitle, "Y", -getActionBarSize() * 2, 0f)
-        );
-        animation.start();
-    }
-
-    private void closeEditTextAnimation() {
-        AnimatorSet animation = new AnimatorSet();
-        animation.setDuration(Const.DURATION);
-        animation.playTogether(
-                ObjectAnimator.ofFloat(mTitleEdit, "alpha", 1f, 0f),
-                ObjectAnimator.ofFloat(mLayoutTitle, "Y", 0f, -getActionBarSize() * 2)
-        );
-        animation.start();
-    }
-
     @Override
     public void startActivityAnimation() {
         int actionBarHeight = getActionBarSize();
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-        int screenHeight = dm.heightPixels;
-        int contentEditHeight = screenHeight - actionBarHeight;
+        int screenHeight = Utils.sScreenHeight;
+        int contentEditHeight = screenHeight - actionBarHeight * 2;
         AnimatorSet animation = new AnimatorSet();
         animation.setDuration(Const.DURATION_ACTIVITY);
         animation.playTogether(
                 ObjectAnimator.ofFloat(mAppBarLayout, "translationY", -actionBarHeight, 0),
-                ObjectAnimator.ofFloat(mLayoutTitle, "translationY", -actionBarHeight * 2, 0),
+                ObjectAnimator.ofFloat(mTitleTextInputLayout, "translationY", -actionBarHeight * 3, 0),
                 ObjectAnimator.ofFloat(mContentEdit, "translationY", contentEditHeight, 0),
-                ObjectAnimator.ofFloat(mFabMenuLayout, "translationY", contentEditHeight, 0)
+                ObjectAnimator.ofFloat(mFabMenuLayout, "translationY", contentEditHeight, 0),
+                ObjectAnimator.ofFloat(mHorizontalEditScrollView, "translationY", contentEditHeight, 0)
         );
         animation.start();
     }
 
-    @OnClick(R.id.img_edit_title_ok)
-    public void clickFinishEditingTitle(View view) {
-        mEditTextPresenter.updateTitle();
-        closeEditTextAnimation();
-    }
-
     @OnClick(R.id.fab_voice)
     public void clickFabVoice(View v) {
-        mFabMenuLayout.close();
+        mFabMenuLayout.collapse();
         revealVoiceAndStart();
     }
 
     @OnClick(R.id.fab_evernote_update)
     public void clickEvernoteUpdate(View v) {
-        mFabMenuLayout.close();
+        mFabMenuLayout.collapse();
         mEditTextPresenter.update2Evernote();
     }
 
@@ -220,17 +198,17 @@ public class EditTextActivity extends BaseActivity implements IEditTextView,
 
     @Override
     public boolean isFabMenuLayoutOpen() {
-        return mFabMenuLayout.isOpen();
+        return mFabMenuLayout.isExpanded();
     }
 
     @Override
     public void closeFabMenuLayout() {
-        mFabMenuLayout.close();
+        mFabMenuLayout.collapse();
     }
 
     @Override
     public void setFabMenuLayoutClickable(boolean clickable) {
-        mFabMenuLayout.setMenuClickable(clickable);
+//        mFabMenuLayout.setMenuClickable(clickable);
     }
 
     @Override
@@ -242,9 +220,11 @@ public class EditTextActivity extends BaseActivity implements IEditTextView,
         animation.setDuration(Const.DURATION_ACTIVITY);
         animation.playTogether(
                 ObjectAnimator.ofFloat(mAppBarLayout, "translationY", 0, -actionBarHeight),
-                ObjectAnimator.ofFloat(mLayoutTitle, "translationY", 0, -actionBarHeight * 2),
+                ObjectAnimator.ofFloat(mTitleTextInputLayout, "translationY", 0, -actionBarHeight * 3),
                 ObjectAnimator.ofFloat(mContentEdit, "translationY", 0, contentEditHeight),
-                ObjectAnimator.ofFloat(mFabMenuLayout, "translationY", 0, contentEditHeight)
+                ObjectAnimator.ofFloat(mFabMenuLayout, "translationY", 0, contentEditHeight),
+                ObjectAnimator.ofFloat(mHorizontalEditScrollView, "translationY", 0, contentEditHeight)
+
         );
         animation.addListener(new AnimatorListenerAdapter() {
             @Override
@@ -270,19 +250,24 @@ public class EditTextActivity extends BaseActivity implements IEditTextView,
     }
 
     @Override
+    public void clearMarkdownPreview() {
+        mContentEdit.clear();
+    }
+
+    @Override
     public void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onKeyboardShow() {
-        mFabMenuLayout.close();
-        mFabMenuLayout.setMenuClickable(false);
+        mFabMenuLayout.collapse();
+        mFabMenuLayout.setVisibility(View.GONE);
     }
 
     @Override
     public void onKeyboardHide() {
-        mFabMenuLayout.setMenuClickable(true);
+        mFabMenuLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -362,6 +347,11 @@ public class EditTextActivity extends BaseActivity implements IEditTextView,
     }
 
     @Override
+    public void initEditView(RxMDConfiguration rxMDConfiguration) {
+        mHorizontalEditScrollView.setEditTextAndConfig(mContentEdit, rxMDConfiguration);
+    }
+
+    @Override
     public String getNoteTitle() {
         return mTitleEdit.getText().toString();
     }
@@ -387,11 +377,6 @@ public class EditTextActivity extends BaseActivity implements IEditTextView,
     }
 
     @Override
-    public void updateNoteTitle(String title) {
-        mToolbar.setTitle(title);
-    }
-
-    @Override
     public void showProgressBar() {
         mProgressLayout.show();
     }
@@ -403,17 +388,18 @@ public class EditTextActivity extends BaseActivity implements IEditTextView,
 
     @Override
     public void showSnakeBar(String message) {
-        SnackHelper.make(mFabMenuLayout, message, SnackHelper.LENGTH_SHORT).show(mFabMenuLayout);
+        Snackbar.make(mFabMenuLayout, message, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
     public void showSnakeBarWithAction(String message, String action, final OnSnackBarActionListener listener) {
-        SnackHelper.make(mFabMenuLayout, message, SnackHelper.LENGTH_LONG)
-                .setAction(action, (v) -> {
+        Snackbar.make(mFabMenuLayout, message, Snackbar.LENGTH_SHORT)
+                .setAction(action, v -> {
                     if (listener != null) {
                         listener.onClick();
                     }
-                }).show(mFabMenuLayout);
+                })
+                .show();
     }
 
     @Override
@@ -421,5 +407,11 @@ public class EditTextActivity extends BaseActivity implements IEditTextView,
         super.onDestroy();
         mEditTextPresenter.detachView();
         mVoiceRippleView.stopAnimation();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mHorizontalEditScrollView.handleResult(requestCode, resultCode, data);
     }
 }

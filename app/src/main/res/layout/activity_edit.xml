@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.yydcdut.note.widget.KeyBoardResizeFrameLayout
-    android:id="@+id/layout_root"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:reveal="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorPrimary">
+    android:background="?attr/colorPrimary"
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -14,34 +15,13 @@
 
         <include layout="@layout/layout_toolbar_light"/>
 
-        <com.yydcdut.rxmarkdown.RxMDEditText
-            android:id="@+id/et_edit_content"
-            style="@null"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/appbar"
-            android:background="@android:color/white"
-            android:gravity="left|top"
-            android:hint="@string/text_content"
-            android:padding="@dimen/activity_margin_small"
-            android:textColor="@color/black"
-            android:textSize="@dimen/txt_mid"/>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/layout_edit_title"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary">
-
         <android.support.design.widget.TextInputLayout
+            android:id="@+id/til_edit_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_toLeftOf="@+id/img_edit_title_ok"
-            android:paddingTop="@dimen/activity_vertical_margin_small">
+            android:layout_below="@+id/appbar"
+            android:background="@android:color/white"
+            android:paddingTop="5dp">
 
             <EditText
                 android:id="@+id/et_edit_title"
@@ -49,19 +29,39 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/text_title"
                 android:singleLine="true"
-                android:textColor="@color/white"/>
+                android:textColor="@color/black"/>
         </android.support.design.widget.TextInputLayout>
 
-        <ImageView
-            android:id="@+id/img_edit_title_ok"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/bg_circle_48_gray"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:src="@drawable/ic_check_white_24dp"/>
+        <View
+            android:id="@+id/view_edit_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_above="@+id/scroll_edit_markdown"
+            android:background="@android:color/black"/>
+
+        <com.yydcdut.note.widget.HorizontalEditScrollView
+            android:id="@+id/scroll_edit_markdown"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true"/>
+
+        <com.yydcdut.rxmarkdown.RxMDEditText
+            android:id="@+id/et_edit_content"
+            style="@null"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_above="@+id/view_edit_divider"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/til_edit_title"
+            android:background="@android:color/white"
+            android:gravity="left|top"
+            android:hint="@string/text_content"
+            android:paddingLeft="@dimen/activity_margin_small"
+            android:paddingRight="@dimen/activity_margin_small"
+            android:textColor="@color/black"
+            android:textSize="@dimen/txt_mid"/>
+
     </RelativeLayout>
 
     <com.yydcdut.note.widget.RevealView
@@ -87,7 +87,7 @@
         android:layout_width="64dip"
         android:layout_height="64dip"
         android:layout_gravity="bottom|right"
-        android:layout_marginBottom="@dimen/dimen_12dip"
+        android:layout_marginBottom="60dp"
         android:layout_marginRight="@dimen/dimen_12dip"
         android:background="@android:color/transparent"/>
 

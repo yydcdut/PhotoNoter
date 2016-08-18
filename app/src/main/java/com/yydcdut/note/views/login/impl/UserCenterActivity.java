@@ -27,7 +27,7 @@ import com.yydcdut.note.widget.CircleProgressBarLayout;
 import com.yydcdut.note.widget.RoundedImageView;
 import com.yydcdut.note.widget.StatusBarView;
 import com.yydcdut.note.widget.UserCenterArrowView;
-import com.yydcdut.note.widget.fab2.snack.OnSnackBarActionListener;
+import com.yydcdut.note.widget.fab.OnSnackBarActionListener;
 
 import javax.inject.Inject;
 

@@ -1,7 +1,7 @@
 package com.yydcdut.note.views.login;
 
 import com.yydcdut.note.views.IView;
-import com.yydcdut.note.widget.fab2.snack.OnSnackBarActionListener;
+import com.yydcdut.note.widget.fab.OnSnackBarActionListener;
 
 /**
  * Created by yuyidong on 15/11/16.

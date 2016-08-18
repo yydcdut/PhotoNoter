@@ -38,6 +38,7 @@ import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.utils.permission.Permission;
 import com.yydcdut.note.views.IView;
 import com.yydcdut.note.views.note.IEditTextView;
+import com.yydcdut.rxmarkdown.RxMDConfiguration;
 import com.yydcdut.rxmarkdown.RxMarkdown;
 import com.yydcdut.rxmarkdown.factory.EditFactory;
 
@@ -91,6 +92,9 @@ public class EditTextPresenterImpl implements IEditTextPresenter, PermissionUtil
     /* Voice的是不是显示出来的 */
     private boolean mIsVoiceOpen = false;
 
+    private boolean isMarkdownPreview;
+    private RxMDConfiguration mRxMDConfiguration;
+
     @Inject
     public EditTextPresenterImpl(@ContextLife("Activity") Context context, Activity activity,
                                  RxPhotoNote rxPhotoNote, RxUser rxUser) {
@@ -100,28 +104,27 @@ public class EditTextPresenterImpl implements IEditTextPresenter, PermissionUtil
         mActivity = activity;
         mRxUser = rxUser;
         mIatResults = new LinkedHashMap<>();
-        /*
-         * 语音
-         * 是一个单例，所以可以这么搞
-         */
         SpeechUtility.createUtility(context, "appid=" + BuildConfig.SPEECH_ID);
     }
 
     @Override
     public void attachView(IView iView) {
         mEditTextView = (IEditTextView) iView;
+        mRxMDConfiguration = new RxMDConfiguration.Builder(mContext).build();
+        mEditTextView.initEditView(mRxMDConfiguration);
         mRxPhotoNote.findByCategoryId(mCategoryId, mComparator)
                 .map(photoNoteList -> photoNoteList.get(mPosition))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(photoNote -> {
                     mEditTextView.setEditNoteTitle(photoNote.getTitle());
-                    mEditTextView.updateNoteTitle(photoNote.getTitle());
                     mEditTextView.setNoteContent(photoNote.getContent());
                     RxMarkdown.live(mEditTextView.getRxMDEditText())
                             .factory(EditFactory.create())
+                            .config(mRxMDConfiguration)
                             .intoObservable()
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe((charSequence -> {
+                                isMarkdownPreview = true;
                             }), (throwable -> {
                                 YLog.e(throwable);
                                 mEditTextView.setNoteContent(photoNote.getContent());
@@ -246,8 +249,19 @@ public class EditTextPresenterImpl implements IEditTextPresenter, PermissionUtil
     }
 
     @Override
-    public void updateTitle() {
-        mEditTextView.updateNoteTitle(mEditTextView.getNoteTitle());
+    public void doMarkdownPreview() {
+        if (isMarkdownPreview) {
+            isMarkdownPreview = false;
+            mEditTextView.clearMarkdownPreview();
+        } else {
+            RxMarkdown.live(mEditTextView.getRxMDEditText())
+                    .factory(EditFactory.create())
+                    .config(mRxMDConfiguration)
+                    .intoObservable()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe((charSequence -> isMarkdownPreview = true),
+                            (throwable -> YLog.e(throwable)));
+        }
     }
 
     /**
@@ -340,12 +354,6 @@ public class EditTextPresenterImpl implements IEditTextPresenter, PermissionUtil
                     JSONArray items = words.getJSONObject(i).getJSONArray("cw");
                     JSONObject obj = items.getJSONObject(0);
                     ret.append(obj.getString("w"));
-//				如果需要多候选结果，解析数组其他字段
-//				for(int j = 0; j < items.length(); j++)
-//				{
-//					JSONObject obj = items.getJSONObject(j);
-//					ret.append(obj.getString("w"));
-//				}
                 }
             } catch (Exception e) {
                 YLog.e(e);

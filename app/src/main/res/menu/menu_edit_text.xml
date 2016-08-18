@@ -5,13 +5,6 @@
         android:id="@+id/menu_markdown"
         android:icon="@drawable/ic_markdown"
         android:title="Markdown"
-        android:visible="false"
-        app:showAsAction="always"/>
-
-    <item
-        android:id="@+id/menu_edit_title"
-        android:icon="@drawable/ic_mode_edit_white_24dp"
-        android:title="@string/edit_title"
         app:showAsAction="always"/>
 
 </menu>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <manifest
-    package="com.yydcdut.note"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.yydcdut.note">
 
     <application
         android:name=".NoteApplication"
@@ -48,6 +48,7 @@
             android:theme="@style/ThemeBlue"/>
         <activity
             android:name=".views.note.impl.EditTextActivity"
+            android:label=" "
             android:screenOrientation="portrait"
             android:theme="@style/ThemeBlue"
             android:windowSoftInputMode="adjustResize|stateHidden"/>

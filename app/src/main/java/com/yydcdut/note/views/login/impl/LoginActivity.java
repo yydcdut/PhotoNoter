@@ -15,7 +15,7 @@ import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.views.BaseActivity;
 import com.yydcdut.note.views.login.ILoginView;
 import com.yydcdut.note.widget.CircleProgressBarLayout;
-import com.yydcdut.note.widget.fab2.snack.OnSnackBarActionListener;
+import com.yydcdut.note.widget.fab.OnSnackBarActionListener;
 
 import javax.inject.Inject;
 
