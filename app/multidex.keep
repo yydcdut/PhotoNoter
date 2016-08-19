@@ -92,6 +92,7 @@ android/support/v7/app/AppCompatCallback.class
 android/support/v7/widget/RecyclerView$Recycler.class
 org/aspectj/lang/annotation/DeclarePrecedence.class
 butterknife/BindString.class
+com/yydcdut/note/entity/gallery/GalleryApp.class
 com/evernote/client/android/OnClientCallback.class
 butterknife/OnClick.class
 android/support/v7/view/menu/MenuPresenter$Callback.class
@@ -278,7 +279,6 @@ android/support/v4/app/ActivityCompatHoneycomb.class
 com/yydcdut/note/R$drawable.class
 com/github/moduth/blockcanary/R$layout.class
 org/eclipse/mat/snapshot/model/ObjectReference.class
-com/yydcdut/note/bean/Category.class
 android/support/v7/widget/ActionMenuView$OnMenuItemClickListener.class
 android/support/v7/widget/SimpleItemAnimator.class
 android/support/annotation/BoolRes.class
@@ -291,6 +291,7 @@ android/support/v4/media/RatingCompat$1.class
 com/yydcdut/note/views/note/impl/EditTextActivity$$Lambda$2.class
 com/baidu/location/a/a.class
 android/support/v4/media/MediaMetadataCompatApi21.class
+com/yydcdut/note/views/BaseActivity$AjcClosure3.class
 org/aspectj/lang/annotation/DeclareWarning.class
 com/evernote/client/android/EvernoteOAuthActivity$WebViewFragment.class
 android/support/annotation/IntegerRes.class
@@ -373,6 +374,7 @@ org/aspectj/lang/reflect/AdviceSignature.class
 android/support/v7/app/AppCompatActivity.class
 android/support/annotation/IntDef.class
 com/yydcdut/sdlv/SlideAndDragListView$OnMenuItemClickListener.class
+com/yydcdut/note/views/home/impl/SplashActivity$AjcClosure3.class
 com/tencent/open/utils/TemporaryStorage.class
 com/yydcdut/note/presenters/note/impl/DetailFragPresenterImpl.class
 com/github/moduth/blockcanary/ui/DisplayBlockActivity$6.class
@@ -398,6 +400,7 @@ android/support/design/widget/Snackbar.class
 com/yydcdut/note/views/note/impl/DetailActivity$4.class
 com/yydcdut/note/widget/ColorChooserDialog$Callback.class
 android/support/v4/widget/DrawerLayoutImpl.class
+com/yydcdut/note/views/BaseActivity$AjcClosure1.class
 rx/Completable.class
 com/yydcdut/sdlv/SlideAndDragListView$OnSlideListener.class
 com/yydcdut/note/views/WebViewActivity$1.class
@@ -481,6 +484,7 @@ com/tencent/connect/auth/AuthMap$Auth.class
 rx/functions/Action1.class
 android/support/design/widget/SnackbarManager$Callback.class
 android/support/v4/view/ViewCompat$KitKatViewCompatImpl.class
+com/yydcdut/note/views/home/impl/SplashActivity$AjcClosure1.class
 android/support/v8/renderscript/Script$FieldBase.class
 com/squareup/leakcanary/internal/DisplayLeakActivity$2.class
 org/eclipse/mat/snapshot/model/IArray.class
@@ -519,6 +523,7 @@ com/yydcdut/note/views/setting/impl/FeedbackActivity$$Lambda$3.class
 android/support/v4/util/DebugUtils.class
 com/yydcdut/note/R.class
 com/yydcdut/note/widget/RoundedImageView.class
+com/yydcdut/note/views/home/impl/HomeActivity$AjcClosure1.class
 android/support/design/widget/Snackbar$2.class
 com/frogermcs/androiddevmetrics/internal/ui/MetricsActivity$3.class
 com/yydcdut/note/BuildConfig.class
@@ -607,6 +612,7 @@ com/yydcdut/note/widget/MaterialProgressDrawable$EndCurveInterpolator.class
 org/aspectj/runtime/internal/AroundClosure.class
 com/yydcdut/note/presenters/gallery/impl/PhotoDetailPresenterImpl.class
 rx/android/schedulers/HandlerScheduler.class
+com/yydcdut/note/entity/Category.class
 android/support/v4/util/ArrayMap$1.class
 com/yydcdut/note/presenters/camera/impl/AdjustCameraPresenterImpl.class
 com/yydcdut/note/views/home/IAlbumView.class
@@ -633,7 +639,6 @@ android/support/v7/recyclerview/R.class
 com/yydcdut/note/widget/StatusBarView.class
 net/vrallev/android/task/TaskExecutor.class
 android/support/design/R$dimen.class
-com/yydcdut/note/bean/PhotoNote.class
 android/support/design/widget/CoordinatorLayout.class
 android/support/v7/widget/RecyclerView$RecycledViewPool.class
 com/yydcdut/note/views/setting/impl/AboutAppActivity.class
@@ -701,6 +706,7 @@ org/aspectj/runtime/reflect/MemberSignatureImpl.class
 com/yydcdut/note/views/camera/impl/CameraActivity$1.class
 com/yydcdut/note/service/CheckService$$Lambda$2.class
 android/support/v7/widget/Toolbar$LayoutParams.class
+com/yydcdut/note/views/note/impl/MapActivity$AjcClosure1.class
 android/support/v7/widget/RecyclerView$ItemAnimator$AdapterChanges.class
 android/support/v7/widget/RecyclerView$3.class
 android/support/design/widget/SwipeDismissBehavior.class
@@ -749,6 +755,7 @@ com/frogermcs/androiddevmetrics/R.class
 com/squareup/leakcanary/LeakTraceElement.class
 com/yydcdut/note/widget/fab/FloatingActionButton.class
 com/yydcdut/note/views/IThemeView.class
+com/yydcdut/note/test/TestUIActivity$AjcClosure1.class
 android/support/v4/media/MediaMetadataCompat$BitmapKey.class
 android/support/v4/graphics/drawable/DrawableCompat.class
 android/support/multidex/ZipUtil$CentralDirectory.class
@@ -950,6 +957,7 @@ android/support/v4/view/accessibility/AccessibilityNodeInfoCompat.class
 android/support/v4/media/RatingCompat.class
 com/yydcdut/note/presenters/note/impl/MapPresenterImpl.class
 com/yydcdut/note/injector/component/DaggerServiceComponent$Builder.class
+com/yydcdut/note/entity/PhotoNote.class
 android/support/design/widget/CoordinatorLayout$OnPreDrawListener.class
 android/support/design/widget/NavigationView$OnNavigationItemSelectedListener.class
 android/support/annotation/IntRange.class
@@ -972,7 +980,6 @@ android/support/annotation/PluralsRes.class
 com/squareup/leakcanary/R$drawable.class
 android/support/v4/app/FragmentActivity$1.class
 butterknife/OnItemSelected.class
-com/yydcdut/note/bean/gallery/GalleryApp.class
 org/eclipse/mat/snapshot/model/IClass.class
 org/greenrobot/eventbus/ThreadMode.class
 android/support/v4/widget/SwipeRefreshLayout.class
@@ -987,6 +994,7 @@ com/yydcdut/note/views/BaseFragment.class
 butterknife/OnEditorAction.class
 android/support/annotation/UiThread.class
 org/aspectj/lang/reflect/ConstructorSignature.class
+com/yydcdut/note/DexActivity$AjcClosure1.class
 com/yydcdut/note/presenters/home/IIntroducePresenter.class
 com/yydcdut/note/presenters/home/impl/AlbumPresenterImpl.class
 android/support/design/widget/Snackbar$SnackbarLayout$OnAttachStateChangeListener.class
@@ -1026,9 +1034,10 @@ android/support/multidex/MultiDexExtractor$1.class
 android/support/multidex/MultiDexExtractor.class
 android/support/multidex/ZipUtil$CentralDirectory.class
 android/support/multidex/ZipUtil.classcom/yydcdut/note/presenters/home/impl/AlbumPresenterImpl$$Lambda$28.class
+com/yydcdut/note/presenters/home/impl/SplashPresenterImpl$AjcClosure1.class
 com/nostra13/universalimageloader/core/ImageLoader$SyncImageLoadingListener.class
 android/support/v4/widget/DrawerLayout$DrawerLayoutCompatImplApi21.class
-com/yydcdut/note/presenters/gallery/impl/MediaPhotoPresenterImpl$$Lambda$2.class
+com/yydcdut/note/presenters/note/impl/DetailFragPresenterImpl$AjcClosure1.class
 com/yydcdut/note/views/camera/impl/AdjustCameraActivity_MembersInjector.class
 com/yydcdut/note/injector/module/ApplicationModule_ProvideRxPhotoNoteFactory.class
 com/nineoldandroids/animation/AnimatorSet$Builder.class
@@ -1040,6 +1049,7 @@ com/yydcdut/note/bus/CategoryDeleteEvent.class
 com/yydcdut/sdlv/SlideAndDragListView$OnListItemClickListener.class
 com/yydcdut/note/injector/component/DaggerServiceComponent$1.class
 com/yydcdut/note/presenters/note/impl/MapPresenterImpl$$Lambda$1.class
+com/yydcdut/note/injector/module/ApplicationModule$AjcClosure7.class
 com/yydcdut/note/presenters/home/impl/AlbumPresenterImpl$$Lambda$23.class
 com/yydcdut/note/presenters/gallery/impl/GalleryPresenterImpl_Factory.class
 com/yydcdut/note/widget/RevealView$2.class
@@ -1065,6 +1075,7 @@ com/yydcdut/note/presenters/login/impl/UserCenterPresenterImpl$$Lambda$17.class
 com/yydcdut/note/views/home/impl/IntroduceActivity$$ViewBinder.class
 uk/co/senab/photoview/PhotoViewAttacher$FlingRunnable.class
 com/yydcdut/note/presenters/home/impl/AlbumPresenterImpl$$Lambda$31.class
+com/yydcdut/note/presenters/setting/impl/FeedbackPresenterImpl$AjcClosure1.class
 com/yydcdut/note/views/note/impl/EditTextActivity$$ViewBinder$4.class
 com/yydcdut/note/presenters/setting/impl/EditCategoryPresenterImpl$$Lambda$1.class
 com/yydcdut/note/presenters/login/impl/LoginPresenterImpl$$Lambda$13.class
@@ -1072,6 +1083,7 @@ com/yydcdut/note/presenters/setting/impl/EditCategoryPresenterImpl$$Lambda$10.cl
 android/support/v4/widget/DrawerLayout$SimpleDrawerListener.class
 com/yydcdut/note/model/rx/RxUser_Factory.class
 com/yydcdut/note/presenters/home/impl/AlbumPresenterImpl$$Lambda$1.class
+com/yydcdut/note/presenters/service/impl/SandBoxServicePresenterImpl$AjcClosure1.class
 com/yydcdut/note/presenters/setting/impl/EditCategoryPresenterImpl$$Lambda$23.class
 com/yydcdut/note/presenters/login/impl/UserCenterPresenterImpl$$Lambda$4.class
 android/support/v7/app/ActionBarDrawerToggle$1.class
@@ -1089,7 +1101,6 @@ com/yydcdut/note/presenters/home/impl/HomePresenterImpl$$Lambda$27.class
 com/yydcdut/note/presenters/login/impl/UserDetailFragPresenterImpl$$Lambda$14.class
 com/yydcdut/note/presenters/note/impl/DetailPresenterImpl$$Lambda$4.class
 android/support/v4/app/NotificationCompat$BigPictureStyle.class
-com/yydcdut/note/presenters/note/impl/DetailPresenterImpl$$Lambda$13.class
 com/yydcdut/note/presenters/home/impl/HomePresenterImpl$$Lambda$19.class
 android/support/v4/view/ViewPager$ItemInfo.class
 com/yydcdut/note/presenters/home/impl/HomePresenterImpl$$Lambda$49.class
@@ -1099,6 +1110,7 @@ com/yydcdut/note/model/rx/RxCategory$$Lambda$18.class
 android/support/v4/app/NotificationCompatApi21$Builder.class
 com/yydcdut/note/presenters/login/impl/UserDetailFragPresenterImpl$$Lambda$1.class
 com/yydcdut/note/views/note/impl/EditTextActivity_MembersInjector.class
+com/yydcdut/note/presenters/home/impl/IntroducePresenterImpl$AjcClosure1.class
 com/yydcdut/note/presenters/home/impl/HomePresenterImpl$$Lambda$48.class
 com/yydcdut/note/presenters/home/impl/AlbumPresenterImpl$2.class
 com/nineoldandroids/animation/ValueAnimator$3.class
@@ -1118,6 +1130,7 @@ com/yydcdut/note/model/rx/RxPhotoNote$$Lambda$12.class
 com/yydcdut/note/model/rx/RxPhotoNote$$Lambda$3.class
 com/yydcdut/note/widget/camera/FocusView$1.class
 com/yydcdut/note/presenters/home/impl/HomePresenterImpl$$Lambda$30.class
+com/yydcdut/note/injector/module/ServiceModule$AjcClosure1.class
 butterknife/ButterKnife$Finder.class
 android/support/design/widget/FloatingActionButtonImpl.class
 com/yydcdut/note/model/rx/RxCategory$$Lambda$17.class
@@ -1132,9 +1145,11 @@ com/yydcdut/note/model/rx/RxCategory$$Lambda$6.class
 com/yydcdut/note/utils/PermissionUtils$$Lambda$2.class
 com/yydcdut/note/presenters/login/impl/UserDetailFragPresenterImpl$$Lambda$18.class
 com/yydcdut/note/presenters/note/impl/EditTextPresenterImpl$$Lambda$10.class
+com/yydcdut/note/injector/module/ApplicationModule$AjcClosure3.class
 android/support/v7/widget/RecyclerView$SmoothScroller$Action.class
 com/yydcdut/note/injector/module/ApplicationModule_ProvideRxGalleryPhotosFactory.class
 com/yydcdut/note/presenters/note/impl/EditTextPresenterImpl$1.class
+com/yydcdut/note/presenters/login/impl/LoginPresenterImpl$AjcClosure1.class
 com/yydcdut/note/presenters/home/impl/AlbumPresenterImpl$$Lambda$45.class
 com/baidu/mapapi/map/BaiduMap$OnPolylineClickListener.class
 com/yydcdut/note/presenters/note/impl/ZoomPresenterImpl$$Lambda$8.class
@@ -1178,11 +1193,13 @@ com/yydcdut/note/presenters/note/impl/EditTextPresenterImpl$$Lambda$1.class
 com/yydcdut/note/views/note/impl/ZoomActivity$$ViewBinder.class
 com/yydcdut/sdlv/SlideAndDragListView$OnListItemLongClickListener.class
 com/yydcdut/note/model/rx/RxSandBox$2.class
+com/yydcdut/note/presenters/camera/impl/CameraPresenterImpl$AjcClosure1.class
 android/support/v7/widget/RecyclerView$LayoutManager$Properties.class
 com/yydcdut/note/presenters/login/impl/UserCenterPresenterImpl$$Lambda$9.class
 com/yydcdut/note/injector/module/FragmentModule_ProvideFragmentFactory.class
 com/yydcdut/note/model/rx/RxCategory$3.class
 android/support/v4/app/NotificationCompat$NotificationCompatImpl.class
+com/yydcdut/note/injector/module/ApplicationModule$AjcClosure11.class
 com/baidu/mapapi/map/BaiduMap$1.class
 com/yydcdut/note/presenters/note/impl/ZoomPresenterImpl$$Lambda$4.class
 android/support/v4/app/NotificationCompat$CarExtender$UnreadConversation.class
@@ -1196,7 +1213,7 @@ com/yydcdut/note/bus/CategoryUpdateEvent.class
 com/yydcdut/note/model/rx/RxCategory$2.class
 com/yydcdut/note/views/gallery/impl/PhotoDetailActivity$$ViewBinder$2.class
 com/yydcdut/note/widget/camera/GestureView$2.class
-com/yydcdut/note/bean/SandExif.class
+com/yydcdut/note/presenters/note/impl/MapPresenterImpl$AjcClosure1.class
 android/support/v4/widget/DrawerLayout$SavedState$1.class
 com/yydcdut/note/views/home/impl/AlbumFragment$$ViewBinder$1.class
 com/yydcdut/note/presenters/home/impl/HomePresenterImpl$$Lambda$15.class
@@ -1209,6 +1226,7 @@ com/yydcdut/note/bus/PhotoNoteCreateEvent.class
 com/yydcdut/note/adapter/recycler/vh/PhotoViewHolder$$ViewBinder.class
 com/baidu/mapapi/map/BaiduMap$SnapshotReadyCallback.class
 com/evernote/client/android/EvernoteSession$EvernoteService.class
+com/yydcdut/note/presenters/home/impl/HomePresenterImpl$AjcClosure1.class
 com/yydcdut/note/presenters/home/impl/AlbumPresenterImpl$$Lambda$44.class
 com/yydcdut/note/presenters/home/impl/HomePresenterImpl$$Lambda$14.class
 com/yydcdut/note/presenters/note/impl/ZoomPresenterImpl$$Lambda$3.class
@@ -1229,6 +1247,7 @@ com/yydcdut/note/widget/RevealView$1.class
 com/yydcdut/note/presenters/setting/impl/SettingPresenterImpl$$Lambda$3.class
 com/yydcdut/note/views/gallery/impl/PhotoDetailActivity_MembersInjector.class
 com/yydcdut/note/model/rx/RxPhotoNote$$Lambda$22.class
+com/yydcdut/note/injector/module/ActivityModule$AjcClosure1.class
 com/yydcdut/note/presenters/home/impl/HomePresenterImpl$$Lambda$13.class
 com/yydcdut/note/views/home/impl/AlbumFragment$$ViewBinder.class
 rx/android/schedulers/AndroidSchedulers.class
@@ -1258,6 +1277,7 @@ com/yydcdut/note/model/rx/RxCategory$$Lambda$9.class
 com/yydcdut/note/presenters/camera/impl/CameraPresenterImpl$4.class
 org/greenrobot/eventbus/SubscriberMethodFinder$FindState.class
 com/yydcdut/note/views/note/impl/DetailFragment$$ViewBinder.class
+com/yydcdut/note/injector/module/ApplicationModule$AjcClosure1.class
 com/yydcdut/note/presenters/note/impl/DetailFragPresenterImpl$$Lambda$3.class
 com/yydcdut/note/views/setting/impl/EditCategoryActivity$$ViewBinder.class
 com/yydcdut/note/presenters/home/impl/AlbumPresenterImpl$$Lambda$35.class
@@ -1285,6 +1305,7 @@ com/yydcdut/note/model/rx/RxUser$$Lambda$3.class
 com/yydcdut/note/presenters/home/impl/HomePresenterImpl$$Lambda$3.class
 com/yydcdut/note/bus/CategoryMoveEvent.class
 com/yydcdut/note/presenters/login/impl/LoginPresenterImpl$$Lambda$4.class
+com/yydcdut/note/model/rx/RxCategory$AjcClosure1.class
 com/yydcdut/note/views/login/impl/UserCenterActivity_MembersInjector.class
 butterknife/ButterKnife$Action.class
 com/yydcdut/note/model/rx/RxUser$13.class
@@ -1300,6 +1321,7 @@ android/support/v7/widget/Toolbar$SavedState$1.class
 com/yydcdut/note/model/rx/RxPhotoNote$2.class
 com/yydcdut/note/model/rx/RxPhotoNote$3$1.class
 com/yydcdut/note/injector/component/DaggerActivityComponent$4.class
+com/yydcdut/note/model/camera/impl/CameraModelImpl$AjcClosure1.class
 com/yydcdut/note/presenters/setting/impl/EditCategoryPresenterImpl$$Lambda$19.class
 android/support/v4/app/NotificationCompatSideChannelService.class
 android/support/v4/view/ViewPager$OnAdapterChangeListener.class
@@ -1313,11 +1335,11 @@ com/yydcdut/note/presenters/note/impl/MapPresenterImpl_Factory.class
 com/yydcdut/note/presenters/service/impl/CameraServicePresenterImpl$$Lambda$1.class
 com/yydcdut/note/views/home/impl/IntroduceActivity$$ViewBinder$1.class
 com/yydcdut/note/views/setting/impl/SettingActivity$$ViewBinder.class
-com/yydcdut/note/bean/SandPhoto.class
 com/yydcdut/note/presenters/home/impl/HomePresenterImpl$$Lambda$26.class
 com/yydcdut/note/views/login/impl/UserDetailFragment$$ViewBinder.class
 com/yydcdut/note/views/camera/impl/CameraActivity_MembersInjector.class
 com/yydcdut/note/presenters/note/impl/EditTextPresenterImpl$$Lambda$12.class
+com/yydcdut/note/presenters/gallery/impl/GalleryPresenterImpl$AjcClosure1.class
 com/yydcdut/note/model/rx/RxPhotoNote$1.class
 dagger/MembersInjector.class
 com/yydcdut/note/model/rx/RxSandBox$$Lambda$2.class
@@ -1326,6 +1348,7 @@ com/yydcdut/note/presenters/note/impl/EditTextPresenterImpl$$Lambda$16.class
 com/yydcdut/note/injector/component/DaggerActivityComponent$6.class
 com/evernote/client/android/EvernoteSession$EvernoteService$1.class
 com/yydcdut/note/presenters/home/impl/AlbumPresenterImpl$$Lambda$18.class
+com/yydcdut/note/presenters/login/impl/UserCenterPresenterImpl$AjcClosure1.class
 com/yydcdut/note/injector/module/ApplicationModule_ProvideContextFactory.class
 rx/Observable$OnSubscribeExtend.class
 com/yydcdut/note/presenters/login/impl/UserCenterPresenterImpl$$Lambda$20.class
@@ -1361,11 +1384,13 @@ com/yydcdut/note/model/rx/RxCategory$$Lambda$1.class
 com/yydcdut/note/presenters/home/impl/AlbumPresenterImpl$$Lambda$19.class
 com/yydcdut/note/presenters/home/impl/HomePresenterImpl$$Lambda$9.class
 com/yydcdut/note/presenters/note/impl/EditTextPresenterImpl$$Lambda$15.class
+com/yydcdut/note/presenters/setting/impl/AboutAppPresenterImpl$AjcClosure1.class
 android/support/v4/app/NotificationCompatBase$Action$Factory.class
 android/support/v4/app/NotificationCompat$Action$WearableExtender.class
 com/nostra13/universalimageloader/core/ImageLoaderConfiguration$NetworkDeniedImageDownloader.class
 com/yydcdut/note/presenters/service/impl/SandBoxServicePresenterImpl$$Lambda$8.class
 com/yydcdut/note/presenters/home/impl/AlbumPresenterImpl$$Lambda$12.class
+com/yydcdut/note/presenters/service/impl/SandBoxServicePresenterImpl$$Lambda$2.class
 com/nostra13/universalimageloader/core/ImageLoaderConfiguration$SlowNetworkImageDownloader.class
 android/support/v4/app/NotificationCompat$Action.class
 com/yydcdut/note/presenters/camera/impl/CameraPresenterImpl$3.class
@@ -1381,12 +1406,14 @@ com/yydcdut/note/presenters/login/impl/UserDetailFragPresenterImpl$$Lambda$9.cla
 com/yydcdut/note/presenters/camera/impl/AdjustCameraPresenterImpl$1.class
 com/yydcdut/note/presenters/setting/impl/EditCategoryPresenterImpl$$Lambda$13.class
 com/yydcdut/note/presenters/note/impl/EditTextPresenterImpl$$Lambda$17.class
+com/yydcdut/note/presenters/service/impl/SandBoxServicePresenterImpl$$Lambda$3.class
 com/yydcdut/note/presenters/home/impl/AlbumPresenterImpl$2$1.class
 com/yydcdut/note/presenters/setting/impl/EditCategoryPresenterImpl$$Lambda$16.class
 com/yydcdut/note/presenters/gallery/impl/PhotoDetailPresenterImpl$$Lambda$1.class
 com/yydcdut/note/presenters/home/impl/AlbumPresenterImpl$$Lambda$14.class
 com/yydcdut/note/presenters/home/impl/HomePresenterImpl$$Lambda$41.class
 com/yydcdut/note/presenters/home/impl/HomePresenterImpl$$Lambda$44.class
+com/yydcdut/note/presenters/note/impl/ZoomPresenterImpl$AjcClosure1.class
 com/github/moduth/blockcanary/ui/DisplayBlockActivity$LoadBlocks$2.class
 com/yydcdut/note/presenters/setting/impl/SettingPresenterImpl$$Lambda$7.class
 com/yydcdut/note/injector/component/DaggerActivityComponent$8.class
@@ -1415,6 +1442,7 @@ android/support/v4/app/NotificationCompat$BigTextStyle.class
 android/support/v4/view/ViewPager$1.class
 com/yydcdut/note/presenters/home/impl/IntroducePresenterImpl$$Lambda$4.class
 com/yydcdut/note/presenters/home/impl/AlbumPresenterImpl$$Lambda$15.class
+com/yydcdut/note/presenters/gallery/impl/MediaPhotoPresenterImpl$$Lambda$4.class
 com/yydcdut/note/presenters/setting/impl/EditCategoryPresenterImpl$$Lambda$14.class
 com/yydcdut/note/presenters/service/impl/SandBoxServicePresenterImpl$$Lambda$5.class
 com/yydcdut/note/injector/module/FragmentModule_ProvideActivityFactory.class
@@ -1426,6 +1454,7 @@ android/support/v4/view/ViewPager$ViewPositionComparator.class
 com/yydcdut/note/presenters/setting/impl/SettingPresenterImpl$$Lambda$9.class
 uk/co/senab/photoview/PhotoViewAttacher$AnimatedZoomRunnable.class
 com/yydcdut/note/presenters/login/impl/UserCenterPresenterImpl$$Lambda$10.class
+com/yydcdut/note/presenters/gallery/impl/MediaPhotoPresenterImpl$AjcClosure1.class
 com/yydcdut/note/presenters/home/impl/HomePresenterImpl$$Lambda$20.class
 com/yydcdut/note/presenters/home/impl/HomePresenterImpl$$Lambda$33.class
 com/yydcdut/note/presenters/note/impl/EditTextPresenterImpl$$Lambda$13.class
@@ -1452,8 +1481,8 @@ android/support/v4/app/NotificationCompat$Action$1.class
 com/yydcdut/note/model/rx/RxPhotoNote$$Lambda$6.class
 com/yydcdut/note/model/rx/RxCategory$4$1.class
 com/yydcdut/note/presenters/login/impl/UserDetailFragPresenterImpl$$Lambda$8.class
+com/yydcdut/note/model/rx/RxFeedBack$AjcClosure1.class
 com/yydcdut/note/presenters/home/impl/AlbumPresenterImpl$$Lambda$42.class
-com/yydcdut/note/presenters/service/impl/SandBoxServicePresenterImpl$$Lambda$9.class
 android/support/v4/app/NotificationCompatApi21.class
 com/yydcdut/note/model/rx/RxPhotoNote$$Lambda$1.class
 com/yydcdut/note/model/rx/RxPhotoNote$$Lambda$10.class
@@ -1479,6 +1508,7 @@ com/yydcdut/note/presenters/home/impl/HomePresenterImpl$$Lambda$17.class
 com/yydcdut/note/presenters/gallery/impl/PhotoDetailPresenterImpl$$Lambda$2.class
 com/yydcdut/note/views/note/impl/DetailActivity$$ViewBinder$3.class
 android/support/design/widget/FloatingActionButtonEclairMr1$BaseShadowAnimation.class
+com/yydcdut/note/model/rx/RxPhotoNote$AjcClosure1.class
 com/yydcdut/note/injector/component/DaggerFragmentComponent$1.class
 com/nineoldandroids/animation/ValueAnimator$1.class
 com/yydcdut/note/model/rx/RxUser$11.class
@@ -1487,7 +1517,9 @@ com/yydcdut/note/injector/component/DaggerActivityComponent$5.class
 com/yydcdut/note/views/home/impl/AlbumFragment$2.class
 com/yydcdut/note/presenters/setting/impl/EditCategoryPresenterImpl$$Lambda$18.class
 com/yydcdut/note/injector/component/DaggerServiceComponent$8.class
+com/yydcdut/note/model/rx/RxSandBox$AjcClosure1.class
 com/yydcdut/note/presenters/home/impl/AlbumPresenterImpl$$Lambda$34.class
+com/yydcdut/note/model/gallery/RxGalleryPhotos$AjcClosure1.class
 com/yydcdut/note/views/home/impl/IntroduceActivity$$ViewBinder$2.class
 com/yydcdut/note/R$bool.class
 com/yydcdut/note/views/gallery/impl/PhotoDetailActivity$$ViewBinder.class
@@ -1531,14 +1563,17 @@ android/support/design/widget/FloatingActionButton$2.class
 com/yydcdut/note/views/gallery/impl/PhotoDetailActivity$$ViewBinder$1.class
 android/support/v4/app/NotificationCompat$InboxStyle.class
 com/yydcdut/note/presenters/note/impl/ZoomPresenterImpl$$Lambda$2.class
+com/yydcdut/note/injector/module/ApplicationModule$AjcClosure9.class
 com/yydcdut/note/views/setting/impl/FeedbackActivity_MembersInjector.class
 com/yydcdut/note/presenters/camera/impl/CameraPresenterImpl$5$1.class
+com/yydcdut/note/presenters/login/impl/UserDetailFragPresenterImpl$AjcClosure1.class
 com/squareup/leakcanary/internal/DisplayLeakActivity$LoadLeaks$3.class
 com/yydcdut/note/presenters/note/impl/DetailFragPresenterImpl$$Lambda$1.class
 com/yydcdut/note/model/camera/impl/CameraModelImpl$PictureCallBack.class
 android/support/design/widget/FloatingActionButtonHoneycombMr1.class
 android/support/v4/app/NotificationCompat$NotificationCompatImplIceCreamSandwich.class
 com/yydcdut/note/presenters/home/impl/SplashPresenterImpl_Factory.class
+com/yydcdut/note/injector/module/ActivityModule$AjcClosure3.class
 com/nineoldandroids/animation/ValueAnimator$5.class
 com/yydcdut/note/views/login/impl/LoginActivity$$ViewBinder$2.class
 com/yydcdut/note/presenters/service/impl/CameraServicePresenterImpl$$Lambda$3.class
@@ -1566,6 +1601,7 @@ com/yydcdut/note/presenters/home/impl/AlbumPresenterImpl$1$$Lambda$1.class
 com/yydcdut/note/presenters/note/impl/DetailPresenterImpl$$Lambda$2.class
 android/support/design/widget/FloatingActionButtonHoneycombMr1$1.class
 com/yydcdut/note/presenters/home/impl/HomePresenterImpl$$Lambda$11.class
+com/yydcdut/note/presenters/home/impl/AlbumPresenterImpl$AjcClosure1.class
 com/yydcdut/note/presenters/camera/impl/AdjustCameraPresenterImpl_Factory.class
 com/yydcdut/note/injector/component/DaggerServiceComponent$3.class
 com/yydcdut/note/widget/camera/FocusView$2.class
@@ -1596,6 +1632,7 @@ android/support/design/widget/SnackbarManager$SnackbarRecord.class
 android/support/v4/app/NotificationCompat$BuilderExtender.class
 com/yydcdut/note/presenters/note/impl/ZoomPresenterImpl$$Lambda$1.class
 android/support/v4/view/ViewPager$SimpleOnPageChangeListener.class
+com/yydcdut/note/presenters/setting/impl/SettingPresenterImpl$AjcClosure1.class
 com/yydcdut/note/presenters/note/impl/EditTextPresenterImpl$$Lambda$3.class
 com/nineoldandroids/animation/ValueAnimator$AnimationHandler.class
 com/yydcdut/note/utils/PermissionUtils$OnRequestPermissionDeniedByUserListener.class
@@ -1609,7 +1646,6 @@ com/yydcdut/note/presenters/login/impl/UserCenterPresenterImpl$$Lambda$7.class
 android/support/v4/widget/DrawerLayout$LayoutParams.class
 com/yydcdut/note/views/login/impl/UserDetailFragment_MembersInjector.class
 com/yydcdut/note/model/camera/impl/CameraModelImpl$SoundCallBack.class
-com/yydcdut/note/presenters/service/impl/SandBoxServicePresenterImpl$$Lambda$10.class
 android/support/v4/app/NotificationCompat$CarExtender$UnreadConversation$Builder.class
 com/yydcdut/note/widget/camera/GestureView$1.class
 com/yydcdut/note/presenters/setting/impl/SettingPresenterImpl$$Lambda$11.class
@@ -1617,7 +1653,9 @@ com/yydcdut/note/presenters/home/impl/AlbumPresenterImpl$$Lambda$39.class
 com/baidu/mapapi/map/BaiduMap$OnMapLoadedCallback.class
 android/support/v4/view/GravityCompat$GravityCompatImplJellybeanMr1.class
 com/yydcdut/note/model/rx/RxCategory$$Lambda$11.class
+com/yydcdut/note/injector/module/ApplicationModule$AjcClosure5.class
 com/yydcdut/note/model/rx/RxCategory$1.class
+com/yydcdut/note/injector/module/ApplicationModule$AjcClosure13.class
 com/yydcdut/note/model/rx/RxUser$7.class
 com/yydcdut/note/presenters/login/impl/UserCenterPresenterImpl$$Lambda$8.class
 com/yydcdut/note/presenters/setting/impl/EditCategoryPresenterImpl$$Lambda$27.class
@@ -1650,6 +1688,7 @@ rx/Observable$Operator.class
 com/yydcdut/note/injector/module/ApplicationModule_ProvideRxCategoryFactory.class
 com/yydcdut/note/views/home/impl/HomeActivity_MembersInjector.class
 com/yydcdut/note/utils/LocalStorageUtils.class
+com/yydcdut/note/injector/module/ApplicationModule$AjcClosure15.class
 com/yydcdut/note/presenters/home/impl/AlbumPresenterImpl$$Lambda$22.class
 com/yydcdut/note/injector/component/DaggerFragmentComponent$5.class
 com/yydcdut/note/model/rx/RxUser$9.class
@@ -1666,6 +1705,7 @@ android/support/design/widget/SnackbarManager$1.class
 com/frogermcs/androiddevmetrics/AndroidDevMetrics$Builder.class
 com/evernote/client/android/EvernoteOAuthActivity$WebViewFragment$1.class
 com/evernote/client/android/login/EvernoteLoginActivity$2$1.class
+com/yydcdut/note/model/rx/RxUser$AjcClosure1.class
 com/yydcdut/note/model/rx/RxPhotoNote$$Lambda$16.class
 com/yydcdut/note/model/rx/RxPhotoNote$$Lambda$7.class
 org/greenrobot/eventbus/SubscriberExceptionEvent.class
@@ -1676,6 +1716,7 @@ com/yydcdut/note/presenters/setting/impl/SettingPresenterImpl_Factory.class
 com/yydcdut/note/model/rx/RxUser$12$1.class
 com/yydcdut/note/presenters/home/impl/HomePresenterImpl$$Lambda$34.class
 com/yydcdut/note/presenters/login/impl/UserCenterPresenterImpl_Factory.class
+com/yydcdut/note/presenters/camera/impl/AdjustCameraPresenterImpl$AjcClosure1.class
 com/yydcdut/note/utils/PermissionUtils$$Lambda$3.class
 com/yydcdut/note/presenters/setting/impl/AboutAppPresenterImpl_Factory.class
 com/yydcdut/note/R$integer.class
@@ -1685,6 +1726,7 @@ com/yydcdut/note/views/home/impl/AlbumFragment$$Lambda$3.class
 com/yydcdut/note/injector/module/ServiceModule_ProvideContextFactory.class
 com/yydcdut/note/presenters/home/impl/SplashPresenterImpl$$Lambda$6.class
 android/support/v4/app/NotificationCompat$NotificationCompatImplGingerbread.class
+com/yydcdut/note/presenters/service/impl/CameraServicePresenterImpl$AjcClosure1.class
 com/yydcdut/note/model/rx/RxFeedBack$2$1.class
 com/yydcdut/note/views/login/impl/LoginActivity$$ViewBinder.class
 com/yydcdut/note/presenters/service/impl/CameraServicePresenterImpl$MakePhotoRunnable.class
@@ -1695,6 +1737,7 @@ com/yydcdut/note/presenters/home/impl/AlbumPresenterImpl$$Lambda$29.class
 android/support/v4/app/NotificationCompat$WearableExtender.class
 com/yydcdut/note/adapter/recycler/vh/MediaPhotoViewHolder$$ViewBinder.class
 rx/Observable$Transformer.class
+com/yydcdut/note/presenters/note/impl/EditTextPresenterImpl$AjcClosure1.class
 com/yydcdut/note/model/rx/RxCategory$$Lambda$19.class
 android/support/design/widget/NavigationView$SavedState.class
 com/yydcdut/note/presenters/note/impl/DetailPresenterImpl$$Lambda$7.class
@@ -1702,7 +1745,9 @@ com/yydcdut/note/model/rx/RxPhotoNote$$Lambda$11.class
 com/yydcdut/note/presenters/home/impl/AlbumPresenterImpl$$Lambda$54.class
 com/yydcdut/note/service/SandBoxService_MembersInjector.class
 android/support/design/widget/NavigationView$SavedState$1.class
+com/yydcdut/note/injector/module/FragmentModule$AjcClosure5.class
 com/yydcdut/note/presenters/login/impl/LoginPresenterImpl$$Lambda$10.class
+com/yydcdut/note/model/gallery/SelectPhotoModel$AjcClosure1.class
 com/yydcdut/note/model/rx/RxCategory$$Lambda$16.class
 com/yydcdut/note/views/home/impl/AlbumFragment$2$2.class
 android/support/v4/app/NotificationCompat$Action$Extender.class
@@ -1726,6 +1771,7 @@ com/yydcdut/note/presenters/home/impl/AlbumPresenterImpl$$Lambda$56.class
 butterknife/ButterKnife$ViewBinder.class
 com/baidu/mapapi/map/BaiduMap$OnMarkerClickListener.class
 android/support/v4/app/NotificationCompatBase$Action.class
+com/yydcdut/note/entity/SandExif.class
 android/support/v4/widget/DrawerLayout$DrawerLayoutCompatImpl.class
 android/support/v4/app/NotificationCompat$NotificationCompatImplJellybean.class
 com/yydcdut/note/presenters/login/impl/LoginPresenterImpl$$Lambda$12.class
@@ -1739,9 +1785,9 @@ com/yydcdut/note/presenters/home/impl/HomePresenterImpl$$Lambda$50.class
 com/yydcdut/note/presenters/login/impl/UserDetailFragPresenterImpl$$Lambda$12.class
 android/support/v4/app/NotificationCompatKitKat.class
 com/yydcdut/note/views/login/impl/UserCenterActivity$$ViewBinder$3.class
+com/yydcdut/note/presenters/gallery/impl/PhotoDetailPresenterImpl$AjcClosure1.class
 com/yydcdut/note/views/home/impl/AlbumFragment$2$1.class
 com/yydcdut/note/views/note/impl/DetailActivity_MembersInjector.class
-com/yydcdut/note/presenters/note/impl/DetailPresenterImpl$$Lambda$12.class
 com/yydcdut/note/views/gallery/impl/GalleryActivity$$ViewBinder.class
 com/yydcdut/note/model/camera/impl/CameraModelImpl$PreviewModel.class
 com/yydcdut/note/presenters/home/impl/AlbumPresenterImpl$$Lambda$2.class
@@ -1751,6 +1797,7 @@ com/yydcdut/note/injector/component/DaggerFragmentComponent$2.class
 android/support/v4/view/ViewPager$LayoutParams.class
 com/baidu/mapapi/map/BaiduMap$OnMapTouchListener.class
 com/yydcdut/note/presenters/login/impl/UserCenterPresenterImpl$$Lambda$19.class
+com/yydcdut/note/presenters/note/impl/DetailPresenterImpl$AjcClosure1.class
 org/greenrobot/eventbus/EventBus$1.class
 com/yydcdut/note/model/rx/RxPhotoNote$$Lambda$9.class
 com/yydcdut/note/views/note/impl/DetailActivity$$ViewBinder$2.class
@@ -1789,8 +1836,8 @@ com/yydcdut/note/model/camera/impl/CameraModelImpl$CaptureModel.class
 android/support/v4/widget/DrawerLayout$SavedState.class
 com/yydcdut/note/presenters/home/impl/AlbumPresenterImpl$$Lambda$24.class
 com/yydcdut/note/presenters/home/impl/HomePresenterImpl$$Lambda$51.class
+com/yydcdut/note/injector/module/FragmentModule$AjcClosure3.class
 com/yydcdut/note/utils/PermissionUtils$$Lambda$6.class
-com/yydcdut/note/presenters/note/impl/DetailPresenterImpl$$Lambda$11.class
 android/support/v4/app/NotificationCompat$NotificationCompatImplApi21.class
 com/yydcdut/note/views/home/impl/AlbumFragment$$Lambda$5.class
 com/yydcdut/note/presenters/note/impl/DetailPresenterImpl$$Lambda$9.class
@@ -1808,8 +1855,10 @@ com/yydcdut/note/presenters/home/impl/AlbumPresenterImpl$$Lambda$21.class
 org/greenrobot/eventbus/EventBus$2.class
 android/support/v4/app/NotificationCompat$NotificationCompatImplApi20.class
 com/yydcdut/note/model/rx/RxPhotoNote_Factory.class
+com/yydcdut/note/presenters/setting/impl/EditCategoryPresenterImpl$AjcClosure1.class
 com/yydcdut/note/views/note/impl/DetailFragment$$Lambda$1.class
 android/support/design/widget/FloatingActionButtonEclairMr1$2.class
+com/yydcdut/note/entity/SandPhoto.class
 com/yydcdut/note/injector/module/ActivityModule_ProvideContextFactory.class
 com/yydcdut/note/adapter/list/vh/EditCategoryVH$$ViewBinder.class
 com/yydcdut/note/presenters/login/impl/UserDetailFragPresenterImpl$$Lambda$11.class
@@ -1826,6 +1875,7 @@ com/yydcdut/note/model/rx/RxFeedBack$$Lambda$1.class
 com/yydcdut/note/presenters/home/impl/AlbumPresenterImpl$$Lambda$6.class
 com/baidu/mapapi/map/BaiduMap$OnMapLongClickListener.class
 com/yydcdut/note/adapter/list/vh/CategoryVH$$ViewBinder.class
+com/yydcdut/note/injector/module/FragmentModule$AjcClosure1.class
 com/yydcdut/note/presenters/login/impl/UserDetailFragPresenterImpl$$Lambda$10.class
 com/yydcdut/note/presenters/setting/impl/FeedbackPresenterImpl_Factory.class
 butterknife/ButterKnife$Finder$1.class
