@@ -16,11 +16,10 @@ android {
         versionName project.VERSION_NAME
         renderscriptTargetApi 19
         renderscriptSupportModeEnabled true
-        multiDexEnabled true
+//        multiDexEnabled true
 //        jackOptions {
 //            enabled true
 //        }
-//        useJack true
 
         ndk {
             moduleName = "blur"
@@ -48,7 +47,7 @@ android {
     dexOptions {
         javaMaxHeapSize "4g"
 //        additionalParameters = ["--multi-dex",
-//                                "--set-max-idx-number=20000",
+//                                "--set-max-idx-number=35000",
 //                                "--main-dex-list=$projectDir/multidex.keep".toString(),
 //                                "--minimal-main-dex"]
     }
@@ -168,7 +167,7 @@ dependencies {
     compile "com.jakewharton:butterknife:7.0.1"
     compile "com.evernote:android-sdk:2.0.0-RC3"
     compile "com.yydcdut.sdlv:sdlv:0.5.4"
-    compile 'com.yydcdut:rxmarkdown:0.0.5'
+    compile 'com.yydcdut:rxmarkdown:0.0.7'
     compile "com.google.dagger:dagger:${dagger2Version}"
     apt "com.google.dagger:dagger-compiler:${dagger2Version}"
     compile "io.reactivex:rxandroid:1.2.0"
@@ -176,7 +175,7 @@ dependencies {
     compile "org.greenrobot:eventbus:3.0.0"
     provided "org.glassfish:javax.annotation:10.0-b28"
     compile "com.commit451:PhotoView:1.2.4"
-    compile "com.android.support:multidex:1.0.0"
+//    compile "com.android.support:multidex:1.0.0"
     compile files("src/libs/umeng-analytics-v5.5.3.jar")
     compile files("src/libs/mta-sdk-1.6.2.jar")
     compile files("src/libs/open_sdk_r5043.jar")

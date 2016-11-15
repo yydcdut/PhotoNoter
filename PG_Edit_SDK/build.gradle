@@ -1,12 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
 
-buildscript {
-    repositories {
-        jcenter()
-    }
-}
-
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion

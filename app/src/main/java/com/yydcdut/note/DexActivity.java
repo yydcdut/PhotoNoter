@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.multidex.MultiDex;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -35,7 +34,7 @@ public class DexActivity extends Activity {
         @Override
         protected Object doInBackground(Object[] params) {
             try {
-                MultiDex.install(getApplication());
+//                MultiDex.install(getApplication());
             } catch (Exception e) {
             }
             return null;
