@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Environment;
 
-import com.frogermcs.androiddevmetrics.AndroidDevMetrics;
 import com.squareup.leakcanary.LeakCanary;
 import com.umeng.analytics.MobclickAgent;
 import com.yydcdut.note.injector.component.ApplicationComponent;
@@ -52,7 +51,7 @@ public class NoteApplication extends Application {
         if (BuildConfig.LOG_DEBUG) {
             LeakCanary.install(this);
 //            BlockCanary.install(this, new NoteBlockCanaryContext(this)).start();
-            AndroidDevMetrics.initWith(this);
+//            AndroidDevMetrics.initWith(this);
         }
 
         initComponent();
