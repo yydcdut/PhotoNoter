@@ -8,6 +8,7 @@ import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 
 import com.yydcdut.note.R;
+import com.yydcdut.note.aspect.permission.AspectPermission;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.presenters.note.IDetailPresenter;
@@ -23,7 +24,6 @@ import com.yydcdut.rxmarkdown.factory.TextFactory;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -32,8 +32,7 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by yuyidong on 16/1/8.
  */
-public class DetailPresenterImpl implements IDetailPresenter,
-        PermissionUtils.OnPermissionCallBacks {
+public class DetailPresenterImpl implements IDetailPresenter {
 
     private IDetailView mIDetailView;
 
@@ -56,6 +55,11 @@ public class DetailPresenterImpl implements IDetailPresenter,
         mActivity = activity;
         mRxPhotoNote = rxPhotoNote;
         mLocalStorageUtils = localStorageUtils;
+    }
+
+    @Override
+    public Context getContext() {
+        return mContext;
     }
 
     @Override
@@ -148,15 +152,10 @@ public class DetailPresenterImpl implements IDetailPresenter,
     }
 
     @Permission(PermissionUtils.CODE_PHONE_STATE)
+    @AspectPermission(PermissionUtils.CODE_PHONE_STATE)
     private void checkBaiduMapPermission() {
-        boolean hasPermission = PermissionUtils.hasPermission4PhoneState(mContext);
-        if (hasPermission) {
-//            SDKInitializer.initialize(mActivity.getApplication());
-//            mIDetailView.jump2MapActivity(mCategoryId, mIDetailView.getCurrentPosition(), mComparator);
-        } else {
-            PermissionUtils.requestPermissionsWithDialog(mActivity, mContext.getString(R.string.permission_phone_state),
-                    PermissionUtils.PERMISSION_PHONE_STATE, PermissionUtils.CODE_PHONE_STATE);
-        }
+//        SDKInitializer.initialize(mActivity.getApplication());
+//        mIDetailView.jump2MapActivity(mCategoryId, mIDetailView.getCurrentPosition(), mComparator);
     }
 
     @Override
@@ -320,20 +319,5 @@ public class DetailPresenterImpl implements IDetailPresenter,
         } else {
             return data;
         }
-    }
-
-    @Override
-    public void onPermissionsGranted(List<String> permissions) {
-
-    }
-
-    @Override
-    public void onPermissionsDenied(List<String> permissions) {
-
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
     }
 }

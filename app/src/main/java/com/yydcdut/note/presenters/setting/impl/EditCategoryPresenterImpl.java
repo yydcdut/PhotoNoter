@@ -68,6 +68,11 @@ public class EditCategoryPresenterImpl implements IEditCategoryPresenter, Handle
     }
 
     @Override
+    public Context getContext() {
+        return mContext;
+    }
+
+    @Override
     public void attachView(IView iView) {
         mHandler = new Handler(this);
         mDeleteCategoryIdList = new ArrayList<>();

@@ -12,6 +12,7 @@ import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
 import com.yydcdut.note.injector.component.DaggerServiceComponent;
 import com.yydcdut.note.injector.module.ServiceModule;
+import com.yydcdut.note.presenters.IPresenter;
 import com.yydcdut.note.presenters.service.impl.SandBoxServicePresenterImpl;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.views.service.ISandBoxServiceView;
@@ -93,5 +94,10 @@ public class SandBoxService extends Service implements ISandBoxServiceView {
     public void killProgress() {
         android.os.Process.killProcess(android.os.Process.myPid());
         System.exit(1);
+    }
+
+    @Override
+    public IPresenter getPresenter() {
+        return mSandBoxServicePresenter;
     }
 }

@@ -1,11 +1,10 @@
 package com.yydcdut.note.presenters.setting.impl;
 
-import android.app.Activity;
 import android.content.Context;
 import android.hardware.Camera;
-import android.support.annotation.NonNull;
 
 import com.yydcdut.note.R;
+import com.yydcdut.note.aspect.permission.AspectPermission;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.camera.ICameraModel;
 import com.yydcdut.note.model.camera.impl.CameraModelImpl;
@@ -34,23 +33,26 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by yuyidong on 15/11/13.
  */
-public class SettingPresenterImpl implements ISettingPresenter, PermissionUtils.OnPermissionCallBacks {
+public class SettingPresenterImpl implements ISettingPresenter {
     private ISettingView mSettingView;
 
     private Context mContext;
-    private Activity mActivity;
     private LocalStorageUtils mLocalStorageUtils;
     private RxUser mRxUser;
     private ICameraModel mCameraModel;
 
     @Inject
-    public SettingPresenterImpl(@ContextLife("Activity") Context context, Activity activity,
+    public SettingPresenterImpl(@ContextLife("Activity") Context context,
                                 LocalStorageUtils localStorageUtils, RxUser rxUser, CameraModelImpl cameraModel) {
         mContext = context;
-        mActivity = activity;
         mLocalStorageUtils = localStorageUtils;
         mRxUser = rxUser;
         mCameraModel = cameraModel;
+    }
+
+    @Override
+    public Context getContext() {
+        return mContext;
     }
 
     @Override
@@ -310,60 +312,34 @@ public class SettingPresenterImpl implements ISettingPresenter, PermissionUtils.
     }
 
     @Permission(PermissionUtils.CODE_CAMERA)
+    @AspectPermission(PermissionUtils.CODE_CAMERA)
     private void getPictureSizeWithPermission() {
-        boolean hasPermission = PermissionUtils.hasPermission4Camera(mContext);
-        if (hasPermission) {
+        try {
+            initCameraNumberAndPictureSize();
+        } catch (JSONException e) {
+            YLog.e(e);
+        }
+        int numbers = mCameraModel.getCameraNumber(mContext);
+        if (numbers == 2) {
             try {
-                initCameraNumberAndPictureSize();
+                mSettingView.showCameraIdsChooser();
             } catch (JSONException e) {
                 YLog.e(e);
-            }
-            int numbers = mCameraModel.getCameraNumber(mContext);
-            if (numbers == 2) {
-                try {
-                    mSettingView.showCameraIdsChooser();
-                } catch (JSONException e) {
-                    YLog.e(e);
-                    mSettingView.showSnackbar(mContext.getString(R.string.toast_fail));
-                }
-            } else {
-                onCameraIdsSelected(0);
+                mSettingView.showSnackbar(mContext.getString(R.string.toast_fail));
             }
         } else {
-            PermissionUtils.requestPermissionsWithDialog(mActivity, mContext.getString(R.string.permission_camera_init),
-                    PermissionUtils.PERMISSION_CAMERA, PermissionUtils.CODE_CAMERA);
+            onCameraIdsSelected(0);
         }
     }
 
     @Permission(PermissionUtils.CODE_ADJUST_CAMERA)
+    @AspectPermission(PermissionUtils.CODE_ADJUST_CAMERA)
     private void adjustCameraWithPermission() {
-        boolean hasPermission = PermissionUtils.hasPermission4Camera(mContext);
-        if (hasPermission) {
-            try {
-                initCameraNumberAndPictureSize();
-            } catch (JSONException e) {
-                YLog.e(e);
-            }
-            mSettingView.jump2CameraFixActivity();
-        } else {
-            PermissionUtils.requestPermissions(mActivity, mContext.getString(R.string.permission_camera),
-                    PermissionUtils.PERMISSION_CAMERA, PermissionUtils.CODE_ADJUST_CAMERA,
-                    ((requestCode) -> mSettingView.showSnackbar(mContext.getString(R.string.permission_cancel))));
+        try {
+            initCameraNumberAndPictureSize();
+        } catch (JSONException e) {
+            YLog.e(e);
         }
-    }
-
-    @Override
-    public void onPermissionsGranted(List<String> permissions) {
-    }
-
-    @Override
-    public void onPermissionsDenied(List<String> permissions) {
-        PermissionUtils.requestPermissions(mActivity, mContext.getString(R.string.permission_storage_init),
-                PermissionUtils.PERMISSION_CAMERA, PermissionUtils.CODE_CAMERA,
-                (requestCode) -> mSettingView.showSnackbar(mContext.getString(R.string.permission_cancel)));
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        mSettingView.jump2CameraFixActivity();
     }
 }

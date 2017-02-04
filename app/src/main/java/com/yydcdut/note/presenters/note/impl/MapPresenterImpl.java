@@ -1,5 +1,6 @@
 package com.yydcdut.note.presenters.note.impl;
 
+import android.content.Context;
 import android.media.ExifInterface;
 import android.support.annotation.NonNull;
 
@@ -19,6 +20,7 @@ import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.yydcdut.note.R;
 import com.yydcdut.note.entity.PhotoNote;
+import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.presenters.note.IMapPresenter;
 import com.yydcdut.note.utils.YLog;
@@ -37,6 +39,7 @@ import rx.android.schedulers.AndroidSchedulers;
 public class MapPresenterImpl implements IMapPresenter, OnGetGeoCoderResultListener {
     private IMapView mIMapView;
 
+    private Context mContext;
     private RxPhotoNote mRxPhotoNote;
 
     /* Data */
@@ -50,7 +53,8 @@ public class MapPresenterImpl implements IMapPresenter, OnGetGeoCoderResultListe
     private GeoCoder mSearch = null; // 搜索模块，也可去掉地图模块独立使用
 
     @Inject
-    public MapPresenterImpl(RxPhotoNote rxPhotoNote) {
+    public MapPresenterImpl(@ContextLife("Activity") Context context, RxPhotoNote rxPhotoNote) {
+        mContext = context;
         mRxPhotoNote = rxPhotoNote;
     }
 
@@ -59,6 +63,11 @@ public class MapPresenterImpl implements IMapPresenter, OnGetGeoCoderResultListe
         mCategoryId = categoryID;
         mPosition = position;
         mComparator = comparator;
+    }
+
+    @Override
+    public Context getContext() {
+        return mContext;
     }
 
     @Override

@@ -10,6 +10,7 @@ import android.os.Environment;
 
 import com.squareup.leakcanary.LeakCanary;
 import com.umeng.analytics.MobclickAgent;
+import com.yydcdut.note.aspect.permission.PermissionInstance;
 import com.yydcdut.note.injector.component.ApplicationComponent;
 import com.yydcdut.note.injector.component.DaggerApplicationComponent;
 import com.yydcdut.note.injector.module.ApplicationModule;
@@ -58,6 +59,7 @@ public class NoteApplication extends Application {
         Utils.init(this);
         initImageLoader();
         FilePathUtils.initEnvironment(this);
+        PermissionInstance.init(this);
 
         //打点
         MobclickAgent.setDebugMode(BuildConfig.LOG_DEBUG);

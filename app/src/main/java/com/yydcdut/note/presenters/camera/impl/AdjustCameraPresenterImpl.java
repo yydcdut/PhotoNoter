@@ -32,6 +32,7 @@ import javax.inject.Inject;
  * Created by yuyidong on 16/2/16.
  */
 public class AdjustCameraPresenterImpl implements IAdjustCameraPresenter {
+    private Context mContext;
     private IAdjustCameraView mAdjustCameraView;
     /* CameraId */
     private String mCameraId = Const.CAMERA_BACK;
@@ -50,6 +51,7 @@ public class AdjustCameraPresenterImpl implements IAdjustCameraPresenter {
     @Inject
     public AdjustCameraPresenterImpl(@ContextLife("Activity") Context context, LocalStorageUtils localStorageUtils,
                                      CameraModelImpl cameraModelImpl) {
+        mContext = context;
         mLocalStorageUtils = localStorageUtils;
         mCurrentOrientationDegree = getCameraRotation();
         //Camera2没有设置方向的方法
@@ -70,6 +72,11 @@ public class AdjustCameraPresenterImpl implements IAdjustCameraPresenter {
                 mCurrentOrientationDegree = mLocalStorageUtils.getCameraBackRotation();
                 return mCurrentOrientationDegree;
         }
+    }
+
+    @Override
+    public Context getContext() {
+        return mContext;
     }
 
     @Override

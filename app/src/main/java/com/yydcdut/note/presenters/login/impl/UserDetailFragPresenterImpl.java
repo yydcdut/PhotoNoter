@@ -60,6 +60,11 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter {
     }
 
     @Override
+    public Context getContext() {
+        return mContext;
+    }
+
+    @Override
     public void attachView(IView iView) {
         mUserDetailFragView = (IUserDetailFragView) iView;
         switch (mType) {

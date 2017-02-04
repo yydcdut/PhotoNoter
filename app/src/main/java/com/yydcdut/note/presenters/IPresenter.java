@@ -1,5 +1,6 @@
 package com.yydcdut.note.presenters;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.yydcdut.note.views.IView;
@@ -16,6 +17,13 @@ public interface IPresenter {
     int RESULT_DATA_USER = 6;
 
     int REQUEST_NOTHING = 1;
+
+    /**
+     * 权限用
+     *
+     * @return
+     */
+    Context getContext();
 
     /**
      * 注入View，使之能够与View相互响应

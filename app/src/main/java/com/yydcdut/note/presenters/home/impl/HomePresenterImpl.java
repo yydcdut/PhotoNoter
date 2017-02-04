@@ -3,9 +3,8 @@ package com.yydcdut.note.presenters.home.impl;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 
-import com.yydcdut.note.R;
+import com.yydcdut.note.aspect.permission.AspectPermission;
 import com.yydcdut.note.bus.CategoryCreateEvent;
 import com.yydcdut.note.bus.CategoryDeleteEvent;
 import com.yydcdut.note.bus.CategoryEditEvent;
@@ -34,8 +33,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -43,7 +40,7 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by yuyidong on 15/11/19.
  */
-public class HomePresenterImpl implements IHomePresenter, PermissionUtils.OnPermissionCallBacks {
+public class HomePresenterImpl implements IHomePresenter {
     private IHomeView mHomeView;
     /**
      * 当前的category的Id
@@ -64,6 +61,11 @@ public class HomePresenterImpl implements IHomePresenter, PermissionUtils.OnPerm
         mRxPhotoNote = rxPhotoNote;
         mRxUser = rxUser;
         mActivity = activity;
+    }
+
+    @Override
+    public Context getContext() {
+        return mContext;
     }
 
     @Override
@@ -350,29 +352,9 @@ public class HomePresenterImpl implements IHomePresenter, PermissionUtils.OnPerm
     }
 
     @Permission(PermissionUtils.CODE_PHONE_STATE)
+    @AspectPermission(PermissionUtils.CODE_PHONE_STATE)
     private void initBaiduMap() {
-        boolean hasPermission = PermissionUtils.hasPermission4PhoneState(mContext);
-        if (hasPermission) {
-//            SDKInitializer.initialize(mActivity.getApplication());
-        } else {
-            PermissionUtils.requestPermissionsWithDialog(mActivity, mContext.getString(R.string.permission_phone_state),
-                    PermissionUtils.PERMISSION_PHONE_STATE, PermissionUtils.CODE_PHONE_STATE);
-        }
+//        SDKInitializer.initialize(mActivity.getApplication());
     }
 
-    @Override
-    public void onPermissionsGranted(List<String> permissions) {
-
-    }
-
-    @Override
-    public void onPermissionsDenied(List<String> permissions) {
-        PermissionUtils.requestPermissions(mActivity, mContext.getString(R.string.permission_phone_state),
-                PermissionUtils.PERMISSION_PHONE_STATE, PermissionUtils.CODE_PHONE_STATE, null);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
-    }
 }

@@ -5,9 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
 
-import com.yydcdut.note.R;
+import com.yydcdut.note.aspect.permission.AspectPermission;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.rx.RxSandBox;
 import com.yydcdut.note.presenters.home.ISplashPresenter;
@@ -21,7 +20,6 @@ import com.yydcdut.note.views.IView;
 import com.yydcdut.note.views.home.ISplashView;
 
 import java.io.File;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -31,8 +29,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by yuyidong on 15/11/18.
  */
-public class SplashPresenterImpl implements ISplashPresenter, Handler.Callback,
-        PermissionUtils.OnPermissionCallBacks {
+public class SplashPresenterImpl implements ISplashPresenter, Handler.Callback {
     private ISplashView mSplashView;
 
     private Handler mHandler;
@@ -52,6 +49,11 @@ public class SplashPresenterImpl implements ISplashPresenter, Handler.Callback,
         mActivity = activity;
         mRxSandBox = rxSandBox;
         mContext = context;
+    }
+
+    @Override
+    public Context getContext() {
+        return mContext;
     }
 
     @Override
@@ -154,25 +156,9 @@ public class SplashPresenterImpl implements ISplashPresenter, Handler.Callback,
     }
 
     @Permission(PermissionUtils.CODE_STORAGE)
+    @AspectPermission(PermissionUtils.CODE_STORAGE)
     private void initFiles() {
-        if (PermissionUtils.hasPermission4Storage(mContext)) {
-            FilePathUtils.initDirs();
-        } else {
-            PermissionUtils.requestPermissions(mActivity, mContext.getResources().getString(R.string.permission_storage),
-                    PermissionUtils.PERMISSION_STORAGE, PermissionUtils.CODE_STORAGE, null);
-        }
-
+        FilePathUtils.initDirs();
     }
 
-    @Override
-    public void onPermissionsGranted(List<String> permissions) {
-    }
-
-    @Override
-    public void onPermissionsDenied(List<String> permissions) {
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    }
 }

@@ -5,7 +5,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.yydcdut.note.R;
@@ -50,8 +49,7 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by yuyidong on 15/11/20.
  */
-public class AlbumPresenterImpl implements IAlbumPresenter, PermissionUtils.OnPermissionCallBacks,
-        PermissionUtils.OnRequestPermissionDeniedByUserListener {
+public class AlbumPresenterImpl implements IAlbumPresenter {
 
     private IAlbumView mAlbumView;
 
@@ -77,6 +75,11 @@ public class AlbumPresenterImpl implements IAlbumPresenter, PermissionUtils.OnPe
         mRxSandBox = rxSandBox;
         mLocalStorageUtils = localStorageUtils;
         mAlbumSortKind = mLocalStorageUtils.getSortKind();
+    }
+
+    @Override
+    public Context getContext() {
+        return mContext;
     }
 
     @Override
@@ -492,43 +495,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter, PermissionUtils.OnPe
 
     @Permission(PermissionUtils.CODE_CAMERA)
     private void getPermissionAndJumpCameraActivity() {
-        boolean hasCameraPermission = PermissionUtils.hasPermission4Camera(mContext);
-        if (hasCameraPermission) {
-            boolean hasLocationPermission = PermissionUtils.hasPermission4Location(mContext);
-            if (hasLocationPermission) {
-                mAlbumView.jump2CameraActivity(mCategoryId);
-            } else {
-                PermissionUtils.requestPermissions(mFragment, mContext.getString(R.string.permission_location),
-                        PermissionUtils.PERMISSION_LOCATION, PermissionUtils.CODE_LOCATION, this);
-            }
-        } else {
-            PermissionUtils.requestPermissions(mFragment, mContext.getString(R.string.permission_camera),
-                    PermissionUtils.PERMISSION_CAMERA, PermissionUtils.CODE_CAMERA, this);
-        }
-    }
-
-    @Override
-    public void onDenied(int requestCode) {
-        if (requestCode == PermissionUtils.CODE_CAMERA) {
-            PermissionUtils.requestPermissions(mFragment, mContext.getString(R.string.permission_camera),
-                    PermissionUtils.PERMISSION_CAMERA, PermissionUtils.CODE_CAMERA, this);
-        } else if (requestCode == PermissionUtils.CODE_LOCATION) {
-            PermissionUtils.requestPermissions(mFragment, mContext.getString(R.string.permission_location),
-                    PermissionUtils.PERMISSION_LOCATION, PermissionUtils.CODE_LOCATION, this);
-        }
-    }
-
-    @Override
-    public void onPermissionsGranted(List<String> permissions) {
-
-    }
-
-    @Override
-    public void onPermissionsDenied(List<String> permissions) {
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        mAlbumView.jump2CameraActivity(mCategoryId);
     }
 }
 

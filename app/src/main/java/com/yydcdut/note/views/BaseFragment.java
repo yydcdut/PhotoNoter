@@ -17,7 +17,7 @@ import com.yydcdut.note.injector.component.DaggerFragmentComponent;
 import com.yydcdut.note.injector.component.FragmentComponent;
 import com.yydcdut.note.injector.module.FragmentModule;
 import com.yydcdut.note.presenters.IPresenter;
-import com.yydcdut.note.utils.PermissionUtils;
+import com.yydcdut.note.utils.YLog;
 
 /**
  * Created by yuyidong on 15-3-17.
@@ -154,8 +154,10 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (mIPresenter != null) {
-            PermissionUtils.permissionResult(mIPresenter, permissions, grantResults, requestCode);
-        }
+        YLog.i("yuyidong", "onRequestPermissionsResult");
+    }
+
+    public IPresenter getPresenter() {
+        return mIPresenter;
     }
 }

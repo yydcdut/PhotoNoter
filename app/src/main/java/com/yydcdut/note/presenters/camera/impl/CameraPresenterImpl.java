@@ -140,6 +140,11 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
     }
 
     @Override
+    public Context getContext() {
+        return mContext;
+    }
+
+    @Override
     public void attachView(@NonNull IView iView) {
         mICameraView = (ICameraView) iView;
         mCurrentCameraId = mLocalStorageUtils.getCameraSaveCameraId();

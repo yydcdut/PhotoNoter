@@ -1,5 +1,6 @@
 package com.yydcdut.note.presenters.service.impl;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
@@ -50,6 +51,11 @@ public class CameraServicePresenterImpl implements ICameraServicePresenter {
         mRxPhotoNote = rxPhotoNote;
         mRxSandBox = rxSandBox;
         new Thread(new MakePhotoRunnable()).start();
+    }
+
+    @Override
+    public Context getContext() {
+        return null;
     }
 
     @Override

@@ -12,6 +12,7 @@ import com.yydcdut.note.ICameraData;
 import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.injector.component.DaggerServiceComponent;
 import com.yydcdut.note.injector.module.ServiceModule;
+import com.yydcdut.note.presenters.IPresenter;
 import com.yydcdut.note.presenters.service.impl.CameraServicePresenterImpl;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.views.service.ICameraServiceView;
@@ -99,4 +100,9 @@ public class CameraService extends Service implements ICameraServiceView {
             CameraService.this.stopSelf();
         }
     };
+
+    @Override
+    public IPresenter getPresenter() {
+        return mCameraServicePresenter;
+    }
 }

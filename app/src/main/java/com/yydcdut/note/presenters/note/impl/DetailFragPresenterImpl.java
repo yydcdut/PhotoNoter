@@ -1,7 +1,9 @@
 package com.yydcdut.note.presenters.note.impl;
 
+import android.content.Context;
 import android.media.ExifInterface;
 
+import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.presenters.note.IDetailFragPresenter;
 import com.yydcdut.note.utils.FilePathUtils;
@@ -21,6 +23,7 @@ import rx.android.schedulers.AndroidSchedulers;
 public class DetailFragPresenterImpl implements IDetailFragPresenter {
 
     private IDetailFragView mDetailFragView;
+    private Context mContext;
 
     /* data */
     private int mCategoryId;
@@ -30,8 +33,14 @@ public class DetailFragPresenterImpl implements IDetailFragPresenter {
     private RxPhotoNote mRxPhotoNote;
 
     @Inject
-    public DetailFragPresenterImpl(RxPhotoNote rxPhotoNote) {
+    public DetailFragPresenterImpl(@ContextLife("Activity") Context context, RxPhotoNote rxPhotoNote) {
+        mContext = context;
         mRxPhotoNote = rxPhotoNote;
+    }
+
+    @Override
+    public Context getContext() {
+        return mContext;
     }
 
     @Override

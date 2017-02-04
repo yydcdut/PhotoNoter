@@ -43,6 +43,11 @@ public class UserCenterPresenterImpl implements IUserCenterPresenter {
     }
 
     @Override
+    public Context getContext() {
+        return mContext;
+    }
+
+    @Override
     public void attachView(IView iView) {
         mUserCenterView = (IUserCenterView) iView;
         initQQ();

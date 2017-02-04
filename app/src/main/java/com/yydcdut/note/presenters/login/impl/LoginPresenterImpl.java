@@ -35,6 +35,11 @@ public class LoginPresenterImpl implements ILoginPresenter {
     }
 
     @Override
+    public Context getContext() {
+        return mContext;
+    }
+
+    @Override
     public void attachView(IView iView) {
         mLoginView = (ILoginView) iView;
     }

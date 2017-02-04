@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 
 import com.evernote.client.android.EvernoteSession;
 import com.evernote.client.android.EvernoteUtil;
@@ -28,6 +27,7 @@ import com.iflytek.cloud.SpeechRecognizer;
 import com.iflytek.cloud.SpeechUtility;
 import com.yydcdut.note.BuildConfig;
 import com.yydcdut.note.R;
+import com.yydcdut.note.aspect.permission.AspectPermission;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.rx.RxPhotoNote;
 import com.yydcdut.note.model.rx.RxUser;
@@ -63,7 +63,7 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by yuyidong on 15/11/15.
  */
-public class EditTextPresenterImpl implements IEditTextPresenter, PermissionUtils.OnPermissionCallBacks {
+public class EditTextPresenterImpl implements IEditTextPresenter {
     private static final String TAG = EditTextPresenterImpl.class.getSimpleName();
 
     private Context mContext;
@@ -105,6 +105,11 @@ public class EditTextPresenterImpl implements IEditTextPresenter, PermissionUtil
         mRxUser = rxUser;
         mIatResults = new LinkedHashMap<>();
         SpeechUtility.createUtility(context, "appid=" + BuildConfig.SPEECH_ID);
+    }
+
+    @Override
+    public Context getContext() {
+        return mContext;
     }
 
     @Override
@@ -189,24 +194,19 @@ public class EditTextPresenterImpl implements IEditTextPresenter, PermissionUtil
     }
 
     @Permission(PermissionUtils.CODE_AUDIO)
+    @AspectPermission(PermissionUtils.CODE_AUDIO)
     private void doVoiceInput() {
-        boolean has = PermissionUtils.hasPermission4Audio(mContext);
-        if (has) {
-            mIsVoiceOpen = true;
-            if (mIat == null) {
-                // 使用SpeechRecognizer对象，可根据回调消息自定义界面；
-                mIat = SpeechRecognizer.createRecognizer(mContext, mInitListener);
-            }
-            //todo 如果是title怎么办
-            mContentString = mEditTextView.getNoteContent();
-            setVoiceParam();
-            ret = mIat.startListening(mRecognizerListener);
-            if (ret != ErrorCode.SUCCESS) {
-                YLog.e(TAG, "听写失败,错误码：" + ret);
-            }
-        } else {
-            PermissionUtils.requestPermissions(mActivity, mContext.getString(R.string.permission_audio),
-                    PermissionUtils.PERMISSION_AUDIO, PermissionUtils.CODE_AUDIO, null);
+        mIsVoiceOpen = true;
+        if (mIat == null) {
+            // 使用SpeechRecognizer对象，可根据回调消息自定义界面；
+            mIat = SpeechRecognizer.createRecognizer(mContext, mInitListener);
+        }
+        //todo 如果是title怎么办
+        mContentString = mEditTextView.getNoteContent();
+        setVoiceParam();
+        ret = mIat.startListening(mRecognizerListener);
+        if (ret != ErrorCode.SUCCESS) {
+            YLog.e(TAG, "听写失败,错误码：" + ret);
         }
     }
 
@@ -474,19 +474,5 @@ public class EditTextPresenterImpl implements IEditTextPresenter, PermissionUtil
         // 设置听写结果是否结果动态修正，为“1”则在听写过程中动态递增地返回结果，否则只在听写结束之后返回最终结果
         // 注：该参数暂时只对在线听写有效
         mIat.setParameter(SpeechConstant.ASR_DWA, "1");
-    }
-
-    @Override
-    public void onPermissionsGranted(List<String> permissions) {
-    }
-
-    @Override
-    public void onPermissionsDenied(List<String> permissions) {
-        PermissionUtils.requestPermissions(mActivity, mContext.getString(R.string.permission_audio),
-                PermissionUtils.PERMISSION_AUDIO, PermissionUtils.CODE_AUDIO, null);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     }
 }

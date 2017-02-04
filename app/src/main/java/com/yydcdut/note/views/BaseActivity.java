@@ -25,7 +25,6 @@ import com.yydcdut.note.presenters.IPresenter;
 import com.yydcdut.note.presenters.ThemePresenter;
 import com.yydcdut.note.utils.ActivityCollector;
 import com.yydcdut.note.utils.AppCompat;
-import com.yydcdut.note.utils.PermissionUtils;
 import com.yydcdut.note.utils.ThemeHelper;
 import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.widget.StatusBarView;
@@ -288,8 +287,10 @@ public abstract class BaseActivity extends AppCompatActivity implements IThemeVi
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (mIPresenter != null) {
-            PermissionUtils.permissionResult(mIPresenter, permissions, grantResults, requestCode);
-        }
+        YLog.i("yuyidong", "onRequestPermissionsResult");
+    }
+
+    public IPresenter getPresenter() {
+        return mIPresenter;
     }
 }

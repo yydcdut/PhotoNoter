@@ -39,6 +39,11 @@ public class FeedbackPresenterImpl implements IFeedbackPresenter {
     }
 
     @Override
+    public Context getContext() {
+        return mContext;
+    }
+
+    @Override
     public void attachView(IView iView) {
         mFeedbackView = (IFeedbackView) iView;
         if (mType == IFeedbackPresenter.TYPE_FEEDBACK) {

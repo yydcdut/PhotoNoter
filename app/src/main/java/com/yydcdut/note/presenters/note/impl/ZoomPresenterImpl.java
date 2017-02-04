@@ -43,6 +43,11 @@ public class ZoomPresenterImpl implements IZoomPresenter {
     }
 
     @Override
+    public Context getContext() {
+        return mContext;
+    }
+
+    @Override
     public void attachView(IView iView) {
         mZoomView = (IZoomView) iView;
         mRxPhotoNote.findByCategoryId(mCategoryId, mComparator)

@@ -42,6 +42,11 @@ public class GalleryPresenterImpl implements IGalleryPresenter {
     }
 
     @Override
+    public Context getContext() {
+        return mContext;
+    }
+
+    @Override
     public void attachView(@NonNull IView iView) {
         mIGalleryView = (IGalleryView) iView;
     }
