@@ -36,6 +36,15 @@ public class ActivityCollector {
             if (!baseActivity.isFinishing()) {
                 YLog.d(TAG, "reStart(),finish this activity :" + baseActivity.getClass().getSimpleName());
                 baseActivity.finish();
+                baseActivity.recreate();
+            }
+        }
+    }
+
+    public static void reStart() {
+        for (BaseActivity baseActivity : activities) {
+            if (!baseActivity.isFinishing()) {
+                baseActivity.recreate();
             }
         }
     }

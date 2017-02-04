@@ -29,7 +29,6 @@ import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.camera.param.Size;
 import com.yydcdut.note.views.BaseActivity;
 import com.yydcdut.note.views.camera.impl.AdjustCameraActivity;
-import com.yydcdut.note.views.home.impl.HomeActivity;
 import com.yydcdut.note.views.setting.ISettingView;
 import com.yydcdut.note.widget.ColorChooserDialog;
 import com.yydcdut.note.widget.RoundedImageView;
@@ -407,7 +406,8 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
 
     @Override
     public void restartActivity() {
-        ActivityCollector.reStart(SettingActivity.this, HomeActivity.class, SettingActivity.class);
+//        ActivityCollector.reStart(SettingActivity.this, HomeActivity.class, SettingActivity.class);
+        ActivityCollector.reStart();
     }
 
     @Override
