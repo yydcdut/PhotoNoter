@@ -18,6 +18,7 @@ import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.Utils;
 import com.yydcdut.note.utils.YLog;
+import com.yydcdut.note.utils.performance.LooperPrinter;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,7 +54,9 @@ public class NoteApplication extends Application {
             LeakCanary.install(this);
 //            BlockCanary.install(this, new NoteBlockCanaryContext(this)).start();
 //            AndroidDevMetrics.initWith(this);
+            LooperPrinter.start();
         }
+
 
         initComponent();
         Utils.init(this);
