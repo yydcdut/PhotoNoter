@@ -12,9 +12,9 @@ public class LooperPrinter {
             @Override
             public void println(String x) {
                 if (x.startsWith(">>>>> Dispatching")) {
-                    LooperMonitor.getInstance().startMonitor();
+                    LogMonitor.getInstance().startMonitor();
                 } else if (x.startsWith("<<<<< Finished")) {
-                    LooperMonitor.getInstance().removeMonitor();
+                    LogMonitor.getInstance().removeMonitor();
                 }
             }
         });

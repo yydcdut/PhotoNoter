@@ -9,21 +9,25 @@ import android.util.Log;
 /**
  * Created by yuyidong on 2017/3/7.
  */
-class LooperMonitor implements Handler.Callback {
+class LogMonitor implements Handler.Callback {
     private static final long DELAY_TIME = 1000l;
     private static final int MESSAGE_WHAT = 4399;
-    private static LooperMonitor sInstance = new LooperMonitor();
+    private static LogMonitor sInstance = new LogMonitor();
     private HandlerThread mHandlerThread;
     private Handler mLogHandler;
 
-    private LooperMonitor() {
+    private LogMonitor() {
         mHandlerThread = new HandlerThread("log");
         mHandlerThread.start();
         mLogHandler = new Handler(mHandlerThread.getLooper(), this);
     }
 
-    public static LooperMonitor getInstance() {
+    public static LogMonitor getInstance() {
         return sInstance;
+    }
+
+    public boolean hasMonitor() {
+        return mLogHandler.hasMessages(MESSAGE_WHAT);
     }
 
     public void startMonitor() {
@@ -41,7 +45,7 @@ class LooperMonitor implements Handler.Callback {
         for (StackTraceElement s : stackTraceElements) {
             sb.append(s.toString() + "\n");
         }
-        Log.i("LooperMonitor", sb.toString());
+        Log.i("LogMonitor", sb.toString());
         return false;
     }
 }

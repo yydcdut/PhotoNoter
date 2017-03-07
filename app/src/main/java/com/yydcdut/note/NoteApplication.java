@@ -18,6 +18,7 @@ import com.yydcdut.note.utils.FilePathUtils;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
 import com.yydcdut.note.utils.Utils;
 import com.yydcdut.note.utils.YLog;
+import com.yydcdut.note.utils.performance.ChoreographerPrinter;
 import com.yydcdut.note.utils.performance.LooperPrinter;
 
 import java.io.File;
@@ -55,6 +56,7 @@ public class NoteApplication extends Application {
 //            BlockCanary.install(this, new NoteBlockCanaryContext(this)).start();
 //            AndroidDevMetrics.initWith(this);
             LooperPrinter.start();
+            ChoreographerPrinter.start();
         }
 
 
