@@ -40,7 +40,6 @@ public class PermissionAspect {
 
     @Around("pointcut2CheckAndRequestPermissions(aspectPermission)")
     public void aroundCheckAndRequestPermission(ProceedingJoinPoint proceedingJoinPoint, AspectPermission aspectPermission) {
-        YLog.i("yuyidong", "aroundCheckAndRequestPermission");
         if (aspectPermission == null) {
             return;
         }
@@ -49,7 +48,6 @@ public class PermissionAspect {
         switch (value) {
             case PermissionUtils.CODE_CAMERA:
             case PermissionUtils.CODE_ADJUST_CAMERA: {
-                YLog.i(TAG, "PermissionUtils.CODE_CAMERA");
                 if (hasPermission4Camera(PermissionInstance.context)) {
                     try {
                         proceedingJoinPoint.proceed();
@@ -67,7 +65,6 @@ public class PermissionAspect {
             }
             break;
             case PermissionUtils.CODE_STORAGE: {
-                YLog.i(TAG, "PermissionUtils.CODE_STORAGE");
                 if (hasPermission4Storage(PermissionInstance.context)) {
                     try {
                         proceedingJoinPoint.proceed();
@@ -85,7 +82,6 @@ public class PermissionAspect {
             }
             break;
             case PermissionUtils.CODE_LOCATION_AND_CAMERA: {
-                YLog.i(TAG, "PermissionUtils.CODE_LOCATION_AND_CAMERA");
                 if (hasPermission4LocationAndCamera(PermissionInstance.context)) {
                     try {
                         proceedingJoinPoint.proceed();
@@ -103,7 +99,6 @@ public class PermissionAspect {
             }
             break;
             case PermissionUtils.CODE_AUDIO: {
-                YLog.i(TAG, "PermissionUtils.CODE_AUDIO");
                 if (hasPermission4Audio(PermissionInstance.context)) {
                     try {
                         proceedingJoinPoint.proceed();
@@ -144,8 +139,6 @@ public class PermissionAspect {
     public void afterPermissionRequestBack(JoinPoint joinPoint) {
         Object[] objects = joinPoint.getArgs();
         Object object = joinPoint.getTarget();
-        YLog.i(TAG, "afterPermissionRequestBack --> " + object.getClass().getName() + "  " + (objects.length >= 1) + "  " + (objects[0] instanceof Integer) + "  " + (object != null) + "  " +
-                (object instanceof IPresenter));
         if (objects.length >= 1 && objects[0] instanceof Integer && object != null && object instanceof IView && ((IView) object).getPresenter() != null) {
             int requestCode = (int) objects[0];
             invokeMethod(((IView) object).getPresenter(), requestCode);
@@ -158,8 +151,6 @@ public class PermissionAspect {
     public void afterPermissionRequestBack4Fragment(JoinPoint joinPoint) {
         Object[] objects = joinPoint.getArgs();
         Object object = joinPoint.getTarget();
-        YLog.i(TAG, "afterPermissionRequestBack4Fragment --> " + object.getClass().getName() + "  " + (objects.length >= 1) + "  " + (objects[0] instanceof Integer) + "  " + (object != null) + "  " +
-                (object instanceof IPresenter));
         if (objects.length >= 1 && objects[0] instanceof Integer && object != null && object instanceof IView && ((IView) object).getPresenter() != null) {
             int requestCode = (int) objects[0];
             invokeMethod(((IView) object).getPresenter(), requestCode);

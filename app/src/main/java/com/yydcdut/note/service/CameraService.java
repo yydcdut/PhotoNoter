@@ -15,6 +15,7 @@ import com.yydcdut.note.injector.module.ServiceModule;
 import com.yydcdut.note.presenters.IPresenter;
 import com.yydcdut.note.presenters.service.impl.CameraServicePresenterImpl;
 import com.yydcdut.note.utils.Const;
+import com.yydcdut.note.utils.YLog;
 import com.yydcdut.note.views.service.ICameraServiceView;
 
 import javax.inject.Inject;
@@ -74,6 +75,7 @@ public class CameraService extends Service implements ICameraServiceView {
             mCameraServicePresenter.add2DB(fileName, size, cameraId, time, categoryId,
                     isMirror, ratio, orientation, latitude, lontitude, whiteBalance, flash,
                     imageLength, imageWidth, make, model, imageFormat);
+            YLog.i("yuyidong", "Thread-->" + Thread.currentThread().getName());
         }
     };
 
