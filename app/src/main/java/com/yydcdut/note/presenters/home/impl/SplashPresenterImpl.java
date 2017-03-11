@@ -9,6 +9,7 @@ import android.os.Message;
 import com.yydcdut.note.aspect.permission.AspectPermission;
 import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.rx.RxSandBox;
+import com.yydcdut.note.model.rx.exception.RxException;
 import com.yydcdut.note.presenters.home.ISplashPresenter;
 import com.yydcdut.note.service.CheckService;
 import com.yydcdut.note.utils.FilePathUtils;
@@ -24,6 +25,7 @@ import java.io.File;
 import javax.inject.Inject;
 
 import rx.Observable;
+import rx.Subscriber;
 import rx.schedulers.Schedulers;
 
 /**
@@ -135,7 +137,20 @@ public class SplashPresenterImpl implements ISplashPresenter, Handler.Callback {
     private void checkDisks() {
         if (!mLocalStorageUtils.isFirstTime()) {
             initFiles();
-            Observable.from(new File(FilePathUtils.getPath()).listFiles())
+            Observable.
+                    create(new Observable.OnSubscribe<File[]>() {
+                        @Override
+                        public void call(Subscriber<? super File[]> subscriber) {
+                            File f = new File(FilePathUtils.getPath());
+                            if (f.exists()) {
+                                subscriber.onNext(f.listFiles());
+                                subscriber.onCompleted();
+                            } else {
+                                subscriber.onError(new RxException(""));
+                            }
+                        }
+                    })
+                    .flatMap(fileList -> Observable.from(fileList))
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.computation())
                     .filter(file1 -> !file1.isDirectory())
