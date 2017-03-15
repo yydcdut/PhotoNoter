@@ -104,7 +104,7 @@ signingConfigs {
 14. RxJava + RxAndroid（RxCategory/ RxPhotoNote/ RxSandBox/ RxFeedBack/ RxUser）。
 15. dex分包处理。第一次开启App的时候 install dex + dexopt 时间很长，所以第一次开启的时候另启进程专门做这个事情，防止主线程因为时间长而发生ANR。以及自己去配置主dex是为了以防自动分包ClassNotFound异常。
 16. Dex自动分包脚本。
-17. Android 6.0 权限适配。
+17. 使用 AOP 进行 Android 6.0 权限适配。
 18. NDK && AIDL。
 
 # 更新版本说明
