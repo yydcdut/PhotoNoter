@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Environment;
+import android.support.multidex.MultiDex;
 
 import com.squareup.leakcanary.LeakCanary;
 import com.umeng.analytics.MobclickAgent;
@@ -41,7 +42,7 @@ public class NoteApplication extends Application {
 //            return;
 //        }
 //        doInstallBeforeLollipop();
-//        MultiDex.install(this);
+        MultiDex.install(this);
     }
 
     @Override

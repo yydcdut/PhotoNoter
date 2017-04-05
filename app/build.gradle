@@ -3,10 +3,10 @@ import org.aspectj.bridge.MessageHandler
 import org.aspectj.tools.ajc.Main
 
 apply plugin: 'com.android.application'
-apply plugin: 'me.tatarka.retrolambda'
+//apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.neenbedankt.android-apt'
 //apply plugin: 'com.frogermcs.androiddevmetrics'
-apply from: '../gradle/dex.gradle'
+//apply from: '../gradle/dex.gradle'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -20,7 +20,7 @@ android {
         versionName project.VERSION_NAME
         renderscriptTargetApi 19
         renderscriptSupportModeEnabled true
-//        multiDexEnabled true
+        multiDexEnabled true
 //        jackOptions {
 //            enabled true
 //        }
@@ -180,7 +180,7 @@ dependencies {
     provided "org.glassfish:javax.annotation:10.0-b28"
     compile "com.commit451:PhotoView:1.2.4"
     compile 'org.aspectj:aspectjrt:1.8.9'
-//    compile "com.android.support:multidex:1.0.0"
+    compile "com.android.support:multidex:1.0.1"
     compile files("src/libs/umeng-analytics-v5.5.3.jar")
     compile files("src/libs/mta-sdk-1.6.2.jar")
     compile files("src/libs/open_sdk_r5043.jar")
@@ -200,7 +200,7 @@ final def variants = project.android.applicationVariants
 variants.all { variant ->
     if (!variant.buildType.isDebuggable()) {
         log.debug("Skipping non-debuggable build type '${variant.buildType.name}'.")
-        return;
+        return
     }
 
     JavaCompile javaCompile = variant.javaCompile
@@ -214,24 +214,24 @@ variants.all { variant ->
                          "-bootclasspath", project.android.bootClasspath.join(File.pathSeparator)]
         log.debug "ajc args: " + Arrays.toString(args)
 
-        MessageHandler handler = new MessageHandler(true);
-        new Main().run(args, handler);
+        MessageHandler handler = new MessageHandler(true)
+        new Main().run(args, handler)
         for (IMessage message : handler.getMessages(null, true)) {
             switch (message.getKind()) {
                 case IMessage.ABORT:
                 case IMessage.ERROR:
                 case IMessage.FAIL:
                     log.error message.message, message.thrown
-                    break;
+                    break
                 case IMessage.WARNING:
                     log.warn message.message, message.thrown
-                    break;
+                    break
                 case IMessage.INFO:
                     log.info message.message, message.thrown
-                    break;
+                    break
                 case IMessage.DEBUG:
                     log.debug message.message, message.thrown
-                    break;
+                    break
             }
         }
     }
