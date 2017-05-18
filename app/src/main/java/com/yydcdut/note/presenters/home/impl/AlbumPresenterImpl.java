@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.text.TextUtils;
 
 import com.yydcdut.note.R;
+import com.yydcdut.note.aspect.permission.AspectPermission;
 import com.yydcdut.note.bus.CategoryCreateEvent;
 import com.yydcdut.note.bus.CategoryMoveEvent;
 import com.yydcdut.note.bus.PhotoNoteCreateEvent;
@@ -494,6 +495,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter {
     }
 
     @Permission(PermissionUtils.CODE_CAMERA)
+    @AspectPermission(PermissionUtils.CODE_CAMERA)
     private void getPermissionAndJumpCameraActivity() {
         mAlbumView.jump2CameraActivity(mCategoryId);
     }
