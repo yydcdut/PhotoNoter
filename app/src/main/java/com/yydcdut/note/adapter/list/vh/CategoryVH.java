@@ -6,18 +6,18 @@ import android.widget.TextView;
 
 import com.yydcdut.note.R;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
  * Created by yuyidong on 16/5/6.
  */
 public class CategoryVH extends AbsVH {
-    @Bind(R.id.icon)
+    @BindView(R.id.icon)
     public ImageView imgLogo;
-    @Bind(R.id.title)
+    @BindView(R.id.title)
     public TextView txtName;
-    @Bind(R.id.counter)
+    @BindView(R.id.counter)
     public TextView txtPicturesNum;
 
     public CategoryVH(View itemView) {

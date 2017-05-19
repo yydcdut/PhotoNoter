@@ -9,14 +9,14 @@ import android.widget.RelativeLayout;
 
 import com.yydcdut.note.R;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
  * Created by yuyidong on 16/2/17.
  */
 public class CameraGridLayout extends FrameLayout {
-    @Bind(R.id.view_grid)
+    @BindView(R.id.view_grid)
     CameraGridView mCameraGridView;
 
     public CameraGridLayout(Context context, AttributeSet attrs) {
@@ -41,11 +41,5 @@ public class CameraGridLayout extends FrameLayout {
 
     public void close() {
         setVisibility(GONE);
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        ButterKnife.unbind(this);
     }
 }

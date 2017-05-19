@@ -19,7 +19,7 @@ import com.yydcdut.note.widget.AutoFitImageView;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rx.android.schedulers.AndroidSchedulers;
@@ -31,10 +31,10 @@ public class DetailFragment extends BaseFragment implements IDetailFragView {
     @Inject
     DetailFragPresenterImpl mDetailFragPresenter;
 
-    @Bind(R.id.img_detail)
+    @BindView(R.id.img_detail)
     AutoFitImageView mAutoFitImageView;
 
-    @Bind(R.id.img_blur)
+    @BindView(R.id.img_blur)
     AutoFitImageView mAutoFitBlurView;
 
     public static DetailFragment newInstance() {
@@ -70,12 +70,6 @@ public class DetailFragment extends BaseFragment implements IDetailFragView {
 
     @Override
     public void initListener(View view) {
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        ButterKnife.unbind(this);
     }
 
     @OnClick(R.id.img_detail)

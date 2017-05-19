@@ -8,7 +8,7 @@ import com.yydcdut.note.R;
 import com.yydcdut.note.widget.GridItemImageView;
 import com.yydcdut.note.widget.PhotoCheckBox;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -19,13 +19,13 @@ public class MediaPhotoViewHolder extends RecyclerView.ViewHolder implements Pho
     private OnItemClickListener mOnItemClickListener;
     private OnItemSelectListener mOnItemSelectListener;
 
-    @Bind(R.id.img_item_photo)
+    @BindView(R.id.img_item_photo)
     public GridItemImageView imageView;
 
-    @Bind(R.id.img_item_bg)
+    @BindView(R.id.img_item_bg)
     public GridItemImageView bgImageView;
 
-    @Bind(R.id.cb_item_photo)
+    @BindView(R.id.cb_item_photo)
     public PhotoCheckBox checkBox;
 
     public MediaPhotoViewHolder(View itemView, int size, OnItemClickListener onItemClickListener, OnItemSelectListener onItemSelectListener) {

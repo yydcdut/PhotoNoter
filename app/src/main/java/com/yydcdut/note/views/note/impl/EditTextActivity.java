@@ -37,7 +37,7 @@ import com.yydcdut.rxmarkdown.RxMDEditText;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -48,35 +48,35 @@ public class EditTextActivity extends BaseActivity implements IEditTextView,
         KeyBoardResizeFrameLayout.OnKeyBoardShowListener, FloatingActionsMenu.OnFloatingActionsMenuUpdateListener {
     private static final String TAG = EditTextActivity.class.getSimpleName();
 
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar mToolbar;
-    @Bind(R.id.appbar)
+    @BindView(R.id.appbar)
     View mAppBarLayout;
-    @Bind(R.id.et_edit_title)
+    @BindView(R.id.et_edit_title)
     EditText mTitleEdit;
-    @Bind(R.id.et_edit_content)
+    @BindView(R.id.et_edit_content)
     RxMDEditText mContentEdit;
-    @Bind(R.id.layout_fab_edittext)
+    @BindView(R.id.layout_fab_edittext)
     FloatingActionsMenu mFabMenuLayout;
-    @Bind(R.id.img_ripple_fab)
+    @BindView(R.id.img_ripple_fab)
     VoiceRippleView mVoiceRippleView;
-    @Bind(R.id.layout_fab_voice_start)
+    @BindView(R.id.layout_fab_voice_start)
     View mVoiceFabLayout;
-    @Bind(R.id.txt_voice)
+    @BindView(R.id.txt_voice)
     View mVoiceTextView;
-    @Bind(R.id.layout_voice)
+    @BindView(R.id.layout_voice)
     View mVoiceLayout;
-    @Bind(R.id.layout_progress)
+    @BindView(R.id.layout_progress)
     CircleProgressBarLayout mProgressLayout;
-    @Bind(R.id.reveal_fab)
+    @BindView(R.id.reveal_fab)
     RevealView mFabRevealView;
-    @Bind(R.id.reveal_voice)
+    @BindView(R.id.reveal_voice)
     RevealView mVoiceRevealView;
-    @Bind(R.id.view_fab_location)
+    @BindView(R.id.view_fab_location)
     View mFabPositionView;
-    @Bind(R.id.til_edit_title)
+    @BindView(R.id.til_edit_title)
     View mTitleTextInputLayout;
-    @Bind(R.id.scroll_edit_markdown)
+    @BindView(R.id.scroll_edit_markdown)
     HorizontalEditScrollView mHorizontalEditScrollView;
 
     @Inject

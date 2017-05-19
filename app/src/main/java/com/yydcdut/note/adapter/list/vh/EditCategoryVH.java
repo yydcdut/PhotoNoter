@@ -7,16 +7,16 @@ import android.widget.TextView;
 
 import com.yydcdut.note.R;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
  * Created by yuyidong on 16/5/6.
  */
 public class EditCategoryVH extends AbsVH {
-    @Bind(R.id.img_item_edit_category)
+    @BindView(R.id.img_item_edit_category)
     public ImageView imgLogo;
-    @Bind(R.id.txt_item_edit_category)
+    @BindView(R.id.txt_item_edit_category)
     public TextView txtName;
 
     public EditCategoryVH(@NonNull View itemView) {

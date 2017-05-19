@@ -17,7 +17,7 @@ import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.YLog;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -25,9 +25,9 @@ import butterknife.ButterKnife;
  */
 public class WebViewActivity extends BaseActivity {
 
-    @Bind(R.id.web)
+    @BindView(R.id.web)
     WebView mWebView;
-    @Bind(R.id.pb_webview)
+    @BindView(R.id.pb_webview)
     ProgressBar mProgressBar;
 
     private WebSettings mWebSettings;

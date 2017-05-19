@@ -19,7 +19,7 @@ import com.yydcdut.note.widget.CircleProgressBarLayout;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -30,7 +30,7 @@ public class UserDetailFragment extends BaseFragment implements IUserDetailFragV
     private static final String TAG_QQ = "tag_qq";
     private static final String TAG_EVERNOTE = "tag_evernote";
 
-    @Bind(R.id.layout_user_detail)
+    @BindView(R.id.layout_user_detail)
     LinearLayout mLinearLayout;
 
     private TextView mLocationView;
@@ -62,12 +62,6 @@ public class UserDetailFragment extends BaseFragment implements IUserDetailFragV
     public void initUI(View view) {
         ButterKnife.bind(this, view);
         mUserDetailFragPresenter.attachView(this);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        ButterKnife.unbind(this);
     }
 
     @Override

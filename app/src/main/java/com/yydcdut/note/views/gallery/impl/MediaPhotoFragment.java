@@ -24,7 +24,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -35,7 +35,7 @@ public class MediaPhotoFragment extends BaseFragment implements IMediaPhotoView,
         MediaPhotoViewHolder.OnItemSelectListener {
     private GalleryActivity mGalleryActivity;
 
-    @Bind(R.id.rv_gallery)
+    @BindView(R.id.rv_gallery)
     RecyclerView mRecyclerView;
 
     private ArrayAdapter<String> mFolderAdapter;
@@ -95,12 +95,6 @@ public class MediaPhotoFragment extends BaseFragment implements IMediaPhotoView,
 
     @Override
     public void initListener(View view) {
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        ButterKnife.unbind(this);
     }
 
     @Override

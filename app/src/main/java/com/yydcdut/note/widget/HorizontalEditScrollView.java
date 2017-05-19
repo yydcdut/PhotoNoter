@@ -247,10 +247,4 @@ public class HorizontalEditScrollView extends FrameLayout {
     public void handleResult(int requestCode, int resultCode, Intent data) {
         mImageController.handleResult(requestCode, resultCode, data);
     }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        ButterKnife.unbind(this);
-    }
 }

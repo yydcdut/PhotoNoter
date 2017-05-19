@@ -15,16 +15,16 @@ import com.yydcdut.note.views.note.IMapView;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
  * Created by yuyidong on 16/1/8.
  */
 public class MapActivity extends BaseActivity implements IMapView {
-    @Bind(R.id.map)
+    @BindView(R.id.map)
     MapView mMapView;/* map */
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
     @Inject

@@ -25,7 +25,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -34,9 +34,9 @@ import butterknife.ButterKnife;
 public class EditCategoryActivity extends BaseActivity implements IEditCategoryView, SlideAndDragListView.OnDragListener,
         SlideAndDragListView.OnSlideListener, SlideAndDragListView.OnMenuItemClickListener, SlideAndDragListView.OnItemDeleteListener {
 
-    @Bind(R.id.lv_edit_category)
+    @BindView(R.id.lv_edit_category)
     SlideAndDragListView mListView;
-    @Bind(R.id.layout_progress)
+    @BindView(R.id.layout_progress)
     CircleProgressBarLayout mProgressLayout;
 
     private EditCategoryAdapter mCategoryAdapter;

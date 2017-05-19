@@ -11,7 +11,7 @@ import android.widget.FrameLayout;
 
 import com.yydcdut.note.R;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -19,7 +19,7 @@ import butterknife.ButterKnife;
  */
 public class CircleProgressBarLayout extends FrameLayout implements View.OnTouchListener {
 
-    @Bind(R.id.pb_loading)
+    @BindView(R.id.pb_loading)
     CircleProgressBar mCircleProgressBar;
 
     public CircleProgressBarLayout(Context context) {
@@ -69,11 +69,5 @@ public class CircleProgressBarLayout extends FrameLayout implements View.OnTouch
         int color = a.getColor(indexOfAttrColor, -1);
         a.recycle();
         return color;
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        ButterKnife.unbind(this);
     }
 }

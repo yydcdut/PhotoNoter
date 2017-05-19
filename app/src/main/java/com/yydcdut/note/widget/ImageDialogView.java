@@ -23,7 +23,7 @@ import com.yydcdut.note.R;
 
 import java.io.File;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -39,16 +39,16 @@ public class ImageDialogView extends LinearLayout implements PopupMenu.OnMenuIte
 
     private int mCurrentCameraPictureIndex = 0;
 
-    @Bind(R.id.img_image)
+    @BindView(R.id.img_image)
     ImageView mTargetImageView;
 
     private String mPath;
 
-    @Bind(R.id.edit_width)
+    @BindView(R.id.edit_width)
     EditText mWidthEditText;
-    @Bind(R.id.edit_height)
+    @BindView(R.id.edit_height)
     EditText mHeightEditText;
-    @Bind(R.id.edit_description)
+    @BindView(R.id.edit_description)
     EditText mDescriptionEditText;
 
     public ImageDialogView(Context context) {

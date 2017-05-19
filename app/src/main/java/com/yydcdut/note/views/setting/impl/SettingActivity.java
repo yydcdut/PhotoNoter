@@ -41,7 +41,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -52,11 +52,11 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
 
     private Map<String, View> mViewMap;
 
-    @Bind(R.id.scroll_setting)
+    @BindView(R.id.scroll_setting)
     View mScrollView;
-    @Bind(R.id.layout_scroll_linear)
+    @BindView(R.id.layout_scroll_linear)
     LinearLayout mScrollLinear;
-    @Bind(R.id.layout_toolbar)
+    @BindView(R.id.layout_toolbar)
     View mToolbarLayout;
 
     @Inject
@@ -68,7 +68,7 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
 
     @Override
     public boolean setStatusBar() {
-        return true;
+        return false;
     }
 
     @Override

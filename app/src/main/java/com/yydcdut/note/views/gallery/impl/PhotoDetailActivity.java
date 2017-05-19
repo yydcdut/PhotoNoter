@@ -27,7 +27,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnPageChange;
@@ -40,22 +40,22 @@ public class PhotoDetailActivity extends BaseActivity implements IPhotoDetailVie
     @Inject
     PhotoDetailPresenterImpl mPhotoDetailPresenter;
 
-    @Bind(R.id.vp_detail)
+    @BindView(R.id.vp_detail)
     FixViewPager mViewPager;
 
-    @Bind(R.id.view_status_cover)
+    @BindView(R.id.view_status_cover)
     View mStatusCoverView;
 
-    @Bind(R.id.appbar)
+    @BindView(R.id.appbar)
     View mAppBarLayout;
 
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
-    @Bind(R.id.layout_detail_bottom)
+    @BindView(R.id.layout_detail_bottom)
     View mBottomLayout;
 
-    @Bind(R.id.cb_detail)
+    @BindView(R.id.cb_detail)
     PhotoCheckBox mPhotoCheckBox;
 
     private MenuItem mFinishMenuItem;

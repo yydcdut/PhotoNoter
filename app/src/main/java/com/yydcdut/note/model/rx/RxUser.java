@@ -47,7 +47,6 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -82,7 +81,6 @@ public class RxUser {
     private Tencent mTencent;
     private EvernoteSession mEvernoteSession;
 
-    @Singleton
     @Inject
     public RxUser(@ContextLife("Application") Context context) {
         mContext = context;

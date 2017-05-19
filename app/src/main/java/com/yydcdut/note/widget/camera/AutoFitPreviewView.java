@@ -12,7 +12,7 @@ import android.widget.FrameLayout;
 import com.yydcdut.note.R;
 import com.yydcdut.note.utils.AppCompat;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -20,9 +20,9 @@ import butterknife.ButterKnife;
  */
 public class AutoFitPreviewView extends FrameLayout implements
         SurfaceHolder.Callback, TextureView.SurfaceTextureListener {
-    @Bind(R.id.sv_camera)
+    @BindView(R.id.sv_camera)
     AutoFitSurfaceView mAutoFitSurfaceView;
-    @Bind(R.id.ttv_camera)
+    @BindView(R.id.ttv_camera)
     AutoFitTextureView mAutoFitTextureView;
 
     private PreviewSurface mHolderSurface;
@@ -145,9 +145,4 @@ public class AutoFitPreviewView extends FrameLayout implements
         }
     }
 
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        ButterKnife.unbind(this);
-    }
 }

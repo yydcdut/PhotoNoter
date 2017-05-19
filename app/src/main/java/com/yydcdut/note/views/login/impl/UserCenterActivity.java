@@ -31,7 +31,7 @@ import com.yydcdut.note.widget.fab.OnSnackBarActionListener;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnPageChange;
@@ -43,19 +43,19 @@ public class UserCenterActivity extends BaseActivity implements IUserCenterView 
     @Inject
     UserCenterPresenterImpl mUserCenterPresenter;
 
-    @Bind(R.id.layout_user_vp_bg)
+    @BindView(R.id.layout_user_vp_bg)
     View mBackgroundImage;
-    @Bind(R.id.view_arrow)
+    @BindView(R.id.view_arrow)
     UserCenterArrowView mUserCenterArrowView;
-    @Bind(R.id.layout_progress)
+    @BindView(R.id.layout_progress)
     CircleProgressBarLayout mCircleProgressBarLayout;
-    @Bind(R.id.img_user)
+    @BindView(R.id.img_user)
     RoundedImageView mQQImageView;
-    @Bind(R.id.txt_name)
+    @BindView(R.id.txt_name)
     TextView mQQTextView;
-    @Bind(R.id.img_user_two)
+    @BindView(R.id.img_user_two)
     ImageView mEvernoteImageView;
-    @Bind(R.id.vp_user)
+    @BindView(R.id.vp_user)
     ViewPager mViewPager;
 
     private int[] mColorArray;

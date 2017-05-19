@@ -4,7 +4,7 @@ import org.aspectj.tools.ajc.Main
 
 apply plugin: 'com.android.application'
 //apply plugin: 'me.tatarka.retrolambda'
-apply plugin: 'com.neenbedankt.android-apt'
+//apply plugin: 'com.neenbedankt.android-apt'
 //apply plugin: 'com.frogermcs.androiddevmetrics'
 //apply from: '../gradle/dex.gradle'
 
@@ -28,7 +28,7 @@ android {
         ndk {
             moduleName = "blur"
             ldLibs "log", "z", "m", "jnigraphics"
-            abiFilters "armeabi", "armeabi-v7a", "arm64-v8a", "x86", "x86_64", "mips", "mips64"
+            abiFilters "armeabi-v7a"//, "armeabi", "arm64-v8a", "x86", "x86_64", "mips", "mips64"
         }
 
         buildConfigField "String", "EVERNOTE_CONSUMER_KEY", (project.hasProperty('EVERNOTE_CONSUMER_KEY') ? "\"$EVERNOTE_CONSUMER_KEY\"" : "\"Your consumer key\"")
@@ -96,8 +96,12 @@ android {
         jniLibs.srcDir 'src/libs'
     }
 
+    flavorDimensions 'dev'
+
     productFlavors {
-        dev {}
+        dev {
+            dimension 'dev'
+        }
 //        Store360 {}
 //        QQ {}
 //        WanDouJia {}
@@ -153,45 +157,49 @@ android {
 
 
 ext {
-    dagger2Version = '2.0'
+    dagger2Version = '2.11-rc2'
     leakcanaryVersion = '1.3'
     blockcanaryVersion = '1.0.0'
     metricsVersion = '0.4'
+    butterknifeVersion = '8.6.0'
 }
 dependencies {
     //    compile fileTree(include: ['*.jar'], dir: 'src/libs')
-    compile "com.android.support:appcompat-v7:${rootProject.ext.supportVersion}"
-    compile "com.android.support:support-v13:${rootProject.ext.supportVersion}"
-    compile "com.nineoldandroids:library:2.4.0"
-    compile "com.android.support:support-annotations:${rootProject.ext.supportVersion}"
-    compile "com.android.support:recyclerview-v7:${rootProject.ext.supportVersion}"
-    compile "com.android.support:cardview-v7:${rootProject.ext.supportVersion}"
-    compile "com.android.support:palette-v7:${rootProject.ext.supportVersion}"
-    compile "com.android.support:design:${rootProject.ext.supportVersion}"
-    compile "com.jakewharton:butterknife:7.0.1"
-    compile "com.evernote:android-sdk:2.0.0-RC3"
-    compile "com.yydcdut.sdlv:sdlv:0.6.1"
-    compile 'com.yydcdut:rxmarkdown:0.0.8-beta'
-    compile "com.google.dagger:dagger:${dagger2Version}"
-    apt "com.google.dagger:dagger-compiler:${dagger2Version}"
-    compile "io.reactivex:rxandroid:1.2.0"
-    compile "io.reactivex:rxjava:1.1.5"
-    compile "org.greenrobot:eventbus:3.0.0"
-    provided "org.glassfish:javax.annotation:10.0-b28"
-    compile "com.commit451:PhotoView:1.2.4"
-    compile 'org.aspectj:aspectjrt:1.8.9'
-    compile "com.android.support:multidex:1.0.1"
-    compile files("src/libs/umeng-analytics-v5.5.3.jar")
-    compile files("src/libs/mta-sdk-1.6.2.jar")
-    compile files("src/libs/open_sdk_r5043.jar")
-    compile files("src/libs/BaiduLBS_Android.jar")
-    compile files("src/libs/Msc.jar")
-    compile files("src/libs/Sunflower.jar")
-    compile files('src/libs/universal-image-loader-1.9.4.jar')
-    debugCompile "com.squareup.leakcanary:leakcanary-android:${leakcanaryVersion}"
-    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:${leakcanaryVersion}"
-    debugCompile "com.github.moduth:blockcanary:${blockcanaryVersion}"
-    releaseCompile "com.github.moduth:blockcanary-no-op:${blockcanaryVersion}"
+    implementation "com.android.support:appcompat-v7:${rootProject.ext.supportVersion}"
+    implementation "com.android.support:support-v13:${rootProject.ext.supportVersion}"
+    implementation "com.nineoldandroids:library:2.4.0"
+    implementation "com.android.support:support-annotations:${rootProject.ext.supportVersion}"
+    implementation "com.android.support:recyclerview-v7:${rootProject.ext.supportVersion}"
+    implementation "com.android.support:cardview-v7:${rootProject.ext.supportVersion}"
+    implementation "com.android.support:palette-v7:${rootProject.ext.supportVersion}"
+    implementation "com.android.support:design:${rootProject.ext.supportVersion}"
+    implementation "com.jakewharton:butterknife:${butterknifeVersion}"
+    annotationProcessor "com.jakewharton:butterknife-compiler:${butterknifeVersion}"
+    implementation "com.evernote:android-sdk:2.0.0-RC3"
+    implementation "com.yydcdut.sdlv:sdlv:0.6.1"
+    implementation 'com.yydcdut:rxmarkdown:0.0.8-beta'
+    implementation "com.google.dagger:dagger:${dagger2Version}"
+    annotationProcessor "com.google.dagger:dagger-compiler:${dagger2Version}"
+//    compile "com.google.dagger:dagger-android-support:${dagger2Version}"
+//    annotationProcessor "com.google.dagger:dagger-android-processor:${dagger2Version}"
+    implementation "io.reactivex:rxandroid:1.2.0"
+    implementation "io.reactivex:rxjava:1.1.5"
+    implementation "org.greenrobot:eventbus:3.0.0"
+    compileOnly "org.glassfish:javax.annotation:10.0-b28"
+    implementation "com.commit451:PhotoView:1.2.4"
+    implementation 'org.aspectj:aspectjrt:1.8.9'
+    implementation "com.android.support:multidex:1.0.1"
+    implementation files("src/libs/umeng-analytics-v5.5.3.jar")
+    implementation files("src/libs/mta-sdk-1.6.2.jar")
+    implementation files("src/libs/open_sdk_r5043.jar")
+    implementation files("src/libs/BaiduLBS_Android.jar")
+    implementation files("src/libs/Msc.jar")
+    implementation files("src/libs/Sunflower.jar")
+    implementation files('src/libs/universal-image-loader-1.9.4.jar')
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:${leakcanaryVersion}"
+    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${leakcanaryVersion}"
+    debugImplementation "com.github.moduth:blockcanary:${blockcanaryVersion}"
+    releaseImplementation "com.github.moduth:blockcanary-no-op:${blockcanaryVersion}"
 }
 
 final def log = project.logger

@@ -18,7 +18,8 @@ import com.yydcdut.note.widget.CircleProgressBarLayout;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
+import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnPageChange;
@@ -30,12 +31,12 @@ public class IntroduceActivity extends BaseActivity implements IIntroduceView {
     @Inject
     IntroducePresenterImpl mIntroducePresenter;
 
-    @Bind({R.id.img_introduce_1, R.id.img_introduce_2, R.id.img_introduce_3, R.id.img_introduce_4,
+    @BindViews({R.id.img_introduce_1, R.id.img_introduce_2, R.id.img_introduce_3, R.id.img_introduce_4,
             R.id.img_introduce_5, R.id.img_introduce_6})
     ImageView[] mImageViewArray;
-    @Bind(R.id.btn_introduce_start)
+    @BindView(R.id.btn_introduce_start)
     View mBtnStart;
-    @Bind(R.id.layout_progress)
+    @BindView(R.id.layout_progress)
     CircleProgressBarLayout mCircleProgressBar;
 
     @Override

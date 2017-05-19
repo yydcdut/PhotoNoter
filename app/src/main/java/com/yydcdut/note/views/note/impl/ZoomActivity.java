@@ -19,7 +19,7 @@ import com.yydcdut.note.widget.CircleProgressBarLayout;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import uk.co.senab.photoview.PhotoView;
 
@@ -29,11 +29,11 @@ import uk.co.senab.photoview.PhotoView;
  */
 public class ZoomActivity extends BaseActivity implements IZoomView {
 
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar mToolbar;
-    @Bind(R.id.img_zoom)
+    @BindView(R.id.img_zoom)
     PhotoView mImage;
-    @Bind(R.id.layout_progress)
+    @BindView(R.id.layout_progress)
     CircleProgressBarLayout mProgressLayout;
 
     @Inject

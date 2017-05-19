@@ -25,7 +25,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -45,7 +44,6 @@ public class RxFeedBack {
     private String mEmail;
     private JSONObject mDeviceInfo;
 
-    @Singleton
     @Inject
     public RxFeedBack(LocalStorageUtils localStorageUtils) {
         mLocalStorageUtils = localStorageUtils;

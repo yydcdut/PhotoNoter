@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 /**
  * Created by yuyidong on 16/3/23.
@@ -12,7 +11,6 @@ import javax.inject.Singleton;
 public class SelectPhotoModel {
     private List<String> mSelectPhotoList;
 
-    @Singleton
     @Inject
     public SelectPhotoModel() {
         mSelectPhotoList = new ArrayList<>();

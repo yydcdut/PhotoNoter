@@ -51,7 +51,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class HomeActivity extends BaseActivity implements IHomeView, View.OnClickListener {
@@ -70,13 +70,13 @@ public class HomeActivity extends BaseActivity implements IHomeView, View.OnClic
     public TextView mCloudUseText;
     public ProgressBar mCloudUseProgress;
     /* Drawer */
-    @Bind(R.id.lv_navigation)
+    @BindView(R.id.lv_navigation)
     ListView mMenuListView;
-    @Bind(R.id.drawerLayout)
+    @BindView(R.id.drawerLayout)
     DrawerLayout mDrawerLayout;
-    @Bind(R.id.relativeDrawer)
+    @BindView(R.id.relativeDrawer)
     FrameLayout mRelativeDrawer;//Fragment
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar mToolbar;
     @Inject
     HomePresenterImpl mHomePresenter;

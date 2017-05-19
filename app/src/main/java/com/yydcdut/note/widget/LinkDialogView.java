@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 
 import com.yydcdut.note.R;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -19,9 +19,9 @@ import butterknife.ButterKnife;
  */
 public class LinkDialogView extends LinearLayout {
 
-    @Bind(R.id.edit_description_link)
+    @BindView(R.id.edit_description_link)
     EditText mDescriptionEditText;
-    @Bind(R.id.edit_link)
+    @BindView(R.id.edit_link)
     EditText mLinkEditText;
 
     public LinkDialogView(Context context) {

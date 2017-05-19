@@ -19,7 +19,7 @@ import com.yydcdut.note.widget.fab.OnSnackBarActionListener;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -32,7 +32,7 @@ public class LoginActivity extends BaseActivity implements ILoginView {
     @Inject
     LoginPresenterImpl mLoginPresenter;
 
-    @Bind(R.id.layout_progress)
+    @BindView(R.id.layout_progress)
     CircleProgressBarLayout mCircleProgressBar;
 
     @Override

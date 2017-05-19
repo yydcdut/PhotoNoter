@@ -6,7 +6,7 @@ import android.view.View;
 import com.yydcdut.note.R;
 import com.yydcdut.note.widget.GridItemImageView;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -16,9 +16,9 @@ public class PhotoViewHolder extends RecyclerView.ViewHolder implements View.OnC
     private OnItemClickListener mOnItemClickListener;
     private OnItemLongClickListener mOnItemLongClickListener;
 
-    @Bind(R.id.img_item_album)
+    @BindView(R.id.img_item_album)
     public GridItemImageView imageView;
-    @Bind(R.id.layout_item_album_check)
+    @BindView(R.id.layout_item_album_check)
     public GridItemImageView checkLayout;
 
     public PhotoViewHolder(View itemView, int size, OnItemClickListener onItemClickListener, OnItemLongClickListener onItemLongClickListener) {

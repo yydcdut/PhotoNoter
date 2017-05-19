@@ -32,7 +32,7 @@ import com.yydcdut.note.widget.camera.IsoView;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnTouch;
 
@@ -52,31 +52,31 @@ public class CameraActivity extends BaseActivity implements ICameraView,
     @Inject
     CameraPresenterImpl mCameraPresenter;
 
-    @Bind(R.id.auto_preview)
+    @BindView(R.id.auto_preview)
     AutoFitPreviewView mAutoFitPreviewView;
 
-    @Bind(R.id.fab_capture)
+    @BindView(R.id.fab_capture)
     FloatingActionButton mCaptureBtn;
 
-    @Bind(R.id.view_top)
+    @BindView(R.id.view_top)
     CameraTopView mCameraTopView;
 
-    @Bind(R.id.view_ratio_cover)
+    @BindView(R.id.view_ratio_cover)
     View mRatioCoverView;
 
-    @Bind(R.id.grid_camera)
+    @BindView(R.id.grid_camera)
     CameraGridLayout mCameraGridLayout;
 
-    @Bind(R.id.txt_timer)
+    @BindView(R.id.txt_timer)
     AnimationTextView mWindowTextView;
 
-    @Bind(R.id.view_gesture)
+    @BindView(R.id.view_gesture)
     GestureView mGestureView;
 
-    @Bind(R.id.img_focus)
+    @BindView(R.id.img_focus)
     FocusView mFocusImage;
 
-    @Bind(R.id.pb_iso)
+    @BindView(R.id.pb_iso)
     IsoView mIsoView;
 
     @Override

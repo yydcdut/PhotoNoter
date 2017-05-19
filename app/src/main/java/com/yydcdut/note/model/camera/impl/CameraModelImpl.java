@@ -18,7 +18,6 @@ import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 /**
  * Created by yuyidong on 16/2/3.
@@ -42,7 +41,6 @@ public class CameraModelImpl implements ICameraModel {
 
     private PicturesPreviewCallback mPicturesPreviewCallback;
 
-    @Singleton
     @Inject
     public CameraModelImpl() {
     }

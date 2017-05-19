@@ -27,7 +27,7 @@ import com.yydcdut.note.widget.RevealView;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -35,19 +35,19 @@ import butterknife.OnClick;
  * Created by yuyidong on 15/11/3.
  */
 public class FeedbackActivity extends BaseActivity implements IFeedbackView {
-    @Bind(R.id.et_feedback_content)
+    @BindView(R.id.et_feedback_content)
     EditText mContentText;
-    @Bind(R.id.et_feedback_email)
+    @BindView(R.id.et_feedback_email)
     EditText mEmailText;
-    @Bind(R.id.layout_progress)
+    @BindView(R.id.layout_progress)
     CircleProgressBarLayout mProgressLayout;
-    @Bind(R.id.reveal_feedback)
+    @BindView(R.id.reveal_feedback)
     RevealView mRevealView;
-    @Bind(R.id.img_feedback_ok)
+    @BindView(R.id.img_feedback_ok)
     View mOkView;
-    @Bind(R.id.fab_send)
+    @BindView(R.id.fab_send)
     FloatingActionButton mFab;
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
     @Inject

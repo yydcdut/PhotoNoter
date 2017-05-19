@@ -41,7 +41,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnPageChange;
@@ -56,35 +56,35 @@ public class DetailActivity extends BaseActivity implements IDetailView,
     @Inject
     DetailPresenterImpl mDetailPresenter;
 
-    @Bind(R.id.vp_detail)
+    @BindView(R.id.vp_detail)
     ViewPager mViewPager;
-    @Bind(R.id.view_overlay)
+    @BindView(R.id.view_overlay)
     View mOverlayView;
-    @Bind(R.id.txt_detail_content_title)
+    @BindView(R.id.txt_detail_content_title)
     FontTextView mTitleView;/* Content TextView */
-    @Bind(R.id.txt_detail_content)
+    @BindView(R.id.txt_detail_content)
     FontTextView mContentView;
-    @Bind(R.id.txt_detail_create_time)
+    @BindView(R.id.txt_detail_create_time)
     TextView mCreateView;
-    @Bind(R.id.txt_detail_edit_time)
+    @BindView(R.id.txt_detail_edit_time)
     TextView mEditView;
-    @Bind(R.id.img_menu)
+    @BindView(R.id.img_menu)
     View mMenuView;
-    @Bind(R.id.layout_menu)
+    @BindView(R.id.layout_menu)
     View mMenuLayout;
-    @Bind(R.id.card_detail)
+    @BindView(R.id.card_detail)
     View mCardView;
-    @Bind(R.id.txt_label_title)
+    @BindView(R.id.txt_label_title)
     View mTitleLabelView;
-    @Bind(R.id.txt_label_content)
+    @BindView(R.id.txt_label_content)
     TextView mContentLabelView;
-    @Bind(R.id.txt_label_date)
+    @BindView(R.id.txt_label_date)
     View mDateLabelView;
-    @Bind(R.id.layout_detail_time)
+    @BindView(R.id.layout_detail_time)
     View mDateLayoutView;
-    @Bind(R.id.fab_edit)
+    @BindView(R.id.fab_edit)
     FloatingActionButton mFab;
-    @Bind(R.id.reveal)
+    @BindView(R.id.reveal)
     RevealView mRevealView;
 
     private DetailPagerAdapter mDetailPagerAdapter;

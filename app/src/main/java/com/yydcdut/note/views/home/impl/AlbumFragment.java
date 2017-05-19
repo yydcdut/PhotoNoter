@@ -53,7 +53,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -72,16 +72,16 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
     private static final int INTENT_REQUEST_CROP = 301;
 
     /* RecyclerView */
-    @Bind(R.id.rv_album)
+    @BindView(R.id.rv_album)
     RecyclerView mRecyclerView;
     /* FloatingActionButton */
-    @Bind(R.id.fab_main)
+    @BindView(R.id.fab_main)
     FloatingActionsMenu mFloatingActionsMenu;
-    @Bind(R.id.view_menu_floating_position)
+    @BindView(R.id.view_menu_floating_position)
     View mFloatingView;//当点击FloatingActionsMenu的时候RevealColor可以找到起始坐标
-    @Bind(R.id.layout_progress)
+    @BindView(R.id.layout_progress)
     CircleProgressBarLayout mProgressLayout;
-    @Bind(R.id.reveal_album)
+    @BindView(R.id.reveal_album)
     RevealView mAlbumRevealView;
     /* RevealColor */
     private RevealView mLayoutRevealView;
@@ -530,12 +530,6 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
     public void onDestroy() {
         unregisterReceiver();
         super.onDestroy();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        ButterKnife.unbind(this);
     }
 
     @Override

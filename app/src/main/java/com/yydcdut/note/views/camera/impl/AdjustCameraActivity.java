@@ -16,7 +16,7 @@ import com.yydcdut.note.widget.camera.AutoFitPreviewView;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -28,13 +28,13 @@ public class AdjustCameraActivity extends BaseActivity implements IAdjustCameraV
     @Inject
     AdjustCameraPresenterImpl mAdjustCameraPresenter;
 
-    @Bind(R.id.auto_preview)
+    @BindView(R.id.auto_preview)
     AutoFitPreviewView mAutoFitPreviewView;
 
-    @Bind(R.id.fab_rotate)
+    @BindView(R.id.fab_rotate)
     FloatingActionButton mRotationBtn;
 
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
     @Override

@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -30,7 +29,6 @@ public class RxGalleryPhotos {
 
     private Context mContext;
 
-    @Singleton
     @Inject
     public RxGalleryPhotos(@ContextLife("Application") Context context) {
         mContext = context;

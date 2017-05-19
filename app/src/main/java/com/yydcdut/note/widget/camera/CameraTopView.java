@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 
 import com.yydcdut.note.R;
 
-import butterknife.Bind;
+import butterknife.BindViews;
 import butterknife.ButterKnife;
 
 /**
@@ -17,9 +17,9 @@ import butterknife.ButterKnife;
  */
 public class CameraTopView extends LinearLayout implements View.OnClickListener,
         AnimationTopLayout.OnAnimationHalfFinishListener {
-    @Bind({R.id.layout_back, R.id.layout_flash, R.id.layout_ratio, R.id.layout_timer, R.id.layout_grid, R.id.layout_camera_id})
+    @BindViews({R.id.layout_back, R.id.layout_flash, R.id.layout_ratio, R.id.layout_timer, R.id.layout_grid, R.id.layout_camera_id})
     AnimationTopLayout[] mItemLayoutView;
-    @Bind({R.id.btn_back, R.id.btn_flash, R.id.btn_ratio, R.id.btn_timer, R.id.btn_grid, R.id.btn_camera_id})
+    @BindViews({R.id.btn_back, R.id.btn_flash, R.id.btn_ratio, R.id.btn_timer, R.id.btn_grid, R.id.btn_camera_id})
     ImageView[] mItemImageView;
 
     private int[] mFlashDrawableRes;

@@ -36,7 +36,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -49,16 +49,16 @@ public class GalleryActivity extends BaseActivity implements IGalleryView,
     @Inject
     GalleryPresenterImpl mGalleryPresenter;
 
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
-    @Bind(R.id.drawer_layout)
+    @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
 
-    @Bind(R.id.fab)
+    @BindView(R.id.fab)
     FloatingActionButton mFab;
 
-    @Bind(R.id.nav_view)
+    @BindView(R.id.nav_view)
     NavigationView mNavigationView;
 
     private MenuItem mPreviewMenu;

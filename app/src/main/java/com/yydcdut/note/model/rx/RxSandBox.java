@@ -9,7 +9,6 @@ import com.yydcdut.note.model.dao.SandBoxDB;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -21,7 +20,6 @@ import rx.schedulers.Schedulers;
 public class RxSandBox {
     private SandBoxDB mSandBoxDB;
 
-    @Singleton
     @Inject
     public RxSandBox(@ContextLife("Application") Context context) {
         mSandBoxDB = new SandBoxDB(context);
