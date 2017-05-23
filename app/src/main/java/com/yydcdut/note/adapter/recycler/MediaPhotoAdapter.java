@@ -1,8 +1,6 @@
 package com.yydcdut.note.adapter.recycler;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -47,7 +45,7 @@ public class MediaPhotoAdapter extends RecyclerView.Adapter<MediaPhotoViewHolder
 
     @Override
     public MediaPhotoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_media_photo, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_media_photo, null, false);
         return new MediaPhotoViewHolder(view, mSize, mOnItemClickListener, mOnItemSelectListener);
     }
 
@@ -59,7 +57,7 @@ public class MediaPhotoAdapter extends RecyclerView.Adapter<MediaPhotoViewHolder
         } else {
             holder.checkBox.setCheckedWithoutCallback(false);
         }
-        holder.imageView.setImageDrawable(new ColorDrawable(Color.rgb(mRandom.nextInt(255), mRandom.nextInt(255), mRandom.nextInt(255))));
+//        holder.imageView.setImageDrawable(new ColorDrawable(Color.rgb(mRandom.nextInt(255), mRandom.nextInt(255), mRandom.nextInt(255))));//todo 优化
         ImageLoaderManager.displayImage("file:/" + mediaPhoto.getThumbPath(), holder.imageView, ImageLoaderManager.getGalleryOptions());
     }
 

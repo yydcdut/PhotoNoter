@@ -480,15 +480,11 @@ public class DetailActivity extends BaseActivity implements IDetailView,
      * 打开RevealColorView并且开启activity
      */
     private void showRevealColorViewAndStartActivity() {
-        if (mTitleLabelView.getVisibility() != View.VISIBLE) {
-            showSnackBar(getString(R.string.function_offoline));
-            return;
-        }
         mIsIgnoreBackPress = true;
         final Point p = getLocationInView(mRevealView, mFab);
         mRevealView.reveal(p.x, p.y, getThemeColor(), mFab.getHeight() / 2, Const.DURATION, () -> {
             if (mTitleLabelView.getVisibility() != View.VISIBLE) {
-//                    mDetailPresenter.jump2MapActivity();
+                mDetailPresenter.jump2MapActivity();
             } else {
                 mDetailPresenter.jump2EditTextActivity();
             }

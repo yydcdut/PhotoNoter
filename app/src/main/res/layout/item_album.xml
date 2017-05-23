@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
-    android:layout_margin="1dip">
+    android:layout_margin="1dip"
+    android:animateLayoutChanges="true">
 
-    <com.yydcdut.note.widget.GridItemImageView
+    <android.support.v7.widget.AppCompatImageView
         android:id="@+id/img_item_album"
+        android:transitionName="transitionImg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"/>
 
-
-    <com.yydcdut.note.widget.GridItemImageView
+    <android.support.v7.widget.AppCompatImageView
         android:id="@+id/layout_item_album_check"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -21,4 +21,4 @@
         android:layout_gravity="center"
         android:scaleType="center"
         android:src="@drawable/ic_check_white_24dp"/>
-</RelativeLayout>
+</FrameLayout>

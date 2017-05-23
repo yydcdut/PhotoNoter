@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 
+import com.baidu.mapapi.SDKInitializer;
 import com.yydcdut.note.R;
 import com.yydcdut.note.aspect.permission.AspectPermission;
 import com.yydcdut.note.injector.ContextLife;
@@ -147,15 +148,14 @@ public class DetailPresenterImpl implements IDetailPresenter {
 
     @Override
     public void jump2MapActivity() {
-        mIDetailView.showSnackBar(mContext.getResources().getString(R.string.function_offoline));
-//        checkBaiduMapPermission();
+        checkBaiduMapPermission();
     }
 
     @Permission(PermissionUtils.CODE_PHONE_STATE)
     @AspectPermission(PermissionUtils.CODE_PHONE_STATE)
     private void checkBaiduMapPermission() {
-//        SDKInitializer.initialize(mActivity.getApplication());
-//        mIDetailView.jump2MapActivity(mCategoryId, mIDetailView.getCurrentPosition(), mComparator);
+        SDKInitializer.initialize(mActivity.getApplication());
+        mIDetailView.jump2MapActivity(mCategoryId, mIDetailView.getCurrentPosition(), mComparator);
     }
 
     @Override

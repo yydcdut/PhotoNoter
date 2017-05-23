@@ -4,16 +4,16 @@
                 android:layout_height="match_parent"
                 android:layout_margin="1dp">
 
-    <com.yydcdut.note.widget.GridItemImageView
+    <android.support.v7.widget.AppCompatImageView
         android:id="@+id/img_item_photo"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:scaleType="centerCrop"/>
 
-    <com.yydcdut.note.widget.GridItemImageView
+    <android.support.v7.widget.AppCompatImageView
         android:id="@+id/img_item_bg"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/little_black"/>
 
     <com.yydcdut.note.widget.PhotoCheckBox

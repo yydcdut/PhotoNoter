@@ -1,11 +1,12 @@
 package com.yydcdut.note.adapter.recycler.vh;
 
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
 import com.yydcdut.note.R;
-import com.yydcdut.note.widget.GridItemImageView;
 import com.yydcdut.note.widget.PhotoCheckBox;
 
 import butterknife.BindView;
@@ -20,10 +21,10 @@ public class MediaPhotoViewHolder extends RecyclerView.ViewHolder implements Pho
     private OnItemSelectListener mOnItemSelectListener;
 
     @BindView(R.id.img_item_photo)
-    public GridItemImageView imageView;
+    public AppCompatImageView imageView;
 
     @BindView(R.id.img_item_bg)
-    public GridItemImageView bgImageView;
+    public AppCompatImageView bgImageView;
 
     @BindView(R.id.cb_item_photo)
     public PhotoCheckBox checkBox;
@@ -33,8 +34,13 @@ public class MediaPhotoViewHolder extends RecyclerView.ViewHolder implements Pho
         ButterKnife.bind(this, itemView);
         mOnItemClickListener = onItemClickListener;
         mOnItemSelectListener = onItemSelectListener;
-        imageView.setSize(size);
-        bgImageView.setSize(size);
+        RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) itemView.getLayoutParams();
+        if (layoutParams == null) {
+            layoutParams = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, size);
+        } else {
+            layoutParams.height = size;
+        }
+        itemView.setLayoutParams(layoutParams);
         checkBox.setOnPhotoCheckedChangeListener(this);
     }
 

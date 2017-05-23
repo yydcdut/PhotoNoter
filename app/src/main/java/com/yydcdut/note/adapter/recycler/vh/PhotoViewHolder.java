@@ -1,10 +1,11 @@
 package com.yydcdut.note.adapter.recycler.vh;
 
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.yydcdut.note.R;
-import com.yydcdut.note.widget.GridItemImageView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -17,17 +18,22 @@ public class PhotoViewHolder extends RecyclerView.ViewHolder implements View.OnC
     private OnItemLongClickListener mOnItemLongClickListener;
 
     @BindView(R.id.img_item_album)
-    public GridItemImageView imageView;
+    public AppCompatImageView imageView;
     @BindView(R.id.layout_item_album_check)
-    public GridItemImageView checkLayout;
+    public AppCompatImageView checkLayout;
 
     public PhotoViewHolder(View itemView, int size, OnItemClickListener onItemClickListener, OnItemLongClickListener onItemLongClickListener) {
         super(itemView);
         ButterKnife.bind(this, itemView);
         itemView.setOnLongClickListener(this);
         itemView.setOnClickListener(this);
-        imageView.setSize(size);
-        checkLayout.setSize(size);
+        RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) itemView.getLayoutParams();
+        if (layoutParams == null) {
+            layoutParams = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, size);
+        } else {
+            layoutParams.height = size;
+        }
+        itemView.setLayoutParams(layoutParams);
         mOnItemClickListener = onItemClickListener;
         mOnItemLongClickListener = onItemLongClickListener;
     }

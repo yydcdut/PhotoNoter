@@ -39,7 +39,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
 
     @Override
     public PhotoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_album, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_album, null, false);
         return new PhotoViewHolder(view, mSize, mOnItemClickListener, mOnItemLongClickListener);
     }
 
@@ -54,7 +54,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
         ImageLoaderManager.displayImage(photoNote.getSmallPhotoPathWithFile(), holder.imageView);
         int color = photoNote.getPaletteColor();
         AppCompat.setBackgroundDrawable(holder.checkLayout,
-                new ColorDrawable(Color.argb(0x70, Color.red(color), Color.green(color), Color.blue(color))));
+                new ColorDrawable(Color.argb(0x70, Color.red(color), Color.green(color), Color.blue(color))));//todo 优化
     }
 
     @Override
