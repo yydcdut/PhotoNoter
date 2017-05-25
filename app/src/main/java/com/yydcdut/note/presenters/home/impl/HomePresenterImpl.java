@@ -3,7 +3,9 @@ package com.yydcdut.note.presenters.home.impl;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 
+import com.baidu.mapapi.SDKInitializer;
 import com.yydcdut.note.aspect.permission.AspectPermission;
 import com.yydcdut.note.bus.CategoryCreateEvent;
 import com.yydcdut.note.bus.CategoryDeleteEvent;
@@ -64,11 +66,6 @@ public class HomePresenterImpl implements IHomePresenter {
     }
 
     @Override
-    public Context getContext() {
-        return mContext;
-    }
-
-    @Override
     public void attachView(IView iView) {
         mHomeView = (IHomeView) iView;
         EventBus.getDefault().register(this);
@@ -78,6 +75,11 @@ public class HomePresenterImpl implements IHomePresenter {
     @Override
     public void detachView() {
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public IView getIView() {
+        return mHomeView;
     }
 
     public void setCategoryId(int categoryId) {
@@ -343,18 +345,13 @@ public class HomePresenterImpl implements IHomePresenter {
      * 因为相册页面的fragment和activity很沉重，速度之慢，所以这些不是特别必须的就稍后初始化
      */
     private void initDelay() {
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                initBaiduMap();
-//            }
-//        }, 200);
+        new Handler().postDelayed(() -> initBaiduMap(), 200);
     }
 
     @Permission(PermissionUtils.CODE_PHONE_STATE)
-    @AspectPermission(PermissionUtils.CODE_PHONE_STATE)
+    @AspectPermission
     private void initBaiduMap() {
-//        SDKInitializer.initialize(mActivity.getApplication());
+        SDKInitializer.initialize(mActivity.getApplication());
     }
 
 }

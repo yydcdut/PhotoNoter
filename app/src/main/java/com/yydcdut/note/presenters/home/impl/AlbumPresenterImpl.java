@@ -1,6 +1,5 @@
 package com.yydcdut.note.presenters.home.impl;
 
-import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
@@ -58,29 +57,22 @@ public class AlbumPresenterImpl implements IAlbumPresenter {
     private int mAlbumSortKind;
 
     private Context mContext;
-    private Fragment mFragment;
     private LocalStorageUtils mLocalStorageUtils;
     private RxCategory mRxCategory;
     private RxPhotoNote mRxPhotoNote;
     private RxSandBox mRxSandBox;
 
     @Inject
-    public AlbumPresenterImpl(@ContextLife("Activity") Context context, Fragment fragment,
+    public AlbumPresenterImpl(@ContextLife("Activity") Context context,
                               RxCategory rxCategory, RxPhotoNote rxPhotoNote, RxSandBox rxSandBox,
                               LocalStorageUtils localStorageUtils) {
 
         mContext = context;
-        mFragment = fragment;
         mRxCategory = rxCategory;
         mRxPhotoNote = rxPhotoNote;
         mRxSandBox = rxSandBox;
         mLocalStorageUtils = localStorageUtils;
         mAlbumSortKind = mLocalStorageUtils.getSortKind();
-    }
-
-    @Override
-    public Context getContext() {
-        return mContext;
     }
 
     @Override
@@ -105,6 +97,11 @@ public class AlbumPresenterImpl implements IAlbumPresenter {
     @Override
     public void detachView() {
 
+    }
+
+    @Override
+    public IView getIView() {
+        return mAlbumView;
     }
 
     @Override
@@ -495,7 +492,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter {
     }
 
     @Permission(PermissionUtils.CODE_CAMERA)
-    @AspectPermission(PermissionUtils.CODE_CAMERA)
+    @AspectPermission
     private void getPermissionAndJumpCameraActivity() {
         mAlbumView.jump2CameraActivity(mCategoryId);
     }

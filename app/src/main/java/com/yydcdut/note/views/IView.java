@@ -1,5 +1,6 @@
 package com.yydcdut.note.views;
 
+import com.yydcdut.note.aspect.permission.RequestType;
 import com.yydcdut.note.presenters.IPresenter;
 
 /**
@@ -13,4 +14,6 @@ public interface IView {
      * @return
      */
     IPresenter getPresenter();
+
+    RequestType getRequestType();
 }

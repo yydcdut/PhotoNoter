@@ -60,11 +60,6 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter {
     }
 
     @Override
-    public Context getContext() {
-        return mContext;
-    }
-
-    @Override
     public void attachView(IView iView) {
         mUserDetailFragView = (IUserDetailFragView) iView;
         switch (mType) {
@@ -117,6 +112,11 @@ public class UserDetailFragPresenterImpl implements IUserDetailFragPresenter {
         if (mType == 0 && mLocationClient != null) {
             mLocationClient.stop();
         }
+    }
+
+    @Override
+    public IView getIView() {
+        return mUserDetailFragView;
     }
 
     @Override

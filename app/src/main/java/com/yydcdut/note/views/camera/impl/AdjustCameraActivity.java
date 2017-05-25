@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.yydcdut.note.R;
+import com.yydcdut.note.aspect.permission.RequestType;
 import com.yydcdut.note.presenters.camera.impl.AdjustCameraPresenterImpl;
 import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.views.BaseActivity;
@@ -124,5 +125,10 @@ public class AdjustCameraActivity extends BaseActivity implements IAdjustCameraV
     @Override
     public void onBackPressed() {
         mAdjustCameraPresenter.clickBack();
+    }
+
+    @Override
+    public RequestType getRequestType() {
+        return new RequestType(this);
     }
 }

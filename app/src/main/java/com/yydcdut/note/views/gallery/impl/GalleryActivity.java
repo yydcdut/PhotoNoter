@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.recycler.GalleryNavigationAdapter;
 import com.yydcdut.note.adapter.recycler.vh.GalleryNavFooterViewHolder;
+import com.yydcdut.note.aspect.permission.RequestType;
 import com.yydcdut.note.entity.gallery.GalleryApp;
 import com.yydcdut.note.presenters.gallery.impl.GalleryPresenterImpl;
 import com.yydcdut.note.utils.AppCompat;
@@ -266,5 +267,10 @@ public class GalleryActivity extends BaseActivity implements IGalleryView,
     @OnClick(R.id.fab)
     public void onFabClick(View view) {
         mGalleryPresenter.finishActivityAndReturnData();
+    }
+
+    @Override
+    public RequestType getRequestType() {
+        return new RequestType(this);
     }
 }

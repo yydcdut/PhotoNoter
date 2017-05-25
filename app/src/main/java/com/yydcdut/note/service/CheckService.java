@@ -109,6 +109,5 @@ public class CheckService extends IntentService {
         intent.putExtra(Const.TARGET_BROADCAST_SERVICE, true);
         sendBroadcast(intent);
         super.onDestroy();
-
     }
 }

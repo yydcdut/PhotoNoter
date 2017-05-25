@@ -7,7 +7,8 @@ import android.net.NetworkInfo;
 /**
  * Created by yuyidong on 15/10/19.
  */
-public class NetworkUtils {
+public class NetworkUtils {//todo Application Context
+
     public static boolean isNetworkConnected(Context context) {
         if (context != null) {
             ConnectivityManager mConnectivityManager = (ConnectivityManager) context
@@ -22,8 +23,7 @@ public class NetworkUtils {
 
     public boolean isWifiConnected(Context context) {
         if (context != null) {
-            ConnectivityManager mConnectivityManager = (ConnectivityManager) context
-                    .getSystemService(Context.CONNECTIVITY_SERVICE);
+            ConnectivityManager mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo mWiFiNetworkInfo = mConnectivityManager
                     .getNetworkInfo(ConnectivityManager.TYPE_WIFI);
             if (mWiFiNetworkInfo != null) {

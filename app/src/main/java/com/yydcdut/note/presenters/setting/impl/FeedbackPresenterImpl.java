@@ -39,11 +39,6 @@ public class FeedbackPresenterImpl implements IFeedbackPresenter {
     }
 
     @Override
-    public Context getContext() {
-        return mContext;
-    }
-
-    @Override
     public void attachView(IView iView) {
         mFeedbackView = (IFeedbackView) iView;
         if (mType == IFeedbackPresenter.TYPE_FEEDBACK) {
@@ -101,6 +96,11 @@ public class FeedbackPresenterImpl implements IFeedbackPresenter {
 
     @Override
     public void detachView() {
+    }
+
+    @Override
+    public IView getIView() {
+        return mFeedbackView;
     }
 
     private boolean isEmail(String email) {

@@ -1,6 +1,5 @@
 package com.yydcdut.note.presenters.service.impl;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
@@ -52,11 +51,6 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter {
     public SandBoxServicePresenterImpl(RxSandBox rxSandBox, RxPhotoNote rxPhotoNote) {
         mRxPhotoNote = rxPhotoNote;
         mRxSandBox = rxSandBox;
-    }
-
-    @Override
-    public Context getContext() {
-        return null;
     }
 
     @Override
@@ -204,6 +198,11 @@ public class SandBoxServicePresenterImpl implements ISandBoxServicePresenter {
 
     @Override
     public void detachView() {
+    }
+
+    @Override
+    public IView getIView() {
+        return mSandBoxServiceView;
     }
 
     private void finishSandBoxService() {

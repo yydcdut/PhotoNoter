@@ -10,6 +10,7 @@ import android.support.v4.app.NotificationCompat;
 
 import com.yydcdut.note.NoteApplication;
 import com.yydcdut.note.R;
+import com.yydcdut.note.aspect.permission.RequestType;
 import com.yydcdut.note.injector.component.DaggerServiceComponent;
 import com.yydcdut.note.injector.module.ServiceModule;
 import com.yydcdut.note.presenters.IPresenter;
@@ -99,5 +100,10 @@ public class SandBoxService extends Service implements ISandBoxServiceView {
     @Override
     public IPresenter getPresenter() {
         return mSandBoxServicePresenter;
+    }
+
+    @Override
+    public RequestType getRequestType() {
+        return null;
     }
 }

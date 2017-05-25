@@ -15,6 +15,7 @@ import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.vp.PhotoDetailPagerAdapter;
+import com.yydcdut.note.aspect.permission.RequestType;
 import com.yydcdut.note.presenters.gallery.IPhotoDetailPresenter;
 import com.yydcdut.note.presenters.gallery.impl.PhotoDetailPresenterImpl;
 import com.yydcdut.note.utils.AppCompat;
@@ -278,5 +279,9 @@ public class PhotoDetailActivity extends BaseActivity implements IPhotoDetailVie
         return mViewPager.getCurrentItem();
     }
 
+    @Override
+    public RequestType getRequestType() {
+        return new RequestType(this);
+    }
 }
 

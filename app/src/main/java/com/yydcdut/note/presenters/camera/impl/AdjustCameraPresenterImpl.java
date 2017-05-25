@@ -1,9 +1,7 @@
 package com.yydcdut.note.presenters.camera.impl;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.yydcdut.note.injector.ContextLife;
 import com.yydcdut.note.model.camera.ICameraFocus;
 import com.yydcdut.note.model.camera.ICameraModel;
 import com.yydcdut.note.model.camera.ICameraSettingModel;
@@ -32,7 +30,6 @@ import javax.inject.Inject;
  * Created by yuyidong on 16/2/16.
  */
 public class AdjustCameraPresenterImpl implements IAdjustCameraPresenter {
-    private Context mContext;
     private IAdjustCameraView mAdjustCameraView;
     /* CameraId */
     private String mCameraId = Const.CAMERA_BACK;
@@ -49,9 +46,7 @@ public class AdjustCameraPresenterImpl implements IAdjustCameraPresenter {
     private AutoFitPreviewView.PreviewSurface mPreviewSurface;
 
     @Inject
-    public AdjustCameraPresenterImpl(@ContextLife("Activity") Context context, LocalStorageUtils localStorageUtils,
-                                     CameraModelImpl cameraModelImpl) {
-        mContext = context;
+    public AdjustCameraPresenterImpl(LocalStorageUtils localStorageUtils, CameraModelImpl cameraModelImpl) {
         mLocalStorageUtils = localStorageUtils;
         mCurrentOrientationDegree = getCameraRotation();
         //Camera2没有设置方向的方法
@@ -72,11 +67,6 @@ public class AdjustCameraPresenterImpl implements IAdjustCameraPresenter {
                 mCurrentOrientationDegree = mLocalStorageUtils.getCameraBackRotation();
                 return mCurrentOrientationDegree;
         }
-    }
-
-    @Override
-    public Context getContext() {
-        return mContext;
     }
 
     @Override
@@ -173,6 +163,11 @@ public class AdjustCameraPresenterImpl implements IAdjustCameraPresenter {
     @Override
     public void detachView() {
         closeCamera();
+    }
+
+    @Override
+    public IView getIView() {
+        return mAdjustCameraView;
     }
 
     private void closeCamera() {

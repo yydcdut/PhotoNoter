@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 
 import com.yydcdut.note.R;
+import com.yydcdut.note.aspect.permission.RequestType;
 import com.yydcdut.note.presenters.note.impl.ZoomPresenterImpl;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
@@ -193,6 +194,11 @@ public class ZoomActivity extends BaseActivity implements IZoomView {
     @Override
     public void showSnackBar(String massage) {
         Snackbar.make(findViewById(R.id.layout_zoom), massage, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public RequestType getRequestType() {
+        return new RequestType(this);
     }
 
 }

@@ -10,6 +10,7 @@ import android.os.RemoteException;
 
 import com.yydcdut.note.ICameraData;
 import com.yydcdut.note.NoteApplication;
+import com.yydcdut.note.aspect.permission.RequestType;
 import com.yydcdut.note.injector.component.DaggerServiceComponent;
 import com.yydcdut.note.injector.module.ServiceModule;
 import com.yydcdut.note.presenters.IPresenter;
@@ -106,5 +107,10 @@ public class CameraService extends Service implements ICameraServiceView {
     @Override
     public IPresenter getPresenter() {
         return mCameraServicePresenter;
+    }
+
+    @Override
+    public RequestType getRequestType() {
+        return null;
     }
 }

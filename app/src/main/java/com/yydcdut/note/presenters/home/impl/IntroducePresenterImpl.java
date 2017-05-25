@@ -60,11 +60,6 @@ public class IntroducePresenterImpl implements IIntroducePresenter, Handler.Call
     }
 
     @Override
-    public Context getContext() {
-        return mContext;
-    }
-
-    @Override
     public void attachView(IView iView) {
         mIntroduceView = (IIntroduceView) iView;
         mHandler = new Handler(this);
@@ -76,6 +71,11 @@ public class IntroducePresenterImpl implements IIntroducePresenter, Handler.Call
     @Override
     public void detachView() {
 
+    }
+
+    @Override
+    public IView getIView() {
+        return mIntroduceView;
     }
 
     @Override
@@ -143,7 +143,7 @@ public class IntroducePresenterImpl implements IIntroducePresenter, Handler.Call
     }
 
     @Permission(PermissionUtils.CODE_STORAGE)
-    @AspectPermission(PermissionUtils.CODE_STORAGE)
+    @AspectPermission
     private void initDefaultPhotoNote() {
         new Thread(() -> {
             FilePathUtils.initDirs();

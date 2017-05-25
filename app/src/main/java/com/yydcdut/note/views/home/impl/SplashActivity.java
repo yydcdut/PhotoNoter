@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.yydcdut.note.R;
+import com.yydcdut.note.aspect.permission.RequestType;
 import com.yydcdut.note.presenters.home.impl.SplashPresenterImpl;
 import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.views.BaseActivity;
@@ -94,5 +95,10 @@ public class SplashActivity extends BaseActivity implements ISplashView {
     protected void onStart() {
         super.onStart();
         mSplashPresenter.onActivityStart();
+    }
+
+    @Override
+    public RequestType getRequestType() {
+        return new RequestType(this);
     }
 }

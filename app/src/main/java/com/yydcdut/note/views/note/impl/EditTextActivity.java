@@ -19,6 +19,7 @@ import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.yydcdut.note.R;
+import com.yydcdut.note.aspect.permission.RequestType;
 import com.yydcdut.note.presenters.note.impl.EditTextPresenterImpl;
 import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.Const;
@@ -413,5 +414,10 @@ public class EditTextActivity extends BaseActivity implements IEditTextView,
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         mHorizontalEditScrollView.handleResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public RequestType getRequestType() {
+        return new RequestType(this);
     }
 }

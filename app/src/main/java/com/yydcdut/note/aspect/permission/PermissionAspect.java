@@ -2,10 +2,12 @@ package com.yydcdut.note.aspect.permission;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.v13.app.FragmentCompat;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -34,17 +36,17 @@ import java.lang.reflect.Method;
 public class PermissionAspect {
     private static final String TAG = "yuyidong";
 
-    @Pointcut("execution(@com.yydcdut.note.aspect.permission.AspectPermission * *(..)) && @annotation(aspectPermission)")
-    public void pointcut2CheckAndRequestPermissions(AspectPermission aspectPermission) {
+    @Pointcut("execution(@com.yydcdut.note.aspect.permission.AspectPermission * *(..)) && @annotation(permission)")
+    public void pointcut2CheckAndRequestPermissions(Permission permission) {
     }
 
-    @Around("pointcut2CheckAndRequestPermissions(aspectPermission)")
-    public void aroundCheckAndRequestPermission(ProceedingJoinPoint proceedingJoinPoint, AspectPermission aspectPermission) {
-        if (aspectPermission == null) {
+    @Around("pointcut2CheckAndRequestPermissions(permission)")
+    public void aroundCheckAndRequestPermission(ProceedingJoinPoint proceedingJoinPoint, Permission permission) {
+        if (permission == null) {
             return;
         }
         IPresenter iPresenter = (IPresenter) proceedingJoinPoint.getTarget();
-        int value = aspectPermission.value();
+        int value = permission.value();
         switch (value) {
             case PermissionUtils.CODE_CAMERA:
             case PermissionUtils.CODE_ADJUST_CAMERA: {
@@ -55,11 +57,12 @@ public class PermissionAspect {
                         YLog.e(throwable);
                     }
                 } else {
-                    if (iPresenter.getContext() instanceof Activity) {
-                        requestPermissions((Activity) iPresenter.getContext(), PermissionInstance.context.getString(R.string.permission_camera_init),
+                    if (iPresenter.getIView().getRequestType().isActivity()) {
+                        requestPermissions4Activity(iPresenter.getIView().getRequestType().getActivity(), PermissionInstance.context.getString(R.string.permission_camera_init),
                                 PermissionUtils.PERMISSION_CAMERA, value);
                     } else {
-                        YLog.i(TAG, "iPresenter.getContext() instanceof Activity  -->   false");
+                        requestPermissions4Fragment(iPresenter.getIView().getRequestType().getFragment(), PermissionInstance.context.getString(R.string.permission_camera_init),
+                                PermissionUtils.PERMISSION_CAMERA, value);
                     }
                 }
             }
@@ -72,11 +75,12 @@ public class PermissionAspect {
                         YLog.e(throwable);
                     }
                 } else {
-                    if (iPresenter.getContext() instanceof Activity) {
-                        requestPermissions((Activity) iPresenter.getContext(), PermissionInstance.context.getString(R.string.permission_storage_init),
+                    if (iPresenter.getIView().getRequestType().isActivity()) {
+                        requestPermissions4Activity(iPresenter.getIView().getRequestType().getActivity(), PermissionInstance.context.getString(R.string.permission_storage_init),
                                 PermissionUtils.PERMISSION_STORAGE, value);
                     } else {
-                        YLog.i(TAG, "iPresenter.getContext() instanceof Activity  -->   false");
+                        requestPermissions4Fragment(iPresenter.getIView().getRequestType().getFragment(), PermissionInstance.context.getString(R.string.permission_storage_init),
+                                PermissionUtils.PERMISSION_STORAGE, value);
                     }
                 }
             }
@@ -89,11 +93,12 @@ public class PermissionAspect {
                         YLog.e(throwable);
                     }
                 } else {
-                    if (iPresenter.getContext() instanceof Activity) {
-                        requestPermissions((Activity) iPresenter.getContext(), PermissionInstance.context.getString(R.string.permission_location),
+                    if (iPresenter.getIView().getRequestType().isActivity()) {
+                        requestPermissions4Activity(iPresenter.getIView().getRequestType().getActivity(), PermissionInstance.context.getString(R.string.permission_location),
                                 PermissionUtils.PERMISSION_LOCATION_AND_CAMERA, value);
                     } else {
-                        YLog.i(TAG, "iPresenter.getContext() instanceof Activity  -->   false");
+                        requestPermissions4Fragment(iPresenter.getIView().getRequestType().getFragment(), PermissionInstance.context.getString(R.string.permission_location),
+                                PermissionUtils.PERMISSION_LOCATION_AND_CAMERA, value);
                     }
                 }
             }
@@ -106,11 +111,12 @@ public class PermissionAspect {
                         YLog.e(throwable);
                     }
                 } else {
-                    if (iPresenter.getContext() instanceof Activity) {
-                        requestPermissions((Activity) iPresenter.getContext(), PermissionInstance.context.getString(R.string.permission_audio),
+                    if (iPresenter.getIView().getRequestType().isActivity()) {
+                        requestPermissions4Activity(iPresenter.getIView().getRequestType().getActivity(), PermissionInstance.context.getString(R.string.permission_audio),
                                 PermissionUtils.PERMISSION_AUDIO, value);
                     } else {
-                        YLog.i(TAG, "iPresenter.getContext() instanceof Activity  -->   false");
+                        requestPermissions4Fragment(iPresenter.getIView().getRequestType().getFragment(), PermissionInstance.context.getString(R.string.permission_audio),
+                                PermissionUtils.PERMISSION_AUDIO, value);
                     }
                 }
             }
@@ -123,11 +129,12 @@ public class PermissionAspect {
                         YLog.e(throwable);
                     }
                 } else {
-                    if (iPresenter.getContext() instanceof Activity) {
-                        requestPermissions((Activity) iPresenter.getContext(), PermissionInstance.context.getString(R.string.permission_phone_state),
+                    if (iPresenter.getIView().getRequestType().isActivity()) {
+                        requestPermissions4Activity(iPresenter.getIView().getRequestType().getActivity(), PermissionInstance.context.getString(R.string.permission_phone_state),
                                 PermissionUtils.PERMISSION_PHONE_STATE, value);
                     } else {
-                        YLog.i(TAG, "iPresenter.getContext() instanceof Activity  -->   false");
+                        requestPermissions4Fragment(iPresenter.getIView().getRequestType().getFragment(), PermissionInstance.context.getString(R.string.permission_phone_state),
+                                PermissionUtils.PERMISSION_PHONE_STATE, value);
                     }
                 }
             }
@@ -137,6 +144,7 @@ public class PermissionAspect {
 
     @After("execution(* android.support.v4.app.FragmentActivity.onRequestPermissionsResult(..))")
     public void afterPermissionRequestBack(JoinPoint joinPoint) {
+        YLog.i(TAG, "afterPermissionRequestBack");
         Object[] objects = joinPoint.getArgs();
         Object object = joinPoint.getTarget();
         if (objects.length >= 1 && objects[0] instanceof Integer && object != null && object instanceof IView && ((IView) object).getPresenter() != null) {
@@ -183,8 +191,7 @@ public class PermissionAspect {
         }
     }
 
-    private static void requestPermissions(final @NonNull Activity activity, String explanation, final String[] permissions,
-                                           final int code) {
+    private static void requestPermissions4Activity(final @NonNull Activity activity, String explanation, final String[] permissions, final int code) {
         boolean shouldShowRationale = false;
         for (String permission : permissions) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
@@ -207,6 +214,31 @@ public class PermissionAspect {
             ActivityCompat.requestPermissions(activity, permissions, code);
         }
     }
+
+    private static void requestPermissions4Fragment(final @NonNull Fragment fragment, String explanation, final String[] permissions, final int code) {
+        boolean shouldShowRationale = false;
+        for (String permission : permissions) {
+            if (FragmentCompat.shouldShowRequestPermissionRationale(fragment, permission)) {
+                shouldShowRationale = true;
+                break;
+            }
+        }
+        if (shouldShowRationale) {
+            //explanation
+            AlertDialog dialog = new AlertDialog.Builder(fragment.getActivity(), R.style.note_dialog)
+                    .setTitle(R.string.permission_title)
+                    .setMessage(explanation)
+                    .setCancelable(false)
+                    .setPositiveButton(R.string.dialog_btn_ok, (dialogCallback, which) ->
+                            FragmentCompat.requestPermissions(fragment, permissions, code))
+                    .setNegativeButton(R.string.dialog_btn_cancel, null)
+                    .create();
+            dialog.show();
+        } else {
+            FragmentCompat.requestPermissions(fragment, permissions, code);
+        }
+    }
+
 
     private static boolean hasPermission4Camera(@NonNull Context context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {

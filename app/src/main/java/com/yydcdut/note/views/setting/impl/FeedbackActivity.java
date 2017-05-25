@@ -17,6 +17,7 @@ import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.TypeEvaluator;
 import com.nineoldandroids.animation.ValueAnimator;
 import com.yydcdut.note.R;
+import com.yydcdut.note.aspect.permission.RequestType;
 import com.yydcdut.note.presenters.setting.impl.FeedbackPresenterImpl;
 import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.Const;
@@ -176,6 +177,11 @@ public class FeedbackActivity extends BaseActivity implements IFeedbackView {
         if (wannaStartAnimation) {
             startSendingAnimation(() -> mFeedbackPresenter.sendFeedback(mEmailText.getText().toString(), mContentText.getText().toString()));
         }
+    }
+
+    @Override
+    public RequestType getRequestType() {
+        return new RequestType(this);
     }
 
 }

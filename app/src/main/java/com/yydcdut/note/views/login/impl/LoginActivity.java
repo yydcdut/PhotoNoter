@@ -10,6 +10,7 @@ import android.view.View;
 import com.evernote.client.android.EvernoteSession;
 import com.yydcdut.note.BuildConfig;
 import com.yydcdut.note.R;
+import com.yydcdut.note.aspect.permission.RequestType;
 import com.yydcdut.note.presenters.login.impl.LoginPresenterImpl;
 import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.views.BaseActivity;
@@ -151,5 +152,10 @@ public class LoginActivity extends BaseActivity implements ILoginView {
                 super.onActivityResult(requestCode, resultCode, data);
                 break;
         }
+    }
+
+    @Override
+    public RequestType getRequestType() {
+        return new RequestType(this);
     }
 }

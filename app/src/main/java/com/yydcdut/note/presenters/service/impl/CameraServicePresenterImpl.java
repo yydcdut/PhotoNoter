@@ -1,6 +1,5 @@
 package com.yydcdut.note.presenters.service.impl;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
@@ -54,17 +53,17 @@ public class CameraServicePresenterImpl implements ICameraServicePresenter {
     }
 
     @Override
-    public Context getContext() {
-        return null;
-    }
-
-    @Override
     public void attachView(IView iView) {
         mCameraServiceView = (ICameraServiceView) iView;
     }
 
     @Override
     public void detachView() {
+    }
+
+    @Override
+    public IView getIView() {
+        return mCameraServiceView;
     }
 
     @Override

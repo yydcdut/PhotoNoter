@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.yydcdut.note.R;
+import com.yydcdut.note.aspect.permission.RequestType;
 import com.yydcdut.note.presenters.note.impl.DetailFragPresenterImpl;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
@@ -114,5 +115,10 @@ public class DetailFragment extends BaseFragment implements IDetailFragView {
     @Override
     public void jump2ZoomActivity(int categoryId, int position, int comparator) {
         ZoomActivity.startActivityForResult(this, categoryId, position, comparator);
+    }
+
+    @Override
+    public RequestType getRequestType() {
+        return new RequestType(this);
     }
 }

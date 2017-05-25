@@ -1,6 +1,5 @@
 package com.yydcdut.note.presenters.home.impl;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -40,22 +39,15 @@ public class SplashPresenterImpl implements ISplashPresenter, Handler.Callback {
 
     private LocalStorageUtils mLocalStorageUtils;
     private RxSandBox mRxSandBox;
-    private Activity mActivity;
 
     private Context mContext;
 
     @Inject
-    public SplashPresenterImpl(@ContextLife("Activity") Context context, Activity activity,
+    public SplashPresenterImpl(@ContextLife("Activity") Context context,
                                LocalStorageUtils localStorageUtils, RxSandBox rxSandBox) {
         mLocalStorageUtils = localStorageUtils;
-        mActivity = activity;
         mRxSandBox = rxSandBox;
         mContext = context;
-    }
-
-    @Override
-    public Context getContext() {
-        return mContext;
     }
 
     @Override
@@ -134,6 +126,11 @@ public class SplashPresenterImpl implements ISplashPresenter, Handler.Callback {
 
     }
 
+    @Override
+    public IView getIView() {
+        return mSplashView;
+    }
+
     private void checkDisks() {
         if (!mLocalStorageUtils.isFirstTime()) {
             initFiles();
@@ -171,7 +168,7 @@ public class SplashPresenterImpl implements ISplashPresenter, Handler.Callback {
     }
 
     @Permission(PermissionUtils.CODE_STORAGE)
-    @AspectPermission(PermissionUtils.CODE_STORAGE)
+    @AspectPermission
     private void initFiles() {
         FilePathUtils.initDirs();
     }

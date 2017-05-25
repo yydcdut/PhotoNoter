@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.recycler.MediaPhotoAdapter;
 import com.yydcdut.note.adapter.recycler.vh.MediaPhotoViewHolder;
+import com.yydcdut.note.aspect.permission.RequestType;
 import com.yydcdut.note.entity.gallery.MediaFolder;
 import com.yydcdut.note.model.gallery.SelectPhotoModel;
 import com.yydcdut.note.presenters.gallery.impl.MediaPhotoPresenterImpl;
@@ -148,5 +149,8 @@ public class MediaPhotoFragment extends BaseFragment implements IMediaPhotoView,
         mMediaPhotoAdapter.notifyDataSetChanged();
     }
 
-
+    @Override
+    public RequestType getRequestType() {
+        return new RequestType(this);
+    }
 }

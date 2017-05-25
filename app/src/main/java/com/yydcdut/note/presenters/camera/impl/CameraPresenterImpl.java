@@ -140,11 +140,6 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
     }
 
     @Override
-    public Context getContext() {
-        return mContext;
-    }
-
-    @Override
     public void attachView(@NonNull IView iView) {
         mICameraView = (ICameraView) iView;
         mCurrentCameraId = mLocalStorageUtils.getCameraSaveCameraId();
@@ -312,6 +307,11 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
     public void detachView() {
         closeCamera();
         mLocationClient.stop();
+    }
+
+    @Override
+    public IView getIView() {
+        return mICameraView;
     }
 
     private void closeCamera() {
@@ -618,7 +618,7 @@ public class CameraPresenterImpl implements ICameraPresenter, Handler.Callback,
         return false;
     }
 
-    private void initLocation() {
+    private void initLocation() {//todo 封装，把Context弄掉
         mLocationClient = new LocationClient(mContext);
         mLocationClient.registerLocationListener(new BDLocationListener() {
             @Override

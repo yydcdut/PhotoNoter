@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.recycler.AlbumAdapter;
 import com.yydcdut.note.adapter.recycler.vh.PhotoViewHolder;
+import com.yydcdut.note.aspect.permission.RequestType;
 import com.yydcdut.note.entity.Category;
 import com.yydcdut.note.entity.PhotoNote;
 import com.yydcdut.note.presenters.home.impl.AlbumPresenterImpl;
@@ -765,4 +766,9 @@ public class AlbumFragment extends BaseFragment implements IAlbumView, View.OnCl
         }
 
     };
+
+    @Override
+    public RequestType getRequestType() {
+        return new RequestType(this);
+    }
 }

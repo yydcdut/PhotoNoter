@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.yydcdut.note.ICameraData;
 import com.yydcdut.note.R;
+import com.yydcdut.note.aspect.permission.RequestType;
 import com.yydcdut.note.presenters.camera.impl.CameraPresenterImpl;
 import com.yydcdut.note.service.CameraService;
 import com.yydcdut.note.utils.AppCompat;
@@ -445,5 +446,10 @@ public class CameraActivity extends BaseActivity implements ICameraView,
     @Override
     public void onTouched() {
         mFocusImage.delayDisappear();
+    }
+
+    @Override
+    public RequestType getRequestType() {
+        return new RequestType(this);
     }
 }

@@ -59,11 +59,6 @@ public class PhotoDetailPresenterImpl implements IPhotoDetailPresenter,
     }
 
     @Override
-    public Context getContext() {
-        return mContext;
-    }
-
-    @Override
     public void attachView(@NonNull IView iView) {
         mPhotoDetailView = (IPhotoDetailView) iView;
     }
@@ -138,6 +133,11 @@ public class PhotoDetailPresenterImpl implements IPhotoDetailPresenter,
     @Override
     public void detachView() {
 
+    }
+
+    @Override
+    public IView getIView() {
+        return mPhotoDetailView;
     }
 
     @Override

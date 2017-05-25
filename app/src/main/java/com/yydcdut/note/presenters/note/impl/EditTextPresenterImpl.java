@@ -108,11 +108,6 @@ public class EditTextPresenterImpl implements IEditTextPresenter {
     }
 
     @Override
-    public Context getContext() {
-        return mContext;
-    }
-
-    @Override
     public void attachView(IView iView) {
         mEditTextView = (IEditTextView) iView;
         mRxMDConfiguration = new RxMDConfiguration.Builder(mContext).build();
@@ -194,7 +189,7 @@ public class EditTextPresenterImpl implements IEditTextPresenter {
     }
 
     @Permission(PermissionUtils.CODE_AUDIO)
-    @AspectPermission(PermissionUtils.CODE_AUDIO)
+    @AspectPermission
     private void doVoiceInput() {
         mIsVoiceOpen = true;
         if (mIat == null) {
@@ -369,6 +364,11 @@ public class EditTextPresenterImpl implements IEditTextPresenter {
             mIat.cancel();
             mIat.destroy();
         }
+    }
+
+    @Override
+    public IView getIView() {
+        return mEditTextView;
     }
 
     private boolean doUpdate2Evernote(String bigPhotoPathWithoutFile, String photoName) {

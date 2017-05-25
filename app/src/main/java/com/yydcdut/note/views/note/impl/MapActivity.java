@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.MapView;
 import com.yydcdut.note.R;
+import com.yydcdut.note.aspect.permission.RequestType;
 import com.yydcdut.note.presenters.note.impl.MapPresenterImpl;
 import com.yydcdut.note.utils.AppCompat;
 import com.yydcdut.note.utils.Const;
@@ -112,5 +113,10 @@ public class MapActivity extends BaseActivity implements IMapView {
         setResult(RESULT_NOTHING, null);
         finish();
         overridePendingTransition(R.anim.activity_no_animation, R.anim.activity_no_animation);
+    }
+
+    @Override
+    public RequestType getRequestType() {
+        return new RequestType(this);
     }
 }

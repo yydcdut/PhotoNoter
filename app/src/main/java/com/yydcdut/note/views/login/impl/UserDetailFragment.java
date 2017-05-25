@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yydcdut.note.R;
+import com.yydcdut.note.aspect.permission.RequestType;
 import com.yydcdut.note.presenters.login.impl.UserDetailFragPresenterImpl;
 import com.yydcdut.note.utils.Const;
 import com.yydcdut.note.utils.ImageManager.ImageLoaderManager;
@@ -264,4 +265,8 @@ public class UserDetailFragment extends BaseFragment implements IUserDetailFragV
         }
     }
 
+    @Override
+    public RequestType getRequestType() {
+        return new RequestType(this);
+    }
 }

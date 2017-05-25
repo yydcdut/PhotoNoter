@@ -51,11 +51,6 @@ public class SettingPresenterImpl implements ISettingPresenter {
     }
 
     @Override
-    public Context getContext() {
-        return mContext;
-    }
-
-    @Override
     public void attachView(IView iView) {
         mSettingView = (ISettingView) iView;
         mSettingView.initPreferenceSetting();
@@ -92,6 +87,11 @@ public class SettingPresenterImpl implements ISettingPresenter {
 
     @Override
     public void detachView() {
+    }
+
+    @Override
+    public IView getIView() {
+        return mSettingView;
     }
 
     @Override
@@ -312,7 +312,7 @@ public class SettingPresenterImpl implements ISettingPresenter {
     }
 
     @Permission(PermissionUtils.CODE_CAMERA)
-    @AspectPermission(PermissionUtils.CODE_CAMERA)
+    @AspectPermission
     private void getPictureSizeWithPermission() {
         try {
             initCameraNumberAndPictureSize();
@@ -333,7 +333,7 @@ public class SettingPresenterImpl implements ISettingPresenter {
     }
 
     @Permission(PermissionUtils.CODE_ADJUST_CAMERA)
-    @AspectPermission(PermissionUtils.CODE_ADJUST_CAMERA)
+    @AspectPermission
     private void adjustCameraWithPermission() {
         try {
             initCameraNumberAndPictureSize();

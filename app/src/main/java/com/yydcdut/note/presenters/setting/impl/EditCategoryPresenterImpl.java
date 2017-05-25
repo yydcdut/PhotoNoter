@@ -68,11 +68,6 @@ public class EditCategoryPresenterImpl implements IEditCategoryPresenter, Handle
     }
 
     @Override
-    public Context getContext() {
-        return mContext;
-    }
-
-    @Override
     public void attachView(IView iView) {
         mHandler = new Handler(this);
         mDeleteCategoryIdList = new ArrayList<>();
@@ -91,6 +86,11 @@ public class EditCategoryPresenterImpl implements IEditCategoryPresenter, Handle
         }), (throwable -> YLog.e(throwable)));
         mRenameCategoryLabelMap.clear();
         mDeleteCategoryIdList.clear();
+    }
+
+    @Override
+    public IView getIView() {
+        return mEditCategoryView;
     }
 
     @Override

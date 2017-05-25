@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.list.CategoryAdapter;
+import com.yydcdut.note.aspect.permission.RequestType;
 import com.yydcdut.note.entity.Category;
 import com.yydcdut.note.presenters.home.IHomePresenter;
 import com.yydcdut.note.presenters.home.impl.HomePresenterImpl;
@@ -487,5 +488,10 @@ public class HomeActivity extends BaseActivity implements IHomeView, View.OnClic
 
     public void changeTitle(String title) {
         mToolbar.setTitle(title);
+    }
+
+    @Override
+    public RequestType getRequestType() {
+        return new RequestType(this);
     }
 }

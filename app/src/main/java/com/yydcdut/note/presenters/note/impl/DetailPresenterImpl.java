@@ -59,11 +59,6 @@ public class DetailPresenterImpl implements IDetailPresenter {
     }
 
     @Override
-    public Context getContext() {
-        return mContext;
-    }
-
-    @Override
     public void attachView(@NonNull IView iView) {
         mIDetailView = (IDetailView) iView;
         mIDetailView.setFontSystem(mLocalStorageUtils.getSettingFontSystem());
@@ -78,6 +73,11 @@ public class DetailPresenterImpl implements IDetailPresenter {
 
     @Override
     public void detachView() {
+    }
+
+    @Override
+    public IView getIView() {
+        return mIDetailView;
     }
 
     @Override
@@ -152,7 +152,7 @@ public class DetailPresenterImpl implements IDetailPresenter {
     }
 
     @Permission(PermissionUtils.CODE_PHONE_STATE)
-    @AspectPermission(PermissionUtils.CODE_PHONE_STATE)
+    @AspectPermission
     private void checkBaiduMapPermission() {
         SDKInitializer.initialize(mActivity.getApplication());
         mIDetailView.jump2MapActivity(mCategoryId, mIDetailView.getCurrentPosition(), mComparator);

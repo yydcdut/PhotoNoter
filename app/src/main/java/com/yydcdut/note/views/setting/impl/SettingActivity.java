@@ -19,6 +19,7 @@ import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.yydcdut.note.R;
+import com.yydcdut.note.aspect.permission.RequestType;
 import com.yydcdut.note.presenters.setting.IFeedbackPresenter;
 import com.yydcdut.note.presenters.setting.ISettingPresenter;
 import com.yydcdut.note.presenters.setting.impl.SettingPresenterImpl;
@@ -634,5 +635,10 @@ public class SettingActivity extends BaseActivity implements ISettingView, View.
 
     private void cancelDivider(View v) {
         v.findViewById(R.id.view_divider).setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public RequestType getRequestType() {
+        return new RequestType(this);
     }
 }

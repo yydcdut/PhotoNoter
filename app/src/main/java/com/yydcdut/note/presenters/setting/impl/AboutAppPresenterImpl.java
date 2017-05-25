@@ -24,11 +24,6 @@ public class AboutAppPresenterImpl implements IAboutAppPresenter {
     }
 
     @Override
-    public Context getContext() {
-        return mContext;
-    }
-
-    @Override
     public void attachView(IView iView) {
         mAboutAppView = (IAboutAppView) iView;
         mAboutAppView.showVersion(PhoneUtils.getVersion(mContext));
@@ -36,7 +31,11 @@ public class AboutAppPresenterImpl implements IAboutAppPresenter {
 
     @Override
     public void detachView() {
+    }
 
+    @Override
+    public IView getIView() {
+        return mAboutAppView;
     }
 
     @Override

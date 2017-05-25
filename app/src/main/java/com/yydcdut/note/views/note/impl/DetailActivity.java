@@ -26,6 +26,7 @@ import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.yydcdut.note.R;
 import com.yydcdut.note.adapter.vp.DetailPagerAdapter;
+import com.yydcdut.note.aspect.permission.RequestType;
 import com.yydcdut.note.entity.PhotoNote;
 import com.yydcdut.note.presenters.note.impl.DetailPresenterImpl;
 import com.yydcdut.note.utils.AppCompat;
@@ -511,5 +512,10 @@ public class DetailActivity extends BaseActivity implements IDetailView,
     @Override
     public void showSnackBar(String content) {
         Toast.makeText(this, content, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public RequestType getRequestType() {
+        return new RequestType(this);
     }
 }

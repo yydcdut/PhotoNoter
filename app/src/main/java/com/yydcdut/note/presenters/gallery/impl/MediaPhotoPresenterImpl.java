@@ -47,11 +47,6 @@ public class MediaPhotoPresenterImpl implements IMediaPhotoPresenter {
     }
 
     @Override
-    public Context getContext() {
-        return mContext;
-    }
-
-    @Override
     public void attachView(@NonNull IView iView) {
         mIMediaPhotoView = (IMediaPhotoView) iView;
         initListNavigationData();
@@ -77,6 +72,11 @@ public class MediaPhotoPresenterImpl implements IMediaPhotoPresenter {
     @Override
     public void detachView() {
 
+    }
+
+    @Override
+    public IView getIView() {
+        return mIMediaPhotoView;
     }
 
     @Override

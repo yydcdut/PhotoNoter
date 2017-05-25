@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.yydcdut.note.R;
+import com.yydcdut.note.aspect.permission.RequestType;
 import com.yydcdut.note.presenters.setting.IFeedbackPresenter;
 import com.yydcdut.note.presenters.setting.impl.AboutAppPresenterImpl;
 import com.yydcdut.note.utils.AppCompat;
@@ -130,5 +131,10 @@ public class AboutAppActivity extends BaseActivity implements IAboutAppView {
         bundle.putString(Const.WEBVIEW_URL, "https://github.com/yydcdut/PhotoNoter");
         intent.putExtras(bundle);
         startActivity(intent);
+    }
+
+    @Override
+    public RequestType getRequestType() {
+        return new RequestType(this);
     }
 }

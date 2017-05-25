@@ -42,11 +42,6 @@ public class GalleryPresenterImpl implements IGalleryPresenter {
     }
 
     @Override
-    public Context getContext() {
-        return mContext;
-    }
-
-    @Override
     public void attachView(@NonNull IView iView) {
         mIGalleryView = (IGalleryView) iView;
     }
@@ -92,6 +87,11 @@ public class GalleryPresenterImpl implements IGalleryPresenter {
     public void detachView() {
         mRxGalleryPhotos.clear();
         mSelectPhotoModel.clear();
+    }
+
+    @Override
+    public IView getIView() {
+        return mIGalleryView;
     }
 
     @Override
