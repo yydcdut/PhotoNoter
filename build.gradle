@@ -6,11 +6,8 @@ buildscript {
     }
 
     dependencies {
-//        classpath 'com.android.tools.build:gradle:3.0.0-alpha1'//new
         classpath 'com.android.tools.build:gradle:3.0.0-alpha1'//new
-//        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
-//        classpath 'me.tatarka:gradle-retrolambda:3.2.0'
-//        classpath 'com.frogermcs.androiddevmetrics:androiddevmetrics-plugin:0.4'
+        classpath 'com.frogermcs.androiddevmetrics:androiddevmetrics-plugin:0.4'
         classpath 'org.aspectj:aspectjtools:1.8.9'
         classpath 'org.aspectj:aspectjweaver:1.8.9'
     }
