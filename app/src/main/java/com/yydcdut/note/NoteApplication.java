@@ -32,7 +32,6 @@ import java.io.IOException;
  * Created by yyd on 15-3-29.
  */
 public class NoteApplication extends Application {
-    private static final String TAG = NoteApplication.class.getSimpleName();
 
     private ApplicationComponent mApplicationComponent;
 
@@ -70,9 +69,9 @@ public class NoteApplication extends Application {
         PermissionInstance.init(this);
 
         //打点
+        MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
         MobclickAgent.setDebugMode(BuildConfig.LOG_DEBUG);
         MobclickAgent.openActivityDurationTrack(true);
-        MobclickAgent.updateOnlineConfig(this);
         MobclickAgent.setCatchUncaughtExceptions(!BuildConfig.LOG_DEBUG);
 
 //        CrashHandler.getInstance().init(getApplicationContext());

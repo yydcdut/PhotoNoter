@@ -156,7 +156,7 @@ ext {
     butterknifeVersion = '8.6.0'
 }
 dependencies {
-    //    compile fileTree(include: ['*.jar'], dir: 'src/libs')
+    compile fileTree(include: ['*.jar'], dir: 'src/libs')
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportVersion}"
     implementation "com.android.support:support-v13:${rootProject.ext.supportVersion}"
     implementation "com.nineoldandroids:library:2.4.0"
@@ -172,22 +172,14 @@ dependencies {
     implementation 'com.yydcdut:rxmarkdown:0.1.0'
     implementation "com.google.dagger:dagger:${dagger2Version}"
     annotationProcessor "com.google.dagger:dagger-compiler:${dagger2Version}"
-//    compile "com.google.dagger:dagger-android-support:${dagger2Version}"
-//    annotationProcessor "com.google.dagger:dagger-android-processor:${dagger2Version}"
     implementation "io.reactivex:rxandroid:1.2.0"
     implementation "io.reactivex:rxjava:1.1.5"
     implementation "org.greenrobot:eventbus:3.0.0"
     compileOnly "org.glassfish:javax.annotation:10.0-b28"
+    implementation 'com.umeng.analytics:analytics:6.1.0'
     implementation "com.commit451:PhotoView:1.2.4"
     implementation 'org.aspectj:aspectjrt:1.8.9'
     implementation "com.android.support:multidex:1.0.1"
-    implementation files("src/libs/umeng-analytics-v5.5.3.jar")
-    implementation files("src/libs/mta-sdk-1.6.2.jar")
-    implementation files("src/libs/open_sdk_r5043.jar")
-    implementation files("src/libs/BaiduLBS_Android.jar")
-    implementation files("src/libs/Msc.jar")
-    implementation files("src/libs/Sunflower.jar")
-    implementation files('src/libs/universal-image-loader-1.9.4.jar')
     debugImplementation "com.squareup.leakcanary:leakcanary-android:${leakcanaryVersion}"
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${leakcanaryVersion}"
     debugImplementation "com.github.markzhai:blockcanary-android:${blockcanaryVersion}"
