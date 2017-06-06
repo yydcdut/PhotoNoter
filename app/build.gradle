@@ -17,9 +17,15 @@ android {
         renderscriptSupportModeEnabled true
         multiDexEnabled true
 
+        externalNativeBuild {
+            ndkBuild {
+                abiFilters "armeabi-v7a"//, "armeabi", "arm64-v8a", "x86", "x86_64", "mips", "mips64"
+            }
+        }
+
         ndk {
-            moduleName = "blur"
-            ldLibs "log", "z", "m", "jnigraphics"
+//            moduleName = "blur"
+//            ldLibs "log", "z", "m", "jnigraphics"
             abiFilters "armeabi-v7a"//, "armeabi", "arm64-v8a", "x86", "x86_64", "mips", "mips64"
         }
 
@@ -27,6 +33,12 @@ android {
         buildConfigField "String", "EVERNOTE_CONSUMER_SECRET", (project.hasProperty('EVERNOTE_CONSUMER_SECRET') ? "\"$EVERNOTE_CONSUMER_SECRET\"" : "\"Your consumer secret\"")
         buildConfigField "String", "TENCENT_KEY", (project.hasProperty('TENCENT_KEY') ? "\"$TENCENT_KEY\"" : "\"TENCENT_KEY\"")
         buildConfigField "String", "SPEECH_ID", (project.hasProperty('SPEECH_ID') ? "\"$SPEECH_ID\"" : "\"SPEECH_ID\"")
+    }
+
+    externalNativeBuild {
+        cmake {
+            path "CMakeLists.txt"
+        }
     }
 
     tasks.withType(JavaCompile) {
@@ -56,12 +68,12 @@ android {
 
     signingConfigs {
         release {
-//            Properties p = new Properties()
-//            p.load(new FileInputStream(project.file('release.properties')))
-//            storeFile file(p.storeFile)
-//            storePassword p.storePassword
-//            keyAlias p.keyAlias
-//            keyPassword p.keyPassword
+            Properties p = new Properties()
+            p.load(new FileInputStream(project.file('release.properties')))
+            storeFile file(p.storeFile)
+            storePassword p.storePassword
+            keyAlias p.keyAlias
+            keyPassword p.keyPassword
         }
         debug {
             storeFile file("debug.keystore")
@@ -70,7 +82,7 @@ android {
 
     buildTypes {
         release {
-            shrinkResources true
+//            shrinkResources true
             signingConfig signingConfigs.release
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.cfg'
@@ -88,11 +100,11 @@ android {
         jniLibs.srcDir 'src/libs'
     }
 
-    flavorDimensions 'dev'
+    flavorDimensions 'dev1'
 
     productFlavors {
         dev {
-            dimension 'dev'
+            dimension 'dev1'
         }
 //        Store360 {}
 //        QQ {}
@@ -117,7 +129,7 @@ android {
         flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
     }
 
-    sourceSets { main { jni.srcDirs = ['src/main/jni'] } }
+//    sourceSets { main { jni.srcDirs = ['src/main/jni'] } }
 }
 
 //afterEvaluate {

@@ -29,6 +29,6 @@ proguard/
 /.idea
 *.iml
 /.DS_Store
-*.txt
+/*.txt
 
 .sonar

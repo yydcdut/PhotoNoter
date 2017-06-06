@@ -15,10 +15,10 @@ class AspectBuildPlugin implements Plugin<Project> {
         final def variants = project.android.applicationVariants
 
         variants.all { variant ->
-            if (!variant.buildType.isDebuggable()) {
-                log.debug("Skipping non-debuggable build type '${variant.buildType.name}'.")
-                return
-            }
+//            if (!variant.buildType.isDebuggable()) {
+//                log.debug("Skipping non-debuggable build type '${variant.buildType.name}'.")
+//                return
+//            }
 
             JavaCompile javaCompile = variant.javaCompile
             javaCompile.doLast {

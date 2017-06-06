@@ -56,8 +56,7 @@ static int *StackBlur(int *pix, int w, int h, int radius) {
                 rinsum += sir[0];
                 ginsum += sir[1];
                 binsum += sir[2];
-            }
-            else {
+            } else {
                 routsum += sir[0];
                 goutsum += sir[1];
                 boutsum += sir[2];
@@ -136,8 +135,7 @@ static int *StackBlur(int *pix, int w, int h, int radius) {
                 rinsum += sir[0];
                 ginsum += sir[1];
                 binsum += sir[2];
-            }
-            else {
+            } else {
                 routsum += sir[0];
                 goutsum += sir[1];
                 boutsum += sir[2];
@@ -235,4 +233,3 @@ Java_com_yydcdut_note_utils_RxImageBlur_blur(JNIEnv *env, jobject instance, jobj
     // Unlocks everything
     AndroidBitmap_unlockPixels(env, bitmap);
 }
-
