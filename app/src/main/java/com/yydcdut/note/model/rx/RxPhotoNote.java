@@ -81,30 +81,25 @@ public class RxPhotoNote {
                 .subscribeOn(Schedulers.io())
                 .map(photoNote1 -> mPhotoNoteDB.update(photoNote1))//更新
                 .map(integer -> categoryId)//得到CategoryId
-                .lift(new Observable.Operator<List<PhotoNote>, Integer>() {
+                .lift(subscriber -> new Subscriber<Integer>() {
+                    private int mCategoryId = -1;
+
                     @Override
-                    public Subscriber<? super Integer> call(Subscriber<? super List<PhotoNote>> subscriber) {
-                        return new Subscriber<Integer>() {
-                            private int mCategoryId = -1;
+                    public void onCompleted() {
+                        if (mCategoryId != -1) {
+                            subscriber.onNext(mCache.get(mCategoryId));
+                            subscriber.onCompleted();
+                        }
+                    }
 
-                            @Override
-                            public void onCompleted() {
-                                if (mCategoryId != -1) {
-                                    subscriber.onNext(mCache.get(mCategoryId));
-                                    subscriber.onCompleted();
-                                }
-                            }
+                    @Override
+                    public void onError(Throwable e) {
 
-                            @Override
-                            public void onError(Throwable e) {
+                    }
 
-                            }
-
-                            @Override
-                            public void onNext(Integer integer) {
-                                mCategoryId = integer;
-                            }
-                        };
+                    @Override
+                    public void onNext(Integer integer) {
+                        mCategoryId = integer;
                     }
                 });
 
@@ -126,31 +121,26 @@ public class RxPhotoNote {
                 .map(photoNote1 -> mPhotoNoteDB.save(photoNote1))
                 .filter(aLong -> aLong != -1)
                 .map(aLong1 -> mPhotoNoteDB.findByPhotoNoteId(aLong1))
-                .lift(new Observable.Operator<List<PhotoNote>, PhotoNote>() {
+                .lift(subscriber -> new Subscriber<PhotoNote>() {
+                    private int mCategoryId = -1;
+
                     @Override
-                    public Subscriber<? super PhotoNote> call(Subscriber<? super List<PhotoNote>> subscriber) {
-                        return new Subscriber<PhotoNote>() {
-                            private int mCategoryId = -1;
+                    public void onCompleted() {
+                        if (mCategoryId != -1) {
+                            mCache.remove(mCategoryId);
+                            mCache.put(mCategoryId, mPhotoNoteDB.findByCategoryId(mCategoryId));
+                            subscriber.onNext(mCache.get(mCategoryId));
+                            subscriber.onCompleted();
+                        }
+                    }
 
-                            @Override
-                            public void onCompleted() {
-                                if (mCategoryId != -1) {
-                                    mCache.remove(mCategoryId);
-                                    mCache.put(mCategoryId, mPhotoNoteDB.findByCategoryId(mCategoryId));
-                                    subscriber.onNext(mCache.get(mCategoryId));
-                                    subscriber.onCompleted();
-                                }
-                            }
+                    @Override
+                    public void onError(Throwable e) {
+                    }
 
-                            @Override
-                            public void onError(Throwable e) {
-                            }
-
-                            @Override
-                            public void onNext(PhotoNote photoNote) {
-                                mCategoryId = photoNote.getId();
-                            }
-                        };
+                    @Override
+                    public void onNext(PhotoNote photoNote) {
+                        mCategoryId = photoNote.getId();
                     }
                 });
     }
@@ -178,27 +168,22 @@ public class RxPhotoNote {
                 .subscribeOn(Schedulers.io())
                 .map(photoNote1 -> mPhotoNoteDB.delete(photoNote1))//做删除操作
                 .filter(integer -> integer > 0)//返回的是删除的条数
-                .lift(new Observable.Operator<List<PhotoNote>, Integer>() {
+                .lift(subscriber -> new Subscriber<Integer>() {
                     @Override
-                    public Subscriber<? super Integer> call(Subscriber<? super List<PhotoNote>> subscriber) {
-                        return new Subscriber<Integer>() {
-                            @Override
-                            public void onCompleted() {
-                                mCache.remove(categoryId);
-                                mCache.put(categoryId, mPhotoNoteDB.findByCategoryId(categoryId));
-                                subscriber.onNext(mCache.get(categoryId));
-                                subscriber.onCompleted();
-                            }
+                    public void onCompleted() {
+                        mCache.remove(categoryId);
+                        mCache.put(categoryId, mPhotoNoteDB.findByCategoryId(categoryId));
+                        subscriber.onNext(mCache.get(categoryId));
+                        subscriber.onCompleted();
+                    }
 
-                            @Override
-                            public void onError(Throwable e) {
+                    @Override
+                    public void onError(Throwable e) {
 
-                            }
+                    }
 
-                            @Override
-                            public void onNext(Integer integer) {
-                            }
-                        };
+                    @Override
+                    public void onNext(Integer integer) {
                     }
                 });
     }
@@ -218,22 +203,16 @@ public class RxPhotoNote {
     }
 
     public Observable<Integer> getAllPhotoNotesNumber() {
-        return Observable.create(new Observable.OnSubscribe<Integer>() {
-            @Override
-            public void call(Subscriber<? super Integer> subscriber) {
-                subscriber.onNext(mPhotoNoteDB.getAllNumber());
-                subscriber.onCompleted();
-            }
+        return Observable.create(subscriber -> {
+            subscriber.onNext(mPhotoNoteDB.getAllNumber());
+            subscriber.onCompleted();
         });
     }
 
     public Observable<Integer> getWordsNumber() {
-        return Observable.create(new Observable.OnSubscribe<Integer>() {
-            @Override
-            public void call(Subscriber<? super Integer> subscriber) {
-                subscriber.onNext(mPhotoNoteDB.getWordsNumber());
-                subscriber.onCompleted();
-            }
+        return Observable.create(subscriber -> {
+            subscriber.onNext(mPhotoNoteDB.getWordsNumber());
+            subscriber.onCompleted();
         });
     }
 

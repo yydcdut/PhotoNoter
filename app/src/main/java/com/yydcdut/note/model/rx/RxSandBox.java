@@ -11,7 +11,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import rx.Observable;
-import rx.Subscriber;
 import rx.schedulers.Schedulers;
 
 /**
@@ -31,12 +30,9 @@ public class RxSandBox {
      * @return
      */
     public Observable<SandPhoto> findFirstOne() {
-        return Observable.create(new Observable.OnSubscribe<SandPhoto>() {
-            @Override
-            public void call(Subscriber<? super SandPhoto> subscriber) {
-                subscriber.onNext(mSandBoxDB.findFirstOne());
-                subscriber.onCompleted();
-            }
+        return Observable.create((Observable.OnSubscribe<SandPhoto>) subscriber -> {
+            subscriber.onNext(mSandBoxDB.findFirstOne());
+            subscriber.onCompleted();
         }).subscribeOn(Schedulers.io());
     }
 
@@ -44,12 +40,9 @@ public class RxSandBox {
      * 找到所有
      */
     public Observable<List<SandPhoto>> findAll() {
-        return Observable.create(new Observable.OnSubscribe<List<SandPhoto>>() {
-            @Override
-            public void call(Subscriber<? super List<SandPhoto>> subscriber) {
-                subscriber.onNext(mSandBoxDB.finaAll());
-                subscriber.onCompleted();
-            }
+        return Observable.create((Observable.OnSubscribe<List<SandPhoto>>) subscriber -> {
+            subscriber.onNext(mSandBoxDB.finaAll());
+            subscriber.onCompleted();
         }).subscribeOn(Schedulers.io());
     }
 
@@ -60,12 +53,7 @@ public class RxSandBox {
      * @return
      */
     public Observable<SandPhoto> saveOne(SandPhoto sandPhoto) {
-        return Observable.create(new Observable.OnSubscribe<Long>() {
-            @Override
-            public void call(Subscriber<? super Long> subscriber) {
-                subscriber.onNext(mSandBoxDB.save(sandPhoto));
-            }
-        })
+        return Observable.create((Observable.OnSubscribe<Long>) subscriber -> subscriber.onNext(mSandBoxDB.save(sandPhoto)))
                 .subscribeOn(Schedulers.io())
                 .map(aLong -> mSandBoxDB.findById(aLong));
     }
@@ -85,12 +73,9 @@ public class RxSandBox {
      * 得到sandPhoto数量
      */
     public Observable<Integer> getNumber() {
-        return Observable.create(new Observable.OnSubscribe<Integer>() {
-            @Override
-            public void call(Subscriber<? super Integer> subscriber) {
-                subscriber.onNext(mSandBoxDB.getAllNumber());
-                subscriber.onCompleted();
-            }
+        return Observable.create((Observable.OnSubscribe<Integer>) subscriber -> {
+            subscriber.onNext(mSandBoxDB.getAllNumber());
+            subscriber.onCompleted();
         }).subscribeOn(Schedulers.io());
     }
 }

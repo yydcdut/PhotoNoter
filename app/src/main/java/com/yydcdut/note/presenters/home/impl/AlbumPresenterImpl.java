@@ -35,7 +35,6 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -270,12 +269,7 @@ public class AlbumPresenterImpl implements IAlbumPresenter {
      * @return
      */
     private TreeMap<Integer, PhotoNote> getTreeMap() {
-        return new TreeMap<>(new Comparator<Integer>() {
-            @Override
-            public int compare(Integer lhs, Integer rhs) {
-                return lhs - rhs;
-            }
-        });
+        return new TreeMap<>((lhs, rhs) -> lhs - rhs);
     }
 
     @Override
@@ -433,24 +427,19 @@ public class AlbumPresenterImpl implements IAlbumPresenter {
                     }
                     return photoNote;
                 })
-                .lift(new Observable.Operator<Integer, PhotoNote>() {
+                .lift((Observable.Operator<Integer, PhotoNote>) subscriber -> new Subscriber<PhotoNote>() {
                     @Override
-                    public Subscriber<? super PhotoNote> call(Subscriber<? super Integer> subscriber) {
-                        return new Subscriber<PhotoNote>() {
-                            @Override
-                            public void onCompleted() {
-                                subscriber.onNext(mCategoryId);
-                                subscriber.onCompleted();
-                            }
+                    public void onCompleted() {
+                        subscriber.onNext(mCategoryId);
+                        subscriber.onCompleted();
+                    }
 
-                            @Override
-                            public void onError(Throwable e) {
-                            }
+                    @Override
+                    public void onError(Throwable e) {
+                    }
 
-                            @Override
-                            public void onNext(PhotoNote photoNote) {
-                            }
-                        };
+                    @Override
+                    public void onNext(PhotoNote photoNote) {
                     }
                 })
                 .doOnSubscribe(() -> mAlbumView.showProgressBar())

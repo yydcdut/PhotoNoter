@@ -14,7 +14,6 @@ import com.yydcdut.note.widget.camera.AutoFitPreviewView;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -71,12 +70,7 @@ public class CameraModelImpl implements ICameraModel {
         mCameraSettingModel = new CameraSettingModel(mCamera);
         if (pictureSize == null) {
             List<Size> list = mCameraSettingModel.getSupportPictureSizes();
-            Collections.sort(list, new Comparator<Size>() {
-                @Override
-                public int compare(Size lhs, Size rhs) {
-                    return -(rhs.getWidth() * rhs.getHeight() - lhs.getWidth() * lhs.getHeight());
-                }
-            });
+            Collections.sort(list, (lhs, rhs) -> -(rhs.getWidth() * rhs.getHeight() - lhs.getWidth() * lhs.getHeight()));
             pictureSize = list.get(list.size() - 1);
         }
         mCameraSettingModel.setPictureSize(pictureSize.getWidth(), pictureSize.getHeight());

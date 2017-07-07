@@ -88,53 +88,44 @@ public class RxUser {
     }
 
     public Observable<Boolean> isLoginQQ() {
-        return Observable.create(new Observable.OnSubscribe<Boolean>() {
-            @Override
-            public void call(Subscriber<? super Boolean> subscriber) {
-                String name = mSharedPreferences.getString(Q_NAME, NAME_DEFAULT);
-                String netImagePath = mSharedPreferences.getString(Q_NET_IMAGE_PATH, Q_NET_IMAGE_PATH_DEFAULT);
-                if (TextUtils.isEmpty(name) || TextUtils.isEmpty(netImagePath)) {
-                    subscriber.onNext(false);
-                } else {
-                    subscriber.onNext(true);
-                }
-                subscriber.onCompleted();
+        return Observable.create((Observable.OnSubscribe<Boolean>) subscriber -> {
+            String name = mSharedPreferences.getString(Q_NAME, NAME_DEFAULT);
+            String netImagePath = mSharedPreferences.getString(Q_NET_IMAGE_PATH, Q_NET_IMAGE_PATH_DEFAULT);
+            if (TextUtils.isEmpty(name) || TextUtils.isEmpty(netImagePath)) {
+                subscriber.onNext(false);
+            } else {
+                subscriber.onNext(true);
             }
+            subscriber.onCompleted();
         }).subscribeOn(Schedulers.io());
     }
 
     public Observable<IUser> getQQ() {
-        return Observable.create(new Observable.OnSubscribe<IUser>() {
-            @Override
-            public void call(Subscriber<? super IUser> subscriber) {
-                if (mQQUser == null) {
-                    String name = mSharedPreferences.getString(Q_NAME, NAME_DEFAULT);
-                    String netImagePath = mSharedPreferences.getString(Q_NET_IMAGE_PATH, Q_NET_IMAGE_PATH_DEFAULT);
-                    if (TextUtils.isEmpty(name) || TextUtils.isEmpty(netImagePath)) {
-                        subscriber.onError(new RxException("没有登录！！！"));
-                        return;
-                    } else {
-                        mQQUser = new QQUser(name, netImagePath);
-                    }
+        return Observable.create((Observable.OnSubscribe<IUser>) subscriber -> {
+            if (mQQUser == null) {
+                String name = mSharedPreferences.getString(Q_NAME, NAME_DEFAULT);
+                String netImagePath = mSharedPreferences.getString(Q_NET_IMAGE_PATH, Q_NET_IMAGE_PATH_DEFAULT);
+                if (TextUtils.isEmpty(name) || TextUtils.isEmpty(netImagePath)) {
+                    subscriber.onError(new RxException("没有登录！！！"));
+                    return;
+                } else {
+                    mQQUser = new QQUser(name, netImagePath);
                 }
-                subscriber.onNext(mQQUser);
-                subscriber.onCompleted();
             }
+            subscriber.onNext(mQQUser);
+            subscriber.onCompleted();
         }).subscribeOn(Schedulers.io());
     }
 
     public Observable<Boolean> logoutQQ() {
-        return Observable.create(new Observable.OnSubscribe<Boolean>() {
-            @Override
-            public void call(Subscriber<? super Boolean> subscriber) {
-                SharedPreferences.Editor editor = mSharedPreferences.edit();
-                editor.putString(Q_NAME, NULL);
-                editor.putString(Q_NET_IMAGE_PATH, NULL);
-                editor.commit();
-                mQQUser = null;
-                subscriber.onNext(true);
-                subscriber.onCompleted();
-            }
+        return Observable.create((Observable.OnSubscribe<Boolean>) subscriber -> {
+            SharedPreferences.Editor editor = mSharedPreferences.edit();
+            editor.putString(Q_NAME, NULL);
+            editor.putString(Q_NET_IMAGE_PATH, NULL);
+            editor.commit();
+            mQQUser = null;
+            subscriber.onNext(true);
+            subscriber.onCompleted();
         }).subscribeOn(Schedulers.io());
     }
 
@@ -144,35 +135,27 @@ public class RxUser {
             mQQActivity = null;
         }
         mQQActivity = new WeakReference<>(activity);
-        return Observable.create(new Observable.OnSubscribe<UserInfo>() {
-            @Override
-            public void call(Subscriber<? super UserInfo> subscriber) {
-                if (mTencent == null) {
-                    mTencent = Tencent.createInstance(BuildConfig.TENCENT_KEY, mContext);
-                }
-                mTencent.login(mQQActivity.get(), "all", new BaseUiListener(subscriber));
+        return Observable.create((Observable.OnSubscribe<UserInfo>) subscriber -> {
+            if (mTencent == null) {
+                mTencent = Tencent.createInstance(BuildConfig.TENCENT_KEY, mContext);
             }
+            mTencent.login(mQQActivity.get(), "all", new BaseUiListener(subscriber));
         })
                 .subscribeOn(Schedulers.io())
-                .lift(new Observable.Operator<IUser, UserInfo>() {
+                .lift(subscriber -> new Subscriber<UserInfo>() {
                     @Override
-                    public Subscriber<? super UserInfo> call(Subscriber<? super IUser> subscriber) {
-                        return new Subscriber<UserInfo>() {
-                            @Override
-                            public void onCompleted() {
-                                subscriber.onCompleted();
-                            }
+                    public void onCompleted() {
+                        subscriber.onCompleted();
+                    }
 
-                            @Override
-                            public void onError(Throwable e) {
-                                subscriber.onError(e);
-                            }
+                    @Override
+                    public void onError(Throwable e) {
+                        subscriber.onError(e);
+                    }
 
-                            @Override
-                            public void onNext(UserInfo userInfo) {
-                                userInfo.getUserInfo(new UserInfoUiListener(subscriber));
-                            }
-                        };
+                    @Override
+                    public void onNext(UserInfo userInfo) {
+                        userInfo.getUserInfo(new UserInfoUiListener(subscriber));
                     }
                 });
     }
@@ -299,61 +282,52 @@ public class RxUser {
     }
 
     public Observable<Boolean> isLoginEvernote() {
-        return Observable.create(new Observable.OnSubscribe<Boolean>() {
-            @Override
-            public void call(Subscriber<? super Boolean> subscriber) {
-                String name = mSharedPreferences.getString(EVERNOTE_NAME, NAME_DEFAULT);
-                if (TextUtils.isEmpty(name)) {
-                    subscriber.onNext(false);
-                } else {
-                    subscriber.onNext(true);
-                }
-                subscriber.onCompleted();
+        return Observable.create((Observable.OnSubscribe<Boolean>) subscriber -> {
+            String name = mSharedPreferences.getString(EVERNOTE_NAME, NAME_DEFAULT);
+            if (TextUtils.isEmpty(name)) {
+                subscriber.onNext(false);
+            } else {
+                subscriber.onNext(true);
             }
+            subscriber.onCompleted();
         }).subscribeOn(Schedulers.io());
     }
 
     public Observable<IUser> getEvernote() {
-        return Observable.create(new Observable.OnSubscribe<IUser>() {
-            @Override
-            public void call(Subscriber<? super IUser> subscriber) {
-                if (mEvernoteUser == null) {
-                    String name = mSharedPreferences.getString(EVERNOTE_NAME, NAME_DEFAULT);
-                    if (TextUtils.isEmpty(name)) {
-                        subscriber.onError(new RxException("没有登录！！！"));
-                    } else {
-                        mEvernoteUser = new EvernoteUser(name);
-                    }
+        return Observable.create((Observable.OnSubscribe<IUser>) subscriber -> {
+            if (mEvernoteUser == null) {
+                String name = mSharedPreferences.getString(EVERNOTE_NAME, NAME_DEFAULT);
+                if (TextUtils.isEmpty(name)) {
+                    subscriber.onError(new RxException("没有登录！！！"));
+                } else {
+                    mEvernoteUser = new EvernoteUser(name);
                 }
-                subscriber.onNext(mEvernoteUser);
-                subscriber.onCompleted();
             }
+            subscriber.onNext(mEvernoteUser);
+            subscriber.onCompleted();
         }).subscribeOn(Schedulers.io());
     }
 
     public Observable<Boolean> logoutEvernote() {
-        return Observable.create(new Observable.OnSubscribe<Boolean>() {
-            @Override
-            public void call(Subscriber<? super Boolean> subscriber) {
-                SharedPreferences.Editor editor = mSharedPreferences.edit();
-                editor.putString(EVERNOTE_NAME, NULL);
-                editor.commit();
-                if (mEvernoteSession == null) {
-                    mEvernoteSession = new EvernoteSession.Builder(mContext)
-                            .setLocale(Locale.SIMPLIFIED_CHINESE)
-                            .setEvernoteService(EVERNOTE_SERVICE)
-                            .setSupportAppLinkedNotebooks(SUPPORT_APP_LINKED_NOTEBOOKS)
-                            .setForceAuthenticationInThirdPartyApp(true)
-                            .build(BuildConfig.EVERNOTE_CONSUMER_KEY, BuildConfig.EVERNOTE_CONSUMER_SECRET)
-                            .asSingleton();
-                }
-                if (mEvernoteSession.isLoggedIn()) {
-                    mEvernoteSession.logOut();
-                }
-                mEvernoteUser = null;
-                subscriber.onNext(true);
-                subscriber.onCompleted();
+        return Observable.create((Observable.OnSubscribe<Boolean>) subscriber -> {
+            SharedPreferences.Editor editor = mSharedPreferences.edit();
+            editor.putString(EVERNOTE_NAME, NULL);
+            editor.commit();
+            if (mEvernoteSession == null) {
+                mEvernoteSession = new EvernoteSession.Builder(mContext)
+                        .setLocale(Locale.SIMPLIFIED_CHINESE)
+                        .setEvernoteService(EVERNOTE_SERVICE)
+                        .setSupportAppLinkedNotebooks(SUPPORT_APP_LINKED_NOTEBOOKS)
+                        .setForceAuthenticationInThirdPartyApp(true)
+                        .build(BuildConfig.EVERNOTE_CONSUMER_KEY, BuildConfig.EVERNOTE_CONSUMER_SECRET)
+                        .asSingleton();
             }
+            if (mEvernoteSession.isLoggedIn()) {
+                mEvernoteSession.logOut();
+            }
+            mEvernoteUser = null;
+            subscriber.onNext(true);
+            subscriber.onCompleted();
         }).subscribeOn(Schedulers.io());
     }
 
@@ -363,72 +337,32 @@ public class RxUser {
             mEvernoteActivity = null;
         }
         mEvernoteActivity = new WeakReference<>(activity);
-        return Observable.create(new Observable.OnSubscribe<Boolean>() {
-            @Override
-            public void call(Subscriber<? super Boolean> subscriber) {
-                if (mEvernoteSession == null) {
-                    mEvernoteSession = new EvernoteSession.Builder(mContext)
-                            .setLocale(Locale.SIMPLIFIED_CHINESE)
-                            .setEvernoteService(EVERNOTE_SERVICE)
-                            .setSupportAppLinkedNotebooks(SUPPORT_APP_LINKED_NOTEBOOKS)
-                            .setForceAuthenticationInThirdPartyApp(true)
-                            .build(BuildConfig.EVERNOTE_CONSUMER_KEY, BuildConfig.EVERNOTE_CONSUMER_SECRET)
-                            .asSingleton();
-                }
-                mEvernoteSession.authenticate(mEvernoteActivity.get());
-                subscriber.onNext(true);
-                subscriber.onCompleted();
+        return Observable.create((Observable.OnSubscribe<Boolean>) subscriber -> {
+            if (mEvernoteSession == null) {
+                mEvernoteSession = new EvernoteSession.Builder(mContext)
+                        .setLocale(Locale.SIMPLIFIED_CHINESE)
+                        .setEvernoteService(EVERNOTE_SERVICE)
+                        .setSupportAppLinkedNotebooks(SUPPORT_APP_LINKED_NOTEBOOKS)
+                        .setForceAuthenticationInThirdPartyApp(true)
+                        .build(BuildConfig.EVERNOTE_CONSUMER_KEY, BuildConfig.EVERNOTE_CONSUMER_SECRET)
+                        .asSingleton();
             }
+            mEvernoteSession.authenticate(mEvernoteActivity.get());
+            subscriber.onNext(true);
+            subscriber.onCompleted();
         }).subscribeOn(Schedulers.io());
     }
 
     public Observable<IUser> saveEvernote() {
-        return Observable.create(new Observable.OnSubscribe<IUser>() {
-            @Override
-            public void call(Subscriber<? super IUser> subscriber) {
-                if (mEvernoteSession.isLoggedIn()) {
-                    try {
-                        User user = mEvernoteSession.getEvernoteClientFactory().getUserStoreClient().getUser();
-                        mEvernoteUser = new EvernoteUser(user.getUsername());
-                        SharedPreferences.Editor editor = mSharedPreferences.edit();
-                        editor.putString(EVERNOTE_NAME, mEvernoteUser.getName());
-                        editor.commit();
-                        subscriber.onNext(mEvernoteUser);
-                    } catch (EDAMUserException e) {
-                        YLog.e(e);
-                        subscriber.onError(e);
-                    } catch (EDAMSystemException e) {
-                        YLog.e(e);
-                        subscriber.onError(e);
-                    } catch (TException e) {
-                        YLog.e(e);
-                        subscriber.onError(e);
-                    }
-                } else {
-                    subscriber.onError(new RxException("没有登录"));
-                }
-                subscriber.onCompleted();
-            }
-        }).subscribeOn(Schedulers.io());
-    }
-
-    public Observable<Boolean> updateNote2Evernote(String bigPhotoPathWithoutFile, String photoName, String noteTitle, String noteContent) {
-        return Observable.create(new Observable.OnSubscribe<List<Notebook>>() {
-            @Override
-            public void call(Subscriber<? super List<Notebook>> subscriber) {
-                if (mEvernoteSession == null) {
-                    mEvernoteSession = new EvernoteSession.Builder(mContext)
-                            .setLocale(Locale.SIMPLIFIED_CHINESE)
-                            .setEvernoteService(EVERNOTE_SERVICE)
-                            .setSupportAppLinkedNotebooks(SUPPORT_APP_LINKED_NOTEBOOKS)
-                            .setForceAuthenticationInThirdPartyApp(true)
-                            .build(BuildConfig.EVERNOTE_CONSUMER_KEY, BuildConfig.EVERNOTE_CONSUMER_SECRET)
-                            .asSingleton();
-                }
-                EvernoteNoteStoreClient noteStoreClient = mEvernoteSession.getEvernoteClientFactory().getNoteStoreClient();
+        return Observable.create((Observable.OnSubscribe<IUser>) subscriber -> {
+            if (mEvernoteSession.isLoggedIn()) {
                 try {
-                    List<Notebook> notebookList = noteStoreClient.listNotebooks();
-                    subscriber.onNext(notebookList);
+                    User user = mEvernoteSession.getEvernoteClientFactory().getUserStoreClient().getUser();
+                    mEvernoteUser = new EvernoteUser(user.getUsername());
+                    SharedPreferences.Editor editor = mSharedPreferences.edit();
+                    editor.putString(EVERNOTE_NAME, mEvernoteUser.getName());
+                    editor.commit();
+                    subscriber.onNext(mEvernoteUser);
                 } catch (EDAMUserException e) {
                     YLog.e(e);
                     subscriber.onError(e);
@@ -439,52 +373,78 @@ public class RxUser {
                     YLog.e(e);
                     subscriber.onError(e);
                 }
-                subscriber.onCompleted();
+            } else {
+                subscriber.onError(new RxException("没有登录"));
             }
+            subscriber.onCompleted();
+        }).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<Boolean> updateNote2Evernote(String bigPhotoPathWithoutFile, String photoName, String noteTitle, String noteContent) {
+        return Observable.create((Observable.OnSubscribe<List<Notebook>>) subscriber -> {
+            if (mEvernoteSession == null) {
+                mEvernoteSession = new EvernoteSession.Builder(mContext)
+                        .setLocale(Locale.SIMPLIFIED_CHINESE)
+                        .setEvernoteService(EVERNOTE_SERVICE)
+                        .setSupportAppLinkedNotebooks(SUPPORT_APP_LINKED_NOTEBOOKS)
+                        .setForceAuthenticationInThirdPartyApp(true)
+                        .build(BuildConfig.EVERNOTE_CONSUMER_KEY, BuildConfig.EVERNOTE_CONSUMER_SECRET)
+                        .asSingleton();
+            }
+            EvernoteNoteStoreClient noteStoreClient = mEvernoteSession.getEvernoteClientFactory().getNoteStoreClient();
+            try {
+                List<Notebook> notebookList = noteStoreClient.listNotebooks();
+                subscriber.onNext(notebookList);
+            } catch (EDAMUserException e) {
+                YLog.e(e);
+                subscriber.onError(e);
+            } catch (EDAMSystemException e) {
+                YLog.e(e);
+                subscriber.onError(e);
+            } catch (TException e) {
+                YLog.e(e);
+                subscriber.onError(e);
+            }
+            subscriber.onCompleted();
         })
                 .subscribeOn(Schedulers.io())
                 .flatMap(notebooks -> Observable.from(notebooks))
                 .filter(notebook -> notebook.getName().equals(mContext.getResources().getString(R.string.app_name)))
-                .lift(new Observable.Operator<String, Notebook>() {
+                .lift((Observable.Operator<String, Notebook>) subscriber -> new Subscriber<Notebook>() {
+                    private int mInTimes = 0;
+
                     @Override
-                    public Subscriber<? super Notebook> call(Subscriber<? super String> subscriber) {
-                        return new Subscriber<Notebook>() {
-                            private int mInTimes = 0;
-
-                            @Override
-                            public void onCompleted() {
-                                if (mInTimes == 0) {
-                                    Notebook notebook = new Notebook();
-                                    notebook.setName(mContext.getResources().getString(R.string.app_name));
-                                    EvernoteNoteStoreClient noteStoreClient = mEvernoteSession.getEvernoteClientFactory().getNoteStoreClient();
-                                    try {
-                                        Notebook appNoteBook = noteStoreClient.createNotebook(notebook);
-                                        subscriber.onNext(appNoteBook.getGuid());
-                                    } catch (EDAMUserException e) {
-                                        YLog.e(e);
-                                        subscriber.onError(e);
-                                    } catch (EDAMSystemException e) {
-                                        YLog.e(e);
-                                        subscriber.onError(e);
-                                    } catch (TException e) {
-                                        YLog.e(e);
-                                        subscriber.onError(e);
-                                    }
-                                }
-                                subscriber.onCompleted();
+                    public void onCompleted() {
+                        if (mInTimes == 0) {
+                            Notebook notebook = new Notebook();
+                            notebook.setName(mContext.getResources().getString(R.string.app_name));
+                            EvernoteNoteStoreClient noteStoreClient = mEvernoteSession.getEvernoteClientFactory().getNoteStoreClient();
+                            try {
+                                Notebook appNoteBook = noteStoreClient.createNotebook(notebook);
+                                subscriber.onNext(appNoteBook.getGuid());
+                            } catch (EDAMUserException e) {
+                                YLog.e(e);
+                                subscriber.onError(e);
+                            } catch (EDAMSystemException e) {
+                                YLog.e(e);
+                                subscriber.onError(e);
+                            } catch (TException e) {
+                                YLog.e(e);
+                                subscriber.onError(e);
                             }
+                        }
+                        subscriber.onCompleted();
+                    }
 
-                            @Override
-                            public void onError(Throwable e) {
+                    @Override
+                    public void onError(Throwable e) {
 
-                            }
+                    }
 
-                            @Override
-                            public void onNext(Notebook notebook) {
-                                mInTimes++;
-                                subscriber.onNext(notebook.getGuid());
-                            }
-                        };
+                    @Override
+                    public void onNext(Notebook notebook) {
+                        mInTimes++;
+                        subscriber.onNext(notebook.getGuid());
                     }
                 })
                 .map(s -> {
@@ -492,71 +452,66 @@ public class RxUser {
                     note.setNotebookGuid(s);
                     return note;
                 })
-                .lift(new Observable.Operator<Boolean, Note>() {
+                .lift(subscriber -> new Subscriber<Note>() {
                     @Override
-                    public Subscriber<? super Note> call(Subscriber<? super Boolean> subscriber) {
-                        return new Subscriber<Note>() {
-                            @Override
-                            public void onCompleted() {
-                                subscriber.onCompleted();
-                            }
+                    public void onCompleted() {
+                        subscriber.onCompleted();
+                    }
 
-                            @Override
-                            public void onError(Throwable e) {
-                                subscriber.onError(e);
-                            }
+                    @Override
+                    public void onError(Throwable e) {
+                        subscriber.onError(e);
+                    }
 
-                            @Override
-                            public void onNext(Note note) {
-                                note.setTitle(noteTitle);
-                                InputStream in = null;
-                                // Hash the data in the image file. The hash is used to reference the file in the ENML note content.
-                                try {
-                                    in = new BufferedInputStream(new FileInputStream(bigPhotoPathWithoutFile));
-                                    FileData data = new FileData(EvernoteUtil.hash(in), new File(bigPhotoPathWithoutFile));
-                                    ResourceAttributes attributes = new ResourceAttributes();
-                                    attributes.setFileName(photoName);
+                    @Override
+                    public void onNext(Note note) {
+                        note.setTitle(noteTitle);
+                        InputStream in = null;
+                        // Hash the data in the image file. The hash is used to reference the file in the ENML note content.
+                        try {
+                            in = new BufferedInputStream(new FileInputStream(bigPhotoPathWithoutFile));
+                            FileData data = new FileData(EvernoteUtil.hash(in), new File(bigPhotoPathWithoutFile));
+                            ResourceAttributes attributes = new ResourceAttributes();
+                            attributes.setFileName(photoName);
 
-                                    // Create a new Resource
-                                    Resource resource = new Resource();
-                                    resource.setData(data);
-                                    resource.setMime("image/jpeg");
-                                    resource.setAttributes(attributes);
+                            // Create a new Resource
+                            Resource resource = new Resource();
+                            resource.setData(data);
+                            resource.setMime("image/jpeg");
+                            resource.setAttributes(attributes);
 
-                                    note.addToResources(resource);
-                                    // Set the note's ENML content
-                                    String content = EvernoteUtil.NOTE_PREFIX
-                                            + noteContent
-                                            + EvernoteUtil.createEnMediaTag(resource)
-                                            + EvernoteUtil.NOTE_SUFFIX;
+                            note.addToResources(resource);
+                            // Set the note's ENML content
+                            String content = EvernoteUtil.NOTE_PREFIX
+                                    + noteContent
+                                    + EvernoteUtil.createEnMediaTag(resource)
+                                    + EvernoteUtil.NOTE_SUFFIX;
 
-                                    note.setContent(content);
-                                    EvernoteNoteStoreClient noteStoreClient = mEvernoteSession.getEvernoteClientFactory().getNoteStoreClient();
-                                    noteStoreClient.createNote(note);
-                                } catch (FileNotFoundException e) {
-                                    YLog.e(e);
-                                    subscriber.onError(e);
-                                } catch (IOException e) {
-                                    YLog.e(e);
-                                    subscriber.onError(e);
-                                } catch (EDAMNotFoundException e) {
-                                    YLog.e(e);
-                                    subscriber.onError(e);
-                                } catch (TException e) {
-                                    YLog.e(e);
-                                    subscriber.onError(e);
-                                } catch (EDAMUserException e) {
-                                    YLog.e(e);
-                                    subscriber.onError(e);
-                                } catch (EDAMSystemException e) {
-                                    YLog.e(e);
-                                    subscriber.onError(e);
-                                } finally {
-                                    FilePathUtils.closeStream(in);
-                                }
-                                subscriber.onNext(true);
-                            }
-                        };
+                            note.setContent(content);
+                            EvernoteNoteStoreClient noteStoreClient = mEvernoteSession.getEvernoteClientFactory().getNoteStoreClient();
+                            noteStoreClient.createNote(note);
+                        } catch (FileNotFoundException e) {
+                            YLog.e(e);
+                            subscriber.onError(e);
+                        } catch (IOException e) {
+                            YLog.e(e);
+                            subscriber.onError(e);
+                        } catch (EDAMNotFoundException e) {
+                            YLog.e(e);
+                            subscriber.onError(e);
+                        } catch (TException e) {
+                            YLog.e(e);
+                            subscriber.onError(e);
+                        } catch (EDAMUserException e) {
+                            YLog.e(e);
+                            subscriber.onError(e);
+                        } catch (EDAMSystemException e) {
+                            YLog.e(e);
+                            subscriber.onError(e);
+                        } finally {
+                            FilePathUtils.closeStream(in);
+                        }
+                        subscriber.onNext(true);
                     }
                 });
     }

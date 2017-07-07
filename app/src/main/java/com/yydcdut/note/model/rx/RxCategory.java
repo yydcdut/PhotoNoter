@@ -36,12 +36,9 @@ public class RxCategory {
      * @return
      */
     public Observable<List<Category>> getAllCategories() {
-        return Observable.create(new Observable.OnSubscribe<List<Category>>() {
-            @Override
-            public void call(Subscriber<? super List<Category>> subscriber) {
-                subscriber.onNext(mCache);
-                subscriber.onCompleted();
-            }
+        return Observable.create((Observable.OnSubscribe<List<Category>>) subscriber -> {
+            subscriber.onNext(mCache);
+            subscriber.onCompleted();
         }).subscribeOn(Schedulers.io());
     }
 
@@ -51,14 +48,11 @@ public class RxCategory {
      * @return
      */
     public Observable<List<Category>> refreshCategories() {
-        return Observable.create(new Observable.OnSubscribe<List<Category>>() {
-            @Override
-            public void call(Subscriber<? super List<Category>> subscriber) {
-                mCache.clear();
-                mCache.addAll(mCategoryDB.findAll());
-                subscriber.onNext(mCache);
-                subscriber.onCompleted();
-            }
+        return Observable.create((Observable.OnSubscribe<List<Category>>) subscriber -> {
+            mCache.clear();
+            mCache.addAll(mCategoryDB.findAll());
+            subscriber.onNext(mCache);
+            subscriber.onCompleted();
         }).subscribeOn(Schedulers.io());
     }
 
@@ -79,31 +73,26 @@ public class RxCategory {
                 })
                 .flatMap(categories -> Observable.from(categories))//转换成一个个Category来处理
                 .filter(category1 -> category1.getId() == _id)//过滤出与ID相同的Category
-                .lift(new Observable.Operator<Category, Category>() {
+                .lift((Observable.Operator<Category, Category>) subscriber -> new Subscriber<Category>() {
+                    /* 因为我想经过filter之后，如果没有数据就返回onError,所以设置这个参数 */
+                    private int mInTimes = 0;
+
                     @Override
-                    public Subscriber<? super Category> call(Subscriber<? super Category> subscriber) {
-                        return new Subscriber<Category>() {
-                            /* 因为我想经过filter之后，如果没有数据就返回onError,所以设置这个参数 */
-                            private int mInTimes = 0;
+                    public void onCompleted() {
+                        if (mInTimes == 0) {
+                            subscriber.onError(new RxException("找不到这个ID的Category"));
+                        }
+                    }
 
-                            @Override
-                            public void onCompleted() {
-                                if (mInTimes == 0) {
-                                    subscriber.onError(new RxException("找不到这个ID的Category"));
-                                }
-                            }
+                    @Override
+                    public void onError(Throwable e) {
+                        subscriber.onError(e);
+                    }
 
-                            @Override
-                            public void onError(Throwable e) {
-                                subscriber.onError(e);
-                            }
-
-                            @Override
-                            public void onNext(Category category) {
-                                mInTimes++;
-                                subscriber.onNext(category);
-                            }
-                        };
+                    @Override
+                    public void onNext(Category category) {
+                        mInTimes++;
+                        subscriber.onNext(category);
                     }
                 })
                 .map(category2 -> {
@@ -152,28 +141,23 @@ public class RxCategory {
                 .map(aLong -> mCache)//重新获取cache数据
                 .flatMap(categories1 -> Observable.from(categories1))//转换成一个个的
                 .filter(category -> category.isCheck())//过滤出check为true的
-                .lift(new Observable.Operator<List<Category>, Category>() {
+                .lift(subscriber -> new Subscriber<Category>() {
                     @Override
-                    public Subscriber<? super Category> call(Subscriber<? super List<Category>> subscriber) {
-                        return new Subscriber<Category>() {
-                            @Override
-                            public void onCompleted() {
-                                mCache.clear();
-                                mCache.addAll(mCategoryDB.findAll());
-                                subscriber.onNext(mCache);
-                            }
+                    public void onCompleted() {
+                        mCache.clear();
+                        mCache.addAll(mCategoryDB.findAll());
+                        subscriber.onNext(mCache);
+                    }
 
-                            @Override
-                            public void onError(Throwable e) {
-                            }
+                    @Override
+                    public void onError(Throwable e) {
+                    }
 
-                            @Override
-                            public void onNext(Category category3) {
-                                //如果有check为true的话，进入到这里，如果没有的话直接进入到onCompleted
-                                category3.setCheck(false);
-                                mCategoryDB.update(category3);
-                            }
-                        };
+                    @Override
+                    public void onNext(Category category3) {
+                        //如果有check为true的话，进入到这里，如果没有的话直接进入到onCompleted
+                        category3.setCheck(false);
+                        mCategoryDB.update(category3);
                     }
                 });
     }
@@ -275,17 +259,14 @@ public class RxCategory {
      * @return
      */
     public Observable<List<Category>> updateOrder() {
-        return Observable.create(new Observable.OnSubscribe<List<Category>>() {
-            @Override
-            public void call(Subscriber<? super List<Category>> subscriber) {
-                for (int i = 0; i < mCache.size(); i++) {
-                    Category category = mCache.get(i);
-                    category.setSort(i);
-                    mCategoryDB.update(category);
-                }
-                subscriber.onNext(mCache);
-                subscriber.onCompleted();
+        return Observable.create((Observable.OnSubscribe<List<Category>>) subscriber -> {
+            for (int i = 0; i < mCache.size(); i++) {
+                Category category = mCache.get(i);
+                category.setSort(i);
+                mCategoryDB.update(category);
             }
+            subscriber.onNext(mCache);
+            subscriber.onCompleted();
         }).subscribeOn(Schedulers.io());
     }
 

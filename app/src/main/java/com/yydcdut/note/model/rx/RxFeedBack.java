@@ -85,112 +85,99 @@ public class RxFeedBack {
     }
 
     public Observable<Map<String, String>> doObservable() {
-        return Observable.create(new Observable.OnSubscribe<String>() {
-            @Override
-            public void call(Subscriber<? super String> subscriber) {
-                if (TextUtils.isEmpty(mLocalStorageUtils.getUmengUid())) {
-                    try {
-                        StringBuilder sb = new StringBuilder("http://fb.umeng.com/api/v2/user/getuid");
-                        sb.append("?");
-                        Iterator iterator = mDeviceInfo.keys();
-                        String uid;
-                        while (iterator.hasNext()) {
-                            String entry = (String) iterator.next();
-                            uid = mDeviceInfo.get(entry).toString();
-                            sb.append(URLEncoder.encode(entry, "UTF-8") + "=" + URLEncoder.encode(uid, "UTF-8") + "&");
-                        }
-
-                        if (38 == sb.charAt(sb.length() - 1)) {
-                            sb.deleteCharAt(sb.length() - 1);
-                        }
-
-                        JSONObject json = httpConnection(sb.toString());
-                        if (judgeStatus(json)) {
-                            uid = json.getJSONObject("data").getString("uid");
-                            mLocalStorageUtils.setUmengUid(uid);
-                            subscriber.onNext(uid);
-                        }
-                    } catch (JSONException e) {
-                        YLog.e(e);
-                        subscriber.onError(e);
-                    } catch (UnsupportedEncodingException e) {
-                        YLog.e(e);
-                        subscriber.onError(e);
-                    } catch (IOException e) {
-                        YLog.e(e);
-                        subscriber.onError(e);
-                    } finally {
-                        subscriber.onCompleted();
+        return Observable.create((Observable.OnSubscribe<String>) subscriber -> {
+            if (TextUtils.isEmpty(mLocalStorageUtils.getUmengUid())) {
+                try {
+                    StringBuilder sb = new StringBuilder("http://fb.umeng.com/api/v2/user/getuid");
+                    sb.append("?");
+                    Iterator iterator = mDeviceInfo.keys();
+                    String uid;
+                    while (iterator.hasNext()) {
+                        String entry = (String) iterator.next();
+                        uid = mDeviceInfo.get(entry).toString();
+                        sb.append(URLEncoder.encode(entry, "UTF-8") + "=" + URLEncoder.encode(uid, "UTF-8") + "&");
                     }
-                } else {
-                    subscriber.onNext(mLocalStorageUtils.getUmengUid());
+
+                    if (38 == sb.charAt(sb.length() - 1)) {
+                        sb.deleteCharAt(sb.length() - 1);
+                    }
+
+                    JSONObject json = httpConnection(sb.toString());
+                    if (judgeStatus(json)) {
+                        uid = json.getJSONObject("data").getString("uid");
+                        mLocalStorageUtils.setUmengUid(uid);
+                        subscriber.onNext(uid);
+                    }
+                } catch (JSONException e) {
+                    YLog.e(e);
+                    subscriber.onError(e);
+                } catch (UnsupportedEncodingException e) {
+                    YLog.e(e);
+                    subscriber.onError(e);
+                } catch (IOException e) {
+                    YLog.e(e);
+                    subscriber.onError(e);
+                } finally {
                     subscriber.onCompleted();
                 }
+            } else {
+                subscriber.onNext(mLocalStorageUtils.getUmengUid());
+                subscriber.onCompleted();
             }
         })
                 .subscribeOn(Schedulers.io())
-                .lift(new Observable.Operator<JSONObject, String>() {
+                .lift((Observable.Operator<JSONObject, String>) subscriber -> new Subscriber<String>() {
                     @Override
-                    public Subscriber<? super String> call(Subscriber<? super JSONObject> subscriber) {
-                        return new Subscriber<String>() {
-                            @Override
-                            public void onCompleted() {
+                    public void onCompleted() {
 
-                            }
+                    }
 
-                            @Override
-                            public void onError(Throwable e) {
-                                subscriber.onError(e);
-                            }
+                    @Override
+                    public void onError(Throwable e) {
+                        subscriber.onError(e);
+                    }
 
-                            @Override
-                            public void onNext(String s) {
-                                StringBuilder sb = new StringBuilder(mEmail);
-                                sb.append("<---联系方式   ")
-                                        .append(mType)
-                                        .append("   反馈内容--->")
-                                        .append(mContent);
-                                try {
-                                    mDeviceInfo.put("content", sb.toString());
-                                    mDeviceInfo.put("feedback_id", mFeedbackId);
-                                    mDeviceInfo.put("reply_id", System.currentTimeMillis() + "");
-                                    mDeviceInfo.put("device_uuid", mLocalStorageUtils.getDeviceUuid());
-                                    mDeviceInfo.put("type", "new_feedback");
-                                    mDeviceInfo.put("uid", s);
-                                    subscriber.onNext(mDeviceInfo);
-                                } catch (JSONException e) {
-                                    YLog.e(e);
-                                    subscriber.onError(e);
-                                }
-                            }
-                        };
+                    @Override
+                    public void onNext(String s) {
+                        StringBuilder sb = new StringBuilder(mEmail);
+                        sb.append("<---联系方式   ")
+                                .append(mType)
+                                .append("   反馈内容--->")
+                                .append(mContent);
+                        try {
+                            mDeviceInfo.put("content", sb.toString());
+                            mDeviceInfo.put("feedback_id", mFeedbackId);
+                            mDeviceInfo.put("reply_id", System.currentTimeMillis() + "");
+                            mDeviceInfo.put("device_uuid", mLocalStorageUtils.getDeviceUuid());
+                            mDeviceInfo.put("type", "new_feedback");
+                            mDeviceInfo.put("uid", s);
+                            subscriber.onNext(mDeviceInfo);
+                        } catch (JSONException e) {
+                            YLog.e(e);
+                            subscriber.onError(e);
+                        }
                     }
                 })
-                .lift(new Observable.Operator<JSONObject, JSONObject>() {
+                .lift((Observable.Operator<JSONObject, JSONObject>) subscriber -> new Subscriber<JSONObject>() {
                     @Override
-                    public Subscriber<? super JSONObject> call(Subscriber<? super JSONObject> subscriber) {
-                        return new Subscriber<JSONObject>() {
-                            @Override
-                            public void onCompleted() {
+                    public void onCompleted() {
 
-                            }
+                    }
 
-                            @Override
-                            public void onError(Throwable e) {
-                                subscriber.onError(e);
-                            }
+                    @Override
+                    public void onError(Throwable e) {
+                        subscriber.onError(e);
+                    }
 
-                            @Override
-                            public void onNext(JSONObject jsonObject) {
-                                try {
-                                    JSONObject json = httpConnection(jsonObject, "http://fb.umeng.com/api/v2/feedback/reply/new");
-                                    subscriber.onNext(json);
-                                } catch (IOException e) {
-                                    YLog.e(e);
-                                    subscriber.onError(e);
-                                }
-                            }
-                        };
+                    @Override
+                    public void onNext(JSONObject jsonObject) {
+                        try {
+                            JSONObject json = httpConnection(jsonObject, "http://fb.umeng.com/api/v2/feedback/reply/new");
+                            subscriber.onNext(json);
+                        } catch (IOException e) {
+                            YLog.e(e);
+                            subscriber.onError(e);
+                        }
                     }
                 })
                 .map(jsonObject -> setData(jsonObject));

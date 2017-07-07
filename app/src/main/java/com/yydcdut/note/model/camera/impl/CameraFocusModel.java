@@ -106,15 +106,11 @@ public class CameraFocusModel implements ICameraFocus {
         mCamera.cancelAutoFocus();
     }
 
-    private Camera.AutoFocusCallback mAutoFocusCallback = new Camera.AutoFocusCallback() {
-
-        @Override
-        public void onAutoFocus(boolean success, Camera camera) {
-            if (success) {
-                mState = FOCUS_STATE_FOCUSED_GOOD;
-            } else {
-                mState = FOCUS_STATE_FOCUSED_BAD;
-            }
+    private Camera.AutoFocusCallback mAutoFocusCallback = (success, camera) -> {
+        if (success) {
+            mState = FOCUS_STATE_FOCUSED_GOOD;
+        } else {
+            mState = FOCUS_STATE_FOCUSED_BAD;
         }
     };
 

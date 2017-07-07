@@ -24,7 +24,6 @@ import java.io.File;
 import javax.inject.Inject;
 
 import rx.Observable;
-import rx.Subscriber;
 import rx.schedulers.Schedulers;
 
 /**
@@ -134,17 +133,13 @@ public class SplashPresenterImpl implements ISplashPresenter, Handler.Callback {
     private void checkDisks() {
         if (!mLocalStorageUtils.isFirstTime()) {
             initFiles();
-            Observable.
-                    create(new Observable.OnSubscribe<File[]>() {
-                        @Override
-                        public void call(Subscriber<? super File[]> subscriber) {
-                            File f = new File(FilePathUtils.getPath());
-                            if (f.exists()) {
-                                subscriber.onNext(f.listFiles());
-                                subscriber.onCompleted();
-                            } else {
-                                subscriber.onError(new RxException(""));
-                            }
+            Observable.create((Observable.OnSubscribe<File[]>) subscriber -> {
+                File f = new File(FilePathUtils.getPath());
+                if (f.exists()) {
+                    subscriber.onNext(f.listFiles());
+                    subscriber.onCompleted();
+                } else {
+                    subscriber.onError(new RxException(""));
                         }
                     })
                     .flatMap(fileList -> Observable.from(fileList))
