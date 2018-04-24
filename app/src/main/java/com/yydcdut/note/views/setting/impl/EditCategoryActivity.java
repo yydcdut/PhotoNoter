@@ -32,7 +32,7 @@ import butterknife.ButterKnife;
 /**
  * Created by yuyidong on 15/10/13.
  */
-public class EditCategoryActivity extends BaseActivity implements IEditCategoryView, SlideAndDragListView.OnDragListener,
+public class EditCategoryActivity extends BaseActivity implements IEditCategoryView, SlideAndDragListView.OnDragDropListener,
         SlideAndDragListView.OnSlideListener, SlideAndDragListView.OnMenuItemClickListener, SlideAndDragListView.OnItemDeleteListener {
 
     @BindView(R.id.lv_edit_category)
@@ -104,8 +104,8 @@ public class EditCategoryActivity extends BaseActivity implements IEditCategoryV
     }
 
     @Override
-    public void onDragViewMoving(int position) {
-        mCategoryAdapter.setCurrentPosition(position);
+    public void onDragDropViewMoved(int fromPosition, int toPosition) {
+        mCategoryAdapter.setCurrentPosition(toPosition);
     }
 
     @Override
@@ -180,7 +180,7 @@ public class EditCategoryActivity extends BaseActivity implements IEditCategoryV
     @Override
     public void showCategoryList(List<Category> categoryList) {
         mCategoryAdapter = new EditCategoryAdapter(this, categoryList);
-        mListView.setOnDragListener(this, categoryList);
+        mListView.setOnDragDropListener(this);
         initListView();
     }
 
@@ -195,12 +195,12 @@ public class EditCategoryActivity extends BaseActivity implements IEditCategoryV
     }
 
     @Override
-    public void onItemDelete(View view, int i) {
-        mEditCategoryPresenter.deleteCategory(i);
+    public RequestType getRequestType() {
+        return new RequestType(this);
     }
 
     @Override
-    public RequestType getRequestType() {
-        return new RequestType(this);
+    public void onItemDeleteAnimationFinished(View view, int position) {
+        mEditCategoryPresenter.deleteCategory(position);
     }
 }

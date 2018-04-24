@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.frogermcs.androiddevmetrics'
+//apply plugin: 'com.frogermcs.androiddevmetrics'
 //apply from: '../gradle/dex.gradle'
 apply plugin: 'aspect'
 
@@ -67,29 +67,29 @@ android {
     }
 
     signingConfigs {
-        release {
-            Properties p = new Properties()
-            p.load(new FileInputStream(project.file('release.properties')))
-            storeFile file(p.storeFile)
-            storePassword p.storePassword
-            keyAlias p.keyAlias
-            keyPassword p.keyPassword
-        }
-        debug {
-            storeFile file("debug.keystore")
-        }
+//        release {
+//            Properties p = new Properties()
+//            p.load(new FileInputStream(project.file('release.properties')))
+//            storeFile file(p.storeFile)
+//            storePassword p.storePassword
+//            keyAlias p.keyAlias
+//            keyPassword p.keyPassword
+//        }
+//        debug {
+//            storeFile file("debug.keystore")
+//        }
     }
 
     buildTypes {
-        release {
-//            shrinkResources true
-            signingConfig signingConfigs.release
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.cfg'
-            buildConfigField "boolean", "LOG_DEBUG", "false"
-        }
+//        release {
+////            shrinkResources true
+//            signingConfig signingConfigs.release
+//            minifyEnabled true
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.cfg'
+//            buildConfigField "boolean", "LOG_DEBUG", "false"
+//        }
         debug {
-            signingConfig signingConfigs.debug
+//            signingConfig signingConfigs.debug
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.cfg'
             buildConfigField "boolean", "LOG_DEBUG", "true"
@@ -130,6 +130,7 @@ android {
     }
 
 //    sourceSets { main { jni.srcDirs = ['src/main/jni'] } }
+    buildToolsVersion '26.0.2'
 }
 
 //afterEvaluate {
@@ -180,7 +181,7 @@ dependencies {
     implementation "com.jakewharton:butterknife:${butterknifeVersion}"
     annotationProcessor "com.jakewharton:butterknife-compiler:${butterknifeVersion}"
     implementation "com.evernote:android-sdk:2.0.0-RC3"
-    implementation "com.yydcdut.sdlv:sdlv:0.6.1"
+    implementation "com.yydcdut.sdlv:sdlv:0.7.1"
     implementation 'com.yydcdut:rxmarkdown:0.1.0'
     implementation "com.google.dagger:dagger:${dagger2Version}"
     annotationProcessor "com.google.dagger:dagger-compiler:${dagger2Version}"

@@ -5,16 +5,16 @@ jdk:
 
 android:
     components:
-#      - build-tools-24.0.0 rc1
-#      - build-tools-23.0.1
-#      - build-tools-23.0.2
-      - build-tools-25.0.2
+      - tools
+      - build-tools-27.0.3
       - android-25
+      - extra-android-m2repository
+      - extra-android-support
       - extra
 
 before_script:
   - chmod +x gradlew
 
 script:
-    - ./gradlew check --info
+    - ./gradlew assembleRelease
 
