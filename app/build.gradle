@@ -100,20 +100,20 @@ android {
         jniLibs.srcDir 'src/libs'
     }
 
-    flavorDimensions 'dev1'
-
-    productFlavors {
-        dev {
-            dimension 'dev1'
-        }
-//        Store360 {}
-//        QQ {}
-//        WanDouJia {}
-//        Flyme {}
-//        Market91 {}
-//        AnZhuo {}
-//        BaiDu {}
-    }
+//    flavorDimensions 'dev1'
+//
+//    productFlavors {
+//        dev {
+//            dimension 'dev1'
+//        }
+////        Store360 {}
+////        QQ {}
+////        WanDouJia {}
+////        Flyme {}
+////        Market91 {}
+////        AnZhuo {}
+////        BaiDu {}
+//    }
 
 //    productFlavors.all { flavor ->
 //        if (name.toLowerCase().equals("dev")) {//debug
@@ -125,12 +125,11 @@ android {
 //        }
 //    }
 
-    productFlavors.all { flavor ->
-        flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
-    }
+//    productFlavors.all { flavor ->
+//        flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
+//    }
 
 //    sourceSets { main { jni.srcDirs = ['src/main/jni'] } }
-    buildToolsVersion '26.0.2'
 }
 
 //afterEvaluate {

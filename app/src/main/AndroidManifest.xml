@@ -128,9 +128,9 @@
             android:value="318c30366d0e153a9bf71b712e7046e3"/>
 
         <!-- 渠道 -->
-        <meta-data
-            android:name="UMENG_CHANNEL"
-            android:value="${UMENG_CHANNEL_VALUE}"/>
+        <!--<meta-data-->
+            <!--android:name="UMENG_CHANNEL"-->
+            <!--android:value="${UMENG_CHANNEL_VALUE}"/>-->
         <!-- ************ 友盟 ************ -->
 
         <!-- ************ Camera360  Begin ************ -->
