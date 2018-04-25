@@ -90,9 +90,9 @@ android {
 //        }
         debug {
 //            signingConfig signingConfigs.debug
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.cfg'
-            buildConfigField "boolean", "LOG_DEBUG", "true"
+//            minifyEnabled false
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.cfg'
+//            buildConfigField "boolean", "LOG_DEBUG", "true"
         }
     }
 

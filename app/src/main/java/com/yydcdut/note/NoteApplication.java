@@ -52,7 +52,7 @@ public class NoteApplication extends Application {
 //            return;
 //        }
 
-        if (BuildConfig.LOG_DEBUG) {
+        if (BuildConfig.DEBUG) {
             LeakCanary.install(this);
             BlockCanary.install(this, new NoteBlockCanaryContext()).start();
 //            AndroidDevMetrics.initWith(this);
@@ -69,13 +69,13 @@ public class NoteApplication extends Application {
 
         //打点
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
-        MobclickAgent.setDebugMode(BuildConfig.LOG_DEBUG);
+        MobclickAgent.setDebugMode(BuildConfig.DEBUG);
         MobclickAgent.openActivityDurationTrack(true);
-        MobclickAgent.setCatchUncaughtExceptions(!BuildConfig.LOG_DEBUG);
+        MobclickAgent.setCatchUncaughtExceptions(!BuildConfig.DEBUG);
 
 //        CrashHandler.getInstance().init(getApplicationContext());
 
-        YLog.setDEBUG(BuildConfig.LOG_DEBUG);
+        YLog.setDEBUG(BuildConfig.DEBUG);
 
     }
 
